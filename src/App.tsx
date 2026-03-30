@@ -5,8 +5,19 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Navbar from "./components/Navbar.tsx";
+import CoursesPage from "./pages/CoursesPage.tsx";
+import EditorPage from "./pages/EditorPage.tsx";
+import DashboardPage from "./pages/DashboardPage.tsx";
 
 const queryClient = new QueryClient();
+
+const PageWithNav = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <Navbar />
+    {children}
+  </>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -16,7 +27,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
+          <Route path="/editor" element={<PageWithNav><EditorPage /></PageWithNav>} />
+          <Route path="/dashboard" element={<PageWithNav><DashboardPage /></PageWithNav>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
