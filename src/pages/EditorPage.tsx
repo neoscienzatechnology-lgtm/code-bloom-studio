@@ -1,0 +1,169 @@
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { codeExercise } from "@/data/mockData";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw } from "lucide-react";
+
+const EditorPage = () => {
+  const [code, setCode] = useState(codeExercise.starterCode);
+  const [output, setOutput] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [hintIndex, setHintIndex] = useState(-1);
+  const [showXP, setShowXP] = useState(false);
+  const [running, setRunning] = useState(false);
+
+  const handleRun = () => {
+    setRunning(true);
+    setTimeout(() => {
+      const correct = code.includes('print("Olá, Mundo!")') || code.includes("print('Olá, Mundo!')");
+      setIsCorrect(correct);
+      setOutput(correct ? 'Olá, Mundo!' : 'Erro: verifique seu código e tente novamente.');
+      setRunning(false);
+      if (correct) {
+        setShowXP(true);
+        setTimeout(() => setShowXP(false), 1500);
+      }
+    }, 800);
+  };
+
+  const handleHint = () => {
+    setHintIndex((prev) => Math.min(prev + 1, codeExercise.hints.length - 1));
+  };
+
+  const handleReset = () => {
+    setCode(codeExercise.starterCode);
+    setOutput(null);
+    setIsCorrect(null);
+    setHintIndex(-1);
+  };
+
+  const progressPercent = (codeExercise.lessonProgress / codeExercise.totalLessons) * 100;
+
+  return (
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col">
+      {/* Top bar */}
+      <div className="border-b border-border/30 bg-secondary/30 px-4 py-3">
+        <div className="mx-auto flex max-w-7xl items-center gap-4">
+          <div className="flex-1">
+            <div className="mb-1 flex items-center justify-between text-xs">
+              <span className="font-bold text-primary">🐍 Python do Zero ao Herói</span>
+              <span className="text-muted-foreground">
+                Lição {codeExercise.lessonProgress}/{codeExercise.totalLessons}
+              </span>
+            </div>
+            <Progress value={progressPercent} className="h-2 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+          </div>
+        </div>
+      </div>
+
+      {/* Main split layout */}
+      <div className="flex-1 grid lg:grid-cols-2">
+        {/* Instructions */}
+        <div className="border-b border-border/30 p-6 lg:border-b-0 lg:border-r overflow-auto">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
+              <span>✨</span> +{codeExercise.xpReward} XP
+            </div>
+            <h2 className="mb-4 text-2xl font-black">{codeExercise.title}</h2>
+            <p className="mb-6 leading-relaxed text-muted-foreground">
+              Seu primeiro programa! Use a função <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-sm text-accent">print()</code> para exibir a mensagem{" "}
+              <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-sm text-quest-yellow">"Olá, Mundo!"</code> no console.
+            </p>
+
+            {/* Hints */}
+            <div className="space-y-3">
+              <Button variant="outline" size="sm" onClick={handleHint} className="gap-2 rounded-full text-xs" disabled={hintIndex >= codeExercise.hints.length - 1}>
+                <Lightbulb size={14} /> Pedir dica ({hintIndex + 1}/{codeExercise.hints.length})
+              </Button>
+              <AnimatePresence>
+                {hintIndex >= 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="space-y-2"
+                  >
+                    {codeExercise.hints.slice(0, hintIndex + 1).map((hint, i) => (
+                      <div key={i} className="rounded-lg border border-quest-yellow/20 bg-quest-yellow/5 px-4 py-2.5 text-sm text-quest-yellow">
+                        💡 {hint}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Editor */}
+        <div className="flex flex-col">
+          <div className="flex-1 p-4">
+            <div className="h-full rounded-xl border border-border/30 bg-[hsl(250,20%,6%)] overflow-hidden flex flex-col">
+              {/* Editor header */}
+              <div className="flex items-center justify-between border-b border-border/20 px-4 py-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-quest-yellow/60" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-accent/60" />
+                  </div>
+                  <span className="text-xs text-muted-foreground font-mono">main.py</span>
+                </div>
+                <Button variant="ghost" size="sm" onClick={handleReset} className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
+                  <RotateCcw size={12} /> Reset
+                </Button>
+              </div>
+
+              {/* Textarea */}
+              <textarea
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="flex-1 w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground outline-none leading-7"
+                spellCheck={false}
+              />
+
+              {/* Output */}
+              {output && (
+                <div className={`border-t px-4 py-3 font-mono text-sm ${isCorrect ? "border-accent/20 bg-accent/5 text-accent" : "border-destructive/20 bg-destructive/5 text-destructive"}`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    {isCorrect ? <Check size={14} /> : <X size={14} />}
+                    <span className="font-bold text-xs">{isCorrect ? "Saída:" : "Erro:"}</span>
+                  </div>
+                  {output}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Run bar */}
+          <div className="border-t border-border/30 bg-secondary/30 p-4">
+            <div className="flex items-center justify-between">
+              <div className="relative">
+                <Button onClick={handleRun} disabled={running} className="gap-2 rounded-full bg-gradient-to-r from-accent to-[hsl(160,80%,45%)] font-extrabold text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-xl">
+                  <Play size={16} /> {running ? "Executando..." : "Executar"}
+                </Button>
+                <AnimatePresence>
+                  {showXP && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5, y: 0 }}
+                      animate={{ opacity: 1, scale: 1.2, y: -20 }}
+                      exit={{ opacity: 0, y: -40 }}
+                      className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-accent text-lg pointer-events-none"
+                    >
+                      +{codeExercise.xpReward} XP! 🎉
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <Button variant="ghost" className="gap-1 text-sm text-muted-foreground">
+                Próximo <ChevronRight size={16} />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EditorPage;
