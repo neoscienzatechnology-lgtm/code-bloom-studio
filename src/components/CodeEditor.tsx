@@ -1,9 +1,6 @@
 import { useEffect, useRef } from "react";
-import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
+import { EditorView, basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language";
-import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { python } from "@codemirror/lang-python";
 import { javascript } from "@codemirror/lang-javascript";
@@ -40,16 +37,9 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
     const state = EditorState.create({
       doc: value,
       extensions: [
-        lineNumbers(),
-        highlightActiveLine(),
-        highlightActiveLineGutter(),
-        history(),
-        bracketMatching(),
-        closeBrackets(),
-        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+        basicSetup,
         langExt,
         oneDark,
-        keymap.of([...defaultKeymap, ...historyKeymap, ...closeBracketsKeymap] as any),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString());
@@ -71,7 +61,6 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
       view.destroy();
       viewRef.current = null;
     };
-    // Intentionally only run on mount + language change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
