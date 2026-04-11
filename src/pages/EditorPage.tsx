@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import CodeEditor from "@/components/CodeEditor";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -157,12 +158,11 @@ const EditorPage = () => {
                 </Button>
               </div>
 
-              {/* Textarea */}
-              <textarea
+              {/* Code Editor */}
+              <CodeEditor
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="flex-1 w-full resize-none bg-transparent p-4 font-mono text-sm text-foreground outline-none leading-7"
-                spellCheck={false}
+                onChange={setCode}
+                language={course.language}
               />
 
               {/* Output */}
