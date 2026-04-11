@@ -1,12 +1,24 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { codeExercise } from "@/data/mockData";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { getLessonById } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw } from "lucide-react";
+import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const EditorPage = () => {
-  const [code, setCode] = useState(codeExercise.starterCode);
+  const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
+  const navigate = useNavigate();
+  const data = getLessonById(courseId || "", lessonId || "");
+
+  if (!data) return <Navigate to="/cursos" replace />;
+
+  const { course, lesson, lessonIndex } = data;
+  const nextLesson = course.lessons[lessonIndex + 1];
+  const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
+
+  const [code, setCode] = useState(lesson.starterCode);
   const [output, setOutput] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hintIndex, setHintIndex] = useState(-1);
@@ -16,9 +28,9 @@ const EditorPage = () => {
   const handleRun = () => {
     setRunning(true);
     setTimeout(() => {
-      const correct = code.includes('print("Olá, Mundo!")') || code.includes("print('Olá, Mundo!')");
+      const correct = code.includes(lesson.expectedOutput) || code.includes(lesson.solution);
       setIsCorrect(correct);
-      setOutput(correct ? 'Olá, Mundo!' : 'Erro: verifique seu código e tente novamente.');
+      setOutput(correct ? lesson.expectedOutput : "Erro: verifique seu código e tente novamente.");
       setRunning(false);
       if (correct) {
         setShowXP(true);
@@ -28,28 +40,39 @@ const EditorPage = () => {
   };
 
   const handleHint = () => {
-    setHintIndex((prev) => Math.min(prev + 1, codeExercise.hints.length - 1));
+    setHintIndex((prev) => Math.min(prev + 1, lesson.hints.length - 1));
   };
 
   const handleReset = () => {
-    setCode(codeExercise.starterCode);
+    setCode(lesson.starterCode);
     setOutput(null);
     setIsCorrect(null);
     setHintIndex(-1);
   };
 
-  const progressPercent = (codeExercise.lessonProgress / codeExercise.totalLessons) * 100;
+  const handleNext = () => {
+    if (nextLesson) {
+      navigate(`/editor/${course.id}/${nextLesson.id}`);
+      // Force re-mount by using key on the component won't work here, so reset state
+      window.location.href = `/editor/${course.id}/${nextLesson.id}`;
+    } else {
+      navigate(`/cursos/${course.id}`);
+    }
+  };
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col">
       {/* Top bar */}
       <div className="border-b border-border/30 bg-secondary/30 px-4 py-3">
         <div className="mx-auto flex max-w-7xl items-center gap-4">
+          <Link to={`/cursos/${course.id}`} className="text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft size={18} />
+          </Link>
           <div className="flex-1">
             <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="font-bold text-primary">🐍 Python do Zero ao Herói</span>
+              <span className="font-bold text-primary">{course.emoji} {course.title}</span>
               <span className="text-muted-foreground">
-                Lição {codeExercise.lessonProgress}/{codeExercise.totalLessons}
+                Lição {lessonIndex + 1}/{course.lessons.length}
               </span>
             </div>
             <Progress value={progressPercent} className="h-2 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
@@ -63,18 +86,17 @@ const EditorPage = () => {
         <div className="border-b border-border/30 p-6 lg:border-b-0 lg:border-r overflow-auto">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
-              <span>✨</span> +{codeExercise.xpReward} XP
+              <span>✨</span> +{lesson.xpReward} XP
             </div>
-            <h2 className="mb-4 text-2xl font-black">{codeExercise.title}</h2>
-            <p className="mb-6 leading-relaxed text-muted-foreground">
-              Seu primeiro programa! Use a função <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-sm text-accent">print()</code> para exibir a mensagem{" "}
-              <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-sm text-quest-yellow">"Olá, Mundo!"</code> no console.
+            <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
+            <p className="mb-6 leading-relaxed text-muted-foreground whitespace-pre-line">
+              {lesson.description}
             </p>
 
             {/* Hints */}
             <div className="space-y-3">
-              <Button variant="outline" size="sm" onClick={handleHint} className="gap-2 rounded-full text-xs" disabled={hintIndex >= codeExercise.hints.length - 1}>
-                <Lightbulb size={14} /> Pedir dica ({hintIndex + 1}/{codeExercise.hints.length})
+              <Button variant="outline" size="sm" onClick={handleHint} className="gap-2 rounded-full text-xs" disabled={hintIndex >= lesson.hints.length - 1}>
+                <Lightbulb size={14} /> Pedir dica ({hintIndex + 1}/{lesson.hints.length})
               </Button>
               <AnimatePresence>
                 {hintIndex >= 0 && (
@@ -83,7 +105,7 @@ const EditorPage = () => {
                     animate={{ opacity: 1, height: "auto" }}
                     className="space-y-2"
                   >
-                    {codeExercise.hints.slice(0, hintIndex + 1).map((hint, i) => (
+                    {lesson.hints.slice(0, hintIndex + 1).map((hint, i) => (
                       <div key={i} className="rounded-lg border border-quest-yellow/20 bg-quest-yellow/5 px-4 py-2.5 text-sm text-quest-yellow">
                         💡 {hint}
                       </div>
@@ -107,7 +129,7 @@ const EditorPage = () => {
                     <div className="h-2.5 w-2.5 rounded-full bg-quest-yellow/60" />
                     <div className="h-2.5 w-2.5 rounded-full bg-accent/60" />
                   </div>
-                  <span className="text-xs text-muted-foreground font-mono">main.py</span>
+                  <span className="text-xs text-muted-foreground font-mono">{course.language.toLowerCase()}</span>
                 </div>
                 <Button variant="ghost" size="sm" onClick={handleReset} className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
                   <RotateCcw size={12} /> Reset
@@ -150,13 +172,13 @@ const EditorPage = () => {
                       exit={{ opacity: 0, y: -40 }}
                       className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-accent text-lg pointer-events-none"
                     >
-                      +{codeExercise.xpReward} XP! 🎉
+                      +{lesson.xpReward} XP! 🎉
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-              <Button variant="ghost" className="gap-1 text-sm text-muted-foreground">
-                Próximo <ChevronRight size={16} />
+              <Button variant="ghost" onClick={handleNext} className="gap-1 text-sm text-muted-foreground">
+                {nextLesson ? "Próximo" : "Voltar ao curso"} <ChevronRight size={16} />
               </Button>
             </div>
           </div>
