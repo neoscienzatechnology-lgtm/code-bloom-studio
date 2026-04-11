@@ -4,7 +4,8 @@ import { courses } from "@/data/mockData";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
-import { Clock, Users, BookOpen } from "lucide-react";
+import { Clock, Users, BookOpen, CheckCircle2 } from "lucide-react";
+import { useProgress } from "@/hooks/useProgress";
 
 const levels = ["Todos", "Iniciante", "Intermediário", "Avançado"] as const;
 
@@ -16,6 +17,7 @@ const tagColors: Record<string, string> = {
 
 const CoursesPage = () => {
   const [filter, setFilter] = useState<string>("Todos");
+  const { getCourseProgress } = useProgress();
   const filtered = filter === "Todos" ? courses : courses.filter((c) => c.level === filter);
 
   return (
@@ -47,58 +49,65 @@ const CoursesPage = () => {
 
         {/* Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((course, i) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-            >
-              <Link to={`/cursos/${course.id}`} className="block">
-                <div className="card-hover group rounded-2xl border border-border/30 bg-card overflow-hidden">
-                  {/* Header band */}
-                  <div className="flex items-center justify-between bg-primary/5 px-5 py-4">
-                    <span className="text-4xl">{course.emoji}</span>
-                    <div className="flex gap-1.5">
-                      {course.tags.map((tag) => (
-                        <span key={tag} className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${tagColors[tag]}`}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="p-5">
-                    <h3 className="mb-1 font-extrabold leading-tight group-hover:text-primary transition-colors">
-                      {course.title}
-                    </h3>
-                    <Badge variant="outline" className="mb-3 text-[10px] font-bold">
-                      {course.level}
-                    </Badge>
-
-                    <div className="mb-3 flex items-center gap-4 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><Clock size={12} /> {course.duration}</span>
-                      <span className="flex items-center gap-1"><Users size={12} /> {course.students.toLocaleString()}</span>
-                      <span className="flex items-center gap-1"><BookOpen size={12} /> {course.lessons.length}</span>
-                    </div>
-
-                    {course.progress > 0 && (
-                      <div>
-                        <div className="mb-1 flex justify-between text-xs">
-                          <span className="text-muted-foreground">Progresso</span>
-                          <span className="font-bold text-accent">{course.progress}%</span>
-                        </div>
-                        <Progress value={course.progress} className="h-2 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+          {filtered.map((course, i) => {
+            const realProgress = getCourseProgress(course.lessons.map((l) => l.id));
+            return (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <Link to={`/cursos/${course.id}`} className="block">
+                  <div className="card-hover group rounded-2xl border border-border/30 bg-card overflow-hidden">
+                    {/* Header band */}
+                    <div className="flex items-center justify-between bg-primary/5 px-5 py-4">
+                      <span className="text-4xl">{course.emoji}</span>
+                      <div className="flex gap-1.5">
+                        {realProgress === 100 && (
+                          <span className="flex items-center gap-1 rounded-full border border-accent/30 bg-accent/15 px-2 py-0.5 text-[10px] font-bold text-accent">
+                            <CheckCircle2 size={10} /> Concluído
+                          </span>
+                        )}
+                        {course.tags.map((tag) => (
+                          <span key={tag} className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${tagColors[tag]}`}>
+                            {tag}
+                          </span>
+                        ))}
                       </div>
-                    )}
-                    {course.progress === 0 && (
-                      <div className="text-xs font-bold text-primary">Começar curso →</div>
-                    )}
+                    </div>
+
+                    <div className="p-5">
+                      <h3 className="mb-1 font-extrabold leading-tight group-hover:text-primary transition-colors">
+                        {course.title}
+                      </h3>
+                      <Badge variant="outline" className="mb-3 text-[10px] font-bold">
+                        {course.level}
+                      </Badge>
+
+                      <div className="mb-3 flex items-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1"><Clock size={12} /> {course.duration}</span>
+                        <span className="flex items-center gap-1"><Users size={12} /> {course.students.toLocaleString()}</span>
+                        <span className="flex items-center gap-1"><BookOpen size={12} /> {course.lessons.length}</span>
+                      </div>
+
+                      {realProgress > 0 ? (
+                        <div>
+                          <div className="mb-1 flex justify-between text-xs">
+                            <span className="text-muted-foreground">Progresso</span>
+                            <span className="font-bold text-accent">{realProgress}%</span>
+                          </div>
+                          <Progress value={realProgress} className="h-2 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+                        </div>
+                      ) : (
+                        <div className="text-xs font-bold text-primary">Começar curso →</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>

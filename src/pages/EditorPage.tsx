@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { getLessonById } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
@@ -8,27 +8,49 @@ import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw, ArrowLeft } from "l
 import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
+import QuizSection from "@/components/QuizSection";
+import { useProgress } from "@/hooks/useProgress";
+import confetti from "canvas-confetti";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
   const data = getLessonById(courseId || "", lessonId || "");
+  const { completeLesson, saveCode, isCompleted, getSavedCode } = useProgress();
 
   const lesson = data?.lesson;
   const course = data?.course;
   const lessonIndex = data?.lessonIndex ?? 0;
 
-  const [code, setCode] = useState(lesson?.starterCode ?? "");
+  const savedCode = lesson ? getSavedCode(lesson.id) : undefined;
+  const [code, setCode] = useState(savedCode ?? lesson?.starterCode ?? "");
   const [output, setOutput] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hintIndex, setHintIndex] = useState(-1);
   const [showXP, setShowXP] = useState(false);
   const [running, setRunning] = useState(false);
 
+  // Save code as user types (debounced via effect)
+  useEffect(() => {
+    if (!lesson) return;
+    const timer = setTimeout(() => saveCode(lesson.id, code), 500);
+    return () => clearTimeout(timer);
+  }, [code, lesson, saveCode]);
+
   if (!data || !lesson || !course) return <Navigate to="/cursos" replace />;
 
   const nextLesson = course.lessons[lessonIndex + 1];
   const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
+  const alreadyCompleted = isCompleted(lesson.id);
+
+  const fireConfetti = () => {
+    confetti({
+      particleCount: 120,
+      spread: 80,
+      origin: { y: 0.7 },
+      colors: ["#8B5CF6", "#10B981", "#F59E0B", "#EC4899"],
+    });
+  };
 
   const handleRun = () => {
     setRunning(true);
@@ -40,6 +62,10 @@ const EditorPage = () => {
       if (correct) {
         setShowXP(true);
         setTimeout(() => setShowXP(false), 1500);
+        if (!alreadyCompleted) {
+          completeLesson(lesson.id, lesson.xpReward);
+          fireConfetti();
+        }
       }
     }, 800);
   };
@@ -89,8 +115,15 @@ const EditorPage = () => {
         {/* Instructions */}
         <div className="border-b border-border/30 p-6 lg:border-b-0 lg:border-r overflow-auto">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
-              <span>✨</span> +{lesson.xpReward} XP
+            <div className="mb-2 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
+                <span>✨</span> +{lesson.xpReward} XP
+              </span>
+              {alreadyCompleted && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
+                  <Check size={12} /> Concluída
+                </span>
+              )}
             </div>
             <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
 
@@ -104,7 +137,26 @@ const EditorPage = () => {
               </div>
             )}
 
-            {/* Exercise section */}
+            {/* Quiz section */}
+            {lesson.quiz && lesson.quiz.length > 0 && (
+              <div className="mb-6">
+                <div className="mb-3 flex items-center gap-2 text-sm font-bold text-quest-blue">
+                  <span>🧠</span> Teste seu conhecimento
+                </div>
+                <div className="rounded-xl border border-quest-blue/10 bg-quest-blue/5 p-4">
+                  <QuizSection
+                    questions={lesson.quiz}
+                    onComplete={(correct) => {
+                      if (correct === lesson.quiz!.length) {
+                        completeLesson(lesson.id + "-quiz", 5);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+
             <div className="mb-6">
               <div className="mb-3 flex items-center gap-2 text-sm font-bold text-accent">
                 <span>🎯</span> Exercício
