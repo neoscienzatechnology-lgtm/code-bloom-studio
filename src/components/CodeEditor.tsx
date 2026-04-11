@@ -49,7 +49,7 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         langExt,
         oneDark,
-        keymap.of([...defaultKeymap, ...historyKeymap, ...closeBracketsKeymap]),
+        keymap.of([...defaultKeymap, ...historyKeymap, ...closeBracketsKeymap] as any),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString());
