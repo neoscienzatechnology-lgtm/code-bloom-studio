@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
+import TheoryRenderer from "@/components/TheoryRenderer";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -99,9 +100,7 @@ const EditorPage = () => {
                 <div className="mb-3 flex items-center gap-2 text-sm font-bold text-primary">
                   <span>📖</span> Aprenda
                 </div>
-                <div className="rounded-xl border border-primary/10 bg-primary/5 p-4 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-                  {lesson.theory}
-                </div>
+                <TheoryRenderer text={lesson.theory} />
               </div>
             )}
 
