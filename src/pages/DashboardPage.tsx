@@ -76,20 +76,24 @@ const DashboardPage = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <h2 className="mb-4 text-xl font-black">Cursos em andamento 📖</h2>
               <div className="space-y-3">
-                {inProgressCourses.map((course) => (
-                  <Link key={course.id} to="/editor" className="block">
-                    <div className="card-hover flex items-center gap-4 rounded-xl border border-border/30 bg-card p-4">
-                      <span className="text-3xl">{course.emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold truncate">{course.title}</h3>
-                        <div className="mt-1.5 flex items-center gap-2">
-                          <Progress value={course.progress} className="h-2 flex-1 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
-                          <span className="text-xs font-bold text-accent whitespace-nowrap">{course.progress}%</span>
+                {inProgressCourses.map((course) => {
+                  const currentLessonIdx = Math.floor((course.progress / 100) * course.lessons.length);
+                  const currentLesson = course.lessons[Math.min(currentLessonIdx, course.lessons.length - 1)];
+                  return (
+                    <Link key={course.id} to={`/editor/${course.id}/${currentLesson.id}`} className="block">
+                      <div className="card-hover flex items-center gap-4 rounded-xl border border-border/30 bg-card p-4">
+                        <span className="text-3xl">{course.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold truncate">{course.title}</h3>
+                          <div className="mt-1.5 flex items-center gap-2">
+                            <Progress value={course.progress} className="h-2 flex-1 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+                            <span className="text-xs font-bold text-accent whitespace-nowrap">{course.progress}%</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </motion.div>
 
@@ -124,11 +128,13 @@ const DashboardPage = () => {
                 <h2 className="mb-4 text-xl font-black">Concluídos ✅</h2>
                 <div className="flex flex-wrap gap-3">
                   {completedCourses.map((course) => (
-                    <div key={course.id} className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2">
-                      <span>{course.emoji}</span>
-                      <span className="text-sm font-bold">{course.title}</span>
-                      <span className="text-accent">✓</span>
-                    </div>
+                    <Link key={course.id} to={`/cursos/${course.id}`}>
+                      <div className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2">
+                        <span>{course.emoji}</span>
+                        <span className="text-sm font-bold">{course.title}</span>
+                        <span className="text-accent">✓</span>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </motion.div>

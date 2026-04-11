@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Navbar from "./components/Navbar.tsx";
 import CoursesPage from "./pages/CoursesPage.tsx";
+import CourseDetailPage from "./pages/CourseDetailPage.tsx";
 import EditorPage from "./pages/EditorPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
 
@@ -28,7 +29,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
-          <Route path="/editor" element={<PageWithNav><EditorPage /></PageWithNav>} />
+          <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
+          <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
           <Route path="/dashboard" element={<PageWithNav><DashboardPage /></PageWithNav>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

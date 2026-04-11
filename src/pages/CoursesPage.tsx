@@ -4,7 +4,7 @@ import { courses } from "@/data/mockData";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
-import { Clock, Users } from "lucide-react";
+import { Clock, Users, BookOpen } from "lucide-react";
 
 const levels = ["Todos", "Iniciante", "Intermediário", "Avançado"] as const;
 
@@ -54,10 +54,10 @@ const CoursesPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
             >
-              <Link to="/editor" className="block">
+              <Link to={`/cursos/${course.id}`} className="block">
                 <div className="card-hover group rounded-2xl border border-border/30 bg-card overflow-hidden">
                   {/* Header band */}
-                  <div className={`flex items-center justify-between bg-gradient-to-r from-${course.color}/20 to-transparent px-5 py-4`}>
+                  <div className="flex items-center justify-between bg-primary/5 px-5 py-4">
                     <span className="text-4xl">{course.emoji}</span>
                     <div className="flex gap-1.5">
                       {course.tags.map((tag) => (
@@ -79,6 +79,7 @@ const CoursesPage = () => {
                     <div className="mb-3 flex items-center gap-4 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1"><Clock size={12} /> {course.duration}</span>
                       <span className="flex items-center gap-1"><Users size={12} /> {course.students.toLocaleString()}</span>
+                      <span className="flex items-center gap-1"><BookOpen size={12} /> {course.lessons.length}</span>
                     </div>
 
                     {course.progress > 0 && (
