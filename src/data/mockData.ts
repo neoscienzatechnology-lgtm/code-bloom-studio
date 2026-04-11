@@ -85,6 +85,10 @@ Dica: print() sempre pula uma linha após exibir. Para exibir várias coisas na 
         expectedOutput: "Olá, Mundo!",
         hints: ["Use a função print() para exibir texto", "O texto deve estar entre aspas", 'A resposta é: print("Olá, Mundo!")'],
         xpReward: 10,
+        quiz: [
+          { question: "Qual função exibe texto no console em Python?", options: ["input()", "print()", "echo()", "write()"], correctIndex: 1 },
+          { question: "Como exibir o texto 'Olá' em Python?", options: ["print Olá", "print('Olá')", "console.log('Olá')", "echo 'Olá'"], correctIndex: 1 },
+        ],
       },
       {
         id: "1-2",
