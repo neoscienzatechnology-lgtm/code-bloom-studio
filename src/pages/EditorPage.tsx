@@ -12,18 +12,21 @@ const EditorPage = () => {
   const navigate = useNavigate();
   const data = getLessonById(courseId || "", lessonId || "");
 
-  if (!data) return <Navigate to="/cursos" replace />;
+  const lesson = data?.lesson;
+  const course = data?.course;
+  const lessonIndex = data?.lessonIndex ?? 0;
 
-  const { course, lesson, lessonIndex } = data;
-  const nextLesson = course.lessons[lessonIndex + 1];
-  const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
-
-  const [code, setCode] = useState(lesson.starterCode);
+  const [code, setCode] = useState(lesson?.starterCode ?? "");
   const [output, setOutput] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hintIndex, setHintIndex] = useState(-1);
   const [showXP, setShowXP] = useState(false);
   const [running, setRunning] = useState(false);
+
+  if (!data || !lesson || !course) return <Navigate to="/cursos" replace />;
+
+  const nextLesson = course.lessons[lessonIndex + 1];
+  const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
 
   const handleRun = () => {
     setRunning(true);
@@ -53,7 +56,6 @@ const EditorPage = () => {
   const handleNext = () => {
     if (nextLesson) {
       navigate(`/editor/${course.id}/${nextLesson.id}`);
-      // Force re-mount by using key on the component won't work here, so reset state
       window.location.href = `/editor/${course.id}/${nextLesson.id}`;
     } else {
       navigate(`/cursos/${course.id}`);
