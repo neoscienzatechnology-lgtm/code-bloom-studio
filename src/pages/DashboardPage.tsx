@@ -3,6 +3,7 @@ import { userProfile, badges, courses, leaderboard } from "@/data/mockData";
 import { Progress } from "@/components/ui/progress";
 import { Flame, Star, Trophy, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useProgress } from "@/hooks/useProgress";
 
 const rarityColors: Record<string, string> = {
   "Comum": "border-muted-foreground/30 bg-muted/30",
@@ -12,9 +13,17 @@ const rarityColors: Record<string, string> = {
 };
 
 const DashboardPage = () => {
-  const xpPercent = (userProfile.xp / userProfile.xpToNext) * 100;
-  const inProgressCourses = courses.filter((c) => c.progress > 0 && c.progress < 100);
-  const completedCourses = courses.filter((c) => c.progress === 100);
+  const { totalXp, completedLessons, getCourseProgress } = useProgress();
+  const displayXp = userProfile.xp + totalXp;
+  const xpPercent = (displayXp / userProfile.xpToNext) * 100;
+
+  const coursesWithProgress = courses.map((c) => ({
+    ...c,
+    realProgress: getCourseProgress(c.lessons.map((l) => l.id)),
+  }));
+  const inProgressCourses = coursesWithProgress.filter((c) => c.realProgress > 0 && c.realProgress < 100);
+  const completedCoursesList = coursesWithProgress.filter((c) => c.realProgress === 100);
+  const exercisesDone = userProfile.exercisesDone + completedLessons.length;
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
@@ -42,9 +51,9 @@ const DashboardPage = () => {
               <div className="max-w-md">
                 <div className="mb-1 flex justify-between text-xs">
                   <span className="text-muted-foreground">XP</span>
-                  <span className="font-bold text-accent">{userProfile.xp.toLocaleString()} / {userProfile.xpToNext.toLocaleString()}</span>
+                  <span className="font-bold text-accent">{displayXp.toLocaleString()} / {userProfile.xpToNext.toLocaleString()}</span>
                 </div>
-                <Progress value={xpPercent} className="h-3 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent [&>div]:rounded-full" />
+                <Progress value={Math.min(xpPercent, 100)} className="h-3 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent [&>div]:rounded-full" />
               </div>
             </div>
 
@@ -57,12 +66,12 @@ const DashboardPage = () => {
               </div>
               <div className="rounded-xl border border-border/30 bg-secondary/50 p-3 text-center">
                 <Star className="mx-auto mb-1 text-quest-yellow" size={20} />
-                <div className="text-xl font-black">{userProfile.coursesCompleted}</div>
+                <div className="text-xl font-black">{completedCoursesList.length + userProfile.coursesCompleted}</div>
                 <div className="text-[10px] text-muted-foreground">Cursos</div>
               </div>
               <div className="rounded-xl border border-border/30 bg-secondary/50 p-3 text-center">
                 <TrendingUp className="mx-auto mb-1 text-accent" size={20} />
-                <div className="text-xl font-black">{userProfile.exercisesDone}</div>
+                <div className="text-xl font-black">{exercisesDone}</div>
                 <div className="text-[10px] text-muted-foreground">Exercícios</div>
               </div>
             </div>
@@ -75,26 +84,30 @@ const DashboardPage = () => {
             {/* In progress */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <h2 className="mb-4 text-xl font-black">Cursos em andamento 📖</h2>
-              <div className="space-y-3">
-                {inProgressCourses.map((course) => {
-                  const currentLessonIdx = Math.floor((course.progress / 100) * course.lessons.length);
-                  const currentLesson = course.lessons[Math.min(currentLessonIdx, course.lessons.length - 1)];
-                  return (
-                    <Link key={course.id} to={`/editor/${course.id}/${currentLesson.id}`} className="block">
-                      <div className="card-hover flex items-center gap-4 rounded-xl border border-border/30 bg-card p-4">
-                        <span className="text-3xl">{course.emoji}</span>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold truncate">{course.title}</h3>
-                          <div className="mt-1.5 flex items-center gap-2">
-                            <Progress value={course.progress} className="h-2 flex-1 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
-                            <span className="text-xs font-bold text-accent whitespace-nowrap">{course.progress}%</span>
+              {inProgressCourses.length > 0 ? (
+                <div className="space-y-3">
+                  {inProgressCourses.map((course) => {
+                    const currentLessonIdx = Math.floor((course.realProgress / 100) * course.lessons.length);
+                    const currentLesson = course.lessons[Math.min(currentLessonIdx, course.lessons.length - 1)];
+                    return (
+                      <Link key={course.id} to={`/editor/${course.id}/${currentLesson.id}`} className="block">
+                        <div className="card-hover flex items-center gap-4 rounded-xl border border-border/30 bg-card p-4">
+                          <span className="text-3xl">{course.emoji}</span>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold truncate">{course.title}</h3>
+                            <div className="mt-1.5 flex items-center gap-2">
+                              <Progress value={course.realProgress} className="h-2 flex-1 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+                              <span className="text-xs font-bold text-accent whitespace-nowrap">{course.realProgress}%</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">Nenhum curso em andamento. <Link to="/cursos" className="text-primary font-bold hover:underline">Comece um!</Link></p>
+              )}
             </motion.div>
 
             {/* Badges */}
@@ -123,11 +136,11 @@ const DashboardPage = () => {
             </motion.div>
 
             {/* Completed */}
-            {completedCourses.length > 0 && (
+            {completedCoursesList.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                 <h2 className="mb-4 text-xl font-black">Concluídos ✅</h2>
                 <div className="flex flex-wrap gap-3">
-                  {completedCourses.map((course) => (
+                  {completedCoursesList.map((course) => (
                     <Link key={course.id} to={`/cursos/${course.id}`}>
                       <div className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2">
                         <span>{course.emoji}</span>
@@ -178,7 +191,7 @@ const DashboardPage = () => {
                   <div className="text-sm font-bold truncate">{userProfile.name} <span className="text-xs text-primary">(você)</span></div>
                   <div className="text-[10px] text-muted-foreground">Nível {userProfile.level}</div>
                 </div>
-                <span className="text-sm font-bold text-primary">{userProfile.xp.toLocaleString()} XP</span>
+                <span className="text-sm font-bold text-primary">{displayXp.toLocaleString()} XP</span>
               </div>
             </div>
           </motion.div>
