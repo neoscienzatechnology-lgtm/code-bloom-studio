@@ -33,7 +33,7 @@ const EditorPage = () => {
   // Save code as user types (debounced via effect)
   useEffect(() => {
     if (!lesson) return;
-    const timer = setTimeout(() => saveCode(lesson.id, code), 500);
+    const timer = setTimeout(() => saveCode(lesson.id, code, course?.id), 500);
     return () => clearTimeout(timer);
   }, [code, lesson, saveCode]);
 
@@ -63,7 +63,7 @@ const EditorPage = () => {
         setShowXP(true);
         setTimeout(() => setShowXP(false), 1500);
         if (!alreadyCompleted) {
-          completeLesson(lesson.id, lesson.xpReward);
+          completeLesson(lesson.id, lesson.xpReward, course.id);
           fireConfetti();
         }
       }
