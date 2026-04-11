@@ -2,6 +2,7 @@ export interface Lesson {
   id: string;
   title: string;
   description: string;
+  theory: string;
   starterCode: string;
   solution: string;
   expectedOutput: string;

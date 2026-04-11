@@ -91,9 +91,28 @@ const EditorPage = () => {
               <span>✨</span> +{lesson.xpReward} XP
             </div>
             <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
-            <p className="mb-6 leading-relaxed text-muted-foreground whitespace-pre-line">
-              {lesson.description}
-            </p>
+
+            {/* Theory section */}
+            {lesson.theory && (
+              <div className="mb-6">
+                <div className="mb-3 flex items-center gap-2 text-sm font-bold text-primary">
+                  <span>📖</span> Aprenda
+                </div>
+                <div className="rounded-xl border border-primary/10 bg-primary/5 p-4 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
+                  {lesson.theory}
+                </div>
+              </div>
+            )}
+
+            {/* Exercise section */}
+            <div className="mb-6">
+              <div className="mb-3 flex items-center gap-2 text-sm font-bold text-accent">
+                <span>🎯</span> Exercício
+              </div>
+              <p className="leading-relaxed text-muted-foreground whitespace-pre-line">
+                {lesson.description}
+              </p>
+            </div>
 
             {/* Hints */}
             <div className="space-y-3">
