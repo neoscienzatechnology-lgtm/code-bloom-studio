@@ -8,6 +8,7 @@ import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw, ArrowLeft } from "l
 import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
+import QuizSection from "@/components/QuizSection";
 import { useProgress } from "@/hooks/useProgress";
 import confetti from "canvas-confetti";
 
