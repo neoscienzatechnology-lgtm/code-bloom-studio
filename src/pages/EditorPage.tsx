@@ -63,7 +63,7 @@ const EditorPage = () => {
         setShowXP(true);
         setTimeout(() => setShowXP(false), 1500);
         if (!alreadyCompleted) {
-          completeLesson(lesson.id, lesson.xpReward);
+          completeLesson(lesson.id, lesson.xpReward, course.id);
           fireConfetti();
         }
       }
