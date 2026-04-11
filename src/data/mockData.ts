@@ -1,3 +1,9 @@
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctIndex: number;
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -8,6 +14,7 @@ export interface Lesson {
   expectedOutput: string;
   hints: string[];
   xpReward: number;
+  quiz?: QuizQuestion[];
 }
 
 export interface Course {
