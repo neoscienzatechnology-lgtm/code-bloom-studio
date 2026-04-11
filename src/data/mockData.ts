@@ -114,6 +114,10 @@ O f antes das aspas ativa a interpolação. Dentro de {}, coloque qualquer vari�
         expectedOutput: "Meu nome é",
         hints: ["Atribua valores às variáveis nome e idade", "Use f-string: f\"texto {variavel}\"", 'print(f"Meu nome é {nome} e tenho {idade} anos")'],
         xpReward: 15,
+        quiz: [
+          { question: "Qual é o tipo de dado de 'Lucas' em Python?", options: ["int", "float", "str", "bool"], correctIndex: 2 },
+          { question: "O que o f antes das aspas ativa?", options: ["Formatação automática", "Interpolação de variáveis", "Conversão de tipo", "Modo debug"], correctIndex: 1 },
+        ],
       },
       {
         id: "1-3",
@@ -182,6 +186,10 @@ IMPORTANTE: Em Python, a indentação (4 espaços) define o bloco de código. N�
         expectedOutput: "Aprovado!",
         hints: ["Use if nota >= 7:", "Não esqueça dos dois pontos (:) e da indentação", 'if nota >= 7:\n    print("Aprovado!")'],
         xpReward: 20,
+        quiz: [
+          { question: "O que acontece se a condição do if for falsa?", options: ["O programa para", "Executa o bloco else", "Dá erro", "Pula tudo"], correctIndex: 1 },
+          { question: "Qual operador verifica 'maior ou igual'?", options: [">>", "=>", ">=", "=<"], correctIndex: 2 },
+        ],
       },
       {
         id: "1-5",
@@ -213,6 +221,9 @@ Você pode usar for com listas, strings, range() e muitos outros objetos iteráv
         expectedOutput: "1",
         hints: ["Use range(1, 6) para gerar números de 1 a 5", "for i in range(1, 6):", "print(i) dentro do loop"],
         xpReward: 20,
+        quiz: [
+          { question: "O que range(1, 6) gera?", options: ["0 a 6", "1 a 6", "1 a 5", "0 a 5"], correctIndex: 2 },
+        ],
       },
       {
         id: "1-6",
@@ -368,6 +379,9 @@ Strings podem usar aspas simples, duplas ou crases (template literals):
         expectedOutput: "Olá, JavaScript!",
         hints: ["Use console.log()", "O texto deve estar entre aspas", 'console.log("Olá, JavaScript!")'],
         xpReward: 10,
+        quiz: [
+          { question: "Qual função exibe valores no console do navegador?", options: ["print()", "console.log()", "alert()", "document.write()"], correctIndex: 1 },
+        ],
       },
       {
         id: "2-2",
@@ -441,6 +455,10 @@ Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram cr
         expectedOutput: "14",
         hints: ["Sintaxe: const func = (param) => expressão", "const dobro = (n) => n * 2", "console.log(dobro(7))"],
         xpReward: 20,
+        quiz: [
+          { question: "Qual sintaxe define uma arrow function com um parâmetro?", options: ["function(n) => n*2", "const f = n => n*2", "const f = (n) -> n*2", "def f(n): n*2"], correctIndex: 1 },
+          { question: "Arrow functions têm seu próprio 'this'?", options: ["Sim, sempre", "Não, herdam do contexto", "Depende dos parâmetros", "Só em classes"], correctIndex: 1 },
+        ],
       },
       {
         id: "2-4",
@@ -692,6 +710,10 @@ Expressões JavaScript dentro do JSX usam chaves {}:
         expectedOutput: "Olá, React!",
         hints: ["function NomeComponente() { return ... }", "Use JSX: <h1>texto</h1>", "export default Saudacao"],
         xpReward: 10,
+        quiz: [
+          { question: "O que um componente React retorna?", options: ["HTML puro", "JSX", "Uma string", "Um objeto"], correctIndex: 1 },
+          { question: "Componentes React devem começar com:", options: ["Letra minúscula", "Letra maiúscula", "Underscore", "Número"], correctIndex: 1 },
+        ],
       },
       {
         id: "3-2",
