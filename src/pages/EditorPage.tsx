@@ -10,6 +10,7 @@ import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import { useProgress } from "@/hooks/useProgress";
+import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
 
 const EditorPage = () => {
@@ -55,9 +56,10 @@ const EditorPage = () => {
   const handleRun = () => {
     setRunning(true);
     setTimeout(() => {
-      const correct = code.includes(lesson.expectedOutput) || code.includes(lesson.solution);
-      setIsCorrect(correct);
-      setOutput(correct ? lesson.expectedOutput : "Erro: verifique seu código e tente novamente.");
+      const result = validateCode(code, lesson.expectedOutput, lesson.solution);
+      const correct = result.level === "exact" || result.level === "flexible";
+      setIsCorrect(correct ? true : result.level === "close" ? null : false);
+      setOutput(correct ? lesson.expectedOutput : result.message);
       setRunning(false);
       if (correct) {
         setShowXP(true);
@@ -218,10 +220,18 @@ const EditorPage = () => {
 
               {/* Output */}
               {output && (
-                <div className={`border-t px-4 py-3 font-mono text-sm ${isCorrect ? "border-accent/20 bg-accent/5 text-accent" : "border-destructive/20 bg-destructive/5 text-destructive"}`}>
+                <div className={`border-t px-4 py-3 font-mono text-sm ${
+                  isCorrect === true
+                    ? "border-accent/20 bg-accent/5 text-accent"
+                    : isCorrect === null
+                    ? "border-quest-yellow/20 bg-quest-yellow/5 text-quest-yellow"
+                    : "border-destructive/20 bg-destructive/5 text-destructive"
+                }`}>
                   <div className="flex items-center gap-2 mb-1">
-                    {isCorrect ? <Check size={14} /> : <X size={14} />}
-                    <span className="font-bold text-xs">{isCorrect ? "Saída:" : "Erro:"}</span>
+                    {isCorrect === true ? <Check size={14} /> : isCorrect === null ? <Lightbulb size={14} /> : <X size={14} />}
+                    <span className="font-bold text-xs">
+                      {isCorrect === true ? "Saída:" : isCorrect === null ? "Quase lá:" : "Erro:"}
+                    </span>
                   </div>
                   {output}
                 </div>
