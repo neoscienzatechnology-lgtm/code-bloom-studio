@@ -1,27 +1,43 @@
 
 
-# Melhorar visual da seção de teoria
-
 ## Problema
-A teoria é renderizada como um bloco cinza de texto puro (`whitespace-pre-line`), sem destaque visual para títulos, código, listas ou conceitos importantes. Tudo parece igual.
 
-## Solução
-Criar uma função de parsing no `EditorPage` que transforma o texto da teoria em elementos visuais ricos, detectando padrões do conteúdo existente:
+A validação atual (linha 58 de `EditorPage.tsx`) faz apenas:
+```js
+code.includes(lesson.expectedOutput) || code.includes(lesson.solution)
+```
+Isso exige que o código contenha exatamente a string esperada — qualquer espaço extra, acento diferente ou variação faz falhar.
 
-### Regras de formatação automática
-1. **Blocos de código** — linhas que começam com espaços e contêm `→` ou `=` ou `print(` etc. → renderizar em `<code>` com fundo escuro e fonte mono
-2. **Títulos de seção** — linhas que terminam com `:` (ex: "Como funciona:", "Exemplos:") → renderizar em negrito com cor primária
-3. **Itens de lista** — linhas que começam com `•` → renderizar com bullet estilizado e cor de destaque
-4. **Texto entre crases** — `código` inline → renderizar com fundo e cor accent
-5. **Primeiro parágrafo** — texto introdutório → renderizar com fonte ligeiramente maior e cor mais clara
+## Plano: Sistema de correção flexível
 
-### Visual
-- Seções separadas com espaçamento e bordas sutis
-- Blocos de código com fundo `hsl(250,20%,8%)` e borda accent
-- Títulos de seção com ícone decorativo e cor `primary`
-- Bullets com cor `accent` em vez de cinza
-- Fundo geral com gradiente sutil de `primary/5` para `accent/5`
+### 1. Criar função de normalização e comparação (`src/utils/codeValidator.ts`)
+
+- **Normalizar** ambos os textos (código do aluno e solução/output esperado) antes de comparar:
+  - Remover espaços extras e trailing whitespace
+  - Normalizar acentos (Unicode NFC/NFD → comparação sem acento como fallback)
+  - Ignorar diferenças entre aspas simples/duplas
+  - Colapsar múltiplos espaços em um
+  - Trim de cada linha
+- **Comparação em 3 níveis**:
+  1. **Exata** → match perfeito (100% XP)
+  2. **Flexível** → match após normalização (100% XP, com toast "Correto!")
+  3. **Quase certo** → similaridade alta (ex: distância de Levenshtein ou tokens-chave presentes) → mostrar feedback parcial: "Quase lá! Veja a diferença:" com diff visual
+
+### 2. Atualizar `handleRun` em `EditorPage.tsx`
+
+- Substituir a verificação `code.includes()` pela nova função de validação
+- Mostrar feedback diferenciado:
+  - **Correto**: confetti + XP (como hoje)
+  - **Quase certo**: mensagem amarela mostrando o que falta ajustar, sem penalizar
+  - **Errado**: mensagem de erro (como hoje)
+
+### 3. Feedback visual de "quase certo"
+
+- Nova cor amarela/warning no painel de output
+- Texto como: "Quase certo! Seu código está funcionalmente correto. Pequenas diferenças encontradas."
+- Se a resposta é funcionalmente equivalente (só difere em espaços/acentos), **considerar como correta** e dar o XP
 
 ### Arquivos modificados
-- `src/pages/EditorPage.tsx` — substituir o `<div>{lesson.theory}</div>` por um componente que faz o parsing e renderiza com cores/estilos ricos
+- `src/utils/codeValidator.ts` (novo)
+- `src/pages/EditorPage.tsx` (atualizar handleRun)
 
