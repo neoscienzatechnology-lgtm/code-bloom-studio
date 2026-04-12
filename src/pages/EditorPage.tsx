@@ -56,9 +56,10 @@ const EditorPage = () => {
   const handleRun = () => {
     setRunning(true);
     setTimeout(() => {
-      const correct = code.includes(lesson.expectedOutput) || code.includes(lesson.solution);
-      setIsCorrect(correct);
-      setOutput(correct ? lesson.expectedOutput : "Erro: verifique seu código e tente novamente.");
+      const result = validateCode(code, lesson.expectedOutput, lesson.solution);
+      const correct = result.level === "exact" || result.level === "flexible";
+      setIsCorrect(correct ? true : result.level === "close" ? null : false);
+      setOutput(correct ? lesson.expectedOutput : result.message);
       setRunning(false);
       if (correct) {
         setShowXP(true);
