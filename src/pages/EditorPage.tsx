@@ -10,6 +10,7 @@ import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import { useProgress } from "@/hooks/useProgress";
+import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
 
 const EditorPage = () => {
