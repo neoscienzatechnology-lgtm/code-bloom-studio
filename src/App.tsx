@@ -38,7 +38,7 @@ const App = () => (
             <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
             <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
             <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
-            <Route path="/dashboard" element={<PageWithNav><DashboardPage /></PageWithNav>} />
+            <Route path="/dashboard" element={<PageWithNav><ProtectedRoute><DashboardPage /></ProtectedRoute></PageWithNav>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
