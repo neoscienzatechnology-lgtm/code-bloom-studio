@@ -76,7 +76,7 @@ const LoginPage = () => {
               Esqueci minha senha
             </Link>
           </div>
-            type="submit"
+          <Button
             disabled={submitting}
             className="w-full rounded-full bg-gradient-to-r from-primary to-quest-pink font-extrabold shadow-lg shadow-primary/25"
           >
