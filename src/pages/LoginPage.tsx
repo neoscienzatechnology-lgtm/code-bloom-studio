@@ -71,7 +71,11 @@ const LoginPage = () => {
               className="bg-secondary/50"
             />
           </div>
-          <Button
+          <div className="flex justify-end">
+            <Link to="/esqueci-senha" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              Esqueci minha senha
+            </Link>
+          </div>
             type="submit"
             disabled={submitting}
             className="w-full rounded-full bg-gradient-to-r from-primary to-quest-pink font-extrabold shadow-lg shadow-primary/25"
