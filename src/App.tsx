@@ -14,6 +14,8 @@ import DashboardPage from "./pages/DashboardPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cadastro" element={<SignUpPage />} />
+            <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
             <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
             <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
