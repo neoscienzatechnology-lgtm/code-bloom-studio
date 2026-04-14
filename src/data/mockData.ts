@@ -333,6 +333,102 @@ Dicionários são essenciais para representar dados estruturados como perfis de 
         hints: ["Use chaves {} para criar dicionários", 'aluno = {"nome": "Lucas", "idade": 20, "curso": "Python"}', 'print(aluno["nome"])'],
         xpReward: 25,
       },
+      {
+        id: "1-9",
+        title: "List Comprehension",
+        description: "Use **list comprehension** para criar uma lista com os quadrados dos números de 1 a 5.",
+        theory: `List comprehension é uma forma elegante e concisa de criar listas em Python. Em vez de usar um loop for com append, você faz tudo em uma linha!
+
+Sintaxe:
+  nova_lista = [expressão for item in iterável]
+
+Exemplos:
+  quadrados = [x**2 for x in range(1, 6)]
+  # [1, 4, 9, 16, 25]
+
+  maiusculas = [nome.upper() for nome in ["ana", "bruno"]]
+  # ["ANA", "BRUNO"]
+
+Com condição (filtro):
+  pares = [x for x in range(10) if x % 2 == 0]
+  # [0, 2, 4, 6, 8]
+
+  grandes = [x for x in numeros if x > 10]
+
+Com expressão condicional:
+  resultado = ["par" if x%2==0 else "ímpar" for x in range(5)]
+
+Equivalência com loop:
+  # Loop tradicional:
+  quadrados = []
+  for x in range(1, 6):
+      quadrados.append(x**2)
+
+  # List comprehension (mesma coisa!):
+  quadrados = [x**2 for x in range(1, 6)]
+
+Dica: Use list comprehension para transformações simples. Para lógica complexa, prefira loops normais.`,
+        starterCode: '# Use list comprehension\n',
+        solution: 'quadrados = [x**2 for x in range(1, 6)]\nprint(quadrados)',
+        expectedOutput: "[1, 4, 9, 16, 25]",
+        hints: ["Sintaxe: [expressão for x in range()]", "x**2 calcula o quadrado", "[x**2 for x in range(1, 6)]"],
+        xpReward: 20,
+        quiz: [
+          { question: "Qual é a sintaxe de list comprehension?", options: ["list(x for x in range)", "[x for x in range()]", "for x in range: list.add(x)", "comprehend(x, range)"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "1-10",
+        title: "Try/Except",
+        description: "Use **try/except** para tentar converter a string **\"abc\"** em número e exibir **\"Erro: valor inválido!\"** se falhar.",
+        theory: `Try/except permite tratar erros sem que o programa quebre. Você "tenta" executar algo e "captura" o erro se acontecer.
+
+Sintaxe:
+  try:
+      # código que pode dar erro
+  except TipoDoErro:
+      # o que fazer se der erro
+
+Exemplo:
+  try:
+      numero = int("abc")
+  except ValueError:
+      print("Valor inválido!")
+
+Tipos comuns de erro:
+  ValueError    → valor errado (int("abc"))
+  TypeError     → tipo errado (1 + "2")
+  ZeroDivisionError → divisão por zero
+  FileNotFoundError → arquivo não existe
+  KeyError      → chave não existe no dicionário
+  IndexError    → índice fora da lista
+
+Múltiplos excepts:
+  try:
+      resultado = 10 / 0
+  except ZeroDivisionError:
+      print("Não pode dividir por zero!")
+  except ValueError:
+      print("Valor inválido!")
+
+Bloco finally (roda SEMPRE):
+  try:
+      arquivo = open("dados.txt")
+  except FileNotFoundError:
+      print("Arquivo não encontrado")
+  finally:
+      print("Finalizando...")  # roda sempre
+
+Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
+        starterCode: '# Use try/except\n',
+        solution: 'try:\n    numero = int("abc")\nexcept ValueError:\n    print("Erro: valor inválido!")',
+        expectedOutput: "Erro: valor inválido!",
+        hints: ["try: tenta executar o código", "except ValueError: captura o erro", "int(\"abc\") gera ValueError"],
+        xpReward: 20,
+        quiz: [
+          { question: "O que o bloco 'finally' faz?", options: ["Roda só se der erro", "Roda só se NÃO der erro", "Roda SEMPRE", "Cancela o erro"], correctIndex: 2 },
+        ],
+      },
     ],
   },
   {
@@ -659,6 +755,109 @@ async/await é o padrão moderno para código assíncrono em JavaScript e React!
         hints: ["async function nomeDaFuncao() { ... }", "const resultado = await promise", "Não esqueça de chamar a função"],
         xpReward: 25,
       },
+      {
+        id: "2-9",
+        title: "Spread e Rest",
+        description: "Use o operador **spread** para combinar dois arrays `[1,2,3]` e `[4,5,6]` em um só. Depois crie uma função com **rest** que soma todos os argumentos.",
+        theory: `Spread (...) e Rest (...) usam a mesma sintaxe (três pontos) mas fazem coisas opostas!
+
+Spread → EXPANDE um array/objeto:
+  const a = [1, 2, 3];
+  const b = [4, 5, 6];
+  const c = [...a, ...b];  // [1, 2, 3, 4, 5, 6]
+
+  const obj1 = { nome: "Ana", idade: 25 };
+  const obj2 = { ...obj1, cidade: "SP" };
+  // { nome: "Ana", idade: 25, cidade: "SP" }
+
+Rest → COLETA argumentos em um array:
+  function somar(...numeros) {
+    return numeros.reduce((a, b) => a + b, 0);
+  }
+  somar(1, 2, 3, 4);  // 10
+
+  // Rest em desestruturação:
+  const [primeiro, ...resto] = [1, 2, 3, 4];
+  // primeiro = 1, resto = [2, 3, 4]
+
+Usos comuns:
+  // Copiar array (sem referência):
+  const copia = [...original];
+
+  // Copiar objeto com alteração:
+  const atualizado = { ...usuario, idade: 26 };
+
+  // Passar array como argumentos:
+  Math.max(...numeros);`,
+        starterCode: '// Spread e Rest\n',
+        solution: 'const a = [1, 2, 3];\nconst b = [4, 5, 6];\nconst combinado = [...a, ...b];\nconsole.log(combinado);\n\nfunction somar(...nums) {\n  return nums.reduce((acc, n) => acc + n, 0);\n}\nconsole.log(somar(1, 2, 3, 4));',
+        expectedOutput: "1,2,3,4,5,6",
+        hints: ["Spread: [...array1, ...array2]", "Rest: function f(...args)", "reduce para somar todos"],
+        xpReward: 20,
+        quiz: [
+          { question: "O que o operador spread faz?", options: ["Coleta argumentos", "Expande um array/objeto", "Cria uma cópia profunda", "Remove duplicatas"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "2-10",
+        title: "Classes",
+        description: "Crie uma classe **Animal** com propriedades `nome` e `som`. Adicione um método `falar()` que retorna **\"[nome] faz [som]!\"**.",
+        theory: `Classes em JavaScript (ES6+) são "moldes" para criar objetos com propriedades e métodos.
+
+Sintaxe:
+  class Animal {
+    constructor(nome, som) {
+      this.nome = nome;
+      this.som = som;
+    }
+
+    falar() {
+      return \`\${this.nome} faz \${this.som}!\`;
+    }
+  }
+
+  const gato = new Animal("Gato", "miau");
+  console.log(gato.falar());  // "Gato faz miau!"
+
+Conceitos:
+  constructor() → método especial, roda ao criar o objeto
+  this → referência ao objeto atual
+  new → cria uma instância da classe
+
+Herança com extends:
+  class Cachorro extends Animal {
+    constructor(nome) {
+      super(nome, "au au");  // chama o constructor pai
+    }
+
+    buscar(item) {
+      return \`\${this.nome} buscou \${item}!\`;
+    }
+  }
+
+  const rex = new Cachorro("Rex");
+  rex.falar();    // "Rex faz au au!"
+  rex.buscar("bola");  // "Rex buscou bola!"
+
+Getters e Setters:
+  class Pessoa {
+    #idade;  // campo privado (ES2022)
+
+    get idade() { return this.#idade; }
+    set idade(val) {
+      if (val < 0) throw new Error("Idade inválida");
+      this.#idade = val;
+    }
+  }`,
+        starterCode: '// Crie a classe Animal\n',
+        solution: 'class Animal {\n  constructor(nome, som) {\n    this.nome = nome;\n    this.som = som;\n  }\n  falar() {\n    return `${this.nome} faz ${this.som}!`;\n  }\n}\nconst gato = new Animal("Gato", "miau");\nconsole.log(gato.falar());',
+        expectedOutput: "Gato faz miau!",
+        hints: ["class NomeClasse { constructor() { } }", "this.propriedade = valor", "Métodos são funções dentro da classe"],
+        xpReward: 25,
+        quiz: [
+          { question: "O que o constructor() faz?", options: ["Destrói o objeto", "Inicializa o objeto ao criá-lo", "Herda de outra classe", "Exporta a classe"], correctIndex: 1 },
+        ],
+      },
     ],
   },
   {
@@ -932,6 +1131,103 @@ Dica: Filtre antes de mapear para mostrar apenas itens relevantes:
         expectedOutput: "Ana",
         hints: ["Use .map() dentro do JSX", "Cada item precisa de uma key única", "<li key={nome}>{nome}</li>"],
         xpReward: 20,
+      },
+      {
+        id: "3-7",
+        title: "Custom Hooks",
+        description: "Crie um custom hook **useContador** que encapsula a lógica de um contador com `incrementar`, `decrementar` e `resetar`.",
+        theory: `Custom Hooks permitem extrair lógica de estado reutilizável em funções separadas. O nome DEVE começar com "use".
+
+Criando um custom hook:
+  function useContador(inicial = 0) {
+    const [count, setCount] = useState(inicial);
+
+    const incrementar = () => setCount(prev => prev + 1);
+    const decrementar = () => setCount(prev => prev - 1);
+    const resetar = () => setCount(inicial);
+
+    return { count, incrementar, decrementar, resetar };
+  }
+
+Usando o hook:
+  function MeuComponente() {
+    const { count, incrementar, resetar } = useContador(0);
+    return (
+      <div>
+        <p>{count}</p>
+        <button onClick={incrementar}>+1</button>
+        <button onClick={resetar}>Resetar</button>
+      </div>
+    );
+  }
+
+Regras dos Hooks:
+  1. Só chame hooks no TOPO do componente/hook
+  2. Nunca dentro de if, for ou funções aninhadas
+  3. Só chame em componentes React ou outros hooks
+
+Exemplos úteis:
+  useLocalStorage(key, valor) → estado persistido
+  useWindowSize() → largura/altura da janela
+  useFetch(url) → busca dados com loading/error`,
+        starterCode: 'import { useState } from "react";\n// Crie o custom hook\n',
+        solution: 'import { useState } from "react";\n\nfunction useContador(inicial = 0) {\n  const [count, setCount] = useState(inicial);\n  const incrementar = () => setCount(c => c + 1);\n  const decrementar = () => setCount(c => c - 1);\n  const resetar = () => setCount(inicial);\n  return { count, incrementar, decrementar, resetar };\n}',
+        expectedOutput: "useContador",
+        hints: ["Custom hooks começam com 'use'", "Retorne estado e funções em um objeto", "Use useState internamente"],
+        xpReward: 25,
+      },
+      {
+        id: "3-8",
+        title: "useContext",
+        description: "Crie um **ThemeContext** com React Context API que fornece o tema atual ('dark' ou 'light') para componentes filhos.",
+        theory: `useContext resolve o problema de "prop drilling" — passar props por muitos níveis de componentes.
+
+Criando o Context:
+  import { createContext, useContext, useState } from "react";
+
+  const ThemeContext = createContext("light");
+
+  function ThemeProvider({ children }) {
+    const [tema, setTema] = useState("light");
+    const toggleTema = () =>
+      setTema(t => t === "light" ? "dark" : "light");
+
+    return (
+      <ThemeContext.Provider value={{ tema, toggleTema }}>
+        {children}
+      </ThemeContext.Provider>
+    );
+  }
+
+Consumindo o Context:
+  function Botao() {
+    const { tema, toggleTema } = useContext(ThemeContext);
+    return (
+      <button
+        style={{ background: tema === "dark" ? "#333" : "#fff" }}
+        onClick={toggleTema}
+      >
+        Tema: {tema}
+      </button>
+    );
+  }
+
+Usando:
+  <ThemeProvider>
+    <App />    {/* todos os filhos acessam o tema */}
+  </ThemeProvider>
+
+Quando usar Context:
+  ✅ Tema, idioma, autenticação, preferências globais
+  ❌ Estado local de um formulário (use useState)`,
+        starterCode: 'import { createContext, useContext } from "react";\n// Crie o context\n',
+        solution: 'import { createContext, useContext, useState } from "react";\n\nconst ThemeContext = createContext("light");\n\nfunction ThemeProvider({ children }) {\n  const [tema, setTema] = useState("light");\n  return (\n    <ThemeContext.Provider value={tema}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}',
+        expectedOutput: "ThemeContext",
+        hints: ["createContext() cria o contexto", "Provider envolve os componentes filhos", "useContext(Context) consome o valor"],
+        xpReward: 25,
+        quiz: [
+          { question: "Qual problema o useContext resolve?", options: ["Performance lenta", "Prop drilling", "Rerenders excessivos", "Falta de tipagem"], correctIndex: 1 },
+        ],
       },
     ],
   },
@@ -1212,269 +1508,205 @@ Dica: Sempre teste seu site em diferentes tamanhos! Use DevTools > Toggle Device
         hints: ["@media (max-width: 768px) { ... }", "Coloque as regras CSS dentro da media query", "max-width para telas menores que"],
         xpReward: 20,
       },
-    ],
-  },
-  {
-    id: "5",
-    title: "Node.js Backend",
-    language: "Node.js",
-    emoji: "🚀",
-    level: "Avançado",
-    duration: "35h",
-    students: 4300,
-    progress: 10,
-    color: "accent",
-    tags: ["Novo"],
-    description: "Construa APIs REST com Node.js, Express, middlewares, autenticação e deploy.",
-    lessons: [
       {
-        id: "5-1",
-        title: "Hello Server",
-        description: "Crie um servidor HTTP básico com Node.js que responde **\"Servidor rodando!\"** na porta 3000.",
-        theory: `Node.js permite rodar JavaScript fora do navegador — no servidor! Com ele você cria APIs, servidores web e ferramentas de linha de comando.
+        id: "4-7",
+        title: "Pseudo-elementos",
+        description: "Use **::before** para adicionar um emoji 🔥 antes de todo elemento `.destaque`.",
+        theory: `Pseudo-elementos criam "elementos virtuais" dentro do CSS — sem adicionar HTML extra!
 
-O módulo http (nativo do Node):
-  const http = require("http");
+Pseudo-elementos principais:
+  ::before → insere conteúdo ANTES do elemento
+  ::after  → insere conteúdo DEPOIS do elemento
+  ::first-line → estiliza a primeira linha de texto
+  ::first-letter → estiliza a primeira letra
+  ::selection → estiliza texto selecionado
 
-  const server = http.createServer((req, res) => {
-    // req = dados da requisição (URL, método, headers)
-    // res = objeto de resposta (o que enviar de volta)
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Olá do servidor!");
-  });
-
-  server.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
-  });
-
-Conceitos importantes:
-• require() → importa módulos
-• createServer() → cria o servidor HTTP
-• O callback (req, res) roda a cada requisição
-• res.end() → envia a resposta e encerra
-• server.listen(porta) → inicia o servidor
-
-Para testar: abra http://localhost:3000 no navegador!
-
-Na prática, usamos frameworks como Express que simplificam muito esse processo.`,
-        starterCode: 'const http = require("http");\n// Crie o servidor\n',
-        solution: 'const http = require("http");\nconst server = http.createServer((req, res) => {\n  res.end("Servidor rodando!");\n});\nserver.listen(3000);',
-        expectedOutput: "Servidor rodando!",
-        hints: ["http.createServer((req, res) => { ... })", "res.end() envia a resposta", "server.listen(3000) inicia na porta"],
-        xpReward: 10,
-      },
-      {
-        id: "5-2",
-        title: "Express Básico",
-        description: "Crie um app Express com uma rota GET `/` que retorna o JSON `{\"mensagem\": \"API funcionando!\"}`.",
-        theory: `Express é o framework web mais popular do Node.js. Ele simplifica a criação de servidores e APIs REST.
-
-Instalando: npm install express
-
-Criando um app Express:
-  const express = require("express");
-  const app = express();
-
-  app.get("/", (req, res) => {
-    res.json({ mensagem: "Olá!" });
-  });
-
-  app.listen(3000, () => {
-    console.log("API rodando na porta 3000");
-  });
-
-Métodos HTTP (verbos):
-  app.get()    → buscar dados (leitura)
-  app.post()   → criar dados
-  app.put()    → atualizar dados (completo)
-  app.patch()  → atualizar dados (parcial)
-  app.delete() → deletar dados
-
-Métodos de resposta:
-  res.send("texto")           → envia texto
-  res.json({ chave: "valor" }) → envia JSON
-  res.status(404).json({...})  → define status + JSON
-  res.redirect("/outra-rota")  → redireciona
-
-O Express é a base para criar qualquer API REST profissional em Node.js!`,
-        starterCode: 'const express = require("express");\nconst app = express();\n// Crie a rota\n',
-        solution: 'const express = require("express");\nconst app = express();\napp.get("/", (req, res) => {\n  res.json({ mensagem: "API funcionando!" });\n});\napp.listen(3000);',
-        expectedOutput: "API funcionando!",
-        hints: ["app.get(\"/\", (req, res) => { ... })", "res.json() envia JSON", "Não esqueça do app.listen()"],
-        xpReward: 15,
-      },
-      {
-        id: "5-3",
-        title: "Rotas e Parâmetros",
-        description: "Crie uma rota GET `/users/:id` que retorna o id do usuário como JSON.",
-        theory: `Rotas com parâmetros permitem criar URLs dinâmicas. O Express usa :nomeDoParametro na definição da rota.
-
-Parâmetros de rota (req.params):
-  app.get("/users/:id", (req, res) => {
-    const userId = req.params.id;
-    res.json({ id: userId });
-  });
-  // GET /users/42 → { id: "42" }
-
-Múltiplos parâmetros:
-  app.get("/cursos/:cursoId/aulas/:aulaId", (req, res) => {
-    const { cursoId, aulaId } = req.params;
-    res.json({ cursoId, aulaId });
-  });
-  // GET /cursos/3/aulas/7 → { cursoId: "3", aulaId: "7" }
-
-Query strings (req.query):
-  // GET /users?nome=Ana&idade=25
-  app.get("/users", (req, res) => {
-    const { nome, idade } = req.query;
-    res.json({ nome, idade });
-  });
-
-Diferença:
-• Parâmetros de rota → dados obrigatórios (parte da URL)
-• Query strings → dados opcionais (após o ?)
-
-Dica: Parâmetros são SEMPRE strings! Converta com Number() ou parseInt() se precisar de números.`,
-        starterCode: '// Rota com parâmetro\n',
-        solution: 'app.get("/users/:id", (req, res) => {\n  res.json({ id: req.params.id });\n});',
-        expectedOutput: "req.params",
-        hints: ["Use :id na rota para parâmetros", "req.params.id acessa o valor", "res.json() para retornar JSON"],
-        xpReward: 15,
-      },
-      {
-        id: "5-4",
-        title: "Middleware",
-        description: "Crie um middleware que loga **\"Requisição recebida: [método] [url]\"** antes de cada request.",
-        theory: `Middlewares são funções que processam a requisição ANTES de chegar na rota final. São como "camadas" que a requisição atravessa.
-
-Estrutura de um middleware:
-  function meuMiddleware(req, res, next) {
-    // faz algo com req/res
-    next();  // passa para o próximo middleware/rota
+Sintaxe:
+  .destaque::before {
+    content: "🔥 ";  /* OBRIGATÓRIO! */
   }
 
-Aplicando globalmente (todas as rotas):
-  app.use(meuMiddleware);
+  .citacao::before {
+    content: """;
+    font-size: 3rem;
+    color: purple;
+  }
 
-Aplicando em rota específica:
-  app.get("/admin", verificarAuth, (req, res) => {
-    res.json({ acesso: "permitido" });
-  });
+Usos criativos:
+  /* Linha decorativa */
+  .titulo::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: purple;
+    margin-top: 8px;
+  }
 
-Middlewares comuns:
-  // Logger
-  app.use((req, res, next) => {
-    console.log(\`\${req.method} \${req.url}\`);
-    next();
-  });
+  /* Tooltip */
+  .info::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+  }
 
-  // CORS
-  app.use(cors());
-
-  // Parse JSON do body
-  app.use(express.json());
-
-  // Servir arquivos estáticos
-  app.use(express.static("public"));
-
-Ordem importa! Middlewares rodam na ordem em que são declarados. Se next() não for chamado, a requisição "trava".`,
-        starterCode: '// Crie o middleware\n',
-        solution: 'app.use((req, res, next) => {\n  console.log(`Requisição recebida: ${req.method} ${req.url}`);\n  next();\n});',
-        expectedOutput: "Requisição recebida",
-        hints: ["app.use((req, res, next) => { ... })", "Chame next() para continuar o fluxo", "req.method e req.url dão info da requisição"],
+IMPORTANTE: ::before e ::after PRECISAM da propriedade content para aparecer, mesmo que vazia (content: "").`,
+        starterCode: '/* Use pseudo-elementos */\n',
+        solution: '.destaque::before {\n  content: "🔥 ";\n}',
+        expectedOutput: "::before",
+        hints: ["::before insere conteúdo antes", "content: é OBRIGATÓRIO", '.destaque::before { content: "🔥 "; }'],
         xpReward: 20,
       },
       {
-        id: "5-5",
-        title: "POST e Body Parser",
-        description: "Crie uma rota POST `/users` que recebe `nome` e `email` no body e retorna o usuário criado.",
-        theory: `Requisições POST enviam dados no corpo (body) da requisição — usado para criar recursos.
+        id: "4-8",
+        title: "Transitions",
+        description: "Crie um botão que muda de cor suavemente ao passar o mouse, usando **transition** com duração de 0.3s.",
+        theory: `Transitions criam animações suaves entre dois estados de um elemento (ex: hover, focus, active).
 
-Habilitando parse de JSON:
-  app.use(express.json());
-  // Sem isso, req.body será undefined!
+Sintaxe:
+  transition: propriedade duração timing-function delay;
 
-Criando rota POST:
-  app.post("/users", (req, res) => {
-    const { nome, email } = req.body;
-    // Aqui salvaria no banco de dados
-    const novoUser = { id: Date.now(), nome, email };
-    res.status(201).json(novoUser);
-  });
+Exemplo:
+  .botao {
+    background: #6c5ce7;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
 
-Status codes importantes:
-  200 → OK (sucesso geral)
-  201 → Created (recurso criado)
-  400 → Bad Request (dados inválidos)
-  401 → Unauthorized (não autenticado)
-  404 → Not Found (não encontrado)
-  500 → Internal Server Error
+  .botao:hover {
+    background: #5a4bd1;
+  }
 
-Validando dados:
-  app.post("/users", (req, res) => {
-    const { nome, email } = req.body;
-    
-    if (!nome || !email) {
-      return res.status(400).json({
-        erro: "Nome e email são obrigatórios"
-      });
-    }
+Múltiplas propriedades:
+  transition: background 0.3s ease, transform 0.2s ease;
 
-    res.status(201).json({ nome, email });
-  });
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
 
-Para testar POST, use ferramentas como Postman, Insomnia ou curl.`,
-        starterCode: 'app.use(express.json());\n// Crie a rota POST\n',
-        solution: 'app.use(express.json());\napp.post("/users", (req, res) => {\n  const { nome, email } = req.body;\n  res.status(201).json({ nome, email });\n});',
-        expectedOutput: "req.body",
-        hints: ["express.json() faz parse do body", "req.body acessa os dados enviados", "res.status(201).json() para criação"],
+Todas as propriedades:
+  transition: all 0.3s ease;  /* anima tudo (pode ser pesado) */
+
+Timing functions:
+  ease     → início lento, meio rápido, fim lento (padrão)
+  linear   → velocidade constante
+  ease-in  → início lento
+  ease-out → fim lento
+  ease-in-out → início e fim lentos
+  cubic-bezier(x1,y1,x2,y2) → personalizado`,
+        starterCode: '.botao {\n  /* Adicione transition */\n}\n.botao:hover {\n  /* Estado hover */\n}\n',
+        solution: '.botao {\n  background: #6c5ce7;\n  color: white;\n  padding: 12px 24px;\n  transition: background 0.3s ease;\n}\n.botao:hover {\n  background: #5a4bd1;\n}',
+        expectedOutput: "transition",
+        hints: ["transition: propriedade duração timing", "Defina o estado normal e o :hover", "0.3s é uma boa duração para hover"],
         xpReward: 20,
       },
       {
-        id: "5-6",
-        title: "Tratamento de Erros",
-        description: "Crie um middleware de erro que captura exceções e retorna status **500** com uma mensagem de erro.",
-        theory: `Tratamento de erros é essencial para APIs robustas. O Express tem um padrão para middlewares de erro.
+        id: "5-7",
+        title: "JWT Auth",
+        description: "Crie um middleware que verifica um **token JWT** no header Authorization e protege uma rota.",
+        theory: `JWT (JSON Web Token) é o padrão para autenticação em APIs. O servidor gera um token após login e o cliente envia em cada requisição.
 
-Middleware de erro (4 parâmetros!):
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-      erro: "Algo deu errado no servidor!"
-    });
-  });
+Fluxo:
+  1. Cliente faz login (email + senha)
+  2. Servidor valida e retorna um JWT
+  3. Cliente envia o JWT no header: Authorization: Bearer <token>
+  4. Servidor verifica o JWT em cada requisição
 
-IMPORTANTE: O middleware de erro DEVE ter 4 parâmetros (err, req, res, next). É assim que o Express reconhece como handler de erro.
+Instalação: npm install jsonwebtoken
 
-Lançando erros nas rotas:
-  app.get("/users/:id", (req, res, next) => {
+Gerando um token:
+  const jwt = require("jsonwebtoken");
+  const SECRET = "minha-chave-secreta";
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email },  // payload
+    SECRET,
+    { expiresIn: "1h" }  // expira em 1 hora
+  );
+
+Verificando o token (middleware):
+  function autenticar(req, res, next) {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ erro: "Token não fornecido" });
+
     try {
-      const user = buscarUser(req.params.id);
-      if (!user) {
-        const erro = new Error("Usuário não encontrado");
-        erro.status = 404;
-        throw erro;
-      }
-      res.json(user);
-    } catch (err) {
-      next(err);  // passa o erro para o middleware de erro
+      const decoded = jwt.verify(token, SECRET);
+      req.usuario = decoded;  // anexa ao request
+      next();
+    } catch {
+      res.status(401).json({ erro: "Token inválido" });
     }
-  });
+  }
 
-Middleware de erro personalizado:
-  app.use((err, req, res, next) => {
-    const status = err.status || 500;
-    res.status(status).json({
-      erro: err.message || "Erro interno",
-      status
-    });
-  });
+  app.get("/perfil", autenticar, (req, res) => {
+    res.json({ usuario: req.usuario });
+  });`,
+        starterCode: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n// Crie o middleware\n',
+        solution: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n\nfunction autenticar(req, res, next) {\n  const token = req.headers.authorization?.split(" ")[1];\n  if (!token) return res.status(401).json({ erro: "Token não fornecido" });\n  try {\n    req.usuario = jwt.verify(token, SECRET);\n    next();\n  } catch {\n    res.status(401).json({ erro: "Token inválido" });\n  }\n}',
+        expectedOutput: "jwt.verify",
+        hints: ["Extraia o token do header Authorization", "jwt.verify() valida o token", "Use try/catch para tokens inválidos"],
+        xpReward: 25,
+      },
+      {
+        id: "5-8",
+        title: "Padrão MVC",
+        description: "Organize uma rota de usuários seguindo o padrão **MVC**: crie um controller e um model separados.",
+        theory: `MVC (Model-View-Controller) organiza o código em camadas com responsabilidades claras.
 
-Dica: Sempre coloque o middleware de erro DEPOIS de todas as rotas!`,
-        starterCode: '// Middleware de erro\n',
-        solution: 'app.use((err, req, res, next) => {\n  console.error(err.stack);\n  res.status(500).json({ erro: "Algo deu errado!" });\n});',
-        expectedOutput: "status(500)",
-        hints: ["Middleware de erro tem 4 parâmetros: err, req, res, next", "Use res.status(500)", "console.error para logar o erro"],
+Model → acessa e manipula dados:
+  // models/userModel.js
+  const users = [];
+  
+  const UserModel = {
+    getAll: () => users,
+    getById: (id) => users.find(u => u.id === id),
+    create: (data) => {
+      const user = { id: Date.now(), ...data };
+      users.push(user);
+      return user;
+    }
+  };
+  module.exports = UserModel;
+
+Controller → lógica de negócio:
+  // controllers/userController.js
+  const UserModel = require("../models/userModel");
+
+  const UserController = {
+    listar: (req, res) => {
+      res.json(UserModel.getAll());
+    },
+    criar: (req, res) => {
+      const user = UserModel.create(req.body);
+      res.status(201).json(user);
+    }
+  };
+  module.exports = UserController;
+
+Routes → define as rotas:
+  // routes/userRoutes.js
+  const router = require("express").Router();
+  const UserController = require("../controllers/userController");
+
+  router.get("/", UserController.listar);
+  router.post("/", UserController.criar);
+  module.exports = router;
+
+  // app.js
+  app.use("/users", userRoutes);
+
+Benefícios: código organizado, testável, escalável.`,
+        starterCode: '// Organize em MVC\n',
+        solution: '// Model\nconst users = [];\nconst getAll = () => users;\nconst create = (data) => { const u = {id: Date.now(), ...data}; users.push(u); return u; };\n\n// Controller\nconst listar = (req, res) => res.json(getAll());\nconst criar = (req, res) => res.status(201).json(create(req.body));',
+        expectedOutput: "Controller",
+        hints: ["Model cuida dos dados", "Controller cuida da lógica", "Routes conecta URLs aos controllers"],
         xpReward: 25,
       },
     ],
@@ -1748,6 +1980,100 @@ Ordem das cláusulas:
         hints: ["GROUP BY agrupa resultados", "COUNT() conta registros", "Use LEFT JOIN para incluir quem não tem pedidos"],
         xpReward: 25,
       },
+      {
+        id: "6-7",
+        title: "Subqueries",
+        description: "Use uma **subquery** para encontrar os usuários cuja idade é maior que a média de idade de todos os usuários.",
+        theory: `Subqueries (subconsultas) são consultas dentro de outras consultas. Permitem usar o resultado de um SELECT como parte de outro.
+
+Subquery no WHERE:
+  SELECT * FROM usuarios
+  WHERE idade > (SELECT AVG(idade) FROM usuarios);
+  -- Retorna usuários acima da média de idade
+
+Subquery no FROM (tabela derivada):
+  SELECT nome, total
+  FROM (
+    SELECT u.nome, COUNT(p.id) as total
+    FROM usuarios u
+    LEFT JOIN pedidos p ON u.id = p.usuario_id
+    GROUP BY u.nome
+  ) as contagem
+  WHERE total > 5;
+
+Subquery com IN:
+  SELECT * FROM produtos
+  WHERE categoria_id IN (
+    SELECT id FROM categorias WHERE ativa = true
+  );
+
+Subquery com EXISTS:
+  SELECT * FROM usuarios u
+  WHERE EXISTS (
+    SELECT 1 FROM pedidos p WHERE p.usuario_id = u.id
+  );
+  -- Usuários que têm pelo menos um pedido
+
+Dica: Subqueries podem ser lentas. Em muitos casos, JOIN é mais eficiente!`,
+        starterCode: '-- Use subquery\n',
+        solution: 'SELECT * FROM usuarios\nWHERE idade > (SELECT AVG(idade) FROM usuarios);',
+        expectedOutput: "SELECT AVG",
+        hints: ["Subquery fica entre parênteses", "AVG() calcula a média", "A subquery roda primeiro e o resultado é usado no WHERE"],
+        xpReward: 25,
+      },
+      {
+        id: "6-8",
+        title: "CREATE TABLE",
+        description: "Crie uma tabela **produtos** com campos: `id` (serial primary key), `nome` (varchar), `preco` (decimal) e `estoque` (integer com default 0).",
+        theory: `CREATE TABLE define a estrutura de uma nova tabela no banco de dados.
+
+Sintaxe:
+  CREATE TABLE nome_tabela (
+    coluna1 tipo restricoes,
+    coluna2 tipo restricoes
+  );
+
+Tipos de dados comuns:
+  INTEGER / INT      → números inteiros
+  SERIAL             → inteiro auto-incremento (ideal para id)
+  VARCHAR(n)         → texto com limite de n caracteres
+  TEXT               → texto sem limite
+  DECIMAL(p, s)      → número decimal (p dígitos, s casas)
+  BOOLEAN            → true/false
+  DATE               → data
+  TIMESTAMP          → data + hora
+
+Restrições (constraints):
+  PRIMARY KEY → identificador único
+  NOT NULL    → campo obrigatório
+  UNIQUE      → valor único na tabela
+  DEFAULT val → valor padrão
+  REFERENCES  → chave estrangeira
+
+Exemplo completo:
+  CREATE TABLE produtos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL,
+    estoque INTEGER DEFAULT 0,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+Chave estrangeira:
+  CREATE TABLE pedidos (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES usuarios(id),
+    valor DECIMAL(10, 2)
+  );`,
+        starterCode: '-- Crie a tabela\n',
+        solution: 'CREATE TABLE produtos (\n  id SERIAL PRIMARY KEY,\n  nome VARCHAR(100) NOT NULL,\n  preco DECIMAL(10, 2) NOT NULL,\n  estoque INTEGER DEFAULT 0\n);',
+        expectedOutput: "CREATE TABLE",
+        hints: ["CREATE TABLE nome ( ... )", "SERIAL PRIMARY KEY para id auto-incremento", "DEFAULT define valor padrão"],
+        xpReward: 20,
+        quiz: [
+          { question: "O que SERIAL faz?", options: ["Cria texto", "Gera ID auto-incremento", "Define chave estrangeira", "Valida formato"], correctIndex: 1 },
+        ],
+      },
     ],
   },
   {
@@ -1965,6 +2291,44 @@ Code review — ao revisar:
         expectedOutput: "git push",
         hints: ["Primeiro faça push da branch", "No GitHub, clique em Compare & pull request", "Descreva suas mudanças no PR"],
         xpReward: 20,
+      },
+      {
+        id: "7-6",
+        title: "git stash",
+        description: "Use **git stash** para salvar temporariamente mudanças não commitadas e depois restaurá-las.",
+        theory: `git stash "guarda" suas mudanças em uma pilha temporária, deixando o diretório de trabalho limpo. Ideal para trocar de branch sem commitar trabalho incompleto.
+
+Comandos:
+  git stash            → guarda mudanças (tracked files)
+  git stash -u         → inclui arquivos novos (untracked)
+  git stash pop        → restaura E remove do stash
+  git stash apply      → restaura mas MANTÉM no stash
+  git stash list       → lista todos os stashes
+  git stash drop       → remove o stash mais recente
+  git stash clear      → remove todos os stashes
+
+Fluxo típico:
+  # Trabalhando na feature...
+  git stash              # guarda mudanças
+  git checkout main      # vai para main
+  # Faz hotfix urgente...
+  git checkout feature   # volta para feature
+  git stash pop          # restaura mudanças
+
+Stash com mensagem:
+  git stash save "WIP: formulário de login"
+  git stash list
+  # stash@{0}: On feature: WIP: formulário de login
+
+Aplicar stash específico:
+  git stash apply stash@{2}
+
+Dica: Stash é como um "ctrl+z temporário" — use para pausar o trabalho sem perder nada!`,
+        starterCode: '# Use git stash\n',
+        solution: 'git stash\n# ... faz outra coisa ...\ngit stash pop',
+        expectedOutput: "git stash",
+        hints: ["git stash guarda mudanças temporariamente", "git stash pop restaura as mudanças", "Útil para trocar de branch sem commit"],
+        xpReward: 15,
       },
     ],
   },
@@ -2242,6 +2606,501 @@ Nota: pop(0) é O(n). Para performance, use collections.deque!`,
         expectedOutput: "A",
         hints: ["Fila: primeiro a entrar, primeiro a sair (FIFO)", "append para enqueue", "pop(0) para dequeue (remove do início)"],
         xpReward: 25,
+      },
+      {
+        id: "8-7",
+        title: "Hash Table",
+        description: "Implemente uma **hash table** simples em Python com métodos `put` e `get`.",
+        theory: `Hash Table (tabela hash) é uma estrutura que armazena pares chave-valor com acesso em O(1) — tempo constante!
+
+Como funciona:
+  1. Uma função hash converte a chave em um índice
+  2. O valor é armazenado nesse índice
+  3. Para buscar, aplica o hash na chave e acessa direto
+
+Função hash simples:
+  def hash_func(key, size):
+      return sum(ord(c) for c in str(key)) % size
+
+Implementação:
+  class HashTable:
+      def __init__(self, size=10):
+          self.size = size
+          self.table = [[] for _ in range(size)]
+
+      def _hash(self, key):
+          return hash(key) % self.size
+
+      def put(self, key, value):
+          idx = self._hash(key)
+          # Atualiza se a chave já existe
+          for i, (k, v) in enumerate(self.table[idx]):
+              if k == key:
+                  self.table[idx][i] = (key, value)
+                  return
+          self.table[idx].append((key, value))
+
+      def get(self, key):
+          idx = self._hash(key)
+          for k, v in self.table[idx]:
+              if k == key:
+                  return v
+          return None
+
+Colisões: quando duas chaves geram o mesmo índice.
+Soluções: chaining (lista encadeada) ou open addressing.
+
+Em Python, dict É uma hash table! dict["chave"] usa hash internamente.`,
+        starterCode: 'class HashTable:\n    # Implemente aqui\n    pass\n',
+        solution: 'class HashTable:\n    def __init__(self):\n        self.size = 10\n        self.table = [[] for _ in range(self.size)]\n    def _hash(self, key):\n        return hash(key) % self.size\n    def put(self, key, value):\n        idx = self._hash(key)\n        for i, (k, v) in enumerate(self.table[idx]):\n            if k == key:\n                self.table[idx][i] = (key, value)\n                return\n        self.table[idx].append((key, value))\n    def get(self, key):\n        idx = self._hash(key)\n        for k, v in self.table[idx]:\n            if k == key:\n                return v\n        return None\n\nht = HashTable()\nht.put("nome", "Ana")\nprint(ht.get("nome"))',
+        expectedOutput: "Ana",
+        hints: ["Hash converte chave em índice", "Use lista de listas para colisões", "hash(key) % size gera o índice"],
+        xpReward: 30,
+      },
+      {
+        id: "8-8",
+        title: "Árvore Binária",
+        description: "Implemente uma **árvore binária de busca** com método `inserir` e percurso **in-order**.",
+        theory: `Árvore Binária de Busca (BST) organiza dados de forma hierárquica. Cada nó tem no máximo 2 filhos.
+
+Regra da BST:
+  • Filho esquerdo < nó pai
+  • Filho direito > nó pai
+
+Exemplo (inserindo 5, 3, 7, 1, 4):
+        5
+       / \\
+      3   7
+     / \\
+    1   4
+
+Implementação:
+  class No:
+      def __init__(self, valor):
+          self.valor = valor
+          self.esquerda = None
+          self.direita = None
+
+  class ArvoreBST:
+      def __init__(self):
+          self.raiz = None
+
+      def inserir(self, valor):
+          if not self.raiz:
+              self.raiz = No(valor)
+          else:
+              self._inserir(self.raiz, valor)
+
+      def _inserir(self, no, valor):
+          if valor < no.valor:
+              if no.esquerda is None:
+                  no.esquerda = No(valor)
+              else:
+                  self._inserir(no.esquerda, valor)
+          else:
+              if no.direita is None:
+                  no.direita = No(valor)
+              else:
+                  self._inserir(no.direita, valor)
+
+Percursos:
+  In-order (esq → raiz → dir): visita em ordem crescente
+  Pre-order (raiz → esq → dir): útil para copiar a árvore
+  Post-order (esq → dir → raiz): útil para deletar
+
+Complexidade: O(log n) para busca/inserção (árvore balanceada).`,
+        starterCode: 'class No:\n    pass\n\nclass ArvoreBST:\n    # Implemente aqui\n    pass\n',
+        solution: 'class No:\n    def __init__(self, valor):\n        self.valor = valor\n        self.esquerda = None\n        self.direita = None\n\nclass ArvoreBST:\n    def __init__(self):\n        self.raiz = None\n    def inserir(self, valor):\n        if not self.raiz:\n            self.raiz = No(valor)\n        else:\n            self._inserir(self.raiz, valor)\n    def _inserir(self, no, valor):\n        if valor < no.valor:\n            if no.esquerda is None:\n                no.esquerda = No(valor)\n            else:\n                self._inserir(no.esquerda, valor)\n        else:\n            if no.direita is None:\n                no.direita = No(valor)\n            else:\n                self._inserir(no.direita, valor)\n    def in_order(self, no):\n        if no:\n            self.in_order(no.esquerda)\n            print(no.valor, end=" ")\n            self.in_order(no.direita)\n\narv = ArvoreBST()\nfor v in [5, 3, 7, 1, 4]:\n    arv.inserir(v)\narv.in_order(arv.raiz)',
+        expectedOutput: "1 3 4 5 7",
+        hints: ["Menor vai para esquerda, maior para direita", "Use recursão para inserir", "In-order: esquerda → raiz → direita"],
+        xpReward: 30,
+      },
+    ],
+  },
+  {
+    id: "9",
+    title: "HTML Fundamentos",
+    language: "HTML",
+    emoji: "📄",
+    level: "Iniciante",
+    duration: "15h",
+    students: 15200,
+    progress: 0,
+    color: "quest-yellow",
+    tags: ["Novo"],
+    description: "Aprenda HTML do zero — a linguagem base de toda página web. Estrutura, tags, formulários e semântica.",
+    lessons: [
+      {
+        id: "9-1",
+        title: "Estrutura Básica",
+        description: "Crie a estrutura HTML básica com **DOCTYPE**, **html**, **head** (com título) e **body** com um parágrafo.",
+        theory: `HTML (HyperText Markup Language) é a linguagem que estrutura toda página web. Não é uma linguagem de programação — é uma linguagem de MARCAÇÃO.
+
+Estrutura básica de toda página HTML:
+  <!DOCTYPE html>
+  <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <title>Minha Página</title>
+  </head>
+  <body>
+    <p>Conteúdo visível aqui!</p>
+  </body>
+  </html>
+
+Explicando cada parte:
+  <!DOCTYPE html> → diz ao navegador que é HTML5
+  <html> → elemento raiz (contém tudo)
+  <head> → metadados (título, charset, CSS, etc.)
+  <body> → conteúdo visível da página
+
+Tags funcionam em pares:
+  <tag>conteúdo</tag>  → tag de abertura e fechamento
+
+Algumas tags são auto-fechadas:
+  <img />, <br />, <hr />, <input />
+
+Atributos adicionam informações:
+  <html lang="pt-BR">
+  <meta charset="UTF-8">
+  <a href="url">link</a>`,
+        starterCode: '<!-- Crie a estrutura HTML -->\n',
+        solution: '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Minha Página</title>\n</head>\n<body>\n  <p>Olá, HTML!</p>\n</body>\n</html>',
+        expectedOutput: "<!DOCTYPE html>",
+        hints: ["Comece com <!DOCTYPE html>", "<html> envolve tudo", "<head> para metadados, <body> para conteúdo"],
+        xpReward: 10,
+        quiz: [
+          { question: "O que o <!DOCTYPE html> faz?", options: ["Cria um documento", "Informa que é HTML5", "Adiciona um título", "Importa CSS"], correctIndex: 1 },
+          { question: "Onde fica o conteúdo visível da página?", options: ["<head>", "<meta>", "<body>", "<html>"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "9-2",
+        title: "Títulos e Parágrafos",
+        description: "Crie um título **h1** com \"Meu Site\", um subtítulo **h2** com \"Sobre\" e um parágrafo descritivo.",
+        theory: `HTML tem 6 níveis de títulos (headings) e a tag <p> para parágrafos.
+
+Títulos — de h1 (maior) a h6 (menor):
+  <h1>Título Principal</h1>     → o mais importante
+  <h2>Subtítulo</h2>            → seções
+  <h3>Sub-subtítulo</h3>        → subseções
+  <h4>Nível 4</h4>
+  <h5>Nível 5</h5>
+  <h6>Nível 6</h6>              → o menor
+
+Regras de SEO e acessibilidade:
+  ✅ Use apenas UM h1 por página
+  ✅ Siga a hierarquia: h1 → h2 → h3 (não pule níveis)
+  ❌ Não use h1 só para deixar texto grande (use CSS)
+
+Parágrafos:
+  <p>Este é um parágrafo de texto. O navegador
+  adiciona espaço automaticamente acima e abaixo.</p>
+
+  <p>Segundo parágrafo. Cada <p> é um bloco separado.</p>
+
+Outras tags de texto:
+  <strong>negrito (importância)</strong>
+  <em>itálico (ênfase)</em>
+  <br> → quebra de linha (sem fechar)
+  <hr> → linha horizontal separadora`,
+        starterCode: '<!-- Títulos e parágrafos -->\n',
+        solution: '<h1>Meu Site</h1>\n<h2>Sobre</h2>\n<p>Este é um site criado para aprender HTML.</p>',
+        expectedOutput: "<h1>",
+        hints: ["<h1> é o título principal", "<h2> para subtítulos", "<p> para parágrafos"],
+        xpReward: 10,
+      },
+      {
+        id: "9-3",
+        title: "Links e Âncoras",
+        description: "Crie um link para **https://google.com** com o texto \"Ir para o Google\" que abre em uma **nova aba**.",
+        theory: `A tag <a> (âncora) cria links — a base da navegação na web!
+
+Sintaxe:
+  <a href="URL">Texto do link</a>
+
+Exemplos:
+  <a href="https://google.com">Google</a>
+  <a href="/sobre">Sobre nós</a>
+  <a href="#secao">Ir para seção</a>
+
+Atributos importantes:
+  href → destino do link (URL, caminho, âncora)
+  target="_blank" → abre em nova aba
+  rel="noopener noreferrer" → segurança com _blank
+  title → tooltip ao passar o mouse
+
+Link em nova aba (seguro):
+  <a href="https://google.com"
+     target="_blank"
+     rel="noopener noreferrer">
+    Google
+  </a>
+
+Tipos de links:
+  Absoluto: https://site.com/pagina
+  Relativo: /pagina, ./arquivo.html, ../outra-pasta
+  Âncora: #id-do-elemento (scroll na mesma página)
+  Email: mailto:email@site.com
+  Telefone: tel:+5511999999999
+
+Links para download:
+  <a href="arquivo.pdf" download>Baixar PDF</a>`,
+        starterCode: '<!-- Crie o link -->\n',
+        solution: '<a href="https://google.com" target="_blank" rel="noopener noreferrer">Ir para o Google</a>',
+        expectedOutput: '<a href=',
+        hints: ["<a href=\"url\">texto</a>", "target=\"_blank\" abre em nova aba", "rel=\"noopener noreferrer\" para segurança"],
+        xpReward: 15,
+        quiz: [
+          { question: "O que target=\"_blank\" faz?", options: ["Fecha a aba", "Abre em nova aba", "Remove o link", "Desabilita o link"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "9-4",
+        title: "Imagens",
+        description: "Adicione uma imagem com **src** apontando para \"foto.jpg\" e um texto alternativo (**alt**) descritivo.",
+        theory: `A tag <img> exibe imagens na página. É uma tag auto-fechada (não tem </img>).
+
+Sintaxe:
+  <img src="caminho/imagem.jpg" alt="Descrição da imagem">
+
+Atributos:
+  src → caminho ou URL da imagem (obrigatório)
+  alt → texto alternativo (obrigatório para acessibilidade!)
+  width → largura em pixels
+  height → altura em pixels
+  loading → "lazy" para carregar sob demanda
+
+Exemplos:
+  <img src="foto.jpg" alt="Foto de paisagem">
+  <img src="https://site.com/logo.png" alt="Logo da empresa">
+  <img src="avatar.png" alt="Avatar do usuário" width="100" height="100">
+
+  <!-- Lazy loading (carrega quando visível) -->
+  <img src="foto.jpg" alt="Foto" loading="lazy">
+
+Por que alt é importante:
+  1. Acessibilidade — leitores de tela leem o alt
+  2. SEO — buscadores indexam o alt
+  3. Fallback — aparece se a imagem não carregar
+
+Formatos de imagem:
+  .jpg/.jpeg → fotos (boa compressão)
+  .png → imagens com transparência
+  .svg → gráficos vetoriais (escalam sem perder qualidade)
+  .webp → formato moderno (menor tamanho)
+  .gif → animações simples`,
+        starterCode: '<!-- Adicione a imagem -->\n',
+        solution: '<img src="foto.jpg" alt="Uma bela paisagem natural">',
+        expectedOutput: '<img',
+        hints: ["<img src=\"\" alt=\"\">", "src é o caminho da imagem", "alt descreve a imagem para acessibilidade"],
+        xpReward: 15,
+      },
+      {
+        id: "9-5",
+        title: "Listas",
+        description: "Crie uma **lista não-ordenada** com 3 frutas e uma **lista ordenada** com 3 passos de uma receita.",
+        theory: `HTML tem dois tipos principais de listas:
+
+Lista não-ordenada (bullets):
+  <ul>
+    <li>Maçã</li>
+    <li>Banana</li>
+    <li>Uva</li>
+  </ul>
+
+Lista ordenada (números):
+  <ol>
+    <li>Pré-aqueça o forno</li>
+    <li>Misture os ingredientes</li>
+    <li>Asse por 30 minutos</li>
+  </ol>
+
+Lista de definições:
+  <dl>
+    <dt>HTML</dt>
+    <dd>Linguagem de marcação para web</dd>
+    <dt>CSS</dt>
+    <dd>Linguagem de estilização</dd>
+  </dl>
+
+Listas aninhadas:
+  <ul>
+    <li>Frutas
+      <ul>
+        <li>Maçã</li>
+        <li>Banana</li>
+      </ul>
+    </li>
+    <li>Legumes</li>
+  </ul>
+
+Atributos de <ol>:
+  type="A" → letras maiúsculas (A, B, C)
+  type="a" → letras minúsculas
+  type="I" → números romanos
+  start="5" → começa do 5
+  reversed → ordem reversa`,
+        starterCode: '<!-- Crie as listas -->\n',
+        solution: '<ul>\n  <li>Maçã</li>\n  <li>Banana</li>\n  <li>Uva</li>\n</ul>\n<ol>\n  <li>Pré-aqueça o forno</li>\n  <li>Misture os ingredientes</li>\n  <li>Asse por 30 minutos</li>\n</ol>',
+        expectedOutput: "<ul>",
+        hints: ["<ul> para lista não-ordenada", "<ol> para lista ordenada", "<li> para cada item"],
+        xpReward: 15,
+        quiz: [
+          { question: "Qual tag cria uma lista com números?", options: ["<ul>", "<ol>", "<li>", "<nl>"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "9-6",
+        title: "Tabelas",
+        description: "Crie uma tabela com cabeçalho (Nome, Idade, Cidade) e **2 linhas** de dados.",
+        theory: `Tabelas em HTML organizam dados em linhas e colunas.
+
+Estrutura:
+  <table>
+    <thead>         → cabeçalho
+      <tr>          → linha (table row)
+        <th>Nome</th>    → célula de cabeçalho
+        <th>Idade</th>
+      </tr>
+    </thead>
+    <tbody>         → corpo da tabela
+      <tr>
+        <td>Ana</td>     → célula de dados
+        <td>25</td>
+      </tr>
+    </tbody>
+  </table>
+
+Tags da tabela:
+  <table>  → container da tabela
+  <thead>  → grupo de cabeçalho
+  <tbody>  → grupo do corpo
+  <tfoot>  → grupo de rodapé
+  <tr>     → linha (table row)
+  <th>     → célula de cabeçalho (negrito e centralizado)
+  <td>     → célula de dados (table data)
+
+Mesclar células:
+  colspan="2" → mescla 2 colunas
+  rowspan="3" → mescla 3 linhas
+
+  <td colspan="2">Ocupa duas colunas</td>
+
+Dica: Use tabelas APENAS para dados tabulares. Para layout, use CSS Grid ou Flexbox!`,
+        starterCode: '<!-- Crie a tabela -->\n',
+        solution: '<table>\n  <thead>\n    <tr>\n      <th>Nome</th>\n      <th>Idade</th>\n      <th>Cidade</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Ana</td>\n      <td>25</td>\n      <td>São Paulo</td>\n    </tr>\n    <tr>\n      <td>Bruno</td>\n      <td>30</td>\n      <td>Rio de Janeiro</td>\n    </tr>\n  </tbody>\n</table>',
+        expectedOutput: "<table>",
+        hints: ["<table> contém tudo", "<tr> para linhas, <th> para cabeçalho", "<td> para dados"],
+        xpReward: 20,
+      },
+      {
+        id: "9-7",
+        title: "Formulários",
+        description: "Crie um formulário com campos de **nome** (text), **email** (email), e um botão de **enviar**.",
+        theory: `Formulários (<form>) coletam dados do usuário — login, cadastro, pesquisa, etc.
+
+Estrutura:
+  <form action="/enviar" method="POST">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+Tipos de input:
+  text     → texto livre
+  email    → valida formato de email
+  password → esconde caracteres
+  number   → apenas números
+  tel      → telefone
+  date     → seletor de data
+  checkbox → caixa de seleção
+  radio    → escolha única (grupo)
+  file     → upload de arquivo
+  range    → slider
+  color    → seletor de cor
+
+Atributos úteis:
+  required     → campo obrigatório
+  placeholder  → texto de exemplo
+  value        → valor padrão
+  disabled     → desabilitado
+  maxlength    → limite de caracteres
+  min / max    → limites numéricos
+  pattern      → regex de validação
+
+Outros elementos de form:
+  <textarea>   → texto multilinha
+  <select>     → dropdown
+  <option>     → opções do select`,
+        starterCode: '<!-- Crie o formulário -->\n',
+        solution: '<form>\n  <label for="nome">Nome:</label>\n  <input type="text" id="nome" name="nome" required>\n\n  <label for="email">Email:</label>\n  <input type="email" id="email" name="email" required>\n\n  <button type="submit">Enviar</button>\n</form>',
+        expectedOutput: "<form>",
+        hints: ["<form> envolve todos os campos", "<input type=\"text\"> para texto", "<button type=\"submit\"> para enviar"],
+        xpReward: 20,
+        quiz: [
+          { question: "Qual type valida formato de email?", options: ["text", "mail", "email", "address"], correctIndex: 2 },
+          { question: "O que o atributo 'required' faz?", options: ["Desabilita o campo", "Torna obrigatório", "Adiciona placeholder", "Limita caracteres"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "9-8",
+        title: "HTML Semântico",
+        description: "Estruture uma página usando tags semânticas: **header**, **nav**, **main**, **section**, **article** e **footer**.",
+        theory: `HTML semântico usa tags que descrevem o SIGNIFICADO do conteúdo, não apenas sua aparência.
+
+Tags semânticas:
+  <header>  → cabeçalho da página ou seção
+  <nav>     → navegação (menu, links)
+  <main>    → conteúdo principal (único por página)
+  <section> → seção temática
+  <article> → conteúdo independente (post, notícia)
+  <aside>   → conteúdo lateral (sidebar)
+  <footer>  → rodapé
+
+Exemplo completo:
+  <header>
+    <h1>Meu Blog</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/sobre">Sobre</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Posts Recentes</h2>
+      <article>
+        <h3>Aprendendo HTML</h3>
+        <p>HTML é a base da web...</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2024 Meu Blog</p>
+  </footer>
+
+Por que usar semântica?
+  1. Acessibilidade — leitores de tela entendem a estrutura
+  2. SEO — Google valoriza HTML semântico
+  3. Manutenção — código mais legível
+
+❌ Evite: <div> para tudo (div soup)
+✅ Prefira: tags semânticas quando possível`,
+        starterCode: '<!-- Use tags semânticas -->\n',
+        solution: '<header>\n  <h1>Meu Site</h1>\n  <nav>\n    <a href="/">Home</a>\n    <a href="/sobre">Sobre</a>\n  </nav>\n</header>\n<main>\n  <section>\n    <h2>Bem-vindo</h2>\n    <article>\n      <h3>Primeiro Post</h3>\n      <p>Conteúdo do post aqui.</p>\n    </article>\n  </section>\n</main>\n<footer>\n  <p>© 2024</p>\n</footer>',
+        expectedOutput: "<header>",
+        hints: ["<header> para o topo da página", "<main> para conteúdo principal", "<footer> para o rodapé"],
+        xpReward: 20,
+        quiz: [
+          { question: "Quantas tags <main> devem existir por página?", options: ["Nenhuma", "Uma", "Quantas quiser", "Duas"], correctIndex: 1 },
+          { question: "Qual tag é usada para navegação?", options: ["<menu>", "<links>", "<nav>", "<navigate>"], correctIndex: 2 },
+        ],
       },
     ],
   },
