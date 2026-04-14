@@ -1,43 +1,41 @@
 
 
-## Problema
+## Plano: Expandir conteúdo dos cursos e criar curso de HTML
 
-A validação atual (linha 58 de `EditorPage.tsx`) faz apenas:
-```js
-code.includes(lesson.expectedOutput) || code.includes(lesson.solution)
-```
-Isso exige que o código contenha exatamente a string esperada — qualquer espaço extra, acento diferente ou variação faz falhar.
+### Resumo
+Adicionar novas lições aos cursos existentes e criar um curso completo de HTML (curso 9).
 
-## Plano: Sistema de correção flexível
+### Alterações no arquivo `src/data/mockData.ts`
 
-### 1. Criar função de normalização e comparação (`src/utils/codeValidator.ts`)
+**1. Novas lições para cursos existentes**
 
-- **Normalizar** ambos os textos (código do aluno e solução/output esperado) antes de comparar:
-  - Remover espaços extras e trailing whitespace
-  - Normalizar acentos (Unicode NFC/NFD → comparação sem acento como fallback)
-  - Ignorar diferenças entre aspas simples/duplas
-  - Colapsar múltiplos espaços em um
-  - Trim de cada linha
-- **Comparação em 3 níveis**:
-  1. **Exata** → match perfeito (100% XP)
-  2. **Flexível** → match após normalização (100% XP, com toast "Correto!")
-  3. **Quase certo** → similaridade alta (ex: distância de Levenshtein ou tokens-chave presentes) → mostrar feedback parcial: "Quase lá! Veja a diferença:" com diff visual
+| Curso | Lições atuais | Novas lições a adicionar |
+|-------|--------------|--------------------------|
+| Python (1) | 8 | +2: List Comprehension, Try/Except |
+| JavaScript (2) | 8 | +2: Spread/Rest, Classes |
+| React (3) | 6 | +2: Custom Hooks, useContext |
+| CSS (4) | 6 | +2: Pseudo-elementos, Transitions |
+| Node.js (5) | 6 | +2: JWT Auth, MVC Pattern |
+| SQL (6) | 6 | +2: Subqueries, CREATE TABLE |
+| Git (7) | 5 | +1: git stash |
+| Algoritmos (8) | 6 | +2: Hash Table, Árvore Binária |
 
-### 2. Atualizar `handleRun` em `EditorPage.tsx`
+**2. Novo curso: HTML Fundamentos (id: "9")**
 
-- Substituir a verificação `code.includes()` pela nova função de validação
-- Mostrar feedback diferenciado:
-  - **Correto**: confetti + XP (como hoje)
-  - **Quase certo**: mensagem amarela mostrando o que falta ajustar, sem penalizar
-  - **Errado**: mensagem de erro (como hoje)
+Curso Iniciante com 8 lições:
+1. Estrutura básica (DOCTYPE, html, head, body)
+2. Títulos e parágrafos (h1-h6, p)
+3. Links e âncoras (a href)
+4. Imagens (img src, alt)
+5. Listas (ul, ol, li)
+6. Tabelas (table, tr, th, td)
+7. Formulários (form, input, button)
+8. Semântica (header, main, section, footer, nav, article)
 
-### 3. Feedback visual de "quase certo"
+Cada lição terá: theory, starterCode, solution, expectedOutput, hints, xpReward e quiz quando relevante.
 
-- Nova cor amarela/warning no painel de output
-- Texto como: "Quase certo! Seu código está funcionalmente correto. Pequenas diferenças encontradas."
-- Se a resposta é funcionalmente equivalente (só difere em espaços/acentos), **considerar como correta** e dar o XP
-
-### Arquivos modificados
-- `src/utils/codeValidator.ts` (novo)
-- `src/pages/EditorPage.tsx` (atualizar handleRun)
+### Detalhes técnicos
+- Arquivo modificado: `src/data/mockData.ts`
+- Nenhuma mudança em componentes ou rotas (o catálogo já renderiza dinamicamente)
+- O curso de HTML usará emoji 📄, level "Iniciante", ~15h, cor "quest-yellow", tag "Novo"
 
