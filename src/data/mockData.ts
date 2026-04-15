@@ -779,31 +779,31 @@ Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram cr
         id: "2-4",
         title: "Template Literals",
         description: "Crie variáveis `nome` e `lang` e use template literals para exibir: **\"Olá, [nome]! Bem-vindo ao [lang].\"**",
-        theory: `Template literals (ou template strings) usam crases (`) em vez de aspas e permitem interpolação de variáveis e expressões.
+        theory: `Template literals (ou template strings) usam crases (\`) em vez de aspas e permitem interpolação de variáveis e expressões.
 
 Sintaxe:
   const nome = "Ana";
-  const msg = `Olá, \${nome}!`;  // → "Olá, Ana!"
+  const msg = \`Olá, \${nome}!\`;  // → "Olá, Ana!"
 
 Interpolação com \${}:
   const a = 10, b = 20;
-  console.log(`Soma: \${a + b}`);  // → "Soma: 30"
-  console.log(`Dobro: \${a * 2}`); // → "Dobro: 20"
+  console.log(\`Soma: \${a + b}\`);  // → "Soma: 30"
+  console.log(\`Dobro: \${a * 2}\`); // → "Dobro: 20"
 
 Strings multilinha (sem precisar de \\n):
-  const html = `
+  const html = \`
     <div>
       <h1>\${titulo}</h1>
       <p>\${descricao}</p>
     </div>
-  `;
+  \`;
 
 Comparação com concatenação antiga:
   // Antigo (confuso):
   "Olá, " + nome + "! Você tem " + idade + " anos."
   
   // Moderno (limpo):
-  `Olá, \${nome}! Você tem \${idade} anos.`
+  \`Olá, \${nome}! Você tem \${idade} anos.\`
 
 Template literals são MUITO mais legíveis e são o padrão em código moderno!`,
         starterCode: '// Use template literals\n',
@@ -1031,7 +1031,7 @@ Sintaxe:
     }
 
     falar() {
-      return `\${this.nome} faz \${this.som}!`;
+      return \`\${this.nome} faz \${this.som}!\`;
     }
   }
 
@@ -1050,7 +1050,7 @@ Herança com extends:
     }
 
     buscar(item) {
-      return `\${this.nome} buscou \${item}!`;
+      return \`\${this.nome} buscou \${item}!\`;
     }
   }
 
@@ -1211,7 +1211,7 @@ Named exports — exportar várias coisas:
 Default export — uma exportação principal:
   // logger.js
   export default function log(msg) {
-    console.log(`[LOG] \${msg}`);
+    console.log(\`[LOG] \${msg}\`);
   }
 
   // main.js
