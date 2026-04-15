@@ -69,6 +69,8 @@ export const courses: Course[] = [
         description: "Seu primeiro programa! Use a função `print()` para exibir a mensagem **\"Olá, Mundo!\"** no console.",
         theory: `Em Python, a função print() é usada para exibir informações na tela (console). Ela é a primeira coisa que todo programador aprende!
 
+![Terminal Python mostrando o print](https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=300&fit=crop)
+
 Como funciona:
 • print() recebe um valor entre parênteses e o exibe no terminal.
 • Textos (strings) devem estar entre aspas — simples ('texto') ou duplas ("texto").
@@ -449,6 +451,8 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
         title: "Console.log",
         description: "Use `console.log()` para exibir **\"Olá, JavaScript!\"** no console.",
         theory: `console.log() é a função mais usada para depuração em JavaScript. Ela exibe valores no console do navegador ou terminal.
+
+![JavaScript no console do navegador](https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=600&h=300&fit=crop)
 
 Como usar:
   console.log("texto")     → exibe texto
@@ -879,6 +883,8 @@ Getters e Setters:
         description: "Crie um componente funcional `Saudacao` que exibe **\"Olá, React!\"** em um `<h1>`. Exporte-o como default.",
         theory: `Em React, a interface é construída com componentes — blocos reutilizáveis de UI. Cada componente é uma função que retorna JSX (HTML dentro do JavaScript).
 
+![Componentes React — blocos de UI reutilizáveis](https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=300&fit=crop)
+
 Componente funcional básico:
   function MeuComponente() {
     return <h1>Olá!</h1>;
@@ -1249,6 +1255,8 @@ Quando usar Context:
         title: "Seletores Básicos",
         description: "Escreva CSS para deixar todos os `<h1>` com cor **azul** e todos os `<p>` com tamanho de fonte **18px**.",
         theory: `CSS (Cascading Style Sheets) controla a aparência visual do HTML. Cada regra CSS tem um seletor e declarações.
+
+![CSS estilizando uma página web](https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=600&h=300&fit=crop)
 
 Estrutura:
   seletor {
@@ -2735,6 +2743,10 @@ Complexidade: O(log n) para busca/inserção (árvore balanceada).`,
         title: "Estrutura Básica",
         description: "Crie a estrutura HTML básica com **DOCTYPE**, **html**, **head** (com título) e **body** com um parágrafo.",
         theory: `HTML (HyperText Markup Language) é a linguagem que estrutura toda página web. Não é uma linguagem de programação — é uma linguagem de MARCAÇÃO.
+
+![Estrutura de uma página HTML](https://images.unsplash.com/photo-1621839673705-6617adf9e890?w=600&h=300&fit=crop)
+
+[video](https://www.youtube.com/watch?v=epDCjksKMok)
 
 Estrutura básica de toda página HTML:
   <!DOCTYPE html>
