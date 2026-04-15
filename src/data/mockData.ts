@@ -435,7 +435,7 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
         id: "1-11",
         title: "Trabalhando com Arquivos",
         description: "Abra um arquivo chamado **\"dados.txt\"**, escreva **\"Olá, arquivo!\"** nele e depois leia o conteúdo com `print()`.",
-        theory: \`Manipular arquivos é essencial para qualquer programa real — ler configurações, salvar dados, processar logs, exportar relatórios.
+        theory: `Manipular arquivos é essencial para qualquer programa real — ler configurações, salvar dados, processar logs, exportar relatórios.
 
 A função open() abre um arquivo. O modo determina o que você pode fazer:
 • "r" → leitura (padrão) — erro se não existir
@@ -468,7 +468,7 @@ Modos binários (para imagens, PDFs):
   with open("foto.png", "rb") as f:
       dados = f.read()
 
-Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prático que escrever linha a linha.\`,
+Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prático que escrever linha a linha.`,
         starterCode: '# Escreva e leia o arquivo\n',
         solution: 'with open("dados.txt", "w") as f:\n    f.write("Olá, arquivo!")\n\nwith open("dados.txt", "r") as f:\n    print(f.read())',
         expectedOutput: "Olá, arquivo!",
@@ -483,7 +483,7 @@ Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prá
         id: "1-12",
         title: "Módulos e Imports",
         description: "Importe o módulo **math** e calcule a raiz quadrada de **144** usando `math.sqrt()`. Exiba o resultado.",
-        theory: \`Módulos organizam o código em arquivos separados e permitem reutilizar funcionalidades. Python tem centenas de módulos prontos na biblioteca padrão!
+        theory: `Módulos organizam o código em arquivos separados e permitem reutilizar funcionalidades. Python tem centenas de módulos prontos na biblioteca padrão!
 
 Importando módulos:
   import math
@@ -525,7 +525,7 @@ Pacotes (pastas com módulos):
 
   from meu_projeto.utils import saudacao
 
-Instalando pacotes externos: pip install requests\`,
+Instalando pacotes externos: pip install requests`,
         starterCode: '# Importe math e calcule\n',
         solution: 'import math\nprint(math.sqrt(144))',
         expectedOutput: "12.0",
@@ -539,7 +539,7 @@ Instalando pacotes externos: pip install requests\`,
         id: "1-13",
         title: "Orientação a Objetos",
         description: "Crie uma classe **Carro** com atributos `marca` e `modelo` e um método `info()` que retorna **\"[marca] [modelo]\"**.",
-        theory: \`Programação Orientada a Objetos (POO) organiza o código em "objetos" que combinam dados (atributos) e comportamentos (métodos).
+        theory: `Programação Orientada a Objetos (POO) organiza o código em "objetos" que combinam dados (atributos) e comportamentos (métodos).
 
 Criando uma classe:
   class Carro:
@@ -590,7 +590,7 @@ Métodos especiais (dunder methods):
   __str__  → representação em string (print)
   __len__  → len(objeto)
   __eq__   → comparação com ==
-  __repr__ → representação para debug\`,
+  __repr__ → representação para debug`,
         starterCode: '# Crie a classe Carro\n',
         solution: 'class Carro:\n    def __init__(self, marca, modelo):\n        self.marca = marca\n        self.modelo = modelo\n    def info(self):\n        return f"{self.marca} {self.modelo}"\n\nc = Carro("Toyota", "Corolla")\nprint(c.info())',
         expectedOutput: "Toyota Corolla",
@@ -605,7 +605,7 @@ Métodos especiais (dunder methods):
         id: "1-14",
         title: "Lambda e Map/Filter",
         description: "Use **lambda** com **map()** para triplicar cada número da lista `[2, 4, 6, 8]` e exiba o resultado.",
-        theory: \`Lambda são funções anônimas (sem nome) de uma linha. Perfeitas para operações simples e rápidas.
+        theory: `Lambda são funções anônimas (sem nome) de uma linha. Perfeitas para operações simples e rápidas.
 
 Sintaxe:
   lambda parametros: expressão
@@ -638,7 +638,7 @@ sorted() com key:
 Lambda vs def:
   ✅ Lambda para operações simples de uma linha
   ❌ Lambda para lógica complexa (use def)
-  ✅ Lambda como argumento de map/filter/sorted\`,
+  ✅ Lambda como argumento de map/filter/sorted`,
         starterCode: '# Use lambda com map\nnums = [2, 4, 6, 8]\n',
         solution: 'nums = [2, 4, 6, 8]\nresultado = list(map(lambda x: x * 3, nums))\nprint(resultado)',
         expectedOutput: "[6, 12, 18, 24]",
@@ -1081,7 +1081,7 @@ Getters e Setters:
         id: "2-11",
         title: "Array Methods Avançados",
         description: "Dado `[12, 5, 8, 130, 44]`, use **filter** para pegar números > 10, depois **reduce** para somá-los.",
-        theory: \`Além de map(), JavaScript tem métodos poderosos de array que todo dev precisa dominar.
+        theory: `Além de map(), JavaScript tem métodos poderosos de array que todo dev precisa dominar.
 
 .filter() — retorna itens que passam no teste:
   const nums = [12, 5, 8, 130, 44];
@@ -1123,7 +1123,7 @@ Encadeamento (chaining):
     .filter(n => n > 10)
     .map(n => n * 2)
     .reduce((acc, n) => acc + n, 0);
-  // (12 + 130 + 44) * 2 = 372\`,
+  // (12 + 130 + 44) * 2 = 372`,
         starterCode: 'const nums = [12, 5, 8, 130, 44];\n// filter e reduce\n',
         solution: 'const nums = [12, 5, 8, 130, 44];\nconst grandes = nums.filter(n => n > 10);\nconst soma = grandes.reduce((acc, n) => acc + n, 0);\nconsole.log(grandes);\nconsole.log(soma);',
         expectedOutput: "12,130,44",
@@ -1137,7 +1137,7 @@ Encadeamento (chaining):
         id: "2-12",
         title: "Closures",
         description: "Crie uma função **criarContador()** que retorna uma função interna. Cada vez que a função interna é chamada, incrementa e retorna o valor.",
-        theory: \`Closure é quando uma função "lembra" das variáveis do escopo onde foi criada, mesmo após esse escopo ter terminado.
+        theory: `Closure é quando uma função "lembra" das variáveis do escopo onde foi criada, mesmo após esse escopo ter terminado.
 
 Exemplo simples:
   function criarContador() {
@@ -1185,7 +1185,7 @@ Usos práticos:
   conta.ver();  // 100
   // saldo não é acessível diretamente!
 
-Closures são fundamentais para entender React hooks, callbacks e módulos.\`,
+Closures são fundamentais para entender React hooks, callbacks e módulos.`,
         starterCode: '// Crie a closure\n',
         solution: 'function criarContador() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  };\n}\n\nconst contador = criarContador();\nconsole.log(contador());\nconsole.log(contador());\nconsole.log(contador());',
         expectedOutput: "1",
@@ -1196,7 +1196,7 @@ Closures são fundamentais para entender React hooks, callbacks e módulos.\`,
         id: "2-13",
         title: "Módulos ES6",
         description: "Crie um módulo que **exporta** uma função `somar` e outra `subtrair`. Depois importe e use ambas.",
-        theory: \`Módulos ES6 (ESM) permitem dividir código em arquivos separados com import/export. É o padrão moderno do JavaScript.
+        theory: `Módulos ES6 (ESM) permitem dividir código em arquivos separados com import/export. É o padrão moderno do JavaScript.
 
 Named exports — exportar várias coisas:
   // math.js
@@ -1238,7 +1238,7 @@ CommonJS (Node.js antigo):
   module.exports = { somar };
   const { somar } = require("./math");
 
-Sempre prefira ESM (import/export) em projetos modernos!\`,
+Sempre prefira ESM (import/export) em projetos modernos!`,
         starterCode: '// Crie exports e imports\n',
         solution: '// math.js\nexport function somar(a, b) { return a + b; }\nexport function subtrair(a, b) { return a - b; }\n\n// main.js\n// import { somar, subtrair } from "./math.js";\nconsole.log(somar(10, 5));\nconsole.log(subtrair(10, 5));',
         expectedOutput: "15",
@@ -1252,7 +1252,7 @@ Sempre prefira ESM (import/export) em projetos modernos!\`,
         id: "2-14",
         title: "Error Handling",
         description: "Crie uma função **dividir(a, b)** que lança um **Error** se b for 0. Use **try/catch** para capturar o erro.",
-        theory: \`Tratamento de erros evita que seu programa quebre inesperadamente. JavaScript usa try/catch/finally.
+        theory: `Tratamento de erros evita que seu programa quebre inesperadamente. JavaScript usa try/catch/finally.
 
 Sintaxe:
   try {
@@ -1307,7 +1307,7 @@ Promises e async/await:
     }
   }
 
-Dica: Sempre trate erros em chamadas de API e operações de I/O!\`,
+Dica: Sempre trate erros em chamadas de API e operações de I/O!`,
         starterCode: '// Crie a função com error handling\n',
         solution: 'function dividir(a, b) {\n  if (b === 0) throw new Error("Divisão por zero!");\n  return a / b;\n}\n\ntry {\n  console.log(dividir(10, 2));\n  console.log(dividir(10, 0));\n} catch (err) {\n  console.log("Erro:", err.message);\n}',
         expectedOutput: "5",
@@ -1692,7 +1692,7 @@ Quando usar Context:
         id: "3-9",
         title: "useReducer",
         description: "Implemente um **gerenciador de tarefas** usando `useReducer` com ações ADD, TOGGLE e REMOVE.",
-        theory: \`useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
+        theory: `useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
 
 Sintaxe:
   const [state, dispatch] = useReducer(reducer, estadoInicial);
@@ -1731,7 +1731,7 @@ Ações com payload:
 
 Quando usar useReducer vs useState:
   useState → 1-2 variáveis simples
-  useReducer → estado complexo, múltiplas ações, lógica de atualização elaborada\`,
+  useReducer → estado complexo, múltiplas ações, lógica de atualização elaborada`,
         starterCode: 'import { useReducer } from "react";\n// Crie o reducer e o componente\n',
         solution: 'import { useReducer } from "react";\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case "ADD":\n      return [...state, { id: Date.now(), text: action.text, done: false }];\n    case "TOGGLE":\n      return state.map(t => t.id === action.id ? {...t, done: !t.done} : t);\n    case "REMOVE":\n      return state.filter(t => t.id !== action.id);\n    default: return state;\n  }\n}',
         expectedOutput: "useReducer",
@@ -1745,7 +1745,7 @@ Quando usar useReducer vs useState:
         id: "3-10",
         title: "React Router",
         description: "Configure rotas com **React Router** para páginas Home (`/`), Sobre (`/sobre`) e Contato (`/contato`).",
-        theory: \`React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
+        theory: `React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
 
 Instalação: npm install react-router-dom
 
@@ -1790,7 +1790,7 @@ Rotas aninhadas:
     <Route path="perfil" element={<Perfil />} />
     <Route path="config" element={<Config />} />
   </Route>
-  // Use <Outlet /> no Dashboard para renderizar as sub-rotas\`,
+  // Use <Outlet /> no Dashboard para renderizar as sub-rotas`,
         starterCode: '// Configure as rotas\n',
         solution: 'import { BrowserRouter, Routes, Route, Link } from "react-router-dom";\n\nfunction Home() { return <h1>Home</h1>; }\nfunction Sobre() { return <h1>Sobre</h1>; }\nfunction Contato() { return <h1>Contato</h1>; }\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <nav>\n        <Link to="/">Home</Link>\n        <Link to="/sobre">Sobre</Link>\n        <Link to="/contato">Contato</Link>\n      </nav>\n      <Routes>\n        <Route path="/" element={<Home />} />\n        <Route path="/sobre" element={<Sobre />} />\n        <Route path="/contato" element={<Contato />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}',
         expectedOutput: "BrowserRouter",
@@ -1801,7 +1801,7 @@ Rotas aninhadas:
         id: "3-11",
         title: "Fetching Data com useEffect",
         description: "Crie um componente que busca dados de uma **API** usando `useEffect` + `fetch` e exibe uma lista de usuários.",
-        theory: \`Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
+        theory: `Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
 
 Padrão básico:
   function Usuarios() {
@@ -1856,7 +1856,7 @@ Cancelando fetch (cleanup):
     return () => controller.abort();
   }, []);
 
-Dica: Para projetos reais, considere React Query (TanStack Query) — gerencia cache, refetch e loading automaticamente.\`,
+Dica: Para projetos reais, considere React Query (TanStack Query) — gerencia cache, refetch e loading automaticamente.`,
         starterCode: 'import { useState, useEffect } from "react";\n// Busque dados da API\n',
         solution: 'import { useState, useEffect } from "react";\n\nfunction Usuarios() {\n  const [users, setUsers] = useState([]);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch("https://jsonplaceholder.typicode.com/users")\n      .then(res => res.json())\n      .then(data => { setUsers(data); setLoading(false); });\n  }, []);\n\n  if (loading) return <p>Carregando...</p>;\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}',
         expectedOutput: "useEffect",
@@ -2246,12 +2246,12 @@ Timing functions:
         expectedOutput: "transition",
         hints: ["transition: propriedade duração timing", "Defina o estado normal e o :hover", "0.3s é uma boa duração para hover"],
         xpReward: 20,
-      }
+      },
       {
         id: "4-9",
         title: "Box Model",
         description: "Explique e aplique o **box model**: crie um `.card` com padding de **20px**, margin de **16px** e borda de **2px solid**. Use `box-sizing: border-box`.",
-        theory: \`O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
+        theory: `O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
 
 De dentro para fora:
   1. Content → o conteúdo (texto, imagem)
@@ -2289,7 +2289,7 @@ box-sizing — MUITO IMPORTANTE:
     box-sizing: border-box;
   }
 
-Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maior vence). Isso NÃO acontece com padding!\`,
+Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maior vence). Isso NÃO acontece com padding!`,
         starterCode: '/* Aplique o box model */\n',
         solution: '* {\n  box-sizing: border-box;\n}\n.card {\n  padding: 20px;\n  margin: 16px;\n  border: 2px solid #6c5ce7;\n}',
         expectedOutput: "box-sizing",
@@ -2303,7 +2303,7 @@ Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maio
         id: "4-10",
         title: "Posicionamento (position)",
         description: "Crie um elemento **fixo** no canto inferior direito da tela (como um botão de chat flutuante) usando `position: fixed`.",
-        theory: \`A propriedade position controla COMO o elemento é posicionado na página.
+        theory: `A propriedade position controla COMO o elemento é posicionado na página.
 
 Valores:
   static (padrão) → fluxo normal do documento
@@ -2348,7 +2348,7 @@ z-index controla a sobreposição (qual fica "na frente"):
   z-index: 100;  → acima de z-index menores
   Só funciona com position diferente de static!
 
-Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).\`,
+Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).`,
         starterCode: '/* Crie o elemento fixo */\n',
         solution: '.chat-btn {\n  position: fixed;\n  bottom: 20px;\n  right: 20px;\n  z-index: 100;\n  padding: 16px;\n  border-radius: 50%;\n  background: #6c5ce7;\n  color: white;\n}',
         expectedOutput: "position: fixed",
@@ -2359,7 +2359,7 @@ Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).\`,
         id: "4-11",
         title: "Flexbox Avançado",
         description: "Crie um layout com **sidebar fixa** (250px) e **conteúdo flexível** que ocupa o resto usando `flex-grow`.",
-        theory: \`Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
+        theory: `Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
 
 Propriedades dos itens flex:
   flex-grow   → quanto o item CRESCE para preencher espaço extra
@@ -2402,7 +2402,7 @@ Flex wrap — quebra de linha:
     flex: 1 1 300px;  /* mínimo 300px, cresce/encolhe */
   }
 
-Isso cria um grid responsivo SEM media queries!\`,
+Isso cria um grid responsivo SEM media queries!`,
         starterCode: '/* Layout sidebar + conteúdo */\n',
         solution: '.layout {\n  display: flex;\n  min-height: 100vh;\n}\n.sidebar {\n  flex: 0 0 250px;\n  background: #1a1a2e;\n}\n.conteudo {\n  flex: 1;\n  padding: 20px;\n}',
         expectedOutput: "flex: 1",
@@ -2549,7 +2549,7 @@ Estrutura:
 
 Middleware de logging:
   function logger(req, res, next) {
-    console.log(\\`[\\${new Date().toISOString()}] \\${req.method} \\${req.url}\\`);
+    console.log(\`[\\${new Date().toISOString()}] \\${req.method} \\${req.url}\`);
     next();
   }
   app.use(logger);  // aplica a TODAS as rotas
@@ -2578,7 +2578,7 @@ Middleware de erro (4 parâmetros):
 
 Ordem importa! Middlewares executam na ordem em que são declarados.`,
         starterCode: 'const express = require("express");\nconst app = express();\n// Crie o middleware\n',
-        solution: 'const express = require("express");\nconst app = express();\n\nfunction logger(req, res, next) {\n  console.log(\`[\${new Date().toISOString()}] \${req.method} \${req.url}\`);\n  next();\n}\n\napp.use(logger);\napp.get("/", (req, res) => res.send("OK"));\napp.listen(3000);',
+        solution: 'const express = require("express");\nconst app = express();\n\nfunction logger(req, res, next) {\n  console.log(`[\${new Date().toISOString()}] \${req.method} \${req.url}`);\n  next();\n}\n\napp.use(logger);\napp.get("/", (req, res) => res.send("OK"));\napp.listen(3000);',
         expectedOutput: "logger",
         hints: ["Middleware recebe req, res, next", "next() passa para o próximo", "app.use() aplica globalmente"],
         xpReward: 20,
@@ -2744,7 +2744,7 @@ Fazendo queries:
   );
 
 ⚠️ NUNCA use string interpolation em queries!
-  ❌ pool.query(\\`SELECT * FROM users WHERE id = \\${id}\\`)  // SQL INJECTION!
+  ❌ pool.query(\`SELECT * FROM users WHERE id = \\${id}\`)  // SQL INJECTION!
   ✅ pool.query("SELECT * FROM users WHERE id = $1", [id])  // Seguro!
 
 Organizando com funções:
@@ -2992,7 +2992,7 @@ Validação:
   const required = ["PORT", "DB_URL", "API_KEY"];
   for (const key of required) {
     if (!process.env[key]) {
-      throw new Error(\\`Variável \\${key} não configurada!\\`);
+      throw new Error(\`Variável \\${key} não configurada!\`);
     }
   }`,
         starterCode: '// Configure dotenv\n',
@@ -3370,7 +3370,7 @@ Chave estrangeira:
         id: "6-9",
         title: "ORDER BY e LIMIT",
         description: "Busque os **5 usuários mais novos** (menor idade) da tabela `usuarios`, ordenados por idade crescente.",
-        theory: \`ORDER BY ordena os resultados e LIMIT restringe a quantidade retornada. Essenciais para paginação e ranking!
+        theory: `ORDER BY ordena os resultados e LIMIT restringe a quantidade retornada. Essenciais para paginação e ranking!
 
 ORDER BY:
   SELECT * FROM usuarios ORDER BY idade;        → crescente (ASC, padrão)
@@ -3406,7 +3406,7 @@ TOP N por categoria (window functions):
 
 DISTINCT — valores únicos:
   SELECT DISTINCT cidade FROM usuarios;
-  SELECT COUNT(DISTINCT cidade) FROM usuarios;\`,
+  SELECT COUNT(DISTINCT cidade) FROM usuarios;`,
         starterCode: '-- Busque os 5 mais novos\n',
         solution: 'SELECT * FROM usuarios\nORDER BY idade ASC\nLIMIT 5;',
         expectedOutput: "ORDER BY",
@@ -3417,7 +3417,7 @@ DISTINCT — valores únicos:
         id: "6-10",
         title: "ALTER TABLE e DELETE",
         description: "Adicione uma coluna **email** (varchar) à tabela `usuarios` e delete todos os usuários com idade menor que 18.",
-        theory: \`ALTER TABLE modifica a estrutura de uma tabela existente. DELETE remove registros.
+        theory: `ALTER TABLE modifica a estrutura de uma tabela existente. DELETE remove registros.
 
 ALTER TABLE — adicionar coluna:
   ALTER TABLE usuarios ADD COLUMN email VARCHAR(100);
@@ -3454,7 +3454,7 @@ Ordem de "perigo":
   TRUNCATE     → remove tudo + reseta (perigoso)
   DROP TABLE   → apaga a tabela inteira (irreversível!)
 
-Dica: Sempre faça SELECT com o mesmo WHERE antes de DELETE!\`,
+Dica: Sempre faça SELECT com o mesmo WHERE antes de DELETE!`,
         starterCode: '-- ALTER TABLE e DELETE\n',
         solution: 'ALTER TABLE usuarios ADD COLUMN email VARCHAR(100);\nDELETE FROM usuarios WHERE idade < 18;',
         expectedOutput: "ALTER TABLE",
@@ -3468,7 +3468,7 @@ Dica: Sempre faça SELECT com o mesmo WHERE antes de DELETE!\`,
         id: "6-11",
         title: "Índices e Performance",
         description: "Crie um **índice** na coluna `email` da tabela `usuarios` para acelerar buscas por email.",
-        theory: \`Índices são estruturas que aceleram drasticamente as buscas no banco de dados — como o índice de um livro!
+        theory: `Índices são estruturas que aceleram drasticamente as buscas no banco de dados — como o índice de um livro!
 
 Sem índice: o banco percorre TODAS as linhas (full table scan) — O(n)
 Com índice: pula direto para o resultado — O(log n)
@@ -3503,7 +3503,7 @@ Tipos de índice:
 Removendo índice:
   DROP INDEX idx_email;
 
-Regra de ouro: Crie índices para resolver queries lentas específicas, não "por precaução".\`,
+Regra de ouro: Crie índices para resolver queries lentas específicas, não "por precaução".`,
         starterCode: '-- Crie o índice\n',
         solution: 'CREATE INDEX idx_email ON usuarios(email);',
         expectedOutput: "CREATE INDEX",
@@ -3771,7 +3771,7 @@ Dica: Stash é como um "ctrl+z temporário" — use para pausar o trabalho sem p
         id: "7-7",
         title: "git rebase",
         description: "Descreva como usar **git rebase** para manter o histórico limpo em vez de merge.",
-        theory: \`Rebase reaplica seus commits SOBRE outra branch, criando um histórico linear (sem commits de merge).
+        theory: `Rebase reaplica seus commits SOBRE outra branch, criando um histórico linear (sem commits de merge).
 
 Merge vs Rebase:
   Merge: preserva a história completa (com bifurcações)
@@ -3811,7 +3811,7 @@ Squash — juntar commits:
   squash ghi9012 Ajusta estilo
   → Vira um só commit limpo!
 
-⚠️ REGRA DE OURO: Nunca faça rebase em branches públicas/compartilhadas! Rebase reescreve o histórico — outros devs terão conflitos.\`,
+⚠️ REGRA DE OURO: Nunca faça rebase em branches públicas/compartilhadas! Rebase reescreve o histórico — outros devs terão conflitos.`,
         starterCode: '# Use git rebase\n',
         solution: 'git checkout feature\ngit rebase main\n# Resolva conflitos se necessário\n# git rebase --continue',
         expectedOutput: "git rebase",
@@ -3825,7 +3825,7 @@ Squash — juntar commits:
         id: "7-8",
         title: ".gitignore e Boas Práticas",
         description: "Crie um **.gitignore** para um projeto Node.js que ignore `node_modules/`, `.env` e arquivos de build.",
-        theory: \`.gitignore diz ao Git quais arquivos/pastas NÃO rastrear. Essencial para manter o repositório limpo!
+        theory: `.gitignore diz ao Git quais arquivos/pastas NÃO rastrear. Essencial para manter o repositório limpo!
 
 Sintaxe do .gitignore:
   # Comentário
@@ -3871,7 +3871,7 @@ Boas práticas Git:
      refactor: refatoração
      test: testes
 
-  git commit -m "feat: adiciona autenticação com Google"\`,
+  git commit -m "feat: adiciona autenticação com Google"`,
         starterCode: '# Crie o .gitignore\n',
         solution: '# .gitignore\nnode_modules/\n.env\n.env.local\ndist/\nbuild/\n*.log\n.DS_Store\ncoverage/',
         expectedOutput: "node_modules",
@@ -4268,7 +4268,7 @@ Complexidade: O(log n) para busca/inserção (árvore balanceada).`,
         id: "8-9",
         title: "Lista Encadeada",
         description: "Implemente uma **lista encadeada** simples em Python com métodos `append` e `print_list`.",
-        theory: \`Lista Encadeada (Linked List) é uma sequência de nós onde cada nó aponta para o próximo. Diferente de arrays, os elementos NÃO ficam em posições contíguas na memória.
+        theory: `Lista Encadeada (Linked List) é uma sequência de nós onde cada nó aponta para o próximo. Diferente de arrays, os elementos NÃO ficam em posições contíguas na memória.
 
 Estrutura:
   [dado|→] → [dado|→] → [dado|None]
@@ -4315,7 +4315,7 @@ Array vs Linked List:
 
 Variações:
   Duplamente encadeada: cada nó aponta para anterior E próximo
-  Circular: o último nó aponta para o primeiro\`,
+  Circular: o último nó aponta para o primeiro`,
         starterCode: 'class Node:\n    pass\n\nclass LinkedList:\n    # Implemente aqui\n    pass\n',
         solution: 'class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n    def append(self, data):\n        novo = Node(data)\n        if not self.head:\n            self.head = novo\n            return\n        atual = self.head\n        while atual.next:\n            atual = atual.next\n        atual.next = novo\n    def print_list(self):\n        atual = self.head\n        while atual:\n            print(atual.data, end=" ")\n            atual = atual.next\n\nll = LinkedList()\nll.append(1)\nll.append(2)\nll.append(3)\nll.print_list()',
         expectedOutput: "1 2 3",
@@ -4326,7 +4326,7 @@ Variações:
         id: "8-10",
         title: "Merge Sort",
         description: "Implemente o **Merge Sort** em Python para ordenar `[38, 27, 43, 3, 9, 82, 10]`.",
-        theory: \`Merge Sort usa a estratégia "dividir para conquistar": divide a lista pela metade recursivamente, ordena cada metade e depois combina (merge).
+        theory: `Merge Sort usa a estratégia "dividir para conquistar": divide a lista pela metade recursivamente, ordena cada metade e depois combina (merge).
 
 Algoritmo:
   1. Se a lista tem 0 ou 1 elemento → já está ordenada
@@ -4372,7 +4372,7 @@ Complexidade:
 Comparação:
   Bubble Sort: O(n²) — lento para listas grandes
   Merge Sort: O(n log n) — muito mais rápido
-  Para 1 milhão de itens: n² = 10¹² vs n log n ≈ 2×10⁷\`,
+  Para 1 milhão de itens: n² = 10¹² vs n log n ≈ 2×10⁷`,
         starterCode: 'def merge_sort(arr):\n    # Implemente aqui\n    pass\n\nprint(merge_sort([38, 27, 43, 3, 9, 82, 10]))',
         solution: 'def merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    meio = len(arr) // 2\n    esq = merge_sort(arr[:meio])\n    dir = merge_sort(arr[meio:])\n    return merge(esq, dir)\n\ndef merge(esq, dir):\n    resultado = []\n    i = j = 0\n    while i < len(esq) and j < len(dir):\n        if esq[i] <= dir[j]:\n            resultado.append(esq[i])\n            i += 1\n        else:\n            resultado.append(dir[j])\n            j += 1\n    resultado.extend(esq[i:])\n    resultado.extend(dir[j:])\n    return resultado\n\nprint(merge_sort([38, 27, 43, 3, 9, 82, 10]))',
         expectedOutput: "[3, 9, 10, 27, 38, 43, 82]",
@@ -4383,7 +4383,7 @@ Comparação:
         id: "8-11",
         title: "Grafos — BFS",
         description: "Implemente a **busca em largura (BFS)** em um grafo representado como dicionário de adjacência.",
-        theory: \`Grafos representam relações entre elementos. Cada elemento é um vértice (nó) e cada relação é uma aresta (conexão).
+        theory: `Grafos representam relações entre elementos. Cada elemento é um vértice (nó) e cada relação é uma aresta (conexão).
 
 Representação com dicionário (lista de adjacência):
   grafo = {
@@ -4431,7 +4431,7 @@ Usos de BFS:
   • Verificar se grafo é conexo
   • Web crawling
 
-Complexidade: O(V + E) onde V = vértices, E = arestas\`,
+Complexidade: O(V + E) onde V = vértices, E = arestas`,
         starterCode: 'from collections import deque\n\n# Implemente BFS\n',
         solution: 'from collections import deque\n\ndef bfs(grafo, inicio):\n    visitados = set()\n    fila = deque([inicio])\n    visitados.add(inicio)\n    ordem = []\n    while fila:\n        vertice = fila.popleft()\n        ordem.append(vertice)\n        for vizinho in grafo[vertice]:\n            if vizinho not in visitados:\n                visitados.add(vizinho)\n                fila.append(vizinho)\n    return ordem\n\ngrafo = {"A": ["B","C"], "B": ["A","D"], "C": ["A","D"], "D": ["B","C"]}\nprint(bfs(grafo, "A"))',
         expectedOutput: "A",
@@ -4837,7 +4837,7 @@ Por que usar semântica?
         id: "9-9",
         title: "Acessibilidade (A11Y)",
         description: "Melhore a acessibilidade de um botão e uma imagem usando **atributos ARIA** e boas práticas de HTML acessível.",
-        theory: \`Acessibilidade (A11Y) garante que TODOS possam usar seu site — incluindo pessoas com deficiência visual, motora ou cognitiva.
+        theory: `Acessibilidade (A11Y) garante que TODOS possam usar seu site — incluindo pessoas com deficiência visual, motora ou cognitiva.
 
 Princípios WCAG:
   Perceptível → conteúdo visível/audível para todos
@@ -4874,7 +4874,7 @@ Boas práticas:
 
   ❌ Não use só cor para comunicar informação
   ❌ Não remova outline de foco sem alternativa
-  ❌ Não use tabindex > 0\`,
+  ❌ Não use tabindex > 0`,
         starterCode: '<!-- Melhore a acessibilidade -->\n',
         solution: '<button aria-label="Fechar modal" type="button">\n  <span aria-hidden="true">✕</span>\n</button>\n<img src="foto.jpg" alt="Equipe de desenvolvedores trabalhando em laptops">',
         expectedOutput: "aria-label",
@@ -4888,7 +4888,7 @@ Boas práticas:
         id: "9-10",
         title: "Meta Tags e SEO",
         description: "Crie um `<head>` completo com meta tags de **SEO**: charset, viewport, description, Open Graph e favicon.",
-        theory: \`Meta tags no <head> fornecem informações sobre a página para navegadores, buscadores e redes sociais.
+        theory: `Meta tags no <head> fornecem informações sobre a página para navegadores, buscadores e redes sociais.
 
 Meta tags essenciais:
   <head>
@@ -4925,7 +4925,7 @@ SEO on-page:
 
 Viewport — essencial para mobile:
   width=device-width → largura = tela do dispositivo
-  initial-scale=1.0 → zoom inicial 100%\`,
+  initial-scale=1.0 → zoom inicial 100%`,
         starterCode: '<!-- Crie o head com meta tags -->\n',
         solution: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Aprenda programação de forma gamificada com CodeQuest">\n  <meta property="og:title" content="CodeQuest">\n  <meta property="og:description" content="Plataforma gamificada de programação">\n  <meta property="og:image" content="https://codequest.com/preview.jpg">\n  <title>CodeQuest — Aprenda Programação</title>\n  <link rel="icon" href="/favicon.ico">\n</head>',
         expectedOutput: "<meta",
@@ -4936,7 +4936,7 @@ Viewport — essencial para mobile:
         id: "9-11",
         title: "Multimídia HTML",
         description: "Adicione um **áudio** e um **vídeo** nativos com controles e uma mensagem de fallback.",
-        theory: \`HTML5 suporta áudio e vídeo nativamente, sem precisar de plugins como Flash!
+        theory: `HTML5 suporta áudio e vídeo nativamente, sem precisar de plugins como Flash!
 
 Elemento <video>:
   <video controls width="640" height="360">
@@ -4982,7 +4982,7 @@ Legendas:
     <track src="legenda.vtt" kind="subtitles" srclang="pt" label="Português">
   </video>
 
-Dica: Forneça múltiplos formatos com <source> para máxima compatibilidade!\`,
+Dica: Forneça múltiplos formatos com <source> para máxima compatibilidade!`,
         starterCode: '<!-- Adicione áudio e vídeo -->\n',
         solution: '<video controls width="640" poster="thumb.jpg">\n  <source src="video.mp4" type="video/mp4">\n  Seu navegador não suporta vídeo.\n</video>\n\n<audio controls>\n  <source src="musica.mp3" type="audio/mpeg">\n  Seu navegador não suporta áudio.\n</audio>',
         expectedOutput: "<video",
