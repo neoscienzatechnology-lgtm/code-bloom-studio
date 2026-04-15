@@ -2246,109 +2246,7 @@ Timing functions:
         expectedOutput: "transition",
         hints: ["transition: propriedade duração timing", "Defina o estado normal e o :hover", "0.3s é uma boa duração para hover"],
         xpReward: 20,
-      },
-      {
-        id: "5-7",
-        title: "JWT Auth",
-        description: "Crie um middleware que verifica um **token JWT** no header Authorization e protege uma rota.",
-        theory: `JWT (JSON Web Token) é o padrão para autenticação em APIs. O servidor gera um token após login e o cliente envia em cada requisição.
-
-Fluxo:
-  1. Cliente faz login (email + senha)
-  2. Servidor valida e retorna um JWT
-  3. Cliente envia o JWT no header: Authorization: Bearer <token>
-  4. Servidor verifica o JWT em cada requisição
-
-Instalação: npm install jsonwebtoken
-
-Gerando um token:
-  const jwt = require("jsonwebtoken");
-  const SECRET = "minha-chave-secreta";
-
-  const token = jwt.sign(
-    { id: user.id, email: user.email },  // payload
-    SECRET,
-    { expiresIn: "1h" }  // expira em 1 hora
-  );
-
-Verificando o token (middleware):
-  function autenticar(req, res, next) {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ erro: "Token não fornecido" });
-
-    try {
-      const decoded = jwt.verify(token, SECRET);
-      req.usuario = decoded;  // anexa ao request
-      next();
-    } catch {
-      res.status(401).json({ erro: "Token inválido" });
-    }
-  }
-
-  app.get("/perfil", autenticar, (req, res) => {
-    res.json({ usuario: req.usuario });
-  });`,
-        starterCode: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n// Crie o middleware\n',
-        solution: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n\nfunction autenticar(req, res, next) {\n  const token = req.headers.authorization?.split(" ")[1];\n  if (!token) return res.status(401).json({ erro: "Token não fornecido" });\n  try {\n    req.usuario = jwt.verify(token, SECRET);\n    next();\n  } catch {\n    res.status(401).json({ erro: "Token inválido" });\n  }\n}',
-        expectedOutput: "jwt.verify",
-        hints: ["Extraia o token do header Authorization", "jwt.verify() valida o token", "Use try/catch para tokens inválidos"],
-        xpReward: 25,
-      },
-      {
-        id: "5-8",
-        title: "Padrão MVC",
-        description: "Organize uma rota de usuários seguindo o padrão **MVC**: crie um controller e um model separados.",
-        theory: `MVC (Model-View-Controller) organiza o código em camadas com responsabilidades claras.
-
-Model → acessa e manipula dados:
-  // models/userModel.js
-  const users = [];
-  
-  const UserModel = {
-    getAll: () => users,
-    getById: (id) => users.find(u => u.id === id),
-    create: (data) => {
-      const user = { id: Date.now(), ...data };
-      users.push(user);
-      return user;
-    }
-  };
-  module.exports = UserModel;
-
-Controller → lógica de negócio:
-  // controllers/userController.js
-  const UserModel = require("../models/userModel");
-
-  const UserController = {
-    listar: (req, res) => {
-      res.json(UserModel.getAll());
-    },
-    criar: (req, res) => {
-      const user = UserModel.create(req.body);
-      res.status(201).json(user);
-    }
-  };
-  module.exports = UserController;
-
-Routes → define as rotas:
-  // routes/userRoutes.js
-  const router = require("express").Router();
-  const UserController = require("../controllers/userController");
-
-  router.get("/", UserController.listar);
-  router.post("/", UserController.criar);
-  module.exports = router;
-
-  // app.js
-  app.use("/users", userRoutes);
-
-Benefícios: código organizado, testável, escalável.`,
-        starterCode: '// Organize em MVC\n',
-        solution: '// Model\nconst users = [];\nconst getAll = () => users;\nconst create = (data) => { const u = {id: Date.now(), ...data}; users.push(u); return u; };\n\n// Controller\nconst listar = (req, res) => res.json(getAll());\nconst criar = (req, res) => res.status(201).json(create(req.body));',
-        expectedOutput: "Controller",
-        hints: ["Model cuida dos dados", "Controller cuida da lógica", "Routes conecta URLs aos controllers"],
-        xpReward: 25,
-      },
+      }
       {
         id: "4-9",
         title: "Box Model",
@@ -2512,6 +2410,597 @@ Isso cria um grid responsivo SEM media queries!\`,
         xpReward: 25,
       },
     
+    ],
+  },
+  {
+    id: "5",
+    title: "Node.js Backend",
+    language: "Node.js",
+    emoji: "🟢",
+    level: "Intermediário",
+    duration: "30h",
+    students: 7800,
+    progress: 0,
+    color: "quest-blue",
+    tags: ["Em alta"],
+    description: "Construa APIs e servidores com Node.js e Express — rotas, middleware, autenticação e banco de dados.",
+    lessons: [
+      {
+        id: "5-1",
+        title: "Introdução ao Node.js",
+        description: "Crie um servidor HTTP simples com Node.js que responde **\"Olá, Node!\"** na porta 3000.",
+        theory: `Node.js permite rodar JavaScript no servidor — fora do navegador! É usado por Netflix, PayPal, LinkedIn e milhares de empresas.
+
+O que é Node.js:
+• Runtime JavaScript baseado no motor V8 do Chrome
+• Assíncrono e orientado a eventos
+• Ideal para APIs, servidores web, microserviços
+
+Criando um servidor HTTP:
+  const http = require("http");
+
+  const server = http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Olá, Node!");
+  });
+
+  server.listen(3000, () => {
+    console.log("Servidor rodando na porta 3000");
+  });
+
+Conceitos-chave:
+  require() → importa módulos
+  createServer() → cria o servidor
+  req → dados da requisição (URL, headers, método)
+  res → objeto de resposta (enviar dados ao cliente)
+
+NPM (Node Package Manager):
+  npm init -y           → cria o package.json
+  npm install express   → instala um pacote
+  npm install -D nodemon → instala como dev dependency
+
+package.json — descreve seu projeto:
+  {
+    "name": "meu-app",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "nodemon server.js"
+    }
+  }
+
+Rode com: node server.js ou npm start`,
+        starterCode: 'const http = require("http");\n// Crie o servidor\n',
+        solution: 'const http = require("http");\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { "Content-Type": "text/plain" });\n  res.end("Olá, Node!");\n});\n\nserver.listen(3000, () => {\n  console.log("Servidor na porta 3000");\n});',
+        expectedOutput: "Olá, Node!",
+        hints: ["http.createServer() cria o servidor", "res.end() envia a resposta", "server.listen(porta) inicia"],
+        xpReward: 10,
+        quiz: [
+          { question: "O que é Node.js?", options: ["Um framework CSS", "Runtime JS no servidor", "Um banco de dados", "Um navegador"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "5-2",
+        title: "Express — Rotas",
+        description: "Crie um servidor Express com rotas **GET** para `/` e `/api/users` que retorna uma lista de usuários em JSON.",
+        theory: `Express é o framework web mais popular do Node.js. Simplifica a criação de APIs e servidores.
+
+Instalação: npm install express
+
+Servidor básico:
+  const express = require("express");
+  const app = express();
+
+  app.get("/", (req, res) => {
+    res.send("Bem-vindo à API!");
+  });
+
+  app.get("/api/users", (req, res) => {
+    res.json([
+      { id: 1, nome: "Ana" },
+      { id: 2, nome: "Bruno" }
+    ]);
+  });
+
+  app.listen(3000, () => console.log("Rodando!"));
+
+Métodos HTTP:
+  app.get("/rota", handler)    → buscar dados
+  app.post("/rota", handler)   → criar dados
+  app.put("/rota", handler)    → atualizar (completo)
+  app.patch("/rota", handler)  → atualizar (parcial)
+  app.delete("/rota", handler) → deletar
+
+Parâmetros de rota:
+  app.get("/users/:id", (req, res) => {
+    const { id } = req.params;
+    res.json({ id, nome: "Usuário " + id });
+  });
+
+Query strings:
+  // GET /search?q=node&limit=10
+  app.get("/search", (req, res) => {
+    const { q, limit } = req.query;
+    res.json({ busca: q, limite: limit });
+  });
+
+Body (dados enviados no POST):
+  app.use(express.json());  // middleware para parsear JSON
+  app.post("/users", (req, res) => {
+    const { nome, email } = req.body;
+    res.status(201).json({ nome, email });
+  });`,
+        starterCode: 'const express = require("express");\nconst app = express();\n// Crie as rotas\n',
+        solution: 'const express = require("express");\nconst app = express();\n\napp.get("/", (req, res) => {\n  res.send("Bem-vindo!");\n});\n\napp.get("/api/users", (req, res) => {\n  res.json([{ id: 1, nome: "Ana" }, { id: 2, nome: "Bruno" }]);\n});\n\napp.listen(3000);',
+        expectedOutput: "express",
+        hints: ["app.get(rota, callback)", "res.json() para retornar JSON", "res.send() para texto simples"],
+        xpReward: 15,
+      },
+      {
+        id: "5-3",
+        title: "Middleware",
+        description: "Crie um **middleware** de logging que exibe método, URL e timestamp de cada requisição.",
+        theory: `Middleware são funções que interceptam requisições ANTES de chegar à rota final. São a espinha dorsal do Express!
+
+Estrutura:
+  function meuMiddleware(req, res, next) {
+    // faz algo...
+    next();  // passa para o próximo middleware/rota
+  }
+
+Middleware de logging:
+  function logger(req, res, next) {
+    console.log(\\`[\\${new Date().toISOString()}] \\${req.method} \\${req.url}\\`);
+    next();
+  }
+  app.use(logger);  // aplica a TODAS as rotas
+
+Middleware built-in do Express:
+  app.use(express.json());        // parseia body JSON
+  app.use(express.urlencoded());  // parseia form data
+  app.use(express.static("public")); // serve arquivos estáticos
+
+Middleware de terceiros:
+  const cors = require("cors");
+  const helmet = require("helmet");
+  app.use(cors());     // habilita CORS
+  app.use(helmet());   // headers de segurança
+
+Middleware por rota:
+  app.get("/admin", verificarAdmin, (req, res) => {
+    res.json({ admin: true });
+  });
+
+Middleware de erro (4 parâmetros):
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ erro: "Algo deu errado!" });
+  });
+
+Ordem importa! Middlewares executam na ordem em que são declarados.`,
+        starterCode: 'const express = require("express");\nconst app = express();\n// Crie o middleware\n',
+        solution: 'const express = require("express");\nconst app = express();\n\nfunction logger(req, res, next) {\n  console.log(\`[\${new Date().toISOString()}] \${req.method} \${req.url}\`);\n  next();\n}\n\napp.use(logger);\napp.get("/", (req, res) => res.send("OK"));\napp.listen(3000);',
+        expectedOutput: "logger",
+        hints: ["Middleware recebe req, res, next", "next() passa para o próximo", "app.use() aplica globalmente"],
+        xpReward: 20,
+        quiz: [
+          { question: "O que next() faz no middleware?", options: ["Encerra a requisição", "Retorna erro", "Passa para o próximo middleware/rota", "Reinicia o servidor"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "5-4",
+        title: "CRUD com Express",
+        description: "Implemente um **CRUD** completo (Create, Read, Update, Delete) para uma lista de tarefas usando Express.",
+        theory: `CRUD são as 4 operações básicas de qualquer API: Create, Read, Update, Delete.
+
+Mapeamento HTTP → CRUD:
+  POST   /todos     → Create (criar)
+  GET    /todos     → Read all (listar)
+  GET    /todos/:id → Read one (buscar)
+  PUT    /todos/:id → Update (atualizar)
+  DELETE /todos/:id → Delete (deletar)
+
+Implementação completa:
+  const express = require("express");
+  const app = express();
+  app.use(express.json());
+
+  let todos = [
+    { id: 1, text: "Estudar Node", done: false }
+  ];
+  let nextId = 2;
+
+  // Listar todos
+  app.get("/todos", (req, res) => {
+    res.json(todos);
+  });
+
+  // Buscar por ID
+  app.get("/todos/:id", (req, res) => {
+    const todo = todos.find(t => t.id === +req.params.id);
+    if (!todo) return res.status(404).json({ erro: "Não encontrado" });
+    res.json(todo);
+  });
+
+  // Criar
+  app.post("/todos", (req, res) => {
+    const todo = { id: nextId++, text: req.body.text, done: false };
+    todos.push(todo);
+    res.status(201).json(todo);
+  });
+
+  // Atualizar
+  app.put("/todos/:id", (req, res) => {
+    const todo = todos.find(t => t.id === +req.params.id);
+    if (!todo) return res.status(404).json({ erro: "Não encontrado" });
+    todo.text = req.body.text ?? todo.text;
+    todo.done = req.body.done ?? todo.done;
+    res.json(todo);
+  });
+
+  // Deletar
+  app.delete("/todos/:id", (req, res) => {
+    todos = todos.filter(t => t.id !== +req.params.id);
+    res.status(204).send();
+  });
+
+Status codes:
+  200 OK, 201 Created, 204 No Content,
+  400 Bad Request, 404 Not Found, 500 Server Error`,
+        starterCode: 'const express = require("express");\nconst app = express();\napp.use(express.json());\n// Implemente o CRUD\n',
+        solution: 'const express = require("express");\nconst app = express();\napp.use(express.json());\n\nlet todos = [];\nlet id = 1;\n\napp.get("/todos", (req, res) => res.json(todos));\napp.post("/todos", (req, res) => {\n  const todo = { id: id++, text: req.body.text, done: false };\n  todos.push(todo);\n  res.status(201).json(todo);\n});\napp.delete("/todos/:id", (req, res) => {\n  todos = todos.filter(t => t.id !== +req.params.id);\n  res.status(204).send();\n});',
+        expectedOutput: "express",
+        hints: ["GET para ler, POST para criar", "req.params.id para parâmetro da URL", "res.status(201) para criação"],
+        xpReward: 25,
+      },
+      {
+        id: "5-5",
+        title: "Validação de Dados",
+        description: "Crie um middleware de **validação** que verifica se os campos `nome` e `email` existem no body antes de criar um usuário.",
+        theory: `Validação garante que dados recebidos estejam corretos antes de processá-los. Nunca confie nos dados do cliente!
+
+Validação manual:
+  function validarUsuario(req, res, next) {
+    const { nome, email } = req.body;
+    const erros = [];
+
+    if (!nome || nome.trim().length < 2) {
+      erros.push("Nome deve ter pelo menos 2 caracteres");
+    }
+    if (!email || !email.includes("@")) {
+      erros.push("Email inválido");
+    }
+
+    if (erros.length > 0) {
+      return res.status(400).json({ erros });
+    }
+    next();
+  }
+
+  app.post("/users", validarUsuario, (req, res) => {
+    // dados já validados!
+    res.status(201).json(req.body);
+  });
+
+Padrão de resposta de erro:
+  {
+    "erros": [
+      { "campo": "email", "mensagem": "Email inválido" },
+      { "campo": "nome", "mensagem": "Nome é obrigatório" }
+    ]
+  }
+
+Tipos de validação:
+  Presença   → campo existe e não está vazio?
+  Tipo       → é string? número? boolean?
+  Formato    → email válido? CPF? telefone?
+  Tamanho    → mínimo/máximo de caracteres?
+  Range      → número entre X e Y?
+  Unicidade  → já existe no banco?
+
+Sanitização — limpar dados:
+  const nome = req.body.nome.trim();
+  const email = req.body.email.toLowerCase().trim();
+
+Dica: Para projetos grandes, use bibliotecas como Joi, Zod ou express-validator.`,
+        starterCode: '// Crie o middleware de validação\n',
+        solution: 'function validarUsuario(req, res, next) {\n  const { nome, email } = req.body;\n  const erros = [];\n  if (!nome || nome.trim().length < 2) erros.push("Nome inválido");\n  if (!email || !email.includes("@")) erros.push("Email inválido");\n  if (erros.length) return res.status(400).json({ erros });\n  next();\n}',
+        expectedOutput: "validar",
+        hints: ["Verifique cada campo obrigatório", "Retorne 400 com lista de erros", "next() se tudo estiver ok"],
+        xpReward: 20,
+      },
+      {
+        id: "5-6",
+        title: "Conexão com Banco de Dados",
+        description: "Conecte ao banco de dados usando um **pool de conexões** e faça uma query SELECT simples.",
+        theory: `Em aplicações reais, o servidor precisa se conectar a um banco de dados para persistir dados.
+
+Pool de conexões — reutiliza conexões:
+  const { Pool } = require("pg");  // PostgreSQL
+
+  const pool = new Pool({
+    host: "localhost",
+    port: 5432,
+    user: "admin",
+    password: "senha",
+    database: "meu_app",
+    max: 20  // máximo de conexões simultâneas
+  });
+
+Fazendo queries:
+  // SELECT
+  const result = await pool.query("SELECT * FROM usuarios");
+  console.log(result.rows);
+
+  // INSERT com parâmetros (previne SQL injection!)
+  await pool.query(
+    "INSERT INTO usuarios (nome, email) VALUES ($1, $2)",
+    ["Ana", "ana@mail.com"]
+  );
+
+  // UPDATE
+  await pool.query(
+    "UPDATE usuarios SET nome = $1 WHERE id = $2",
+    ["Ana Silva", 1]
+  );
+
+⚠️ NUNCA use string interpolation em queries!
+  ❌ pool.query(\\`SELECT * FROM users WHERE id = \\${id}\\`)  // SQL INJECTION!
+  ✅ pool.query("SELECT * FROM users WHERE id = $1", [id])  // Seguro!
+
+Organizando com funções:
+  async function buscarUsuarios() {
+    const { rows } = await pool.query("SELECT * FROM usuarios");
+    return rows;
+  }
+
+  async function criarUsuario(nome, email) {
+    const { rows } = await pool.query(
+      "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *",
+      [nome, email]
+    );
+    return rows[0];
+  }
+
+Transactions — operações atômicas:
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query("UPDATE contas SET saldo = saldo - 100 WHERE id = 1");
+    await client.query("UPDATE contas SET saldo = saldo + 100 WHERE id = 2");
+    await client.query("COMMIT");
+  } catch (err) {
+    await client.query("ROLLBACK");
+  } finally {
+    client.release();
+  }`,
+        starterCode: '// Conecte ao banco\n',
+        solution: 'const { Pool } = require("pg");\n\nconst pool = new Pool({ connectionString: process.env.DATABASE_URL });\n\nasync function buscarUsuarios() {\n  const { rows } = await pool.query("SELECT * FROM usuarios");\n  return rows;\n}\n\nasync function criarUsuario(nome, email) {\n  const { rows } = await pool.query(\n    "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *",\n    [nome, email]\n  );\n  return rows[0];\n}',
+        expectedOutput: "pool.query",
+        hints: ["Pool reutiliza conexões", "Use $1, $2 para parâmetros (previne SQL injection)", "RETURNING * retorna o registro criado"],
+        xpReward: 25,
+      },
+      {
+        id: "5-7",
+        title: "JWT Auth",
+        description: "Crie um middleware que verifica um **token JWT** no header Authorization e protege uma rota.",
+        theory: `JWT (JSON Web Token) é o padrão para autenticação em APIs. O servidor gera um token após login e o cliente envia em cada requisição.
+
+Fluxo:
+  1. Cliente faz login (email + senha)
+  2. Servidor valida e retorna um JWT
+  3. Cliente envia o JWT no header: Authorization: Bearer <token>
+  4. Servidor verifica o JWT em cada requisição
+
+Instalação: npm install jsonwebtoken
+
+Gerando um token:
+  const jwt = require("jsonwebtoken");
+  const SECRET = "minha-chave-secreta";
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    SECRET,
+    { expiresIn: "1h" }
+  );
+
+Verificando o token (middleware):
+  function autenticar(req, res, next) {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ erro: "Token não fornecido" });
+
+    try {
+      const decoded = jwt.verify(token, SECRET);
+      req.usuario = decoded;
+      next();
+    } catch {
+      res.status(401).json({ erro: "Token inválido" });
+    }
+  }
+
+  app.get("/perfil", autenticar, (req, res) => {
+    res.json({ usuario: req.usuario });
+  });`,
+        starterCode: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n// Crie o middleware\n',
+        solution: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n\nfunction autenticar(req, res, next) {\n  const token = req.headers.authorization?.split(" ")[1];\n  if (!token) return res.status(401).json({ erro: "Token não fornecido" });\n  try {\n    req.usuario = jwt.verify(token, SECRET);\n    next();\n  } catch {\n    res.status(401).json({ erro: "Token inválido" });\n  }\n}',
+        expectedOutput: "jwt.verify",
+        hints: ["Extraia o token do header Authorization", "jwt.verify() valida o token", "Use try/catch para tokens inválidos"],
+        xpReward: 25,
+      },
+      {
+        id: "5-8",
+        title: "Padrão MVC",
+        description: "Organize uma rota de usuários seguindo o padrão **MVC**: crie um controller e um model separados.",
+        theory: `MVC (Model-View-Controller) organiza o código em camadas com responsabilidades claras.
+
+Model → acessa e manipula dados:
+  // models/userModel.js
+  const users = [];
+  
+  const UserModel = {
+    getAll: () => users,
+    getById: (id) => users.find(u => u.id === id),
+    create: (data) => {
+      const user = { id: Date.now(), ...data };
+      users.push(user);
+      return user;
+    }
+  };
+  module.exports = UserModel;
+
+Controller → lógica de negócio:
+  // controllers/userController.js
+  const UserModel = require("../models/userModel");
+
+  const UserController = {
+    listar: (req, res) => {
+      res.json(UserModel.getAll());
+    },
+    criar: (req, res) => {
+      const user = UserModel.create(req.body);
+      res.status(201).json(user);
+    }
+  };
+  module.exports = UserController;
+
+Routes → define as rotas:
+  // routes/userRoutes.js
+  const router = require("express").Router();
+  const UserController = require("../controllers/userController");
+
+  router.get("/", UserController.listar);
+  router.post("/", UserController.criar);
+  module.exports = router;
+
+  // app.js
+  app.use("/users", userRoutes);
+
+Benefícios: código organizado, testável, escalável.`,
+        starterCode: '// Organize em MVC\n',
+        solution: '// Model\nconst users = [];\nconst getAll = () => users;\nconst create = (data) => { const u = {id: Date.now(), ...data}; users.push(u); return u; };\n\n// Controller\nconst listar = (req, res) => res.json(getAll());\nconst criar = (req, res) => res.status(201).json(create(req.body));',
+        expectedOutput: "Controller",
+        hints: ["Model cuida dos dados", "Controller cuida da lógica", "Routes conecta URLs aos controllers"],
+        xpReward: 25,
+      },
+      {
+        id: "5-9",
+        title: "File System (fs)",
+        description: "Use o módulo **fs** para ler e escrever um arquivo JSON com dados de usuários.",
+        theory: `O módulo fs (File System) do Node.js permite manipular arquivos e pastas no servidor.
+
+Importando:
+  const fs = require("fs");
+
+Leitura síncrona:
+  const data = fs.readFileSync("dados.json", "utf-8");
+  const obj = JSON.parse(data);
+
+Leitura assíncrona (recomendado):
+  const fs = require("fs/promises");
+  async function ler() {
+    const data = await fs.readFile("dados.json", "utf-8");
+    return JSON.parse(data);
+  }
+
+Escrita:
+  const usuarios = [{ nome: "Ana", idade: 25 }];
+  fs.writeFileSync("users.json", JSON.stringify(usuarios, null, 2));
+
+Outras operações:
+  fs.existsSync("arquivo.txt")
+  fs.mkdirSync("pasta")
+  fs.readdirSync(".")
+  fs.unlinkSync("arquivo.txt")
+
+Dica: Sempre use versões async em servidores web — sync bloqueia o event loop!`,
+        starterCode: 'const fs = require("fs");\n// Leia e escreva JSON\n',
+        solution: 'const fs = require("fs");\n\nconst usuarios = [{ nome: "Ana", idade: 25 }, { nome: "Bruno", idade: 30 }];\nfs.writeFileSync("users.json", JSON.stringify(usuarios, null, 2));\nconst data = fs.readFileSync("users.json", "utf-8");\nconsole.log(JSON.parse(data));',
+        expectedOutput: "Ana",
+        hints: ["writeFileSync para escrever", "readFileSync para ler", "JSON.stringify/parse para converter"],
+        xpReward: 20,
+      },
+      {
+        id: "5-10",
+        title: "Async/Await no Node",
+        description: "Use **Promise.all** para buscar usuários e produtos em paralelo.",
+        theory: `No Node.js, quase tudo é assíncrono. Dominar async/await é essencial!
+
+Promise.all — executar em paralelo:
+  async function buscarDados() {
+    const [usuarios, produtos] = await Promise.all([
+      buscarUsuarios(),
+      buscarProdutos()
+    ]);
+    console.log(usuarios, produtos);
+  }
+
+Promise.allSettled — não para se uma falhar:
+  const resultados = await Promise.allSettled([
+    fetch("/api/1"),
+    fetch("/api/2"),
+  ]);
+
+Promise.race — retorna o primeiro:
+  const primeiro = await Promise.race([
+    buscarDoBanco(),
+    buscarDoCache()
+  ]);
+
+Padrão retry:
+  async function comRetry(fn, tentativas = 3) {
+    for (let i = 0; i < tentativas; i++) {
+      try { return await fn(); }
+      catch (err) {
+        if (i === tentativas - 1) throw err;
+        await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+      }
+    }
+  }`,
+        starterCode: '// Use async/await e Promise.all\n',
+        solution: 'function buscarUsuarios() {\n  return new Promise(resolve => setTimeout(() => resolve(["Ana", "Bruno"]), 100));\n}\nfunction buscarProdutos() {\n  return new Promise(resolve => setTimeout(() => resolve(["Notebook", "Mouse"]), 100));\n}\n\nasync function main() {\n  const [users, products] = await Promise.all([buscarUsuarios(), buscarProdutos()]);\n  console.log("Usuários:", users);\n  console.log("Produtos:", products);\n}\nmain();',
+        expectedOutput: "Usuários:",
+        hints: ["Promise.all() executa em paralelo", "Desestruture o resultado", "Cada item é uma Promise"],
+        xpReward: 25,
+        quiz: [
+          { question: "O que Promise.all faz?", options: ["Executa sequencialmente", "Executa em paralelo e espera todas", "Retorna a primeira", "Cancela as outras"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "5-11",
+        title: "Variáveis de Ambiente",
+        description: "Configure **variáveis de ambiente** com dotenv para armazenar a porta e uma chave de API.",
+        theory: `Variáveis de ambiente armazenam configurações sensíveis FORA do código.
+
+Instalação: npm install dotenv
+
+Criando o .env:
+  PORT=3000
+  DB_URL=postgresql://user:pass@host/db
+  API_KEY=sk_live_abc123
+
+Usando no código:
+  require("dotenv").config();
+  const porta = process.env.PORT || 3000;
+  const apiKey = process.env.API_KEY;
+
+Regras IMPORTANTES:
+  1. SEMPRE adicione .env ao .gitignore!
+  2. Crie um .env.example com as chaves (sem valores)
+  3. NUNCA faça commit de .env com dados reais
+  4. Use SCREAMING_SNAKE_CASE
+
+Validação:
+  const required = ["PORT", "DB_URL", "API_KEY"];
+  for (const key of required) {
+    if (!process.env[key]) {
+      throw new Error(\\`Variável \\${key} não configurada!\\`);
+    }
+  }`,
+        starterCode: '// Configure dotenv\n',
+        solution: 'require("dotenv").config();\n\nconst PORT = process.env.PORT || 3000;\nconst API_KEY = process.env.API_KEY;\n\nconsole.log("Porta:", PORT);\nif (!API_KEY) console.log("⚠️ API_KEY não configurada!");',
+        expectedOutput: "Porta:",
+        hints: ["require('dotenv').config() carrega o .env", "process.env.VARIAVEL acessa o valor", "|| define valor padrão"],
+        xpReward: 20,
+      },
     ],
   },
   {
