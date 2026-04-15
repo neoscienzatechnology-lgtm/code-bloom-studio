@@ -483,7 +483,7 @@ Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prá
         id: "1-12",
         title: "Módulos e Imports",
         description: "Importe o módulo **math** e calcule a raiz quadrada de **144** usando `math.sqrt()`. Exiba o resultado.",
-        theory: \`Módulos organizam o código em arquivos separados e permitem reutilizar funcionalidades. Python tem centenas de módulos prontos na biblioteca padrão!
+        theory: `Módulos organizam o código em arquivos separados e permitem reutilizar funcionalidades. Python tem centenas de módulos prontos na biblioteca padrão!
 
 Importando módulos:
   import math
@@ -539,7 +539,7 @@ Instalando pacotes externos: pip install requests\`,
         id: "1-13",
         title: "Orientação a Objetos",
         description: "Crie uma classe **Carro** com atributos `marca` e `modelo` e um método `info()` que retorna **\"[marca] [modelo]\"**.",
-        theory: \`Programação Orientada a Objetos (POO) organiza o código em "objetos" que combinam dados (atributos) e comportamentos (métodos).
+        theory: `Programação Orientada a Objetos (POO) organiza o código em "objetos" que combinam dados (atributos) e comportamentos (métodos).
 
 Criando uma classe:
   class Carro:
@@ -605,7 +605,7 @@ Métodos especiais (dunder methods):
         id: "1-14",
         title: "Lambda e Map/Filter",
         description: "Use **lambda** com **map()** para triplicar cada número da lista `[2, 4, 6, 8]` e exiba o resultado.",
-        theory: \`Lambda são funções anônimas (sem nome) de uma linha. Perfeitas para operações simples e rápidas.
+        theory: `Lambda são funções anônimas (sem nome) de uma linha. Perfeitas para operações simples e rápidas.
 
 Sintaxe:
   lambda parametros: expressão
@@ -1081,7 +1081,7 @@ Getters e Setters:
         id: "2-11",
         title: "Array Methods Avançados",
         description: "Dado `[12, 5, 8, 130, 44]`, use **filter** para pegar números > 10, depois **reduce** para somá-los.",
-        theory: \`Além de map(), JavaScript tem métodos poderosos de array que todo dev precisa dominar.
+        theory: `Além de map(), JavaScript tem métodos poderosos de array que todo dev precisa dominar.
 
 .filter() — retorna itens que passam no teste:
   const nums = [12, 5, 8, 130, 44];
@@ -1137,7 +1137,7 @@ Encadeamento (chaining):
         id: "2-12",
         title: "Closures",
         description: "Crie uma função **criarContador()** que retorna uma função interna. Cada vez que a função interna é chamada, incrementa e retorna o valor.",
-        theory: \`Closure é quando uma função "lembra" das variáveis do escopo onde foi criada, mesmo após esse escopo ter terminado.
+        theory: `Closure é quando uma função "lembra" das variáveis do escopo onde foi criada, mesmo após esse escopo ter terminado.
 
 Exemplo simples:
   function criarContador() {
@@ -1196,7 +1196,7 @@ Closures são fundamentais para entender React hooks, callbacks e módulos.\`,
         id: "2-13",
         title: "Módulos ES6",
         description: "Crie um módulo que **exporta** uma função `somar` e outra `subtrair`. Depois importe e use ambas.",
-        theory: \`Módulos ES6 (ESM) permitem dividir código em arquivos separados com import/export. É o padrão moderno do JavaScript.
+        theory: `Módulos ES6 (ESM) permitem dividir código em arquivos separados com import/export. É o padrão moderno do JavaScript.
 
 Named exports — exportar várias coisas:
   // math.js
@@ -1252,7 +1252,7 @@ Sempre prefira ESM (import/export) em projetos modernos!\`,
         id: "2-14",
         title: "Error Handling",
         description: "Crie uma função **dividir(a, b)** que lança um **Error** se b for 0. Use **try/catch** para capturar o erro.",
-        theory: \`Tratamento de erros evita que seu programa quebre inesperadamente. JavaScript usa try/catch/finally.
+        theory: `Tratamento de erros evita que seu programa quebre inesperadamente. JavaScript usa try/catch/finally.
 
 Sintaxe:
   try {
@@ -1692,7 +1692,7 @@ Quando usar Context:
         id: "3-9",
         title: "useReducer",
         description: "Implemente um **gerenciador de tarefas** usando `useReducer` com ações ADD, TOGGLE e REMOVE.",
-        theory: \`useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
+        theory: `useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
 
 Sintaxe:
   const [state, dispatch] = useReducer(reducer, estadoInicial);
@@ -1745,7 +1745,7 @@ Quando usar useReducer vs useState:
         id: "3-10",
         title: "React Router",
         description: "Configure rotas com **React Router** para páginas Home (`/`), Sobre (`/sobre`) e Contato (`/contato`).",
-        theory: \`React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
+        theory: `React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
 
 Instalação: npm install react-router-dom
 
@@ -1801,7 +1801,7 @@ Rotas aninhadas:
         id: "3-11",
         title: "Fetching Data com useEffect",
         description: "Crie um componente que busca dados de uma **API** usando `useEffect` + `fetch` e exibe uma lista de usuários.",
-        theory: \`Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
+        theory: `Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
 
 Padrão básico:
   function Usuarios() {
@@ -2251,7 +2251,7 @@ Timing functions:
         id: "4-9",
         title: "Box Model",
         description: "Explique e aplique o **box model**: crie um `.card` com padding de **20px**, margin de **16px** e borda de **2px solid**. Use `box-sizing: border-box`.",
-        theory: \`O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
+        theory: `O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
 
 De dentro para fora:
   1. Content → o conteúdo (texto, imagem)
@@ -2303,7 +2303,7 @@ Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maio
         id: "4-10",
         title: "Posicionamento (position)",
         description: "Crie um elemento **fixo** no canto inferior direito da tela (como um botão de chat flutuante) usando `position: fixed`.",
-        theory: \`A propriedade position controla COMO o elemento é posicionado na página.
+        theory: `A propriedade position controla COMO o elemento é posicionado na página.
 
 Valores:
   static (padrão) → fluxo normal do documento
@@ -2359,7 +2359,7 @@ Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).\`,
         id: "4-11",
         title: "Flexbox Avançado",
         description: "Crie um layout com **sidebar fixa** (250px) e **conteúdo flexível** que ocupa o resto usando `flex-grow`.",
-        theory: \`Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
+        theory: `Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
 
 Propriedades dos itens flex:
   flex-grow   → quanto o item CRESCE para preencher espaço extra
@@ -3370,7 +3370,7 @@ Chave estrangeira:
         id: "6-9",
         title: "ORDER BY e LIMIT",
         description: "Busque os **5 usuários mais novos** (menor idade) da tabela `usuarios`, ordenados por idade crescente.",
-        theory: \`ORDER BY ordena os resultados e LIMIT restringe a quantidade retornada. Essenciais para paginação e ranking!
+        theory: `ORDER BY ordena os resultados e LIMIT restringe a quantidade retornada. Essenciais para paginação e ranking!
 
 ORDER BY:
   SELECT * FROM usuarios ORDER BY idade;        → crescente (ASC, padrão)
@@ -3417,7 +3417,7 @@ DISTINCT — valores únicos:
         id: "6-10",
         title: "ALTER TABLE e DELETE",
         description: "Adicione uma coluna **email** (varchar) à tabela `usuarios` e delete todos os usuários com idade menor que 18.",
-        theory: \`ALTER TABLE modifica a estrutura de uma tabela existente. DELETE remove registros.
+        theory: `ALTER TABLE modifica a estrutura de uma tabela existente. DELETE remove registros.
 
 ALTER TABLE — adicionar coluna:
   ALTER TABLE usuarios ADD COLUMN email VARCHAR(100);
@@ -3468,7 +3468,7 @@ Dica: Sempre faça SELECT com o mesmo WHERE antes de DELETE!\`,
         id: "6-11",
         title: "Índices e Performance",
         description: "Crie um **índice** na coluna `email` da tabela `usuarios` para acelerar buscas por email.",
-        theory: \`Índices são estruturas que aceleram drasticamente as buscas no banco de dados — como o índice de um livro!
+        theory: `Índices são estruturas que aceleram drasticamente as buscas no banco de dados — como o índice de um livro!
 
 Sem índice: o banco percorre TODAS as linhas (full table scan) — O(n)
 Com índice: pula direto para o resultado — O(log n)
@@ -3771,7 +3771,7 @@ Dica: Stash é como um "ctrl+z temporário" — use para pausar o trabalho sem p
         id: "7-7",
         title: "git rebase",
         description: "Descreva como usar **git rebase** para manter o histórico limpo em vez de merge.",
-        theory: \`Rebase reaplica seus commits SOBRE outra branch, criando um histórico linear (sem commits de merge).
+        theory: `Rebase reaplica seus commits SOBRE outra branch, criando um histórico linear (sem commits de merge).
 
 Merge vs Rebase:
   Merge: preserva a história completa (com bifurcações)
@@ -3825,7 +3825,7 @@ Squash — juntar commits:
         id: "7-8",
         title: ".gitignore e Boas Práticas",
         description: "Crie um **.gitignore** para um projeto Node.js que ignore `node_modules/`, `.env` e arquivos de build.",
-        theory: \`.gitignore diz ao Git quais arquivos/pastas NÃO rastrear. Essencial para manter o repositório limpo!
+        theory: `.gitignore diz ao Git quais arquivos/pastas NÃO rastrear. Essencial para manter o repositório limpo!
 
 Sintaxe do .gitignore:
   # Comentário
@@ -4268,7 +4268,7 @@ Complexidade: O(log n) para busca/inserção (árvore balanceada).`,
         id: "8-9",
         title: "Lista Encadeada",
         description: "Implemente uma **lista encadeada** simples em Python com métodos `append` e `print_list`.",
-        theory: \`Lista Encadeada (Linked List) é uma sequência de nós onde cada nó aponta para o próximo. Diferente de arrays, os elementos NÃO ficam em posições contíguas na memória.
+        theory: `Lista Encadeada (Linked List) é uma sequência de nós onde cada nó aponta para o próximo. Diferente de arrays, os elementos NÃO ficam em posições contíguas na memória.
 
 Estrutura:
   [dado|→] → [dado|→] → [dado|None]
@@ -4326,7 +4326,7 @@ Variações:
         id: "8-10",
         title: "Merge Sort",
         description: "Implemente o **Merge Sort** em Python para ordenar `[38, 27, 43, 3, 9, 82, 10]`.",
-        theory: \`Merge Sort usa a estratégia "dividir para conquistar": divide a lista pela metade recursivamente, ordena cada metade e depois combina (merge).
+        theory: `Merge Sort usa a estratégia "dividir para conquistar": divide a lista pela metade recursivamente, ordena cada metade e depois combina (merge).
 
 Algoritmo:
   1. Se a lista tem 0 ou 1 elemento → já está ordenada
@@ -4383,7 +4383,7 @@ Comparação:
         id: "8-11",
         title: "Grafos — BFS",
         description: "Implemente a **busca em largura (BFS)** em um grafo representado como dicionário de adjacência.",
-        theory: \`Grafos representam relações entre elementos. Cada elemento é um vértice (nó) e cada relação é uma aresta (conexão).
+        theory: `Grafos representam relações entre elementos. Cada elemento é um vértice (nó) e cada relação é uma aresta (conexão).
 
 Representação com dicionário (lista de adjacência):
   grafo = {
@@ -4837,7 +4837,7 @@ Por que usar semântica?
         id: "9-9",
         title: "Acessibilidade (A11Y)",
         description: "Melhore a acessibilidade de um botão e uma imagem usando **atributos ARIA** e boas práticas de HTML acessível.",
-        theory: \`Acessibilidade (A11Y) garante que TODOS possam usar seu site — incluindo pessoas com deficiência visual, motora ou cognitiva.
+        theory: `Acessibilidade (A11Y) garante que TODOS possam usar seu site — incluindo pessoas com deficiência visual, motora ou cognitiva.
 
 Princípios WCAG:
   Perceptível → conteúdo visível/audível para todos
@@ -4888,7 +4888,7 @@ Boas práticas:
         id: "9-10",
         title: "Meta Tags e SEO",
         description: "Crie um `<head>` completo com meta tags de **SEO**: charset, viewport, description, Open Graph e favicon.",
-        theory: \`Meta tags no <head> fornecem informações sobre a página para navegadores, buscadores e redes sociais.
+        theory: `Meta tags no <head> fornecem informações sobre a página para navegadores, buscadores e redes sociais.
 
 Meta tags essenciais:
   <head>
@@ -4936,7 +4936,7 @@ Viewport — essencial para mobile:
         id: "9-11",
         title: "Multimídia HTML",
         description: "Adicione um **áudio** e um **vídeo** nativos com controles e uma mensagem de fallback.",
-        theory: \`HTML5 suporta áudio e vídeo nativamente, sem precisar de plugins como Flash!
+        theory: `HTML5 suporta áudio e vídeo nativamente, sem precisar de plugins como Flash!
 
 Elemento <video>:
   <video controls width="640" height="360">
