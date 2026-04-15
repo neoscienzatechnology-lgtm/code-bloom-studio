@@ -2246,7 +2246,7 @@ Timing functions:
         expectedOutput: "transition",
         hints: ["transition: propriedade duração timing", "Defina o estado normal e o :hover", "0.3s é uma boa duração para hover"],
         xpReward: 20,
-      }
+      },
       {
         id: "4-9",
         title: "Box Model",
