@@ -779,37 +779,11 @@ Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram cr
         id: "2-4",
         title: "Template Literals",
         description: "Crie variáveis `nome` e `lang` e use template literals para exibir: **\"Olá, [nome]! Bem-vindo ao [lang].\"**",
-        theory: `Template literals (ou template strings) usam crases (\`) em vez de aspas e permitem interpolação de variáveis e expressões.
-
-Sintaxe:
-  const nome = "Ana";
-  const msg = \`Olá, \${nome}!\`;  // → "Olá, Ana!"
-
-Interpolação com \${}:
-  const a = 10, b = 20;
-  console.log(\`Soma: \${a + b}\`);  // → "Soma: 30"
-  console.log(\`Dobro: \${a * 2}\`); // → "Dobro: 20"
-
-Strings multilinha (sem precisar de \\n):
-  const html = \`
-    <div>
-      <h1>\${titulo}</h1>
-      <p>\${descricao}</p>
-    </div>
-  \`;
-
-Comparação com concatenação antiga:
-  // Antigo (confuso):
-  "Olá, " + nome + "! Você tem " + idade + " anos."
-  
-  // Moderno (limpo):
-  \`Olá, \${nome}! Você tem \${idade} anos.\`
-
-Template literals são MUITO mais legíveis e são o padrão em código moderno!`,
+        theory: "Template literals (ou template strings) usam crases em vez de aspas e permitem interpolação de variáveis e expressões.\n\nSintaxe:\n  const nome = \"Ana\";\n  const msg = `Olá, ${nome}!`;  // → \"Olá, Ana!\"\n\nInterpolação com ${}:\n  const a = 10, b = 20;\n  console.log(`Soma: ${a + b}`);  // → \"Soma: 30\"\n  console.log(`Dobro: ${a * 2}`); // → \"Dobro: 20\"\n\nStrings multilinha (sem precisar de \\n):\n  const html = `\n    <div>\n      <h1>${titulo}</h1>\n    </div>\n  `;\n\nComparação com concatenação antiga:\n  // Antigo (confuso):\n  \"Olá, \" + nome + \"! Você tem \" + idade + \" anos.\"\n  \n  // Moderno (limpo):\n  `Olá, ${nome}! Você tem ${idade} anos.`\n\nTemplate literals são MUITO mais legíveis e são o padrão em código moderno!",
         starterCode: '// Use template literals\n',
         solution: 'const nome = "Dev";\nconst lang = "JavaScript";\nconsole.log(`Olá, ${nome}! Bem-vindo ao ${lang}.`);',
         expectedOutput: "Olá,",
-        hints: ["Use crases (`) em vez de aspas", "Interpolação: ${variavel}", "console.log(`Olá, ${nome}!`)"],
+        hints: ["Use crases em vez de aspas", "Interpolação: ${variavel}", 'console.log(`Olá, ${nome}!`)'],
         xpReward: 15,
       },
       {
