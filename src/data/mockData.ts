@@ -688,7 +688,7 @@ Em JavaScript, toda linha termina com ponto e vírgula (;) — não é obrigató
 Strings podem usar aspas simples, duplas ou crases (template literals):
   console.log('simples')
   console.log("duplas")
-  console.log(`crases`)`,
+  console.log(\`crases\`)`,
         starterCode: '// Exiba a mensagem\n',
         solution: 'console.log("Olá, JavaScript!");',
         expectedOutput: "Olá, JavaScript!",
