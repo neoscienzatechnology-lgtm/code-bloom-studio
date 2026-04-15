@@ -1,4 +1,5 @@
 import React from "react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 function parseInlineCode(text: string): React.ReactNode[] {
   const parts = text.split(/`([^`]+)`/);
@@ -14,6 +15,11 @@ function parseInlineCode(text: string): React.ReactNode[] {
       <span key={i}>{part}</span>
     )
   );
+}
+
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^&?\s]+)/);
+  return match ? match[1] : null;
 }
 
 interface TheoryRendererProps {
@@ -32,6 +38,63 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
 
     // Empty line
     if (!trimmed) {
+      i++;
+      continue;
+    }
+
+    // Image: ![alt](url)
+    const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (imgMatch) {
+      const [, alt, src] = imgMatch;
+      elements.push(
+        <div key={`img-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            className="w-full object-cover"
+          />
+          {alt && (
+            <div className="px-3 py-1.5 text-xs text-muted-foreground text-center bg-secondary/30">
+              {alt}
+            </div>
+          )}
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Video: [video](url)
+    const videoMatch = trimmed.match(/^\[video\]\(([^)]+)\)$/);
+    if (videoMatch) {
+      const url = videoMatch[1];
+      const ytId = getYouTubeId(url);
+      if (ytId) {
+        elements.push(
+          <div key={`video-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
+            <AspectRatio ratio={16 / 9}>
+              <iframe
+                src={`https://www.youtube.com/embed/${ytId}`}
+                title="Vídeo da lição"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="h-full w-full"
+              />
+            </AspectRatio>
+          </div>
+        );
+      } else {
+        elements.push(
+          <div key={`video-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
+            <AspectRatio ratio={16 / 9}>
+              <video controls className="h-full w-full" src={url}>
+                Seu navegador não suporta vídeo.
+              </video>
+            </AspectRatio>
+          </div>
+        );
+      }
       i++;
       continue;
     }
