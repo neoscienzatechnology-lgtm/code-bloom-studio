@@ -452,6 +452,8 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
         description: "Use `console.log()` para exibir **\"Olá, JavaScript!\"** no console.",
         theory: `console.log() é a função mais usada para depuração em JavaScript. Ela exibe valores no console do navegador ou terminal.
 
+![JavaScript no console do navegador](https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=600&h=300&fit=crop)
+
 Como usar:
   console.log("texto")     → exibe texto
   console.log(42)           → exibe número
@@ -1253,6 +1255,8 @@ Quando usar Context:
         title: "Seletores Básicos",
         description: "Escreva CSS para deixar todos os `<h1>` com cor **azul** e todos os `<p>` com tamanho de fonte **18px**.",
         theory: `CSS (Cascading Style Sheets) controla a aparência visual do HTML. Cada regra CSS tem um seletor e declarações.
+
+![CSS estilizando uma página web](https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=600&h=300&fit=crop)
 
 Estrutura:
   seletor {
