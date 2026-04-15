@@ -2523,7 +2523,7 @@ Estrutura:
 
 Middleware de logging:
   function logger(req, res, next) {
-    console.log(\`[\\${new Date().toISOString()}] \\${req.method} \\${req.url}\`);
+    console.log(\`[\${new Date().toISOString()}] \${req.method} \${req.url}\`);
     next();
   }
   app.use(logger);  // aplica a TODAS as rotas
