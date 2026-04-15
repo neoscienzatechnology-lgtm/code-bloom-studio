@@ -2718,7 +2718,7 @@ Fazendo queries:
   );
 
 ⚠️ NUNCA use string interpolation em queries!
-  ❌ pool.query(\`SELECT * FROM users WHERE id = \\${id}\`)  // SQL INJECTION!
+  ❌ pool.query(\`SELECT * FROM users WHERE id = \${id}\`)  // SQL INJECTION!
   ✅ pool.query("SELECT * FROM users WHERE id = $1", [id])  // Seguro!
 
 Organizando com funções:
@@ -2966,7 +2966,7 @@ Validação:
   const required = ["PORT", "DB_URL", "API_KEY"];
   for (const key of required) {
     if (!process.env[key]) {
-      throw new Error(\`Variável \\${key} não configurada!\`);
+      throw new Error(\`Variável \${key} não configurada!\`);
     }
   }`,
         starterCode: '// Configure dotenv\n',
