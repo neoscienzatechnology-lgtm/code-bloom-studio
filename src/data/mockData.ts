@@ -56,7 +56,7 @@ export const courses: Course[] = [
     language: "Python",
     emoji: "🐍",
     level: "Iniciante",
-    duration: "20h",
+    duration: "28h",
     students: 12400,
     progress: 65,
     color: "quest-yellow",
@@ -431,6 +431,221 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
           { question: "O que o bloco 'finally' faz?", options: ["Roda só se der erro", "Roda só se NÃO der erro", "Roda SEMPRE", "Cancela o erro"], correctIndex: 2 },
         ],
       },
+      {
+        id: "1-11",
+        title: "Trabalhando com Arquivos",
+        description: "Abra um arquivo chamado **\"dados.txt\"**, escreva **\"Olá, arquivo!\"** nele e depois leia o conteúdo com `print()`.",
+        theory: \`Manipular arquivos é essencial para qualquer programa real — ler configurações, salvar dados, processar logs, exportar relatórios.
+
+A função open() abre um arquivo. O modo determina o que você pode fazer:
+• "r" → leitura (padrão) — erro se não existir
+• "w" → escrita (cria ou SOBRESCREVE)
+• "a" → append (adiciona ao final)
+• "r+" → leitura e escrita
+• "x" → cria novo (erro se já existir)
+
+Escrevendo em um arquivo:
+  with open("dados.txt", "w") as f:
+      f.write("Linha 1\n")
+      f.write("Linha 2\n")
+
+Lendo um arquivo:
+  with open("dados.txt", "r") as f:
+      conteudo = f.read()       → lê tudo de uma vez
+      # ou
+      linhas = f.readlines()    → lista de linhas
+      # ou
+      for linha in f:           → itera linha a linha (eficiente)
+
+O bloco with garante que o arquivo é FECHADO automaticamente, mesmo se der erro. Sempre use with!
+
+Verificando se existe:
+  import os
+  if os.path.exists("dados.txt"):
+      print("Arquivo existe!")
+
+Modos binários (para imagens, PDFs):
+  with open("foto.png", "rb") as f:
+      dados = f.read()
+
+Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prático que escrever linha a linha.\`,
+        starterCode: '# Escreva e leia o arquivo\n',
+        solution: 'with open("dados.txt", "w") as f:\n    f.write("Olá, arquivo!")\n\nwith open("dados.txt", "r") as f:\n    print(f.read())',
+        expectedOutput: "Olá, arquivo!",
+        hints: ["Use open() com modo 'w' para escrever", "Use open() com modo 'r' para ler", "with garante que o arquivo é fechado"],
+        xpReward: 25,
+        quiz: [
+          { question: "O que o modo 'a' faz ao abrir um arquivo?", options: ["Apaga o conteúdo", "Lê o arquivo", "Adiciona ao final", "Cria uma cópia"], correctIndex: 2 },
+          { question: "Por que usar 'with open()' em vez de 'open()' sozinho?", options: ["É mais rápido", "Fecha o arquivo automaticamente", "Não precisa de modo", "Cria backup"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "1-12",
+        title: "Módulos e Imports",
+        description: "Importe o módulo **math** e calcule a raiz quadrada de **144** usando `math.sqrt()`. Exiba o resultado.",
+        theory: \`Módulos organizam o código em arquivos separados e permitem reutilizar funcionalidades. Python tem centenas de módulos prontos na biblioteca padrão!
+
+Importando módulos:
+  import math
+  print(math.sqrt(16))  → 4.0
+  print(math.pi)        → 3.14159...
+
+Importando funções específicas:
+  from math import sqrt, pi
+  print(sqrt(16))       → 4.0 (sem prefixo math.)
+
+Importando com alias:
+  import numpy as np
+  import pandas as pd
+
+Módulos úteis da biblioteca padrão:
+  math       → funções matemáticas (sqrt, ceil, floor, pi)
+  random     → números aleatórios (random, randint, choice)
+  datetime   → datas e horários
+  os         → sistema operacional (arquivos, pastas)
+  json       → ler/escrever JSON
+  re         → expressões regulares
+  collections → estruturas especiais (Counter, defaultdict)
+  itertools  → iteradores eficientes
+
+Criando seus módulos:
+  # utils.py
+  def saudacao(nome):
+      return f"Olá, {nome}!"
+
+  # main.py
+  from utils import saudacao
+  print(saudacao("Ana"))
+
+Pacotes (pastas com módulos):
+  meu_projeto/
+    __init__.py      → marca como pacote
+    utils.py
+    models.py
+
+  from meu_projeto.utils import saudacao
+
+Instalando pacotes externos: pip install requests\`,
+        starterCode: '# Importe math e calcule\n',
+        solution: 'import math\nprint(math.sqrt(144))',
+        expectedOutput: "12.0",
+        hints: ["import math importa o módulo", "math.sqrt() calcula raiz quadrada", "sqrt(144) = 12.0"],
+        xpReward: 20,
+        quiz: [
+          { question: "Qual a diferença entre 'import math' e 'from math import sqrt'?", options: ["Nenhuma", "O segundo importa só sqrt, sem prefixo", "O primeiro é mais rápido", "O segundo importa tudo"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "1-13",
+        title: "Orientação a Objetos",
+        description: "Crie uma classe **Carro** com atributos `marca` e `modelo` e um método `info()` que retorna **\"[marca] [modelo]\"**.",
+        theory: \`Programação Orientada a Objetos (POO) organiza o código em "objetos" que combinam dados (atributos) e comportamentos (métodos).
+
+Criando uma classe:
+  class Carro:
+      def __init__(self, marca, modelo):
+          self.marca = marca
+          self.modelo = modelo
+
+      def info(self):
+          return f"{self.marca} {self.modelo}"
+
+  meu_carro = Carro("Toyota", "Corolla")
+  print(meu_carro.info())  → "Toyota Corolla"
+
+Conceitos-chave:
+  class → define o "molde"
+  __init__ → construtor (inicializa o objeto)
+  self → referência ao próprio objeto
+  Instância → objeto criado a partir da classe
+
+Herança — reutilizar código:
+  class Veiculo:
+      def __init__(self, marca):
+          self.marca = marca
+      def ligar(self):
+          return "Veículo ligado!"
+
+  class Carro(Veiculo):
+      def __init__(self, marca, portas):
+          super().__init__(marca)
+          self.portas = portas
+
+  c = Carro("Ford", 4)
+  c.ligar()  → "Veículo ligado!" (herdado)
+
+Encapsulamento:
+  class Conta:
+      def __init__(self, saldo):
+          self.__saldo = saldo    # privado (convenção __)
+
+      def depositar(self, valor):
+          if valor > 0:
+              self.__saldo += valor
+
+      def ver_saldo(self):
+          return self.__saldo
+
+Métodos especiais (dunder methods):
+  __str__  → representação em string (print)
+  __len__  → len(objeto)
+  __eq__   → comparação com ==
+  __repr__ → representação para debug\`,
+        starterCode: '# Crie a classe Carro\n',
+        solution: 'class Carro:\n    def __init__(self, marca, modelo):\n        self.marca = marca\n        self.modelo = modelo\n    def info(self):\n        return f"{self.marca} {self.modelo}"\n\nc = Carro("Toyota", "Corolla")\nprint(c.info())',
+        expectedOutput: "Toyota Corolla",
+        hints: ["class NomeDaClasse:", "__init__ é o construtor", "self.atributo = valor"],
+        xpReward: 30,
+        quiz: [
+          { question: "O que o __init__ faz?", options: ["Destrói o objeto", "Inicializa o objeto", "Herda de outra classe", "Cria um módulo"], correctIndex: 1 },
+          { question: "O que 'self' representa?", options: ["A classe", "O módulo", "O próprio objeto", "O construtor"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "1-14",
+        title: "Lambda e Map/Filter",
+        description: "Use **lambda** com **map()** para triplicar cada número da lista `[2, 4, 6, 8]` e exiba o resultado.",
+        theory: \`Lambda são funções anônimas (sem nome) de uma linha. Perfeitas para operações simples e rápidas.
+
+Sintaxe:
+  lambda parametros: expressão
+
+Exemplos:
+  dobro = lambda x: x * 2
+  print(dobro(5))  → 10
+
+  soma = lambda a, b: a + b
+  print(soma(3, 7))  → 10
+
+map() — aplica função a cada item:
+  nums = [1, 2, 3, 4]
+  dobros = list(map(lambda x: x * 2, nums))
+  # [2, 4, 6, 8]
+
+filter() — filtra por condição:
+  nums = [1, 2, 3, 4, 5, 6]
+  pares = list(filter(lambda x: x % 2 == 0, nums))
+  # [2, 4, 6]
+
+sorted() com key:
+  nomes = ["Carlos", "Ana", "Bruno"]
+  ordenado = sorted(nomes, key=lambda x: len(x))
+  # ["Ana", "Bruno", "Carlos"]
+
+  alunos = [{"nome": "Ana", "nota": 8}, {"nome": "Bruno", "nota": 9}]
+  por_nota = sorted(alunos, key=lambda a: a["nota"], reverse=True)
+
+Lambda vs def:
+  ✅ Lambda para operações simples de uma linha
+  ❌ Lambda para lógica complexa (use def)
+  ✅ Lambda como argumento de map/filter/sorted\`,
+        starterCode: '# Use lambda com map\nnums = [2, 4, 6, 8]\n',
+        solution: 'nums = [2, 4, 6, 8]\nresultado = list(map(lambda x: x * 3, nums))\nprint(resultado)',
+        expectedOutput: "[6, 12, 18, 24]",
+        hints: ["lambda x: x * 3 triplica", "map(função, lista) aplica a cada item", "list() converte o resultado em lista"],
+        xpReward: 25,
+      },
+    
     ],
   },
   {
@@ -439,7 +654,7 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
     language: "JavaScript",
     emoji: "⚡",
     level: "Intermediário",
-    duration: "25h",
+    duration: "35h",
     students: 9800,
     progress: 30,
     color: "quest-yellow",
@@ -862,6 +1077,244 @@ Getters e Setters:
           { question: "O que o constructor() faz?", options: ["Destrói o objeto", "Inicializa o objeto ao criá-lo", "Herda de outra classe", "Exporta a classe"], correctIndex: 1 },
         ],
       },
+      {
+        id: "2-11",
+        title: "Array Methods Avançados",
+        description: "Dado `[12, 5, 8, 130, 44]`, use **filter** para pegar números > 10, depois **reduce** para somá-los.",
+        theory: \`Além de map(), JavaScript tem métodos poderosos de array que todo dev precisa dominar.
+
+.filter() — retorna itens que passam no teste:
+  const nums = [12, 5, 8, 130, 44];
+  const grandes = nums.filter(n => n > 10);
+  // [12, 130, 44]
+
+.reduce() — acumula um valor final:
+  const soma = nums.reduce((acc, n) => acc + n, 0);
+  // 199 (0 é o valor inicial do acumulador)
+
+  // Contando ocorrências:
+  const frutas = ["maçã", "banana", "maçã", "uva"];
+  const contagem = frutas.reduce((acc, f) => {
+    acc[f] = (acc[f] || 0) + 1;
+    return acc;
+  }, {});
+  // { maçã: 2, banana: 1, uva: 1 }
+
+.find() — retorna o PRIMEIRO que passa:
+  const primeiro = nums.find(n => n > 10);  // 12
+
+.findIndex() — retorna o ÍNDICE do primeiro:
+  const idx = nums.findIndex(n => n > 100); // 3
+
+.some() — pelo menos UM passa?
+  nums.some(n => n > 100);  // true
+
+.every() — TODOS passam?
+  nums.every(n => n > 0);   // true
+
+.flat() — achata arrays aninhados:
+  [[1,2], [3,4]].flat();  // [1, 2, 3, 4]
+
+.flatMap() — map + flat:
+  ["hello world"].flatMap(s => s.split(" "));  // ["hello", "world"]
+
+Encadeamento (chaining):
+  const resultado = nums
+    .filter(n => n > 10)
+    .map(n => n * 2)
+    .reduce((acc, n) => acc + n, 0);
+  // (12 + 130 + 44) * 2 = 372\`,
+        starterCode: 'const nums = [12, 5, 8, 130, 44];\n// filter e reduce\n',
+        solution: 'const nums = [12, 5, 8, 130, 44];\nconst grandes = nums.filter(n => n > 10);\nconst soma = grandes.reduce((acc, n) => acc + n, 0);\nconsole.log(grandes);\nconsole.log(soma);',
+        expectedOutput: "12,130,44",
+        hints: [".filter(n => n > 10) filtra", ".reduce((acc, n) => acc + n, 0) soma", "Encadeie os métodos"],
+        xpReward: 25,
+        quiz: [
+          { question: "O que .reduce() faz?", options: ["Filtra itens", "Transforma cada item", "Acumula um valor final", "Encontra um item"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "2-12",
+        title: "Closures",
+        description: "Crie uma função **criarContador()** que retorna uma função interna. Cada vez que a função interna é chamada, incrementa e retorna o valor.",
+        theory: \`Closure é quando uma função "lembra" das variáveis do escopo onde foi criada, mesmo após esse escopo ter terminado.
+
+Exemplo simples:
+  function criarContador() {
+    let count = 0;           // variável do escopo externo
+    return function() {
+      count++;               // a função interna "lembra" count
+      return count;
+    };
+  }
+
+  const contador = criarContador();
+  console.log(contador());  // 1
+  console.log(contador());  // 2
+  console.log(contador());  // 3
+
+  const outro = criarContador();
+  console.log(outro());     // 1 (escopo independente!)
+
+Por que isso funciona?
+  A função interna mantém uma referência ao escopo externo (closure).
+  Mesmo após criarContador() terminar, count continua vivo na memória.
+
+Usos práticos:
+  // Função factory com configuração
+  function multiplicador(fator) {
+    return (n) => n * fator;
+  }
+  const dobro = multiplicador(2);
+  const triplo = multiplicador(3);
+  dobro(5);   // 10
+  triplo(5);  // 15
+
+  // Dados privados (encapsulamento)
+  function criarBanco() {
+    let saldo = 0;
+    return {
+      depositar: (v) => { saldo += v; },
+      sacar: (v) => { saldo -= v; },
+      ver: () => saldo,
+    };
+  }
+
+  const conta = criarBanco();
+  conta.depositar(100);
+  conta.ver();  // 100
+  // saldo não é acessível diretamente!
+
+Closures são fundamentais para entender React hooks, callbacks e módulos.\`,
+        starterCode: '// Crie a closure\n',
+        solution: 'function criarContador() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  };\n}\n\nconst contador = criarContador();\nconsole.log(contador());\nconsole.log(contador());\nconsole.log(contador());',
+        expectedOutput: "1",
+        hints: ["A função externa define a variável", "A função interna acessa e modifica", "Cada chamada a criarContador() cria um escopo novo"],
+        xpReward: 30,
+      },
+      {
+        id: "2-13",
+        title: "Módulos ES6",
+        description: "Crie um módulo que **exporta** uma função `somar` e outra `subtrair`. Depois importe e use ambas.",
+        theory: \`Módulos ES6 (ESM) permitem dividir código em arquivos separados com import/export. É o padrão moderno do JavaScript.
+
+Named exports — exportar várias coisas:
+  // math.js
+  export function somar(a, b) { return a + b; }
+  export function subtrair(a, b) { return a - b; }
+  export const PI = 3.14;
+
+  // main.js
+  import { somar, subtrair, PI } from "./math.js";
+  console.log(somar(2, 3));  // 5
+
+Default export — uma exportação principal:
+  // logger.js
+  export default function log(msg) {
+    console.log(\`[LOG] \${msg}\`);
+  }
+
+  // main.js
+  import log from "./logger.js";
+  log("teste");  // [LOG] teste
+
+Diferenças:
+  Named:   export { somar }   →  import { somar } from ...
+  Default: export default fn  →  import fn from ... (qualquer nome)
+
+Renomeando imports:
+  import { somar as add } from "./math.js";
+
+Importando tudo:
+  import * as Math from "./math.js";
+  Math.somar(1, 2);
+
+Re-exportando:
+  // index.js (barrel file)
+  export { somar } from "./math.js";
+  export { default as Logger } from "./logger.js";
+
+CommonJS (Node.js antigo):
+  module.exports = { somar };
+  const { somar } = require("./math");
+
+Sempre prefira ESM (import/export) em projetos modernos!\`,
+        starterCode: '// Crie exports e imports\n',
+        solution: '// math.js\nexport function somar(a, b) { return a + b; }\nexport function subtrair(a, b) { return a - b; }\n\n// main.js\n// import { somar, subtrair } from "./math.js";\nconsole.log(somar(10, 5));\nconsole.log(subtrair(10, 5));',
+        expectedOutput: "15",
+        hints: ["export function para exportar", "import { func } from para importar", "Named exports usam chaves {}"],
+        xpReward: 20,
+        quiz: [
+          { question: "Qual a diferença entre named e default export?", options: ["Named é mais rápido", "Default só pode ter um por arquivo", "Named não funciona com funções", "Default precisa de chaves"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "2-14",
+        title: "Error Handling",
+        description: "Crie uma função **dividir(a, b)** que lança um **Error** se b for 0. Use **try/catch** para capturar o erro.",
+        theory: \`Tratamento de erros evita que seu programa quebre inesperadamente. JavaScript usa try/catch/finally.
+
+Sintaxe:
+  try {
+    // código que pode falhar
+    const resultado = operacaoArriscada();
+  } catch (erro) {
+    // tratamento do erro
+    console.error("Algo deu errado:", erro.message);
+  } finally {
+    // roda SEMPRE (opcional)
+    console.log("Finalizando...");
+  }
+
+Lançando erros customizados:
+  function dividir(a, b) {
+    if (b === 0) {
+      throw new Error("Divisão por zero!");
+    }
+    return a / b;
+  }
+
+Tipos de erro built-in:
+  Error        → erro genérico
+  TypeError    → tipo errado
+  RangeError   → valor fora do intervalo
+  ReferenceError → variável não existe
+  SyntaxError  → erro de sintaxe
+
+Erros customizados:
+  class ValidacaoError extends Error {
+    constructor(campo, mensagem) {
+      super(mensagem);
+      this.campo = campo;
+      this.name = "ValidacaoError";
+    }
+  }
+
+  throw new ValidacaoError("email", "Email inválido");
+
+Promises e async/await:
+  // Com .catch()
+  fetch("/api").catch(err => console.error(err));
+
+  // Com try/catch em async
+  async function buscar() {
+    try {
+      const res = await fetch("/api");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return await res.json();
+    } catch (err) {
+      console.error("Falha:", err.message);
+    }
+  }
+
+Dica: Sempre trate erros em chamadas de API e operações de I/O!\`,
+        starterCode: '// Crie a função com error handling\n',
+        solution: 'function dividir(a, b) {\n  if (b === 0) throw new Error("Divisão por zero!");\n  return a / b;\n}\n\ntry {\n  console.log(dividir(10, 2));\n  console.log(dividir(10, 0));\n} catch (err) {\n  console.log("Erro:", err.message);\n}',
+        expectedOutput: "5",
+        hints: ["throw new Error() lança um erro", "try/catch captura o erro", "err.message contém a mensagem"],
+        xpReward: 25,
+      },
+    
     ],
   },
   {
@@ -870,7 +1323,7 @@ Getters e Setters:
     language: "React",
     emoji: "⚛️",
     level: "Intermediário",
-    duration: "30h",
+    duration: "40h",
     students: 7200,
     progress: 0,
     color: "quest-blue",
@@ -1235,6 +1688,185 @@ Quando usar Context:
           { question: "Qual problema o useContext resolve?", options: ["Performance lenta", "Prop drilling", "Rerenders excessivos", "Falta de tipagem"], correctIndex: 1 },
         ],
       },
+      {
+        id: "3-9",
+        title: "useReducer",
+        description: "Implemente um **gerenciador de tarefas** usando `useReducer` com ações ADD, TOGGLE e REMOVE.",
+        theory: \`useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
+
+Sintaxe:
+  const [state, dispatch] = useReducer(reducer, estadoInicial);
+
+O reducer é uma função pura:
+  function reducer(state, action) {
+    switch (action.type) {
+      case "INCREMENT":
+        return { count: state.count + 1 };
+      case "DECREMENT":
+        return { count: state.count - 1 };
+      case "RESET":
+        return { count: 0 };
+      default:
+        return state;
+    }
+  }
+
+Usando no componente:
+  function Contador() {
+    const [state, dispatch] = useReducer(reducer, { count: 0 });
+    return (
+      <div>
+        <p>{state.count}</p>
+        <button onClick={() => dispatch({ type: "INCREMENT" })}>+1</button>
+        <button onClick={() => dispatch({ type: "RESET" })}>Resetar</button>
+      </div>
+    );
+  }
+
+Ações com payload:
+  dispatch({ type: "ADD_TODO", payload: { text: "Estudar" } });
+
+  case "ADD_TODO":
+    return [...state, { id: Date.now(), text: action.payload.text, done: false }];
+
+Quando usar useReducer vs useState:
+  useState → 1-2 variáveis simples
+  useReducer → estado complexo, múltiplas ações, lógica de atualização elaborada\`,
+        starterCode: 'import { useReducer } from "react";\n// Crie o reducer e o componente\n',
+        solution: 'import { useReducer } from "react";\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case "ADD":\n      return [...state, { id: Date.now(), text: action.text, done: false }];\n    case "TOGGLE":\n      return state.map(t => t.id === action.id ? {...t, done: !t.done} : t);\n    case "REMOVE":\n      return state.filter(t => t.id !== action.id);\n    default: return state;\n  }\n}',
+        expectedOutput: "useReducer",
+        hints: ["reducer recebe state e action", "dispatch({ type, payload })", "Retorne um NOVO estado (imutabilidade)"],
+        xpReward: 30,
+        quiz: [
+          { question: "O que o reducer deve retornar?", options: ["undefined", "A ação", "O novo estado", "O dispatch"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "3-10",
+        title: "React Router",
+        description: "Configure rotas com **React Router** para páginas Home (`/`), Sobre (`/sobre`) e Contato (`/contato`).",
+        theory: \`React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
+
+Instalação: npm install react-router-dom
+
+Configuração básica:
+  import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+  function App() {
+    return (
+      <BrowserRouter>
+        <nav>
+          <Link to="/">Home</Link>
+          <Link to="/sobre">Sobre</Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
+Link vs a:
+  <Link to="/sobre">Sobre</Link>    → navegação SPA (sem reload)
+  <a href="/sobre">Sobre</a>        → reload completo (evite!)
+
+Rotas dinâmicas:
+  <Route path="/usuario/:id" element={<Perfil />} />
+
+  function Perfil() {
+    const { id } = useParams();
+    return <h1>Usuário {id}</h1>;
+  }
+
+useNavigate — navegação programática:
+  const navigate = useNavigate();
+  navigate("/dashboard");
+  navigate(-1);  // voltar
+
+Rotas aninhadas:
+  <Route path="/dashboard" element={<Dashboard />}>
+    <Route path="perfil" element={<Perfil />} />
+    <Route path="config" element={<Config />} />
+  </Route>
+  // Use <Outlet /> no Dashboard para renderizar as sub-rotas\`,
+        starterCode: '// Configure as rotas\n',
+        solution: 'import { BrowserRouter, Routes, Route, Link } from "react-router-dom";\n\nfunction Home() { return <h1>Home</h1>; }\nfunction Sobre() { return <h1>Sobre</h1>; }\nfunction Contato() { return <h1>Contato</h1>; }\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <nav>\n        <Link to="/">Home</Link>\n        <Link to="/sobre">Sobre</Link>\n        <Link to="/contato">Contato</Link>\n      </nav>\n      <Routes>\n        <Route path="/" element={<Home />} />\n        <Route path="/sobre" element={<Sobre />} />\n        <Route path="/contato" element={<Contato />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}',
+        expectedOutput: "BrowserRouter",
+        hints: ["BrowserRouter envolve toda a app", "Routes contém as Route", "Link navega sem recarregar"],
+        xpReward: 25,
+      },
+      {
+        id: "3-11",
+        title: "Fetching Data com useEffect",
+        description: "Crie um componente que busca dados de uma **API** usando `useEffect` + `fetch` e exibe uma lista de usuários.",
+        theory: \`Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
+
+Padrão básico:
+  function Usuarios() {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [erro, setErro] = useState(null);
+
+    useEffect(() => {
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then(res => {
+          if (!res.ok) throw new Error("Erro HTTP: " + res.status);
+          return res.json();
+        })
+        .then(data => setUsers(data))
+        .catch(err => setErro(err.message))
+        .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) return <p>Carregando...</p>;
+    if (erro) return <p>Erro: {erro}</p>;
+    return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
+  }
+
+Com async/await:
+  useEffect(() => {
+    async function buscar() {
+      try {
+        setLoading(true);
+        const res = await fetch(URL);
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        setErro(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    buscar();
+  }, []);
+
+Estados essenciais para fetch:
+  data     → os dados recebidos
+  loading  → está carregando?
+  error    → deu erro?
+
+Cancelando fetch (cleanup):
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(URL, { signal: controller.signal })
+      .then(...)
+      .catch(...);
+    return () => controller.abort();
+  }, []);
+
+Dica: Para projetos reais, considere React Query (TanStack Query) — gerencia cache, refetch e loading automaticamente.\`,
+        starterCode: 'import { useState, useEffect } from "react";\n// Busque dados da API\n',
+        solution: 'import { useState, useEffect } from "react";\n\nfunction Usuarios() {\n  const [users, setUsers] = useState([]);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch("https://jsonplaceholder.typicode.com/users")\n      .then(res => res.json())\n      .then(data => { setUsers(data); setLoading(false); });\n  }, []);\n\n  if (loading) return <p>Carregando...</p>;\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}',
+        expectedOutput: "useEffect",
+        hints: ["useEffect com [] vazio = roda uma vez", "fetch() retorna uma Promise", "Trate loading e error states"],
+        xpReward: 30,
+        quiz: [
+          { question: "Por que usamos [] no useEffect para fetch?", options: ["Para rodar toda renderização", "Para rodar só na montagem", "Para evitar erros", "Para cancelar o fetch"], correctIndex: 1 },
+        ],
+      },
+    
     ],
   },
   {
@@ -1243,7 +1875,7 @@ Quando usar Context:
     language: "CSS",
     emoji: "🎨",
     level: "Iniciante",
-    duration: "15h",
+    duration: "22h",
     students: 5600,
     progress: 100,
     color: "quest-pink",
@@ -1717,6 +2349,169 @@ Benefícios: código organizado, testável, escalável.`,
         hints: ["Model cuida dos dados", "Controller cuida da lógica", "Routes conecta URLs aos controllers"],
         xpReward: 25,
       },
+      {
+        id: "4-9",
+        title: "Box Model",
+        description: "Explique e aplique o **box model**: crie um `.card` com padding de **20px**, margin de **16px** e borda de **2px solid**. Use `box-sizing: border-box`.",
+        theory: \`O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
+
+De dentro para fora:
+  1. Content → o conteúdo (texto, imagem)
+  2. Padding → espaço INTERNO (entre conteúdo e borda)
+  3. Border  → a borda do elemento
+  4. Margin  → espaço EXTERNO (entre este e outros elementos)
+
+Visualização:
+  ┌──────── margin ─────────┐
+  │  ┌──── border ────────┐ │
+  │  │  ┌── padding ───┐  │ │
+  │  │  │  [content]   │  │ │
+  │  │  └──────────────┘  │ │
+  │  └────────────────────┘ │
+  └─────────────────────────┘
+
+Propriedades:
+  padding: 20px;              → todos os lados
+  padding: 10px 20px;         → vertical horizontal
+  padding: 5px 10px 15px 20px; → top right bottom left
+  padding-top: 10px;          → só o topo
+
+  margin: funciona igual ao padding
+  margin: 0 auto;             → centraliza horizontalmente!
+
+box-sizing — MUITO IMPORTANTE:
+  /* Sem border-box (padrão): */
+  width: 200px + padding + border = tamanho total MAIOR que 200px
+
+  /* Com border-box: */
+  width: 200px INCLUI padding e border
+
+  /* Sempre use: */
+  * {
+    box-sizing: border-box;
+  }
+
+Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maior vence). Isso NÃO acontece com padding!\`,
+        starterCode: '/* Aplique o box model */\n',
+        solution: '* {\n  box-sizing: border-box;\n}\n.card {\n  padding: 20px;\n  margin: 16px;\n  border: 2px solid #6c5ce7;\n}',
+        expectedOutput: "box-sizing",
+        hints: ["box-sizing: border-box é essencial", "padding = espaço interno", "margin = espaço externo"],
+        xpReward: 15,
+        quiz: [
+          { question: "O que box-sizing: border-box faz?", options: ["Remove bordas", "Inclui padding/border no width", "Duplica o margin", "Centraliza o elemento"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "4-10",
+        title: "Posicionamento (position)",
+        description: "Crie um elemento **fixo** no canto inferior direito da tela (como um botão de chat flutuante) usando `position: fixed`.",
+        theory: \`A propriedade position controla COMO o elemento é posicionado na página.
+
+Valores:
+  static (padrão) → fluxo normal do documento
+  relative → deslocado em relação à sua posição original
+  absolute → posicionado em relação ao ancestral posicionado mais próximo
+  fixed → posicionado em relação à VIEWPORT (não rola)
+  sticky → alterna entre relative e fixed ao rolar
+
+Exemplos:
+  /* Relative — desloca sem sair do fluxo */
+  .elemento {
+    position: relative;
+    top: 10px;
+    left: 20px;
+  }
+
+  /* Absolute — sai do fluxo, posiciona dentro do pai relative */
+  .pai { position: relative; }
+  .filho {
+    position: absolute;
+    top: 0;
+    right: 0;  /* canto superior direito do pai */
+  }
+
+  /* Fixed — fica fixo na tela (botão flutuante, navbar fixa) */
+  .chat-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+  }
+
+  /* Sticky — gruda ao rolar */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+z-index controla a sobreposição (qual fica "na frente"):
+  z-index: 1;    → acima do padrão
+  z-index: 100;  → acima de z-index menores
+  Só funciona com position diferente de static!
+
+Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).\`,
+        starterCode: '/* Crie o elemento fixo */\n',
+        solution: '.chat-btn {\n  position: fixed;\n  bottom: 20px;\n  right: 20px;\n  z-index: 100;\n  padding: 16px;\n  border-radius: 50%;\n  background: #6c5ce7;\n  color: white;\n}',
+        expectedOutput: "position: fixed",
+        hints: ["position: fixed fixa na viewport", "bottom e right posicionam", "z-index controla sobreposição"],
+        xpReward: 20,
+      },
+      {
+        id: "4-11",
+        title: "Flexbox Avançado",
+        description: "Crie um layout com **sidebar fixa** (250px) e **conteúdo flexível** que ocupa o resto usando `flex-grow`.",
+        theory: \`Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
+
+Propriedades dos itens flex:
+  flex-grow   → quanto o item CRESCE para preencher espaço extra
+  flex-shrink → quanto o item ENCOLHE se faltar espaço
+  flex-basis  → tamanho base antes de crescer/encolher
+
+Shorthand:
+  flex: grow shrink basis;
+  flex: 1;           → flex: 1 1 0% (cresce igualmente)
+  flex: 0 0 250px;   → não cresce, não encolhe, 250px fixo
+
+Layout sidebar + conteúdo:
+  .layout {
+    display: flex;
+    min-height: 100vh;
+  }
+  .sidebar {
+    flex: 0 0 250px;    /* fixa em 250px */
+    background: #1a1a2e;
+  }
+  .conteudo {
+    flex: 1;            /* ocupa todo o resto */
+    padding: 20px;
+  }
+
+Outros valores úteis:
+  align-self → alinha individualmente no eixo cruzado
+    align-self: flex-start | center | flex-end | stretch
+
+  order → muda a ordem visual (sem alterar o HTML!)
+    .item-especial { order: -1; }  /* aparece primeiro */
+
+Flex wrap — quebra de linha:
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .item {
+    flex: 1 1 300px;  /* mínimo 300px, cresce/encolhe */
+  }
+
+Isso cria um grid responsivo SEM media queries!\`,
+        starterCode: '/* Layout sidebar + conteúdo */\n',
+        solution: '.layout {\n  display: flex;\n  min-height: 100vh;\n}\n.sidebar {\n  flex: 0 0 250px;\n  background: #1a1a2e;\n}\n.conteudo {\n  flex: 1;\n  padding: 20px;\n}',
+        expectedOutput: "flex: 1",
+        hints: ["flex: 0 0 250px = tamanho fixo", "flex: 1 = ocupa o espaço restante", "O container precisa de display: flex"],
+        xpReward: 25,
+      },
+    
     ],
   },
   {
@@ -1725,7 +2520,7 @@ Benefícios: código organizado, testável, escalável.`,
     language: "SQL",
     emoji: "🗄️",
     level: "Iniciante",
-    duration: "18h",
+    duration: "25h",
     students: 6100,
     progress: 0,
     color: "quest-orange",
@@ -2082,6 +2877,151 @@ Chave estrangeira:
           { question: "O que SERIAL faz?", options: ["Cria texto", "Gera ID auto-incremento", "Define chave estrangeira", "Valida formato"], correctIndex: 1 },
         ],
       },
+      {
+        id: "6-9",
+        title: "ORDER BY e LIMIT",
+        description: "Busque os **5 usuários mais novos** (menor idade) da tabela `usuarios`, ordenados por idade crescente.",
+        theory: \`ORDER BY ordena os resultados e LIMIT restringe a quantidade retornada. Essenciais para paginação e ranking!
+
+ORDER BY:
+  SELECT * FROM usuarios ORDER BY idade;        → crescente (ASC, padrão)
+  SELECT * FROM usuarios ORDER BY idade DESC;   → decrescente
+  SELECT * FROM usuarios ORDER BY nome ASC;     → alfabética
+
+Múltiplas colunas:
+  SELECT * FROM usuarios ORDER BY cidade, nome;
+  -- Ordena por cidade primeiro, depois nome dentro da mesma cidade
+
+LIMIT:
+  SELECT * FROM usuarios LIMIT 10;              → primeiros 10
+  SELECT * FROM usuarios LIMIT 10 OFFSET 20;    → pula 20, pega 10 (página 3)
+
+Paginação:
+  -- Página 1: LIMIT 10 OFFSET 0
+  -- Página 2: LIMIT 10 OFFSET 10
+  -- Página 3: LIMIT 10 OFFSET 20
+  -- Fórmula: OFFSET = (página - 1) * itens_por_pagina
+
+Combinando tudo:
+  SELECT nome, idade
+  FROM usuarios
+  WHERE ativo = true
+  ORDER BY idade ASC
+  LIMIT 5;
+  -- 5 usuários ativos mais jovens
+
+TOP N por categoria (window functions):
+  SELECT nome, cidade, idade,
+    ROW_NUMBER() OVER (PARTITION BY cidade ORDER BY idade) as rank
+  FROM usuarios;
+
+DISTINCT — valores únicos:
+  SELECT DISTINCT cidade FROM usuarios;
+  SELECT COUNT(DISTINCT cidade) FROM usuarios;\`,
+        starterCode: '-- Busque os 5 mais novos\n',
+        solution: 'SELECT * FROM usuarios\nORDER BY idade ASC\nLIMIT 5;',
+        expectedOutput: "ORDER BY",
+        hints: ["ORDER BY idade ASC para crescente", "LIMIT 5 para limitar", "ASC é o padrão, pode omitir"],
+        xpReward: 15,
+      },
+      {
+        id: "6-10",
+        title: "ALTER TABLE e DELETE",
+        description: "Adicione uma coluna **email** (varchar) à tabela `usuarios` e delete todos os usuários com idade menor que 18.",
+        theory: \`ALTER TABLE modifica a estrutura de uma tabela existente. DELETE remove registros.
+
+ALTER TABLE — adicionar coluna:
+  ALTER TABLE usuarios ADD COLUMN email VARCHAR(100);
+
+ALTER TABLE — modificar coluna:
+  ALTER TABLE usuarios ALTER COLUMN email SET NOT NULL;
+  ALTER TABLE usuarios ALTER COLUMN idade SET DEFAULT 0;
+
+ALTER TABLE — renomear:
+  ALTER TABLE usuarios RENAME COLUMN nome TO full_name;
+  ALTER TABLE usuarios RENAME TO clientes;
+
+ALTER TABLE — remover coluna:
+  ALTER TABLE usuarios DROP COLUMN email;
+
+DELETE — remover registros:
+  DELETE FROM usuarios WHERE idade < 18;
+
+  ⚠️ CUIDADO! Sem WHERE, deleta TUDO:
+  DELETE FROM usuarios;  -- apaga todos os registros!
+
+TRUNCATE — mais rápido que DELETE para limpar tabela inteira:
+  TRUNCATE TABLE usuarios;
+  -- Remove tudo e reseta auto-increment
+
+DROP TABLE — remove a tabela inteira:
+  DROP TABLE IF EXISTS usuarios;
+  -- Remove estrutura + dados!
+
+Ordem de "perigo":
+  UPDATE WHERE → atualiza registros específicos (seguro)
+  DELETE WHERE → remove registros específicos (cuidado)
+  DELETE       → remove TUDO (perigoso)
+  TRUNCATE     → remove tudo + reseta (perigoso)
+  DROP TABLE   → apaga a tabela inteira (irreversível!)
+
+Dica: Sempre faça SELECT com o mesmo WHERE antes de DELETE!\`,
+        starterCode: '-- ALTER TABLE e DELETE\n',
+        solution: 'ALTER TABLE usuarios ADD COLUMN email VARCHAR(100);\nDELETE FROM usuarios WHERE idade < 18;',
+        expectedOutput: "ALTER TABLE",
+        hints: ["ALTER TABLE ... ADD COLUMN", "DELETE FROM ... WHERE", "SEMPRE use WHERE com DELETE!"],
+        xpReward: 20,
+        quiz: [
+          { question: "O que acontece com DELETE sem WHERE?", options: ["Nada", "Deleta a tabela", "Deleta TODOS os registros", "Dá erro"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "6-11",
+        title: "Índices e Performance",
+        description: "Crie um **índice** na coluna `email` da tabela `usuarios` para acelerar buscas por email.",
+        theory: \`Índices são estruturas que aceleram drasticamente as buscas no banco de dados — como o índice de um livro!
+
+Sem índice: o banco percorre TODAS as linhas (full table scan) — O(n)
+Com índice: pula direto para o resultado — O(log n)
+
+Criando índices:
+  CREATE INDEX idx_email ON usuarios(email);
+  CREATE UNIQUE INDEX idx_email_unico ON usuarios(email);
+  CREATE INDEX idx_nome_cidade ON usuarios(nome, cidade);  -- composto
+
+Quando criar índices:
+  ✅ Colunas usadas frequentemente em WHERE
+  ✅ Colunas usadas em JOIN (foreign keys)
+  ✅ Colunas usadas em ORDER BY
+  ✅ Colunas com alta cardinalidade (muitos valores únicos)
+
+Quando NÃO criar:
+  ❌ Tabelas muito pequenas (< 1000 linhas)
+  ❌ Colunas raramente consultadas
+  ❌ Colunas com poucos valores diferentes (ex: boolean)
+  ❌ Tabelas com muitos INSERT/UPDATE (índices desaceleram escrita)
+
+EXPLAIN — analisar performance:
+  EXPLAIN ANALYZE SELECT * FROM usuarios WHERE email = 'ana@mail.com';
+  -- Mostra se está usando índice ou full scan
+
+Tipos de índice:
+  B-tree (padrão) → comparações =, <, >, BETWEEN
+  Hash → apenas igualdade (=)
+  GIN → arrays, JSONB, full-text search
+  GiST → dados geográficos
+
+Removendo índice:
+  DROP INDEX idx_email;
+
+Regra de ouro: Crie índices para resolver queries lentas específicas, não "por precaução".\`,
+        starterCode: '-- Crie o índice\n',
+        solution: 'CREATE INDEX idx_email ON usuarios(email);',
+        expectedOutput: "CREATE INDEX",
+        hints: ["CREATE INDEX nome ON tabela(coluna)", "Índices aceleram buscas", "Use EXPLAIN para verificar performance"],
+        xpReward: 25,
+      },
+    
     ],
   },
   {
@@ -2090,7 +3030,7 @@ Chave estrangeira:
     language: "Git",
     emoji: "🔀",
     level: "Iniciante",
-    duration: "10h",
+    duration: "14h",
     students: 8900,
     progress: 80,
     color: "quest-blue",
@@ -2338,6 +3278,118 @@ Dica: Stash é como um "ctrl+z temporário" — use para pausar o trabalho sem p
         hints: ["git stash guarda mudanças temporariamente", "git stash pop restaura as mudanças", "Útil para trocar de branch sem commit"],
         xpReward: 15,
       },
+      {
+        id: "7-7",
+        title: "git rebase",
+        description: "Descreva como usar **git rebase** para manter o histórico limpo em vez de merge.",
+        theory: \`Rebase reaplica seus commits SOBRE outra branch, criando um histórico linear (sem commits de merge).
+
+Merge vs Rebase:
+  Merge: preserva a história completa (com bifurcações)
+    A → B → C → M (merge commit)
+             ↗
+        D → E
+
+  Rebase: reescreve para parecer linear
+    A → B → C → D' → E'
+
+Usando rebase:
+  git checkout feature
+  git rebase main
+  # Seus commits são reaplicados sobre o main atualizado
+
+Fluxo seguro:
+  1. git checkout main && git pull
+  2. git checkout feature
+  3. git rebase main
+  4. Resolva conflitos (se houver)
+  5. git rebase --continue
+  6. git push --force-with-lease  (necessário após rebase!)
+
+Interactive rebase — reorganizar commits:
+  git rebase -i HEAD~3   # últimos 3 commits
+
+  Opções:
+    pick   → manter o commit
+    squash → juntar com o anterior
+    reword → alterar a mensagem
+    drop   → remover o commit
+    edit   → pausar para editar
+
+Squash — juntar commits:
+  pick abc1234 Adiciona formulário
+  squash def5678 Corrige typo
+  squash ghi9012 Ajusta estilo
+  → Vira um só commit limpo!
+
+⚠️ REGRA DE OURO: Nunca faça rebase em branches públicas/compartilhadas! Rebase reescreve o histórico — outros devs terão conflitos.\`,
+        starterCode: '# Use git rebase\n',
+        solution: 'git checkout feature\ngit rebase main\n# Resolva conflitos se necessário\n# git rebase --continue',
+        expectedOutput: "git rebase",
+        hints: ["Rebase reaplica commits sobre outra branch", "Cria histórico linear", "Nunca rebase branches compartilhadas!"],
+        xpReward: 20,
+        quiz: [
+          { question: "Qual a diferença principal entre merge e rebase?", options: ["Rebase é mais rápido", "Merge cria histórico linear", "Rebase cria histórico linear", "Não há diferença"], correctIndex: 2 },
+        ],
+      },
+      {
+        id: "7-8",
+        title: ".gitignore e Boas Práticas",
+        description: "Crie um **.gitignore** para um projeto Node.js que ignore `node_modules/`, `.env` e arquivos de build.",
+        theory: \`.gitignore diz ao Git quais arquivos/pastas NÃO rastrear. Essencial para manter o repositório limpo!
+
+Sintaxe do .gitignore:
+  # Comentário
+  node_modules/       → ignora a pasta inteira
+  *.log              → ignora todos os .log
+  .env               → ignora arquivo específico
+  dist/              → ignora pasta de build
+  !important.log     → NÃO ignora (exceção com !)
+
+.gitignore para Node.js:
+  node_modules/
+  .env
+  .env.local
+  dist/
+  build/
+  *.log
+  .DS_Store
+  coverage/
+  .cache/
+
+.gitignore para Python:
+  __pycache__/
+  *.pyc
+  .env
+  venv/
+  .pytest_cache/
+
+IMPORTANTE: .gitignore só funciona para arquivos NOVOS. Se já rastreou:
+  git rm --cached arquivo.txt
+  # Remove do Git mas mantém no disco
+
+Boas práticas Git:
+  1. Commits atômicos — cada commit faz UMA coisa
+  2. Mensagens descritivas — "Adiciona validação de email no cadastro"
+  3. Branches por feature — nunca commit direto na main
+  4. Pull antes de push — git pull --rebase origin main
+  5. Code review — todo código passa por revisão
+  6. Conventional Commits:
+     feat: nova funcionalidade
+     fix: correção de bug
+     docs: documentação
+     style: formatação
+     refactor: refatoração
+     test: testes
+
+  git commit -m "feat: adiciona autenticação com Google"\`,
+        starterCode: '# Crie o .gitignore\n',
+        solution: '# .gitignore\nnode_modules/\n.env\n.env.local\ndist/\nbuild/\n*.log\n.DS_Store\ncoverage/',
+        expectedOutput: "node_modules",
+        hints: ["Cada linha é um padrão a ignorar", "* é wildcard para qualquer arquivo", "/ no final indica pasta"],
+        xpReward: 15,
+      },
+    
     ],
   },
   {
@@ -2346,7 +3398,7 @@ Dica: Stash é como um "ctrl+z temporário" — use para pausar o trabalho sem p
     language: "Lógica",
     emoji: "🧠",
     level: "Avançado",
-    duration: "40h",
+    duration: "50h",
     students: 3200,
     progress: 0,
     color: "primary",
@@ -2723,6 +3775,184 @@ Complexidade: O(log n) para busca/inserção (árvore balanceada).`,
         hints: ["Menor vai para esquerda, maior para direita", "Use recursão para inserir", "In-order: esquerda → raiz → direita"],
         xpReward: 30,
       },
+      {
+        id: "8-9",
+        title: "Lista Encadeada",
+        description: "Implemente uma **lista encadeada** simples em Python com métodos `append` e `print_list`.",
+        theory: \`Lista Encadeada (Linked List) é uma sequência de nós onde cada nó aponta para o próximo. Diferente de arrays, os elementos NÃO ficam em posições contíguas na memória.
+
+Estrutura:
+  [dado|→] → [dado|→] → [dado|None]
+   head                    tail
+
+Nó (Node):
+  class Node:
+      def __init__(self, data):
+          self.data = data
+          self.next = None    # ponteiro para o próximo
+
+Lista Encadeada:
+  class LinkedList:
+      def __init__(self):
+          self.head = None
+
+      def append(self, data):
+          novo = Node(data)
+          if not self.head:
+              self.head = novo
+              return
+          atual = self.head
+          while atual.next:
+              atual = atual.next
+          atual.next = novo
+
+      def print_list(self):
+          atual = self.head
+          while atual:
+              print(atual.data, end=" → ")
+              atual = atual.next
+          print("None")
+
+Operações e complexidade:
+  Acesso por índice: O(n) — precisa percorrer
+  Inserção no início: O(1) — só muda o head!
+  Inserção no final: O(n) — percorre até o final
+  Remoção no início: O(1)
+  Busca: O(n)
+
+Array vs Linked List:
+  Array: acesso O(1), inserção no meio O(n)
+  Linked: acesso O(n), inserção no início O(1)
+
+Variações:
+  Duplamente encadeada: cada nó aponta para anterior E próximo
+  Circular: o último nó aponta para o primeiro\`,
+        starterCode: 'class Node:\n    pass\n\nclass LinkedList:\n    # Implemente aqui\n    pass\n',
+        solution: 'class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n    def append(self, data):\n        novo = Node(data)\n        if not self.head:\n            self.head = novo\n            return\n        atual = self.head\n        while atual.next:\n            atual = atual.next\n        atual.next = novo\n    def print_list(self):\n        atual = self.head\n        while atual:\n            print(atual.data, end=" ")\n            atual = atual.next\n\nll = LinkedList()\nll.append(1)\nll.append(2)\nll.append(3)\nll.print_list()',
+        expectedOutput: "1 2 3",
+        hints: ["Cada Node tem data e next", "head aponta para o primeiro nó", "Percorra com while atual.next"],
+        xpReward: 30,
+      },
+      {
+        id: "8-10",
+        title: "Merge Sort",
+        description: "Implemente o **Merge Sort** em Python para ordenar `[38, 27, 43, 3, 9, 82, 10]`.",
+        theory: \`Merge Sort usa a estratégia "dividir para conquistar": divide a lista pela metade recursivamente, ordena cada metade e depois combina (merge).
+
+Algoritmo:
+  1. Se a lista tem 0 ou 1 elemento → já está ordenada
+  2. Divida ao meio
+  3. Ordene cada metade (recursão)
+  4. Combine (merge) as duas metades ordenadas
+
+Implementação:
+  def merge_sort(arr):
+      if len(arr) <= 1:
+          return arr
+
+      meio = len(arr) // 2
+      esq = merge_sort(arr[:meio])
+      dir = merge_sort(arr[meio:])
+      return merge(esq, dir)
+
+  def merge(esq, dir):
+      resultado = []
+      i = j = 0
+      while i < len(esq) and j < len(dir):
+          if esq[i] <= dir[j]:
+              resultado.append(esq[i])
+              i += 1
+          else:
+              resultado.append(dir[j])
+              j += 1
+      resultado.extend(esq[i:])
+      resultado.extend(dir[j:])
+      return resultado
+
+Exemplo [38, 27, 43, 3]:
+  [38, 27, 43, 3]
+  [38, 27] [43, 3]
+  [38][27] [43][3]
+  [27, 38] [3, 43]    ← merge de cada par
+  [3, 27, 38, 43]     ← merge final
+
+Complexidade:
+  Tempo: O(n log n) — sempre! (melhor, médio e pior caso)
+  Espaço: O(n) — precisa de arrays auxiliares
+
+Comparação:
+  Bubble Sort: O(n²) — lento para listas grandes
+  Merge Sort: O(n log n) — muito mais rápido
+  Para 1 milhão de itens: n² = 10¹² vs n log n ≈ 2×10⁷\`,
+        starterCode: 'def merge_sort(arr):\n    # Implemente aqui\n    pass\n\nprint(merge_sort([38, 27, 43, 3, 9, 82, 10]))',
+        solution: 'def merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    meio = len(arr) // 2\n    esq = merge_sort(arr[:meio])\n    dir = merge_sort(arr[meio:])\n    return merge(esq, dir)\n\ndef merge(esq, dir):\n    resultado = []\n    i = j = 0\n    while i < len(esq) and j < len(dir):\n        if esq[i] <= dir[j]:\n            resultado.append(esq[i])\n            i += 1\n        else:\n            resultado.append(dir[j])\n            j += 1\n    resultado.extend(esq[i:])\n    resultado.extend(dir[j:])\n    return resultado\n\nprint(merge_sort([38, 27, 43, 3, 9, 82, 10]))',
+        expectedOutput: "[3, 9, 10, 27, 38, 43, 82]",
+        hints: ["Divida ao meio recursivamente", "Merge combina duas listas ordenadas", "Caso base: lista com 0 ou 1 elemento"],
+        xpReward: 35,
+      },
+      {
+        id: "8-11",
+        title: "Grafos — BFS",
+        description: "Implemente a **busca em largura (BFS)** em um grafo representado como dicionário de adjacência.",
+        theory: \`Grafos representam relações entre elementos. Cada elemento é um vértice (nó) e cada relação é uma aresta (conexão).
+
+Representação com dicionário (lista de adjacência):
+  grafo = {
+      "A": ["B", "C"],
+      "B": ["A", "D", "E"],
+      "C": ["A", "F"],
+      "D": ["B"],
+      "E": ["B", "F"],
+      "F": ["C", "E"]
+  }
+
+BFS (Breadth-First Search) — Busca em Largura:
+  Explora todos os vizinhos de um nó ANTES de ir mais fundo.
+  Usa uma FILA (queue) como estrutura auxiliar.
+
+Implementação:
+  from collections import deque
+
+  def bfs(grafo, inicio):
+      visitados = set()
+      fila = deque([inicio])
+      visitados.add(inicio)
+      ordem = []
+
+      while fila:
+          vertice = fila.popleft()
+          ordem.append(vertice)
+
+          for vizinho in grafo[vertice]:
+              if vizinho not in visitados:
+                  visitados.add(vizinho)
+                  fila.append(vizinho)
+
+      return ordem
+
+  bfs(grafo, "A")  → ["A", "B", "C", "D", "E", "F"]
+
+BFS vs DFS:
+  BFS (largura): usa Fila → encontra caminho mais curto
+  DFS (profundidade): usa Pilha/Recursão → explora fundo primeiro
+
+Usos de BFS:
+  • Caminho mais curto em grafo sem peso
+  • Nível de separação (ex: "6 graus de separação")
+  • Verificar se grafo é conexo
+  • Web crawling
+
+Complexidade: O(V + E) onde V = vértices, E = arestas\`,
+        starterCode: 'from collections import deque\n\n# Implemente BFS\n',
+        solution: 'from collections import deque\n\ndef bfs(grafo, inicio):\n    visitados = set()\n    fila = deque([inicio])\n    visitados.add(inicio)\n    ordem = []\n    while fila:\n        vertice = fila.popleft()\n        ordem.append(vertice)\n        for vizinho in grafo[vertice]:\n            if vizinho not in visitados:\n                visitados.add(vizinho)\n                fila.append(vizinho)\n    return ordem\n\ngrafo = {"A": ["B","C"], "B": ["A","D"], "C": ["A","D"], "D": ["B","C"]}\nprint(bfs(grafo, "A"))',
+        expectedOutput: "A",
+        hints: ["Use deque como fila", "set() para rastrear visitados", "popleft() remove o primeiro da fila"],
+        xpReward: 35,
+        quiz: [
+          { question: "Qual estrutura o BFS usa?", options: ["Pilha", "Fila", "Árvore", "Hash Table"], correctIndex: 1 },
+        ],
+      },
+    
     ],
   },
   {
@@ -2731,7 +3961,7 @@ Complexidade: O(log n) para busca/inserção (árvore balanceada).`,
     language: "HTML",
     emoji: "📄",
     level: "Iniciante",
-    duration: "15h",
+    duration: "22h",
     students: 15200,
     progress: 0,
     color: "quest-yellow",
@@ -3114,6 +4344,166 @@ Por que usar semântica?
           { question: "Qual tag é usada para navegação?", options: ["<menu>", "<links>", "<nav>", "<navigate>"], correctIndex: 2 },
         ],
       },
+      {
+        id: "9-9",
+        title: "Acessibilidade (A11Y)",
+        description: "Melhore a acessibilidade de um botão e uma imagem usando **atributos ARIA** e boas práticas de HTML acessível.",
+        theory: \`Acessibilidade (A11Y) garante que TODOS possam usar seu site — incluindo pessoas com deficiência visual, motora ou cognitiva.
+
+Princípios WCAG:
+  Perceptível → conteúdo visível/audível para todos
+  Operável → navegável por teclado
+  Compreensível → linguagem clara
+  Robusto → funciona em tecnologias assistivas
+
+Atributos ARIA:
+  role → define o papel do elemento
+    <div role="button">Clique</div>
+    <div role="navigation">Menu</div>
+    <div role="alert">Erro!</div>
+
+  aria-label → nome acessível (quando texto visual não basta)
+    <button aria-label="Fechar menu">✕</button>
+    <input aria-label="Buscar produtos">
+
+  aria-hidden → esconde de leitores de tela
+    <span aria-hidden="true">🎨</span>  → decorativo
+
+  aria-expanded → estado de menus/accordions
+    <button aria-expanded="false">Menu</button>
+
+  aria-live → anuncia mudanças dinâmicas
+    <div aria-live="polite">3 resultados encontrados</div>
+
+Boas práticas:
+  ✅ Toda imagem tem alt descritivo (ou alt="" se decorativa)
+  ✅ Formulários têm <label> associado ao <input>
+  ✅ Contraste mínimo 4.5:1 (texto normal)
+  ✅ Site 100% navegável por teclado (Tab, Enter, Esc)
+  ✅ Foco visível em elementos interativos
+  ✅ Textos de links descritivos ("Ler artigo" em vez de "Clique aqui")
+
+  ❌ Não use só cor para comunicar informação
+  ❌ Não remova outline de foco sem alternativa
+  ❌ Não use tabindex > 0\`,
+        starterCode: '<!-- Melhore a acessibilidade -->\n',
+        solution: '<button aria-label="Fechar modal" type="button">\n  <span aria-hidden="true">✕</span>\n</button>\n<img src="foto.jpg" alt="Equipe de desenvolvedores trabalhando em laptops">',
+        expectedOutput: "aria-label",
+        hints: ["aria-label dá nome acessível", "aria-hidden esconde decorações", "alt descreve a imagem"],
+        xpReward: 20,
+        quiz: [
+          { question: "O que aria-hidden='true' faz?", options: ["Esconde visualmente", "Esconde de leitores de tela", "Remove o elemento", "Desabilita o elemento"], correctIndex: 1 },
+        ],
+      },
+      {
+        id: "9-10",
+        title: "Meta Tags e SEO",
+        description: "Crie um `<head>` completo com meta tags de **SEO**: charset, viewport, description, Open Graph e favicon.",
+        theory: \`Meta tags no <head> fornecem informações sobre a página para navegadores, buscadores e redes sociais.
+
+Meta tags essenciais:
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aprenda programação de forma gamificada">
+    <meta name="keywords" content="programação, cursos, código">
+    <meta name="author" content="CodeQuest">
+    <title>CodeQuest — Aprenda Programação</title>
+    <link rel="icon" href="/favicon.ico">
+  </head>
+
+Open Graph (como aparece no Facebook/LinkedIn):
+  <meta property="og:title" content="CodeQuest">
+  <meta property="og:description" content="Plataforma gamificada de programação">
+  <meta property="og:image" content="https://site.com/preview.jpg">
+  <meta property="og:url" content="https://site.com">
+  <meta property="og:type" content="website">
+
+Twitter Card:
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CodeQuest">
+  <meta name="twitter:image" content="https://site.com/preview.jpg">
+
+SEO on-page:
+  ✅ Título com palavra-chave (< 60 caracteres)
+  ✅ Meta description persuasiva (< 160 caracteres)
+  ✅ UM h1 por página com keyword
+  ✅ URLs amigáveis: /cursos/python (não /p?id=123)
+  ✅ Imagens com alt text
+  ✅ Site rápido (Core Web Vitals)
+  ✅ Responsivo (mobile-friendly)
+  ✅ HTTPS
+
+Viewport — essencial para mobile:
+  width=device-width → largura = tela do dispositivo
+  initial-scale=1.0 → zoom inicial 100%\`,
+        starterCode: '<!-- Crie o head com meta tags -->\n',
+        solution: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Aprenda programação de forma gamificada com CodeQuest">\n  <meta property="og:title" content="CodeQuest">\n  <meta property="og:description" content="Plataforma gamificada de programação">\n  <meta property="og:image" content="https://codequest.com/preview.jpg">\n  <title>CodeQuest — Aprenda Programação</title>\n  <link rel="icon" href="/favicon.ico">\n</head>',
+        expectedOutput: "<meta",
+        hints: ["charset e viewport são obrigatórios", "description ajuda no Google", "Open Graph controla preview em redes sociais"],
+        xpReward: 20,
+      },
+      {
+        id: "9-11",
+        title: "Multimídia HTML",
+        description: "Adicione um **áudio** e um **vídeo** nativos com controles e uma mensagem de fallback.",
+        theory: \`HTML5 suporta áudio e vídeo nativamente, sem precisar de plugins como Flash!
+
+Elemento <video>:
+  <video controls width="640" height="360">
+    <source src="video.mp4" type="video/mp4">
+    <source src="video.webm" type="video/webm">
+    Seu navegador não suporta vídeo.
+  </video>
+
+Atributos de video:
+  controls   → exibe controles (play, pause, volume)
+  autoplay   → inicia automaticamente (evite!)
+  muted      → inicia sem som (necessário para autoplay)
+  loop       → repete infinitamente
+  poster     → imagem de preview antes de reproduzir
+  preload    → none | metadata | auto
+
+  <video controls poster="thumb.jpg" preload="metadata">
+    <source src="video.mp4" type="video/mp4">
+  </video>
+
+Elemento <audio>:
+  <audio controls>
+    <source src="musica.mp3" type="audio/mpeg">
+    <source src="musica.ogg" type="audio/ogg">
+    Seu navegador não suporta áudio.
+  </audio>
+
+Elemento <iframe> — incorporar conteúdo externo:
+  <iframe
+    src="https://www.youtube.com/embed/VIDEO_ID"
+    width="560" height="315"
+    title="Título do vídeo"
+    allowfullscreen>
+  </iframe>
+
+Formatos suportados:
+  Vídeo: .mp4 (H.264), .webm (VP9), .ogg
+  Áudio: .mp3, .ogg (Vorbis), .wav, .aac
+
+Legendas:
+  <video controls>
+    <source src="video.mp4" type="video/mp4">
+    <track src="legenda.vtt" kind="subtitles" srclang="pt" label="Português">
+  </video>
+
+Dica: Forneça múltiplos formatos com <source> para máxima compatibilidade!\`,
+        starterCode: '<!-- Adicione áudio e vídeo -->\n',
+        solution: '<video controls width="640" poster="thumb.jpg">\n  <source src="video.mp4" type="video/mp4">\n  Seu navegador não suporta vídeo.\n</video>\n\n<audio controls>\n  <source src="musica.mp3" type="audio/mpeg">\n  Seu navegador não suporta áudio.\n</audio>',
+        expectedOutput: "<video",
+        hints: ["<video controls> com <source> dentro", "<audio controls> para áudio", "Mensagem de fallback entre as tags"],
+        xpReward: 20,
+        quiz: [
+          { question: "Para que serve o atributo poster em <video>?", options: ["Define a legenda", "Imagem de preview", "Define o formato", "Silencia o vídeo"], correctIndex: 1 },
+        ],
+      },
+    
     ],
   },
 ];
