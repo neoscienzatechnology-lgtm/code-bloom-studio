@@ -435,7 +435,7 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
         id: "1-11",
         title: "Trabalhando com Arquivos",
         description: "Abra um arquivo chamado **\"dados.txt\"**, escreva **\"Olá, arquivo!\"** nele e depois leia o conteúdo com `print()`.",
-        theory: \`Manipular arquivos é essencial para qualquer programa real — ler configurações, salvar dados, processar logs, exportar relatórios.
+        theory: `Manipular arquivos é essencial para qualquer programa real — ler configurações, salvar dados, processar logs, exportar relatórios.
 
 A função open() abre um arquivo. O modo determina o que você pode fazer:
 • "r" → leitura (padrão) — erro se não existir
