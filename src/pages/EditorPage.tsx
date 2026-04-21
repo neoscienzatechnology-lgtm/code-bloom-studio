@@ -4,7 +4,18 @@ import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { getLessonById } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Play, Lightbulb, ChevronRight, Check, X, RotateCcw, ArrowLeft } from "lucide-react";
+import {
+  Play,
+  Lightbulb,
+  ChevronRight,
+  Check,
+  X,
+  RotateCcw,
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Info,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
@@ -12,6 +23,8 @@ import QuizSection from "@/components/QuizSection";
 import { useProgress } from "@/hooks/useProgress";
 import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
+
+const ONBOARDING_KEY = "codequest_editor_onboarding_seen";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -30,8 +43,21 @@ const EditorPage = () => {
   const [hintIndex, setHintIndex] = useState(-1);
   const [showXP, setShowXP] = useState(false);
   const [running, setRunning] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
+  const [solutionWarned, setSolutionWarned] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Save code as user types (debounced via effect)
+  useEffect(() => {
+    const seen = localStorage.getItem(ONBOARDING_KEY);
+    if (!seen) setShowOnboarding(true);
+  }, []);
+
+  const dismissOnboarding = () => {
+    localStorage.setItem(ONBOARDING_KEY, "1");
+    setShowOnboarding(false);
+  };
+
+  // Save code as user types (debounced)
   useEffect(() => {
     if (!lesson) return;
     const timer = setTimeout(() => saveCode(lesson.id, code, course?.id), 500);
@@ -81,6 +107,17 @@ const EditorPage = () => {
     setOutput(null);
     setIsCorrect(null);
     setHintIndex(-1);
+    setShowSolution(false);
+    setSolutionWarned(false);
+  };
+
+  const handleRevealSolution = () => {
+    if (!solutionWarned) {
+      setSolutionWarned(true);
+      return;
+    }
+    setShowSolution(true);
+    setCode(lesson.solution);
   };
 
   const handleNext = () => {
@@ -94,27 +131,73 @@ const EditorPage = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col">
+      {/* Onboarding Banner */}
+      <AnimatePresence>
+        {showOnboarding && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="border-b border-primary/20 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 px-4 py-3"
+          >
+            <div className="mx-auto flex max-w-7xl items-center gap-4 flex-wrap">
+              <Info size={18} className="shrink-0 text-primary" />
+              <div className="flex flex-1 flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground">
+                <span>
+                  <strong className="text-foreground">📖 Esquerda:</strong> leia a teoria e o exercício
+                </span>
+                <span>
+                  <strong className="text-foreground">💻 Direita:</strong> escreva seu código
+                </span>
+                <span>
+                  <strong className="text-foreground">▶ Executar:</strong> testa sua resposta
+                </span>
+                <span>
+                  <strong className="text-foreground">💡 Dicas:</strong> aparecem se você travar
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={dismissOnboarding}
+                className="shrink-0 h-7 rounded-full text-xs"
+              >
+                Entendi ✓
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Top bar */}
       <div className="border-b border-border/30 bg-secondary/30 px-4 py-3">
         <div className="mx-auto flex max-w-7xl items-center gap-4">
-          <Link to={`/cursos/${course.id}`} className="text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to={`/cursos/${course.id}`}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
             <ArrowLeft size={18} />
           </Link>
           <div className="flex-1">
             <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="font-bold text-primary">{course.emoji} {course.title}</span>
+              <span className="font-bold text-primary">
+                {course.emoji} {course.title}
+              </span>
               <span className="text-muted-foreground">
                 Lição {lessonIndex + 1}/{course.lessons.length}
               </span>
             </div>
-            <Progress value={progressPercent} className="h-2 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+            <Progress
+              value={progressPercent}
+              className="h-2 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent"
+            />
           </div>
         </div>
       </div>
 
       {/* Main split layout */}
       <div className="flex-1 grid lg:grid-cols-2">
-        {/* Instructions */}
+        {/* Instructions (left panel) */}
         <div className="border-b border-border/30 p-6 lg:border-b-0 lg:border-r overflow-auto">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="mb-2 flex items-center gap-2">
@@ -158,7 +241,7 @@ const EditorPage = () => {
               </div>
             )}
 
-
+            {/* Exercise description */}
             <div className="mb-6">
               <div className="mb-3 flex items-center gap-2 text-sm font-bold text-accent">
                 <span>🎯</span> Exercício
@@ -166,13 +249,69 @@ const EditorPage = () => {
               <p className="leading-relaxed text-muted-foreground whitespace-pre-line">
                 {lesson.description}
               </p>
+              {/* Expected output reference */}
+              <div className="mt-3 rounded-lg border border-border/30 bg-secondary/40 px-3 py-2 text-xs">
+                <span className="font-bold text-muted-foreground">Saída esperada: </span>
+                <code className="font-mono text-accent">{lesson.expectedOutput}</code>
+              </div>
             </div>
 
             {/* Hints */}
             <div className="space-y-3">
-              <Button variant="outline" size="sm" onClick={handleHint} className="gap-2 rounded-full text-xs" disabled={hintIndex >= lesson.hints.length - 1}>
-                <Lightbulb size={14} /> Pedir dica ({hintIndex + 1}/{lesson.hints.length})
-              </Button>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleHint}
+                  className="gap-2 rounded-full text-xs"
+                  disabled={hintIndex >= lesson.hints.length - 1}
+                >
+                  <Lightbulb size={14} /> Pedir dica ({Math.max(hintIndex + 1, 0)}/{lesson.hints.length})
+                </Button>
+
+                {/* Ver Solução button */}
+                {hintIndex >= 1 && !showSolution && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleRevealSolution}
+                    className="gap-1.5 rounded-full text-xs text-muted-foreground hover:text-destructive"
+                  >
+                    <Eye size={13} /> Ver Solução
+                  </Button>
+                )}
+                {showSolution && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowSolution(false)}
+                    className="gap-1.5 rounded-full text-xs text-muted-foreground"
+                  >
+                    <EyeOff size={13} /> Ocultar Solução
+                  </Button>
+                )}
+              </div>
+
+              {/* Solution warning */}
+              <AnimatePresence>
+                {solutionWarned && !showSolution && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="rounded-lg border border-quest-yellow/30 bg-quest-yellow/5 px-4 py-3 text-xs text-quest-yellow"
+                  >
+                    ⚠️ Ver a solução vai carregar o código no editor. Tente mais um pouco primeiro — você aprende muito mais errando!{" "}
+                    <button
+                      onClick={handleRevealSolution}
+                      className="ml-1 underline font-bold hover:opacity-80"
+                    >
+                      Mostrar mesmo assim
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <AnimatePresence>
                 {hintIndex >= 0 && (
                   <motion.div
@@ -181,7 +320,10 @@ const EditorPage = () => {
                     className="space-y-2"
                   >
                     {lesson.hints.slice(0, hintIndex + 1).map((hint, i) => (
-                      <div key={i} className="rounded-lg border border-quest-yellow/20 bg-quest-yellow/5 px-4 py-2.5 text-sm text-quest-yellow">
+                      <div
+                        key={i}
+                        className="rounded-lg border border-quest-yellow/20 bg-quest-yellow/5 px-4 py-2.5 text-sm text-quest-yellow"
+                      >
                         💡 {hint}
                       </div>
                     ))}
@@ -192,7 +334,7 @@ const EditorPage = () => {
           </motion.div>
         </div>
 
-        {/* Editor */}
+        {/* Editor (right panel) */}
         <div className="flex flex-col">
           <div className="flex-1 p-4">
             <div className="h-full rounded-xl border border-border/30 bg-[hsl(250,20%,6%)] overflow-hidden flex flex-col">
@@ -204,36 +346,56 @@ const EditorPage = () => {
                     <div className="h-2.5 w-2.5 rounded-full bg-quest-yellow/60" />
                     <div className="h-2.5 w-2.5 rounded-full bg-accent/60" />
                   </div>
-                  <span className="text-xs text-muted-foreground font-mono">{course.language.toLowerCase()}</span>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {course.language.toLowerCase()}
+                  </span>
+                  {showSolution && (
+                    <span className="text-xs rounded-full bg-quest-yellow/10 px-2 py-0.5 text-quest-yellow font-bold">
+                      solução
+                    </span>
+                  )}
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleReset} className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReset}
+                  className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground"
+                >
                   <RotateCcw size={12} /> Reset
                 </Button>
               </div>
 
               {/* Code Editor */}
-              <CodeEditor
-                value={code}
-                onChange={setCode}
-                language={course.language}
-              />
+              <CodeEditor value={code} onChange={setCode} language={course.language} />
 
               {/* Output */}
               {output && (
-                <div className={`border-t px-4 py-3 font-mono text-sm ${
-                  isCorrect === true
-                    ? "border-accent/20 bg-accent/5 text-accent"
-                    : isCorrect === null
-                    ? "border-quest-yellow/20 bg-quest-yellow/5 text-quest-yellow"
-                    : "border-destructive/20 bg-destructive/5 text-destructive"
-                }`}>
+                <div
+                  className={`border-t px-4 py-3 font-mono text-sm ${
+                    isCorrect === true
+                      ? "border-accent/20 bg-accent/5 text-accent"
+                      : isCorrect === null
+                      ? "border-quest-yellow/20 bg-quest-yellow/5 text-quest-yellow"
+                      : "border-destructive/20 bg-destructive/5 text-destructive"
+                  }`}
+                >
                   <div className="flex items-center gap-2 mb-1">
-                    {isCorrect === true ? <Check size={14} /> : isCorrect === null ? <Lightbulb size={14} /> : <X size={14} />}
+                    {isCorrect === true ? (
+                      <Check size={14} />
+                    ) : isCorrect === null ? (
+                      <Lightbulb size={14} />
+                    ) : (
+                      <X size={14} />
+                    )}
                     <span className="font-bold text-xs">
-                      {isCorrect === true ? "Saída:" : isCorrect === null ? "Quase lá:" : "Erro:"}
+                      {isCorrect === true
+                        ? "Correto!"
+                        : isCorrect === null
+                        ? "Quase lá:"
+                        : "Atenção:"}
                     </span>
                   </div>
-                  {output}
+                  <span className="whitespace-pre-wrap">{output}</span>
                 </div>
               )}
             </div>
@@ -243,7 +405,11 @@ const EditorPage = () => {
           <div className="border-t border-border/30 bg-secondary/30 p-4">
             <div className="flex items-center justify-between">
               <div className="relative">
-                <Button onClick={handleRun} disabled={running} className="gap-2 rounded-full bg-gradient-to-r from-accent to-[hsl(160,80%,45%)] font-extrabold text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-xl">
+                <Button
+                  onClick={handleRun}
+                  disabled={running}
+                  className="gap-2 rounded-full bg-gradient-to-r from-accent to-[hsl(160,80%,45%)] font-extrabold text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-xl"
+                >
                   <Play size={16} /> {running ? "Executando..." : "Executar"}
                 </Button>
                 <AnimatePresence>
@@ -259,8 +425,17 @@ const EditorPage = () => {
                   )}
                 </AnimatePresence>
               </div>
-              <Button variant="ghost" onClick={handleNext} className="gap-1 text-sm text-muted-foreground">
-                {nextLesson ? "Próximo" : "Voltar ao curso"} <ChevronRight size={16} />
+              <Button
+                variant={isCorrect === true ? "default" : "ghost"}
+                onClick={handleNext}
+                className={`gap-1 text-sm ${
+                  isCorrect === true
+                    ? "bg-accent/20 text-accent font-bold hover:bg-accent/30"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {nextLesson ? "Próxima lição" : "Voltar ao curso"}{" "}
+                <ChevronRight size={16} />
               </Button>
             </div>
           </div>

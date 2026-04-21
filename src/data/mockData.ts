@@ -2,6 +2,7 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
+  explanation?: string;
 }
 
 export interface Lesson {
@@ -88,8 +89,8 @@ Dica: print() sempre pula uma linha após exibir. Para exibir várias coisas na 
         hints: ["Use a função print() para exibir texto", "O texto deve estar entre aspas", 'A resposta é: print("Olá, Mundo!")'],
         xpReward: 10,
         quiz: [
-          { question: "Qual função exibe texto no console em Python?", options: ["input()", "print()", "echo()", "write()"], correctIndex: 1 },
-          { question: "Como exibir o texto 'Olá' em Python?", options: ["print Olá", "print('Olá')", "console.log('Olá')", "echo 'Olá'"], correctIndex: 1 },
+          { question: "Qual função exibe texto no console em Python?", options: ["input()", "print()", "echo()", "write()"], correctIndex: 1, explanation: "print() é a função padrão do Python para saída de texto. input() lê do usuário, echo() é do PHP/shell, e write() não existe como função global." },
+          { question: "Como exibir o texto 'Olá' em Python?", options: ["print Olá", "print('Olá')", "console.log('Olá')", "echo 'Olá'"], correctIndex: 1, explanation: "Em Python 3, print() é uma função — sempre precisa de parênteses. console.log é JavaScript e echo é PHP/shell." },
         ],
       },
       {
@@ -117,8 +118,8 @@ O f antes das aspas ativa a interpolação. Dentro de {}, coloque qualquer vari�
         hints: ["Atribua valores às variáveis nome e idade", "Use f-string: f\"texto {variavel}\"", 'print(f"Meu nome é {nome} e tenho {idade} anos")'],
         xpReward: 15,
         quiz: [
-          { question: "Qual é o tipo de dado de 'Lucas' em Python?", options: ["int", "float", "str", "bool"], correctIndex: 2 },
-          { question: "O que o f antes das aspas ativa?", options: ["Formatação automática", "Interpolação de variáveis", "Conversão de tipo", "Modo debug"], correctIndex: 1 },
+          { question: "Qual é o tipo de dado de 'Lucas' em Python?", options: ["int", "float", "str", "bool"], correctIndex: 2, explanation: "str (string) representa texto. int é número inteiro, float é decimal, e bool é True/False. Qualquer valor entre aspas é uma str." },
+          { question: "O que o f antes das aspas ativa?", options: ["Formatação automática", "Interpolação de variáveis", "Conversão de tipo", "Modo debug"], correctIndex: 1, explanation: "f-strings (f\"...\") permitem inserir variáveis e expressões Python diretamente dentro do texto usando {chaves}. Ex: f\"Olá, {nome}!\"" },
         ],
       },
       {
@@ -189,8 +190,8 @@ IMPORTANTE: Em Python, a indentação (4 espaços) define o bloco de código. N�
         hints: ["Use if nota >= 7:", "Não esqueça dos dois pontos (:) e da indentação", 'if nota >= 7:\n    print("Aprovado!")'],
         xpReward: 20,
         quiz: [
-          { question: "O que acontece se a condição do if for falsa?", options: ["O programa para", "Executa o bloco else", "Dá erro", "Pula tudo"], correctIndex: 1 },
-          { question: "Qual operador verifica 'maior ou igual'?", options: [">>", "=>", ">=", "=<"], correctIndex: 2 },
+          { question: "O que acontece se a condição do if for falsa?", options: ["O programa para", "Executa o bloco else", "Dá erro", "Pula tudo"], correctIndex: 1, explanation: "Quando a condição do if é False, o Python vai para o bloco else (se existir). Se não houver else, simplesmente pula o bloco if e continua o programa." },
+          { question: "Qual operador verifica 'maior ou igual'?", options: [">>", "=>", ">=", "=<"], correctIndex: 2, explanation: ">= é o operador 'maior ou igual a'. Note que o sinal de maior (>) vem antes do igual (=). => não existe em Python — é confundido com JavaScript." },
         ],
       },
       {
@@ -224,7 +225,7 @@ Você pode usar for com listas, strings, range() e muitos outros objetos iteráv
         hints: ["Use range(1, 6) para gerar números de 1 a 5", "for i in range(1, 6):", "print(i) dentro do loop"],
         xpReward: 20,
         quiz: [
-          { question: "O que range(1, 6) gera?", options: ["0 a 6", "1 a 6", "1 a 5", "0 a 5"], correctIndex: 2 },
+          { question: "O que range(1, 6) gera?", options: ["0 a 6", "1 a 6", "1 a 5", "0 a 5"], correctIndex: 2, explanation: "range(início, fim) gera números do início até fim-1. Por isso range(1, 6) gera 1, 2, 3, 4, 5 — o número final (6) fica de fora." },
         ],
       },
       {
@@ -376,7 +377,7 @@ Dica: Use list comprehension para transformações simples. Para lógica complex
         hints: ["Sintaxe: [expressão for x in range()]", "x**2 calcula o quadrado", "[x**2 for x in range(1, 6)]"],
         xpReward: 20,
         quiz: [
-          { question: "Qual é a sintaxe de list comprehension?", options: ["list(x for x in range)", "[x for x in range()]", "for x in range: list.add(x)", "comprehend(x, range)"], correctIndex: 1 },
+          { question: "Qual é a sintaxe de list comprehension?", options: ["list(x for x in range)", "[x for x in range()]", "for x in range: list.add(x)", "comprehend(x, range)"], correctIndex: 1, explanation: "List comprehension usa colchetes [ ] e a estrutura [expressão for variável in iterável]. É equivalente a um loop for com append, mas mais conciso." },
         ],
       },
       {
@@ -428,7 +429,7 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
         hints: ["try: tenta executar o código", "except ValueError: captura o erro", "int(\"abc\") gera ValueError"],
         xpReward: 20,
         quiz: [
-          { question: "O que o bloco 'finally' faz?", options: ["Roda só se der erro", "Roda só se NÃO der erro", "Roda SEMPRE", "Cancela o erro"], correctIndex: 2 },
+          { question: "O que o bloco 'finally' faz?", options: ["Roda só se der erro", "Roda só se NÃO der erro", "Roda SEMPRE", "Cancela o erro"], correctIndex: 2, explanation: "O bloco finally é executado independente do resultado — deu erro ou não. É ideal para fechar arquivos, conexões ou liberar recursos." },
         ],
       },
       {
@@ -475,8 +476,8 @@ Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prá
         hints: ["Use open() com modo 'w' para escrever", "Use open() com modo 'r' para ler", "with garante que o arquivo é fechado"],
         xpReward: 25,
         quiz: [
-          { question: "O que o modo 'a' faz ao abrir um arquivo?", options: ["Apaga o conteúdo", "Lê o arquivo", "Adiciona ao final", "Cria uma cópia"], correctIndex: 2 },
-          { question: "Por que usar 'with open()' em vez de 'open()' sozinho?", options: ["É mais rápido", "Fecha o arquivo automaticamente", "Não precisa de modo", "Cria backup"], correctIndex: 1 },
+          { question: "O que o modo 'a' faz ao abrir um arquivo?", options: ["Apaga o conteúdo", "Lê o arquivo", "Adiciona ao final", "Cria uma cópia"], correctIndex: 2, explanation: "Modo 'a' (append) adiciona conteúdo ao final do arquivo sem apagar o que existe. 'r' lê, 'w' escreve (apaga tudo antes) e 'x' cria (dá erro se existir)." },
+          { question: "Por que usar 'with open()' em vez de 'open()' sozinho?", options: ["É mais rápido", "Fecha o arquivo automaticamente", "Não precisa de modo", "Cria backup"], correctIndex: 1, explanation: "with open() é um gerenciador de contexto que fecha o arquivo automaticamente ao sair do bloco, mesmo se ocorrer um erro. Evita vazamentos de recursos." },
         ],
       },
       {
@@ -532,7 +533,7 @@ Instalando pacotes externos: pip install requests`,
         hints: ["import math importa o módulo", "math.sqrt() calcula raiz quadrada", "sqrt(144) = 12.0"],
         xpReward: 20,
         quiz: [
-          { question: "Qual a diferença entre 'import math' e 'from math import sqrt'?", options: ["Nenhuma", "O segundo importa só sqrt, sem prefixo", "O primeiro é mais rápido", "O segundo importa tudo"], correctIndex: 1 },
+          { question: "Qual a diferença entre 'import math' e 'from math import sqrt'?", options: ["Nenhuma", "O segundo importa só sqrt, sem prefixo", "O primeiro é mais rápido", "O segundo importa tudo"], correctIndex: 1, explanation: "Com 'import math' você usa math.sqrt(). Com 'from math import sqrt' você usa sqrt() diretamente, sem o prefixo do módulo." },
         ],
       },
       {
@@ -597,8 +598,8 @@ Métodos especiais (dunder methods):
         hints: ["class NomeDaClasse:", "__init__ é o construtor", "self.atributo = valor"],
         xpReward: 30,
         quiz: [
-          { question: "O que o __init__ faz?", options: ["Destrói o objeto", "Inicializa o objeto", "Herda de outra classe", "Cria um módulo"], correctIndex: 1 },
-          { question: "O que 'self' representa?", options: ["A classe", "O módulo", "O próprio objeto", "O construtor"], correctIndex: 2 },
+          { question: "O que o __init__ faz?", options: ["Destrói o objeto", "Inicializa o objeto", "Herda de outra classe", "Cria um módulo"], correctIndex: 1, explanation: "__init__ é o construtor da classe — é chamado automaticamente quando você cria um objeto. Serve para definir os atributos iniciais do objeto." },
+          { question: "O que 'self' representa?", options: ["A classe", "O módulo", "O próprio objeto", "O construtor"], correctIndex: 2, explanation: "'self' é uma referência à instância atual do objeto. Ao chamar cachorro.latir(), Python passa o objeto 'cachorro' automaticamente como 'self'." },
         ],
       },
       {
@@ -695,7 +696,7 @@ Strings podem usar aspas simples, duplas ou crases (template literals):
         hints: ["Use console.log()", "O texto deve estar entre aspas", 'console.log("Olá, JavaScript!")'],
         xpReward: 10,
         quiz: [
-          { question: "Qual função exibe valores no console do navegador?", options: ["print()", "console.log()", "alert()", "document.write()"], correctIndex: 1 },
+          { question: "Qual função exibe valores no console do navegador?", options: ["print()", "console.log()", "alert()", "document.write()"], correctIndex: 1, explanation: "console.log() exibe no console do DevTools (F12). print() é Python, alert() abre uma caixa de diálogo e document.write() insere HTML na página." },
         ],
       },
       {
@@ -771,8 +772,8 @@ Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram cr
         hints: ["Sintaxe: const func = (param) => expressão", "const dobro = (n) => n * 2", "console.log(dobro(7))"],
         xpReward: 20,
         quiz: [
-          { question: "Qual sintaxe define uma arrow function com um parâmetro?", options: ["function(n) => n*2", "const f = n => n*2", "const f = (n) -> n*2", "def f(n): n*2"], correctIndex: 1 },
-          { question: "Arrow functions têm seu próprio 'this'?", options: ["Sim, sempre", "Não, herdam do contexto", "Depende dos parâmetros", "Só em classes"], correctIndex: 1 },
+          { question: "Qual sintaxe define uma arrow function com um parâmetro?", options: ["function(n) => n*2", "const f = n => n*2", "const f = (n) -> n*2", "def f(n): n*2"], correctIndex: 1, explanation: "Arrow functions usam =>. Com um único parâmetro, os parênteses são opcionais. -> é Python/Haskell, def é Python." },
+          { question: "Arrow functions têm seu próprio 'this'?", options: ["Sim, sempre", "Não, herdam do contexto", "Depende dos parâmetros", "Só em classes"], correctIndex: 1, explanation: "Arrow functions não criam seu próprio 'this' — herdam o 'this' do escopo onde foram definidas. Isso as torna ideais dentro de métodos de classe." },
         ],
       },
       {
@@ -988,7 +989,7 @@ Usos comuns:
         hints: ["Spread: [...array1, ...array2]", "Rest: function f(...args)", "reduce para somar todos"],
         xpReward: 20,
         quiz: [
-          { question: "O que o operador spread faz?", options: ["Coleta argumentos", "Expande um array/objeto", "Cria uma cópia profunda", "Remove duplicatas"], correctIndex: 1 },
+          { question: "O que o operador spread faz?", options: ["Coleta argumentos", "Expande um array/objeto", "Cria uma cópia profunda", "Remove duplicatas"], correctIndex: 1, explanation: "Spread (...) expande os elementos de um array ou propriedades de um objeto. Ex: [...arr1, ...arr2] junta dois arrays. Rest (...args) faz o oposto — coleta." },
         ],
       },
       {
@@ -1048,7 +1049,7 @@ Getters e Setters:
         hints: ["class NomeClasse { constructor() { } }", "this.propriedade = valor", "Métodos são funções dentro da classe"],
         xpReward: 25,
         quiz: [
-          { question: "O que o constructor() faz?", options: ["Destrói o objeto", "Inicializa o objeto ao criá-lo", "Herda de outra classe", "Exporta a classe"], correctIndex: 1 },
+          { question: "O que o constructor() faz?", options: ["Destrói o objeto", "Inicializa o objeto ao criá-lo", "Herda de outra classe", "Exporta a classe"], correctIndex: 1, explanation: "constructor() é chamado automaticamente quando você usa 'new MinhaClasse()'. É onde você define e atribui os valores iniciais dos atributos do objeto." },
         ],
       },
       {
@@ -1104,7 +1105,7 @@ Encadeamento (chaining):
         hints: [".filter(n => n > 10) filtra", ".reduce((acc, n) => acc + n, 0) soma", "Encadeie os métodos"],
         xpReward: 25,
         quiz: [
-          { question: "O que .reduce() faz?", options: ["Filtra itens", "Transforma cada item", "Acumula um valor final", "Encontra um item"], correctIndex: 2 },
+          { question: "O que .reduce() faz?", options: ["Filtra itens", "Transforma cada item", "Acumula um valor final", "Encontra um item"], correctIndex: 2, explanation: ".reduce() percorre o array acumulando um resultado único. Ex: [1,2,3].reduce((acc, n) => acc + n, 0) retorna 6 (soma de todos). .filter() filtra, .map() transforma." },
         ],
       },
       {
@@ -1219,7 +1220,7 @@ Sempre prefira ESM (import/export) em projetos modernos!`,
         hints: ["export function para exportar", "import { func } from para importar", "Named exports usam chaves {}"],
         xpReward: 20,
         quiz: [
-          { question: "Qual a diferença entre named e default export?", options: ["Named é mais rápido", "Default só pode ter um por arquivo", "Named não funciona com funções", "Default precisa de chaves"], correctIndex: 1 },
+          { question: "Qual a diferença entre named e default export?", options: ["Named é mais rápido", "Default só pode ter um por arquivo", "Named não funciona com funções", "Default precisa de chaves"], correctIndex: 1, explanation: "Cada arquivo pode ter apenas um export default. Named exports usam { chaves } ao importar. Default exports podem ser importados com qualquer nome." },
         ],
       },
       {
@@ -1343,8 +1344,8 @@ Expressões JavaScript dentro do JSX usam chaves {}:
         hints: ["function NomeComponente() { return ... }", "Use JSX: <h1>texto</h1>", "export default Saudacao"],
         xpReward: 10,
         quiz: [
-          { question: "O que um componente React retorna?", options: ["HTML puro", "JSX", "Uma string", "Um objeto"], correctIndex: 1 },
-          { question: "Componentes React devem começar com:", options: ["Letra minúscula", "Letra maiúscula", "Underscore", "Número"], correctIndex: 1 },
+          { question: "O que um componente React retorna?", options: ["HTML puro", "JSX", "Uma string", "Um objeto"], correctIndex: 1, explanation: "Componentes React retornam JSX — uma sintaxe parecida com HTML, mas que é convertida para JavaScript. JSX permite misturar UI e lógica de forma declarativa." },
+          { question: "Componentes React devem começar com:", options: ["Letra minúscula", "Letra maiúscula", "Underscore", "Número"], correctIndex: 1, explanation: "React usa a letra inicial para distinguir componentes de tags HTML nativas. <Botao /> é um componente React, <botao /> seria uma tag HTML desconhecida." },
         ],
       },
       {
@@ -1659,7 +1660,7 @@ Quando usar Context:
         hints: ["createContext() cria o contexto", "Provider envolve os componentes filhos", "useContext(Context) consome o valor"],
         xpReward: 25,
         quiz: [
-          { question: "Qual problema o useContext resolve?", options: ["Performance lenta", "Prop drilling", "Rerenders excessivos", "Falta de tipagem"], correctIndex: 1 },
+          { question: "Qual problema o useContext resolve?", options: ["Performance lenta", "Prop drilling", "Rerenders excessivos", "Falta de tipagem"], correctIndex: 1, explanation: "Prop drilling é quando você passa props por vários níveis de componentes só para chegar ao componente que precisa. useContext permite acessar dados globais diretamente." },
         ],
       },
       {
@@ -1712,7 +1713,7 @@ Quando usar useReducer vs useState:
         hints: ["reducer recebe state e action", "dispatch({ type, payload })", "Retorne um NOVO estado (imutabilidade)"],
         xpReward: 30,
         quiz: [
-          { question: "O que o reducer deve retornar?", options: ["undefined", "A ação", "O novo estado", "O dispatch"], correctIndex: 2 },
+          { question: "O que o reducer deve retornar?", options: ["undefined", "A ação", "O novo estado", "O dispatch"], correctIndex: 2, explanation: "O reducer recebe o estado atual e uma ação, e retorna o NOVO estado. Ele nunca modifica o estado diretamente — sempre retorna um objeto novo (imutabilidade)." },
         ],
       },
       {
@@ -1837,7 +1838,7 @@ Dica: Para projetos reais, considere React Query (TanStack Query) — gerencia c
         hints: ["useEffect com [] vazio = roda uma vez", "fetch() retorna uma Promise", "Trate loading e error states"],
         xpReward: 30,
         quiz: [
-          { question: "Por que usamos [] no useEffect para fetch?", options: ["Para rodar toda renderização", "Para rodar só na montagem", "Para evitar erros", "Para cancelar o fetch"], correctIndex: 1 },
+          { question: "Por que usamos [] no useEffect para fetch?", options: ["Para rodar toda renderização", "Para rodar só na montagem", "Para evitar erros", "Para cancelar o fetch"], correctIndex: 1, explanation: "O array de dependências [] vazio indica que o efeito roda apenas uma vez, quando o componente é montado. Sem o [], rodaria após CADA renderização, causando loop infinito." },
         ],
       },
     
@@ -2270,7 +2271,7 @@ Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maio
         hints: ["box-sizing: border-box é essencial", "padding = espaço interno", "margin = espaço externo"],
         xpReward: 15,
         quiz: [
-          { question: "O que box-sizing: border-box faz?", options: ["Remove bordas", "Inclui padding/border no width", "Duplica o margin", "Centraliza o elemento"], correctIndex: 1 },
+          { question: "O que box-sizing: border-box faz?", options: ["Remove bordas", "Inclui padding/border no width", "Duplica o margin", "Centraliza o elemento"], correctIndex: 1, explanation: "Com border-box, padding e border fazem parte do width declarado. Sem ele (content-box padrão), um elemento width:200px + padding:20px ficaria com 240px no total." },
         ],
       },
       {
@@ -2449,7 +2450,7 @@ Rode com: node server.js ou npm start`,
         hints: ["http.createServer() cria o servidor", "res.end() envia a resposta", "server.listen(porta) inicia"],
         xpReward: 10,
         quiz: [
-          { question: "O que é Node.js?", options: ["Um framework CSS", "Runtime JS no servidor", "Um banco de dados", "Um navegador"], correctIndex: 1 },
+          { question: "O que é Node.js?", options: ["Um framework CSS", "Runtime JS no servidor", "Um banco de dados", "Um navegador"], correctIndex: 1, explanation: "Node.js permite executar JavaScript fora do navegador, no servidor. Usa o motor V8 do Chrome. É a base para Express, NestJS, ferramentas como npm e Vite." },
         ],
       },
       {
@@ -2557,7 +2558,7 @@ Ordem importa! Middlewares executam na ordem em que são declarados.`,
         hints: ["Middleware recebe req, res, next", "next() passa para o próximo", "app.use() aplica globalmente"],
         xpReward: 20,
         quiz: [
-          { question: "O que next() faz no middleware?", options: ["Encerra a requisição", "Retorna erro", "Passa para o próximo middleware/rota", "Reinicia o servidor"], correctIndex: 2 },
+          { question: "O que next() faz no middleware?", options: ["Encerra a requisição", "Retorna erro", "Passa para o próximo middleware/rota", "Reinicia o servidor"], correctIndex: 2, explanation: "Middlewares são funções encadeadas. Chamar next() passa o controle ao próximo middleware ou à rota final. Sem next(), a requisição fica presa e o cliente não recebe resposta." },
         ],
       },
       {
@@ -2935,7 +2936,7 @@ Padrão retry:
         hints: ["Promise.all() executa em paralelo", "Desestruture o resultado", "Cada item é uma Promise"],
         xpReward: 25,
         quiz: [
-          { question: "O que Promise.all faz?", options: ["Executa sequencialmente", "Executa em paralelo e espera todas", "Retorna a primeira", "Cancela as outras"], correctIndex: 1 },
+          { question: "O que Promise.all faz?", options: ["Executa sequencialmente", "Executa em paralelo e espera todas", "Retorna a primeira", "Cancela as outras"], correctIndex: 1, explanation: "Promise.all dispara várias Promises ao mesmo tempo e aguarda TODAS terminarem. Se uma falhar, a promise toda falha. Promise.race retorna a primeira que terminar." },
         ],
       },
       {
@@ -3337,7 +3338,7 @@ Chave estrangeira:
         hints: ["CREATE TABLE nome ( ... )", "SERIAL PRIMARY KEY para id auto-incremento", "DEFAULT define valor padrão"],
         xpReward: 20,
         quiz: [
-          { question: "O que SERIAL faz?", options: ["Cria texto", "Gera ID auto-incremento", "Define chave estrangeira", "Valida formato"], correctIndex: 1 },
+          { question: "O que SERIAL faz?", options: ["Cria texto", "Gera ID auto-incremento", "Define chave estrangeira", "Valida formato"], correctIndex: 1, explanation: "SERIAL é um atalho para INTEGER com sequência auto-incrementada. Ideal para colunas de ID. Cada novo registro recebe automaticamente o próximo número." },
         ],
       },
       {
@@ -3435,7 +3436,7 @@ Dica: Sempre faça SELECT com o mesmo WHERE antes de DELETE!`,
         hints: ["ALTER TABLE ... ADD COLUMN", "DELETE FROM ... WHERE", "SEMPRE use WHERE com DELETE!"],
         xpReward: 20,
         quiz: [
-          { question: "O que acontece com DELETE sem WHERE?", options: ["Nada", "Deleta a tabela", "Deleta TODOS os registros", "Dá erro"], correctIndex: 2 },
+          { question: "O que acontece com DELETE sem WHERE?", options: ["Nada", "Deleta a tabela", "Deleta TODOS os registros", "Dá erro"], correctIndex: 2, explanation: "DELETE sem WHERE apaga TODOS os registros da tabela (a estrutura permanece). Sempre verifique seu WHERE antes de executar! DROP TABLE remove a tabela inteira." },
         ],
       },
       {
@@ -3792,7 +3793,7 @@ Squash — juntar commits:
         hints: ["Rebase reaplica commits sobre outra branch", "Cria histórico linear", "Nunca rebase branches compartilhadas!"],
         xpReward: 20,
         quiz: [
-          { question: "Qual a diferença principal entre merge e rebase?", options: ["Rebase é mais rápido", "Merge cria histórico linear", "Rebase cria histórico linear", "Não há diferença"], correctIndex: 2 },
+          { question: "Qual a diferença principal entre merge e rebase?", options: ["Rebase é mais rápido", "Merge cria histórico linear", "Rebase cria histórico linear", "Não há diferença"], correctIndex: 2, explanation: "Rebase reaplica seus commits sobre outro branch, criando histórico linear e limpo. Merge preserva o histórico real com um commit de merge. Rebase é ideal para branches locais." },
         ],
       },
       {
@@ -4412,7 +4413,7 @@ Complexidade: O(V + E) onde V = vértices, E = arestas`,
         hints: ["Use deque como fila", "set() para rastrear visitados", "popleft() remove o primeiro da fila"],
         xpReward: 35,
         quiz: [
-          { question: "Qual estrutura o BFS usa?", options: ["Pilha", "Fila", "Árvore", "Hash Table"], correctIndex: 1 },
+          { question: "Qual estrutura o BFS usa?", options: ["Pilha", "Fila", "Árvore", "Hash Table"], correctIndex: 1, explanation: "BFS (busca em largura) usa uma fila (FIFO) para visitar nós nível por nível. DFS (busca em profundidade) usa uma pilha (LIFO) ou recursão para ir fundo primeiro." },
         ],
       },
     
@@ -4475,8 +4476,8 @@ Atributos adicionam informações:
         hints: ["Comece com <!DOCTYPE html>", "<html> envolve tudo", "<head> para metadados, <body> para conteúdo"],
         xpReward: 10,
         quiz: [
-          { question: "O que o <!DOCTYPE html> faz?", options: ["Cria um documento", "Informa que é HTML5", "Adiciona um título", "Importa CSS"], correctIndex: 1 },
-          { question: "Onde fica o conteúdo visível da página?", options: ["<head>", "<meta>", "<body>", "<html>"], correctIndex: 2 },
+          { question: "O que o <!DOCTYPE html> faz?", options: ["Cria um documento", "Informa que é HTML5", "Adiciona um título", "Importa CSS"], correctIndex: 1, explanation: "<!DOCTYPE html> diz ao navegador que o documento é HTML5, ativando o modo padrão de renderização. Sem ele, alguns navegadores entram em 'quirks mode' com comportamento imprevisível." },
+          { question: "Onde fica o conteúdo visível da página?", options: ["<head>", "<meta>", "<body>", "<html>"], correctIndex: 2, explanation: "<body> contém todo o conteúdo visível (textos, imagens, botões). <head> contém metadados invisíveis como título, links de CSS e scripts." },
         ],
       },
       {
@@ -4557,7 +4558,7 @@ Links para download:
         hints: ["<a href=\"url\">texto</a>", "target=\"_blank\" abre em nova aba", "rel=\"noopener noreferrer\" para segurança"],
         xpReward: 15,
         quiz: [
-          { question: "O que target=\"_blank\" faz?", options: ["Fecha a aba", "Abre em nova aba", "Remove o link", "Desabilita o link"], correctIndex: 1 },
+          { question: "O que target=\"_blank\" faz?", options: ["Fecha a aba", "Abre em nova aba", "Remove o link", "Desabilita o link"], correctIndex: 1, explanation: "target=\"_blank\" abre o link em uma nova aba/janela. Sempre adicione rel=\"noopener noreferrer\" junto para segurança, pois _blank sozinho pode expor a página a ataques." },
         ],
       },
       {
@@ -4652,7 +4653,7 @@ Atributos de <ol>:
         hints: ["<ul> para lista não-ordenada", "<ol> para lista ordenada", "<li> para cada item"],
         xpReward: 15,
         quiz: [
-          { question: "Qual tag cria uma lista com números?", options: ["<ul>", "<ol>", "<li>", "<nl>"], correctIndex: 1 },
+          { question: "Qual tag cria uma lista com números?", options: ["<ul>", "<ol>", "<li>", "<nl>"], correctIndex: 1, explanation: "<ol> (ordered list) cria lista numerada. <ul> (unordered list) cria lista com marcadores. <li> é o item dentro de ambas. <nl> não existe em HTML." },
         ],
       },
       {
@@ -4748,8 +4749,8 @@ Outros elementos de form:
         hints: ["<form> envolve todos os campos", "<input type=\"text\"> para texto", "<button type=\"submit\"> para enviar"],
         xpReward: 20,
         quiz: [
-          { question: "Qual type valida formato de email?", options: ["text", "mail", "email", "address"], correctIndex: 2 },
-          { question: "O que o atributo 'required' faz?", options: ["Desabilita o campo", "Torna obrigatório", "Adiciona placeholder", "Limita caracteres"], correctIndex: 1 },
+          { question: "Qual type valida formato de email?", options: ["text", "mail", "email", "address"], correctIndex: 2, explanation: "type=\"email\" faz o navegador validar automaticamente se o valor tem formato de email (com @). type=\"text\" aceita qualquer texto sem validação." },
+          { question: "O que o atributo 'required' faz?", options: ["Desabilita o campo", "Torna obrigatório", "Adiciona placeholder", "Limita caracteres"], correctIndex: 1, explanation: "required impede o formulário de ser enviado se o campo estiver vazio. É uma validação do HTML — sempre combine com validação no servidor para segurança." },
         ],
       },
       {
@@ -4803,8 +4804,8 @@ Por que usar semântica?
         hints: ["<header> para o topo da página", "<main> para conteúdo principal", "<footer> para o rodapé"],
         xpReward: 20,
         quiz: [
-          { question: "Quantas tags <main> devem existir por página?", options: ["Nenhuma", "Uma", "Quantas quiser", "Duas"], correctIndex: 1 },
-          { question: "Qual tag é usada para navegação?", options: ["<menu>", "<links>", "<nav>", "<navigate>"], correctIndex: 2 },
+          { question: "Quantas tags <main> devem existir por página?", options: ["Nenhuma", "Uma", "Quantas quiser", "Duas"], correctIndex: 1, explanation: "Deve existir apenas uma <main> por página. Ela representa o conteúdo principal e único da página, diferente do que se repete (header, nav, footer)." },
+          { question: "Qual tag é usada para navegação?", options: ["<menu>", "<links>", "<nav>", "<navigate>"], correctIndex: 2, explanation: "<nav> é a tag semântica para blocos de navegação (menus, breadcrumbs). Ajuda leitores de tela e mecanismos de busca a entenderem a estrutura da página." },
         ],
       },
       {
@@ -4855,7 +4856,7 @@ Boas práticas:
         hints: ["aria-label dá nome acessível", "aria-hidden esconde decorações", "alt descreve a imagem"],
         xpReward: 20,
         quiz: [
-          { question: "O que aria-hidden='true' faz?", options: ["Esconde visualmente", "Esconde de leitores de tela", "Remove o elemento", "Desabilita o elemento"], correctIndex: 1 },
+          { question: "O que aria-hidden='true' faz?", options: ["Esconde visualmente", "Esconde de leitores de tela", "Remove o elemento", "Desabilita o elemento"], correctIndex: 1, explanation: "aria-hidden='true' torna o elemento invisível para leitores de tela, mas continua visualmente na tela. Usado em ícones decorativos que não agregam informação." },
         ],
       },
       {
@@ -4963,7 +4964,7 @@ Dica: Forneça múltiplos formatos com <source> para máxima compatibilidade!`,
         hints: ["<video controls> com <source> dentro", "<audio controls> para áudio", "Mensagem de fallback entre as tags"],
         xpReward: 20,
         quiz: [
-          { question: "Para que serve o atributo poster em <video>?", options: ["Define a legenda", "Imagem de preview", "Define o formato", "Silencia o vídeo"], correctIndex: 1 },
+          { question: "Para que serve o atributo poster em <video>?", options: ["Define a legenda", "Imagem de preview", "Define o formato", "Silencia o vídeo"], correctIndex: 1, explanation: "poster define a imagem mostrada antes do vídeo começar a tocar (thumbnail). Sem ele, o navegador exibe o primeiro frame ou uma área vazia." },
         ],
       },
     

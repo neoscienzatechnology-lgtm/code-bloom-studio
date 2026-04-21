@@ -1,20 +1,29 @@
 import React from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-function parseInlineCode(text: string): React.ReactNode[] {
-  const parts = text.split(/`([^`]+)`/);
-  return parts.map((part, i) =>
-    i % 2 === 1 ? (
-      <code
-        key={i}
-        className="rounded bg-accent/15 px-1.5 py-0.5 font-mono text-[0.85em] text-accent font-semibold"
-      >
-        {part}
-      </code>
-    ) : (
-      <span key={i}>{part}</span>
-    )
-  );
+function parseInlineFormatting(text: string): React.ReactNode[] {
+  // Split on **bold**, `code`, or both (in order)
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} className="font-bold text-foreground">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code
+          key={i}
+          className="rounded bg-accent/15 px-1.5 py-0.5 font-mono text-[0.85em] text-accent font-semibold"
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
 }
 
 function getYouTubeId(url: string): string | null {
@@ -48,12 +57,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       const [, alt, src] = imgMatch;
       elements.push(
         <div key={`img-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
-          <img
-            src={src}
-            alt={alt}
-            loading="lazy"
-            className="w-full object-cover"
-          />
+          <img src={src} alt={alt} loading="lazy" className="w-full object-cover" />
           {alt && (
             <div className="px-3 py-1.5 text-xs text-muted-foreground text-center bg-secondary/30">
               {alt}
@@ -70,10 +74,10 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
     if (videoMatch) {
       const url = videoMatch[1];
       const ytId = getYouTubeId(url);
-      if (ytId) {
-        elements.push(
-          <div key={`video-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
-            <AspectRatio ratio={16 / 9}>
+      elements.push(
+        <div key={`video-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
+          <AspectRatio ratio={16 / 9}>
+            {ytId ? (
               <iframe
                 src={`https://www.youtube.com/embed/${ytId}`}
                 title="Vídeo da lição"
@@ -81,25 +85,39 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
                 allowFullScreen
                 className="h-full w-full"
               />
-            </AspectRatio>
-          </div>
-        );
-      } else {
-        elements.push(
-          <div key={`video-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
-            <AspectRatio ratio={16 / 9}>
+            ) : (
               <video controls className="h-full w-full" src={url}>
                 Seu navegador não suporta vídeo.
               </video>
-            </AspectRatio>
-          </div>
-        );
-      }
+            )}
+          </AspectRatio>
+        </div>
+      );
       i++;
       continue;
     }
 
-    // Code block: lines starting with spaces and containing code-like patterns
+    // Heading: ## or #
+    if (trimmed.startsWith("## ")) {
+      elements.push(
+        <h3 key={`h2-${i}`} className="mt-5 mb-2 text-base font-extrabold text-foreground">
+          {trimmed.slice(3)}
+        </h3>
+      );
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith("# ")) {
+      elements.push(
+        <h2 key={`h1-${i}`} className="mt-5 mb-2 text-lg font-extrabold text-foreground">
+          {trimmed.slice(2)}
+        </h2>
+      );
+      i++;
+      continue;
+    }
+
+    // Code block: lines starting with spaces/tab containing code patterns
     if (
       (line.startsWith("  ") || line.startsWith("\t")) &&
       /[→=(){}[\]<>]|print|def |return |const |let |var |function |import |SELECT |FROM /.test(trimmed)
@@ -132,7 +150,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       continue;
     }
 
-    // Section title: ends with ":"
+    // Section title: ends with ":" (short line, not a list item)
     if (trimmed.endsWith(":") && trimmed.length < 60 && !trimmed.startsWith("•")) {
       elements.push(
         <div
@@ -147,19 +165,24 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       continue;
     }
 
-    // List item: starts with •
-    if (trimmed.startsWith("•")) {
+    // List item: starts with • or -
+    if (trimmed.startsWith("•") || trimmed.startsWith("- ")) {
       const listItems: string[] = [];
-      while (i < lines.length && lines[i].trim().startsWith("•")) {
-        listItems.push(lines[i].trim().slice(1).trim());
-        i++;
+      while (i < lines.length) {
+        const lt = lines[i].trim();
+        if (lt.startsWith("•") || lt.startsWith("- ")) {
+          listItems.push(lt.startsWith("•") ? lt.slice(1).trim() : lt.slice(2).trim());
+          i++;
+        } else {
+          break;
+        }
       }
       elements.push(
         <div key={`list-${i}`} className="my-2 space-y-1.5">
           {listItems.map((item, j) => (
             <div key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-              <span>{parseInlineCode(item)}</span>
+              <span>{parseInlineFormatting(item)}</span>
             </div>
           ))}
         </div>
@@ -173,7 +196,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       : "text-sm leading-relaxed text-muted-foreground";
     elements.push(
       <p key={`p-${i}`} className={`my-2 ${paraClass}`}>
-        {parseInlineCode(trimmed)}
+        {parseInlineFormatting(trimmed)}
       </p>
     );
     isFirstParagraph = false;
