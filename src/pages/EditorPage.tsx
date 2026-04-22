@@ -138,7 +138,7 @@ const EditorPage = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="border-b border-primary/20 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 px-4 py-3"
+            className="border-b border-primary/20 bg-primary/5 px-4 py-3"
           >
             <div className="mx-auto flex max-w-7xl items-center gap-4 flex-wrap">
               <Info size={18} className="shrink-0 text-primary" />
@@ -170,7 +170,7 @@ const EditorPage = () => {
       </AnimatePresence>
 
       {/* Top bar */}
-      <div className="border-b border-border/30 bg-secondary/30 px-4 py-3">
+      <div className="border-b border-border bg-card px-4 py-3">
         <div className="mx-auto flex max-w-7xl items-center gap-4">
           <Link
             to={`/cursos/${course.id}`}
@@ -198,7 +198,7 @@ const EditorPage = () => {
       {/* Main split layout */}
       <div className="flex-1 grid lg:grid-cols-2">
         {/* Instructions (left panel) */}
-        <div className="border-b border-border/30 p-6 lg:border-b-0 lg:border-r overflow-auto">
+        <div className="border-b border-border bg-background p-6 lg:border-b-0 lg:border-r overflow-auto">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="mb-2 flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
@@ -337,16 +337,16 @@ const EditorPage = () => {
         {/* Editor (right panel) */}
         <div className="flex flex-col">
           <div className="flex-1 p-4">
-            <div className="h-full rounded-xl border border-border/30 bg-[hsl(250,20%,6%)] overflow-hidden flex flex-col">
+            <div className="h-full rounded-2xl border border-border bg-[#1e1e2e] overflow-hidden flex flex-col shadow-sm">
               {/* Editor header */}
-              <div className="flex items-center justify-between border-b border-border/20 px-4 py-2">
+              <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
                     <div className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
                     <div className="h-2.5 w-2.5 rounded-full bg-quest-yellow/60" />
                     <div className="h-2.5 w-2.5 rounded-full bg-accent/60" />
                   </div>
-                  <span className="text-xs text-muted-foreground font-mono">
+                  <span className="text-xs text-[#585b70] font-mono">
                     {course.language.toLowerCase()}
                   </span>
                   {showSolution && (
@@ -359,7 +359,7 @@ const EditorPage = () => {
                   variant="ghost"
                   size="sm"
                   onClick={handleReset}
-                  className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground"
+                  className="h-7 gap-1 text-xs text-[#6c7086] hover:text-[#cdd6f4]"
                 >
                   <RotateCcw size={12} /> Reset
                 </Button>
@@ -402,7 +402,7 @@ const EditorPage = () => {
           </div>
 
           {/* Run bar */}
-          <div className="border-t border-border/30 bg-secondary/30 p-4">
+          <div className="border-t border-border/20 bg-[#181825] p-4">
             <div className="flex items-center justify-between">
               <div className="relative">
                 <Button

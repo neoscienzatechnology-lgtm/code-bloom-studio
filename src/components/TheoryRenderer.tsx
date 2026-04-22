@@ -1,8 +1,6 @@
 import React from "react";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 function parseInlineFormatting(text: string): React.ReactNode[] {
-  // Split on **bold**, `code`, or both (in order)
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/);
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
@@ -16,7 +14,7 @@ function parseInlineFormatting(text: string): React.ReactNode[] {
       return (
         <code
           key={i}
-          className="rounded bg-accent/15 px-1.5 py-0.5 font-mono text-[0.85em] text-accent font-semibold"
+          className="rounded-md bg-primary/10 px-1.5 py-0.5 font-mono text-[0.85em] text-primary font-semibold"
         >
           {part.slice(1, -1)}
         </code>
@@ -24,11 +22,6 @@ function parseInlineFormatting(text: string): React.ReactNode[] {
     }
     return <span key={i}>{part}</span>;
   });
-}
-
-function getYouTubeId(url: string): string | null {
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^&?\s]+)/);
-  return match ? match[1] : null;
 }
 
 interface TheoryRendererProps {
@@ -45,7 +38,6 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // Empty line
     if (!trimmed) {
       i++;
       continue;
@@ -56,41 +48,13 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
     if (imgMatch) {
       const [, alt, src] = imgMatch;
       elements.push(
-        <div key={`img-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
+        <div key={`img-${i}`} className="my-4 overflow-hidden rounded-xl border border-border">
           <img src={src} alt={alt} loading="lazy" className="w-full object-cover" />
           {alt && (
-            <div className="px-3 py-1.5 text-xs text-muted-foreground text-center bg-secondary/30">
+            <div className="px-3 py-1.5 text-xs text-muted-foreground text-center bg-muted/50">
               {alt}
             </div>
           )}
-        </div>
-      );
-      i++;
-      continue;
-    }
-
-    // Video: [video](url)
-    const videoMatch = trimmed.match(/^\[video\]\(([^)]+)\)$/);
-    if (videoMatch) {
-      const url = videoMatch[1];
-      const ytId = getYouTubeId(url);
-      elements.push(
-        <div key={`video-${i}`} className="my-4 overflow-hidden rounded-lg border border-border/20">
-          <AspectRatio ratio={16 / 9}>
-            {ytId ? (
-              <iframe
-                src={`https://www.youtube.com/embed/${ytId}`}
-                title="Vídeo da lição"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="h-full w-full"
-              />
-            ) : (
-              <video controls className="h-full w-full" src={url}>
-                Seu navegador não suporta vídeo.
-              </video>
-            )}
-          </AspectRatio>
         </div>
       );
       i++;
@@ -117,7 +81,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       continue;
     }
 
-    // Code block: lines starting with spaces/tab containing code patterns
+    // Code block: indented lines with code patterns
     if (
       (line.startsWith("  ") || line.startsWith("\t")) &&
       /[→=(){}[\]<>]|print|def |return |const |let |var |function |import |SELECT |FROM /.test(trimmed)
@@ -140,7 +104,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       elements.push(
         <div
           key={`code-${i}`}
-          className="my-3 rounded-lg border border-accent/20 bg-[hsl(250,20%,8%)] px-4 py-3 font-mono text-sm leading-relaxed text-accent"
+          className="my-3 rounded-xl border border-border bg-[#1e1e2e] px-4 py-3 font-mono text-sm leading-relaxed text-[#cba6f7]"
         >
           {codeLines.map((cl, j) => (
             <div key={j}>{cl}</div>
@@ -150,7 +114,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       continue;
     }
 
-    // Section title: ends with ":" (short line, not a list item)
+    // Section title: ends with ":"
     if (trimmed.endsWith(":") && trimmed.length < 60 && !trimmed.startsWith("•")) {
       elements.push(
         <div
@@ -165,7 +129,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
       continue;
     }
 
-    // List item: starts with • or -
+    // List item: • or -
     if (trimmed.startsWith("•") || trimmed.startsWith("- ")) {
       const listItems: string[] = [];
       while (i < lines.length) {
@@ -181,7 +145,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
         <div key={`list-${i}`} className="my-2 space-y-1.5">
           {listItems.map((item, j) => (
             <div key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
               <span>{parseInlineFormatting(item)}</span>
             </div>
           ))}
@@ -192,7 +156,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
 
     // Regular paragraph
     const paraClass = isFirstParagraph
-      ? "text-[0.925rem] leading-relaxed text-foreground/80"
+      ? "text-[0.925rem] leading-relaxed text-foreground/90"
       : "text-sm leading-relaxed text-muted-foreground";
     elements.push(
       <p key={`p-${i}`} className={`my-2 ${paraClass}`}>
@@ -204,7 +168,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
   }
 
   return (
-    <div className="rounded-xl border border-primary/10 bg-gradient-to-br from-primary/5 to-accent/5 p-5">
+    <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5 space-y-0.5">
       {elements}
     </div>
   );

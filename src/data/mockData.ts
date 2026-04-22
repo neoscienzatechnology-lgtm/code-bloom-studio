@@ -4440,7 +4440,6 @@ Complexidade: O(V + E) onde V = vértices, E = arestas`,
 
 ![Estrutura de uma página HTML](https://images.unsplash.com/photo-1621839673705-6617adf9e890?w=600&h=300&fit=crop)
 
-[video](https://www.youtube.com/watch?v=epDCjksKMok)
 
 Estrutura básica de toda página HTML:
   <!DOCTYPE html>

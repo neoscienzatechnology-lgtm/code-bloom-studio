@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, HelpCircle, RefreshCw } from "lucide-react";
+import { Check, X, RefreshCw, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { QuizQuestion } from "@/data/mockData";
 
@@ -24,9 +24,7 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
     if (answered) return;
     setSelected(idx);
     setAnswered(true);
-    if (idx === q.correctIndex) {
-      setCorrectCount((prev) => prev + 1);
-    }
+    if (idx === q.correctIndex) setCorrectCount((p) => p + 1);
   };
 
   const handleNext = () => {
@@ -34,7 +32,7 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
       setFinished(true);
       onComplete(correctCount);
     } else {
-      setCurrentQ((prev) => prev + 1);
+      setCurrentQ((p) => p + 1);
       setSelected(null);
       setAnswered(false);
     }
@@ -48,34 +46,33 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
     setFinished(false);
   };
 
+  /* ── Resultado final ─────────────────────────────────────────── */
   if (finished) {
     const allCorrect = correctCount === questions.length;
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-xl border p-5 text-center ${
-          allCorrect
-            ? "border-accent/30 bg-accent/5"
-            : "border-quest-yellow/30 bg-quest-yellow/5"
+        className={`rounded-2xl border p-5 text-center ${
+          allCorrect ? "border-accent/30 bg-accent/5" : "border-border bg-muted/40"
         }`}
       >
-        <div className="mb-2 text-3xl">{allCorrect ? "🎉" : "📝"}</div>
-        <div className="text-sm font-bold">
+        <div className="mb-2 text-4xl">{allCorrect ? "🎉" : "📝"}</div>
+        <p className="text-sm font-extrabold text-foreground">
           {allCorrect ? "Perfeito!" : "Quiz concluído!"}{" "}
-          {correctCount}/{questions.length} corretas
-        </div>
+          <span className="text-primary">{correctCount}/{questions.length}</span> corretas
+        </p>
         <p className="mt-1 text-xs text-muted-foreground">
           {allCorrect
             ? "Você dominou o conceito! Continue para o exercício."
-            : "Não desanime! Revise a teoria acima e tente novamente."}
+            : "Revise a teoria acima e tente novamente."}
         </p>
         {!allCorrect && (
           <Button
             variant="outline"
             size="sm"
             onClick={handleRestart}
-            className="mt-3 gap-1.5 rounded-full text-xs"
+            className="mt-4 gap-1.5 rounded-full text-xs"
           >
             <RefreshCw size={12} /> Tentar Novamente
           </Button>
@@ -84,106 +81,112 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
     );
   }
 
+  /* ── Pergunta ────────────────────────────────────────────────── */
   return (
-    <div className="space-y-3">
-      {/* Progress dots */}
-      <div className="flex items-center gap-2">
-        <HelpCircle size={14} className="text-quest-blue" />
-        <span className="text-xs font-bold text-quest-blue">
-          Pergunta {currentQ + 1} de {questions.length}
+    <div className="space-y-4">
+      {/* Progress bar + counter */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-bold text-muted-foreground whitespace-nowrap">
+          {currentQ + 1}/{questions.length}
         </span>
-        <div className="ml-auto flex gap-1">
-          {questions.map((_, i) => (
-            <div
-              key={i}
-              className={`h-1.5 w-4 rounded-full transition-colors ${
-                i < currentQ
-                  ? "bg-accent"
-                  : i === currentQ
-                  ? "bg-quest-blue"
-                  : "bg-border"
-              }`}
-            />
-          ))}
+        <div className="flex-1 h-1.5 rounded-full bg-border overflow-hidden">
+          <div
+            className="h-full rounded-full bg-primary transition-all duration-300"
+            style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
+          />
         </div>
       </div>
 
-      {/* Question */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQ}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
+          exit={{ opacity: 0, x: -16 }}
+          className="space-y-3"
         >
-          <p className="mb-3 text-sm font-bold text-foreground">{q.question}</p>
+          {/* Question */}
+          <p className="text-sm font-bold text-foreground leading-snug">{q.question}</p>
+
+          {/* Options */}
           <div className="space-y-2">
             {q.options.map((opt, idx) => {
-              let borderClass =
-                "border-border/30 bg-card hover:border-quest-blue/50 hover:bg-quest-blue/5";
-              if (answered) {
-                if (idx === q.correctIndex) {
-                  borderClass = "border-accent/50 bg-accent/10";
-                } else if (idx === selected) {
-                  borderClass = "border-destructive/50 bg-destructive/10";
-                } else {
-                  borderClass = "border-border/20 bg-card opacity-40";
-                }
-              } else if (idx === selected) {
-                borderClass = "border-quest-blue/50 bg-quest-blue/5";
+              const isThisCorrect = idx === q.correctIndex;
+              const isThisSelected = idx === selected;
+
+              let cls =
+                "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-all";
+
+              if (!answered) {
+                cls += " border-border bg-card hover:border-primary/50 hover:bg-primary/5 cursor-pointer";
+              } else if (isThisCorrect) {
+                cls += " border-accent/50 bg-accent/10 text-accent";
+              } else if (isThisSelected) {
+                cls += " border-destructive/40 bg-destructive/8 text-destructive";
+              } else {
+                cls += " border-border bg-card opacity-40";
               }
 
               return (
-                <button
-                  key={idx}
-                  onClick={() => handleSelect(idx)}
-                  disabled={answered}
-                  className={`flex w-full items-center gap-3 rounded-lg border px-4 py-2.5 text-left text-sm transition-all ${borderClass}`}
-                >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-current text-[10px] font-bold">
-                    {answered && idx === q.correctIndex ? (
-                      <Check size={12} className="text-accent" />
-                    ) : answered && idx === selected && idx !== q.correctIndex ? (
-                      <X size={12} className="text-destructive" />
+                <button key={idx} onClick={() => handleSelect(idx)} disabled={answered} className={cls}>
+                  <span
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold ${
+                      answered && isThisCorrect
+                        ? "border-accent bg-accent text-white"
+                        : answered && isThisSelected
+                        ? "border-destructive bg-destructive text-white"
+                        : "border-border"
+                    }`}
+                  >
+                    {answered && isThisCorrect ? (
+                      <Check size={12} />
+                    ) : answered && isThisSelected && !isThisCorrect ? (
+                      <X size={12} />
                     ) : (
                       String.fromCharCode(65 + idx)
                     )}
                   </span>
-                  <span>{opt}</span>
+                  <span className="font-medium">{opt}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Feedback + Explanation after answering */}
+          {/* Feedback after answering */}
           <AnimatePresence>
             {answered && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-3 space-y-2"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-2"
               >
+                {/* Result badge */}
                 <div
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold ${
+                  className={`rounded-xl px-4 py-2.5 text-sm font-semibold ${
                     isCorrect
                       ? "bg-accent/10 text-accent"
-                      : "bg-destructive/10 text-destructive"
+                      : "bg-destructive/8 text-destructive"
                   }`}
                 >
-                  {isCorrect ? "✅ Correto!" : `❌ Incorreto. A resposta certa é: "${q.options[q.correctIndex]}"`}
+                  {isCorrect
+                    ? "✅ Correto!"
+                    : `❌ A resposta correta é: "${q.options[q.correctIndex]}"`}
                 </div>
+
+                {/* Explanation */}
                 {q.explanation && (
-                  <div className="rounded-lg border border-quest-blue/20 bg-quest-blue/5 px-3 py-2 text-xs text-muted-foreground">
+                  <div className="rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-xs text-muted-foreground leading-relaxed">
                     💡 {q.explanation}
                   </div>
                 )}
+
+                {/* Continue button */}
                 <Button
-                  size="sm"
                   onClick={handleNext}
-                  className="w-full rounded-full text-xs font-bold"
+                  className="w-full gap-2 rounded-xl bg-primary font-bold text-white hover:bg-primary/90"
                 >
-                  {isLastQuestion ? "Ver Resultado →" : "Próxima Pergunta →"}
+                  {isLastQuestion ? "Ver Resultado" : "Próxima"}
+                  <ChevronRight size={16} />
                 </Button>
               </motion.div>
             )}
