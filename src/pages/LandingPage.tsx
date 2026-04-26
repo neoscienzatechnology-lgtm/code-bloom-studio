@@ -89,7 +89,7 @@ const CodePreview = () => {
             <span className="mr-4 select-none text-[#45475a] text-xs">{i + 1}</span>
             {line.parts.map((p, j) => (
               <span key={j} className={colorMap[p.t]}>
-                {p.indent === undefined && line.indent > 0 && j === 0 ? "    " : ""}
+                {line.indent > 0 && j === 0 ? "    " : ""}
                 {p.v}
               </span>
             ))}
