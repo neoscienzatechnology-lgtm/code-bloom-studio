@@ -146,6 +146,8 @@ export function validateCode(
     return {
       level: "wrong",
       message: "Escreva seu código antes de executar! Use a teoria acima como guia.",
+      errorKind: "empty",
+      reflectiveQuestion: "Qual é o primeiro comando que você precisa para mostrar algo na tela?",
     };
   }
 
@@ -175,6 +177,8 @@ export function validateCode(
     };
   }
 
+  const classification = classifyError(userCode, expectedOutput, solution);
+
   // Similarity check
   const simExpected = similarity(normUser, normExpected);
   const simSolution = similarity(normUser, normSolution);
@@ -183,23 +187,25 @@ export function validateCode(
   if (bestSim >= 0.85) {
     return {
       level: "close",
-      message:
-        "Quase certo! Seu código está muito próximo. Verifique pequenos detalhes como aspas, espaços ou letras maiúsculas.",
+      message: classification.hint,
+      errorKind: classification.kind,
+      reflectiveQuestion: classification.question,
     };
   }
 
   if (bestSim >= 0.6) {
     return {
       level: "close",
-      message: `Você está no caminho certo! Saída esperada: "${expectedOutput}". Revise seu código e use as dicas se precisar.`,
+      message: classification.hint,
+      errorKind: classification.kind,
+      reflectiveQuestion: classification.question,
     };
   }
 
-  const specificHint = detectCommonMistakes(userCode, expectedOutput);
   return {
     level: "wrong",
-    message:
-      specificHint ??
-      `Saída esperada: "${expectedOutput}". Releia a teoria, verifique a sintaxe e use as dicas.`,
+    message: classification.hint,
+    errorKind: classification.kind,
+    reflectiveQuestion: classification.question,
   };
 }
