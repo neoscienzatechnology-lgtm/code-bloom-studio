@@ -417,6 +417,16 @@ const EditorPage = () => {
                     </span>
                   </div>
                   <span className="whitespace-pre-wrap">{output}</span>
+                  {reflectiveQ && isCorrect !== true && (
+                    <div className="mt-3 rounded-lg border border-quest-blue/30 bg-quest-blue/5 px-3 py-2 text-xs text-quest-blue font-sans not-italic">
+                      <span className="font-bold">🤔 Pense:</span> {reflectiveQ}
+                    </div>
+                  )}
+                  {getAttempts(lesson.id) >= 2 && isCorrect !== true && (
+                    <div className="mt-2 text-[10px] text-muted-foreground font-sans">
+                      Tentativas nesta lição: {getAttempts(lesson.id)} — não desista, você está aprendendo!
+                    </div>
+                  )}
                 </div>
               )}
             </div>
