@@ -88,16 +88,32 @@ const EditorPage = () => {
       const result = validateCode(code, lesson.expectedOutput, lesson.solution);
       const correct = result.level === "exact" || result.level === "flexible";
       setIsCorrect(correct ? true : result.level === "close" ? null : false);
-      setOutput(correct ? lesson.expectedOutput : result.message);
-      setRunning(false);
+
       if (correct) {
+        setOutput(lesson.expectedOutput);
+        setReflectiveQ(null);
+        resetLesson(lesson.id);
         setShowXP(true);
         setTimeout(() => setShowXP(false), 1500);
         if (!alreadyCompleted) {
           completeLesson(lesson.id, lesson.xpReward, course.id);
           fireConfetti();
         }
+      } else {
+        registerFailure(lesson.id, result.errorKind);
+        const attempts = getAttempts(lesson.id) + 1;
+        let composed = result.message;
+
+        if (attempts >= 2 && lesson.hints.length > 0) {
+          const nextHintIdx = Math.min(hintIndex + 1, lesson.hints.length - 1);
+          if (nextHintIdx > hintIndex) setHintIndex(nextHintIdx);
+          composed += `\n\n💡 Dica direta: ${lesson.hints[nextHintIdx]}`;
+        }
+
+        setOutput(composed);
+        setReflectiveQ(result.reflectiveQuestion ?? null);
       }
+      setRunning(false);
     }, 800);
   };
 
@@ -108,10 +124,12 @@ const EditorPage = () => {
   const handleReset = () => {
     setCode(lesson.starterCode);
     setOutput(null);
+    setReflectiveQ(null);
     setIsCorrect(null);
     setHintIndex(-1);
     setShowSolution(false);
     setSolutionWarned(false);
+    resetLesson(lesson.id);
   };
 
   const handleRevealSolution = () => {
