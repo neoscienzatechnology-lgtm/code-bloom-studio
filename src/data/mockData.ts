@@ -3692,53 +3692,55 @@ Conceitos-chave:
         id: "5-2",
         title: "Express — Rotas",
         description: "Crie um servidor Express com rotas **GET** para `/` e `/api/users` que retorna uma lista de usuários em JSON.",
-        theory: `Express é o framework web mais popular do Node.js. Simplifica a criação de APIs e servidores.
+        theory: `# Express — Roteamento de APIs
 
-Instalação: npm install express
+## 💡 O que é
+**Express** é o framework web minimalista mais popular do Node. Ele transforma o trabalhoso \`http.createServer\` em algo declarativo: você diz "quando vier um GET em /users, execute esta função" e pronto.
 
-Servidor básico:
+## 🌍 Analogia do mundo real
+Pense num **recepcionista de hotel**: cada pessoa que chega (requisição) tem um pedido (URL + método). O recepcionista olha numa **tabela de procedimentos** (suas rotas) e direciona para o setor certo. Sem Express, você seria forçado a escrever um \`if/else\` gigante para cada URL — Express é essa tabela organizada.
+
+## 🔧 Sintaxe e como funciona
   const express = require("express");
-  const app = express();
+  const app = express();                  // cria a "central" do servidor
 
-  app.get("/", (req, res) => {
-    res.send("Bem-vindo à API!");
-  });
+  app.get("/", (req, res) => res.send("Bem-vindo!"));
+  app.post("/users", (req, res) => res.json(req.body));
 
-  app.get("/api/users", (req, res) => {
-    res.json([
-      { id: 1, nome: "Ana" },
-      { id: 2, nome: "Bruno" }
-    ]);
-  });
+  app.listen(3000, () => console.log("🚀 porta 3000"));
 
-  app.listen(3000, () => console.log("Rodando!"));
+Anatomia de uma rota:
+• **Método HTTP** — \`get\`, \`post\`, \`put\`, \`patch\`, \`delete\`. Cada um expressa uma **intenção** semântica.
+• **Caminho (path)** — \`/users\`, \`/users/:id\` (o \`:id\` vira \`req.params.id\`), \`/search?q=...\` (vira \`req.query.q\`).
+• **Handler** — função \`(req, res) => ...\` que produz a resposta.
+• **\`res.json()\`** vs **\`res.send()\`** — \`json\` serializa objeto + define header \`Content-Type: application/json\`. \`send\` envia texto/HTML.
 
-Métodos HTTP:
-  app.get("/rota", handler)    → buscar dados
-  app.post("/rota", handler)   → criar dados
-  app.put("/rota", handler)    → atualizar (completo)
-  app.patch("/rota", handler)  → atualizar (parcial)
-  app.delete("/rota", handler) → deletar
+## 📚 Exemplos comentados
+  // 1. Rota fixa
+  app.get("/", (req, res) => res.send("Olá"));
 
-Parâmetros de rota:
+  // 2. Parâmetro de rota (URL dinâmica)
   app.get("/users/:id", (req, res) => {
-    const { id } = req.params;
-    res.json({ id, nome: "Usuário " + id });
+    const { id } = req.params;          // string vinda da URL
+    res.json({ id, nome: "User " + id });
   });
 
-Query strings:
-  // GET /search?q=node&limit=10
-  app.get("/search", (req, res) => {
-    const { q, limit } = req.query;
-    res.json({ busca: q, limite: limit });
+  // 3. Query string + body (precisa do middleware de JSON)
+  app.use(express.json());              // habilita parse de JSON no body
+  app.post("/search", (req, res) => {
+    const { q } = req.query;            // ?q=...
+    const { filtros } = req.body;       // body do POST
+    res.json({ q, filtros });
   });
 
-Body (dados enviados no POST):
-  app.use(express.json());  // middleware para parsear JSON
-  app.post("/users", (req, res) => {
-    const { nome, email } = req.body;
-    res.status(201).json({ nome, email });
-  });`,
+## ⚠️ Erros comuns
+• Esquecer **\`app.use(express.json())\`** → \`req.body\` vem \`undefined\` em POST.
+• Confundir **\`req.params\`** (parte da URL: \`/users/:id\`) com **\`req.query\`** (após \`?\`: \`/users?id=1\`) com **\`req.body\`** (POST/PUT).
+• Não chamar **\`res.send/json/end\`** → a requisição fica pendurada até o timeout do cliente.
+• Definir duas rotas com o mesmo path → só a primeira é executada.
+
+## 🚀 Quando usar na prática
+Praticamente **toda API REST em Node** usa Express (ou Fastify, com sintaxe quase idêntica). Backends de SPAs, BFFs (Backend for Frontend), webhooks de Stripe/GitHub, microsserviços. Em Lovable Cloud, as **edge functions** Deno usam um padrão similar (\`Deno.serve\`).`,
         starterCode: 'const express = require("express");\nconst app = express();\n// Crie as rotas\n',
         solution: 'const express = require("express");\nconst app = express();\n\napp.get("/", (req, res) => {\n  res.send("Bem-vindo!");\n});\n\napp.get("/api/users", (req, res) => {\n  res.json([{ id: 1, nome: "Ana" }, { id: 2, nome: "Bruno" }]);\n});\n\napp.listen(3000);',
         expectedOutput: "express",
@@ -3749,44 +3751,58 @@ Body (dados enviados no POST):
         id: "5-3",
         title: "Middleware",
         description: "Crie um **middleware** de logging que exibe método, URL e timestamp de cada requisição.",
-        theory: `Middleware são funções que interceptam requisições ANTES de chegar à rota final. São a espinha dorsal do Express!
+        theory: `# Middleware — Interceptando requisições
 
-Estrutura:
+## 💡 O que é
+**Middleware** é uma função que roda **entre** a chegada da requisição e a rota final. Ela pode logar, autenticar, validar, transformar — e decide se passa adiante (\`next()\`) ou corta a resposta ali mesmo.
+
+## 🌍 Analogia do mundo real
+Pense numa **fila de aeroporto**: check-in → raio-X → controle de passaporte → embarque. Cada balcão é um **middleware**. Algum pode te liberar (chamar \`next()\`) ou te barrar e devolver na hora (responder com 403). A "rota final" é o avião.
+
+## 🔧 Sintaxe e como funciona
   function meuMiddleware(req, res, next) {
-    // faz algo...
-    next();  // passa para o próximo middleware/rota
-  }
-
-Middleware de logging:
-  function logger(req, res, next) {
-    console.log(\`[\${new Date().toISOString()}] \${req.method} \${req.url}\`);
+    // 1. faz algo (loga, valida, decora req...)
+    // 2. chama next() para seguir, OU responde direto
     next();
   }
-  app.use(logger);  // aplica a TODAS as rotas
 
-Middleware built-in do Express:
-  app.use(express.json());        // parseia body JSON
-  app.use(express.urlencoded());  // parseia form data
-  app.use(express.static("public")); // serve arquivos estáticos
+  app.use(meuMiddleware);              // global — todas as rotas
+  app.get("/admin", autenticar, handler); // só nesta rota
 
-Middleware de terceiros:
-  const cors = require("cors");
-  const helmet = require("helmet");
-  app.use(cors());     // habilita CORS
-  app.use(helmet());   // headers de segurança
+Tipos de middleware:
+• **Built-in**: \`express.json()\`, \`express.urlencoded()\`, \`express.static("public")\`.
+• **Terceiros**: \`cors()\`, \`helmet()\`, \`morgan()\` (logs), \`compression()\`.
+• **Próprios**: autenticação, validação, rate-limit, telemetria.
+• **De erro** (assinatura com **4 parâmetros**): \`(err, req, res, next) => ...\`.
 
-Middleware por rota:
-  app.get("/admin", verificarAdmin, (req, res) => {
-    res.json({ admin: true });
+## 📚 Exemplos comentados
+  // 1. Logger global
+  app.use((req, res, next) => {
+    console.log(\`[\${new Date().toISOString()}] \${req.method} \${req.url}\`);
+    next();                            // SEM isso, requisição trava
   });
 
-Middleware de erro (4 parâmetros):
+  // 2. Middleware por rota (autenticação)
+  function autenticar(req, res, next) {
+    if (!req.headers.authorization) return res.status(401).json({ erro: "sem token" });
+    next();
+  }
+  app.get("/perfil", autenticar, (req, res) => res.json({ ok: true }));
+
+  // 3. Tratador de erro (sempre o ÚLTIMO app.use)
   app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ erro: "Algo deu errado!" });
+    res.status(500).json({ erro: "interno" });
   });
 
-Ordem importa! Middlewares executam na ordem em que são declarados.`,
+## ⚠️ Erros comuns
+• **Esquecer \`next()\`** → a requisição fica pendurada para sempre.
+• Chamar \`next()\` **e** responder no mesmo middleware → erro "Cannot set headers after they are sent".
+• Registrar middleware **depois** das rotas → ele não roda nelas (ordem importa!).
+• Esquecer os **4 parâmetros** no middleware de erro → Express trata como middleware normal.
+
+## 🚀 Quando usar na prática
+**Autenticação JWT**, **CORS**, **rate-limiting** (proteção contra abuse), **logs estruturados**, **compressão gzip**, **parsing de body**, **i18n** (idioma a partir do header), **tracing**/observabilidade. Praticamente toda funcionalidade transversal vira middleware.`,
         starterCode: 'const express = require("express");\nconst app = express();\n// Crie o middleware\n',
         solution: 'const express = require("express");\nconst app = express();\n\nfunction logger(req, res, next) {\n  console.log(`[\${new Date().toISOString()}] \${req.method} \${req.url}`);\n  next();\n}\n\napp.use(logger);\napp.get("/", (req, res) => res.send("OK"));\napp.listen(3000);',
         expectedOutput: "logger",
@@ -3800,62 +3816,75 @@ Ordem importa! Middlewares executam na ordem em que são declarados.`,
         id: "5-4",
         title: "CRUD com Express",
         description: "Implemente um **CRUD** completo (Create, Read, Update, Delete) para uma lista de tarefas usando Express.",
-        theory: `CRUD são as 4 operações básicas de qualquer API: Create, Read, Update, Delete.
+        theory: `# CRUD — As 4 operações de qualquer API
 
-Mapeamento HTTP → CRUD:
-  POST   /todos     → Create (criar)
-  GET    /todos     → Read all (listar)
-  GET    /todos/:id → Read one (buscar)
-  PUT    /todos/:id → Update (atualizar)
-  DELETE /todos/:id → Delete (deletar)
+## 💡 O que é
+**CRUD** = **C**reate, **R**ead, **U**pdate, **D**elete. São as 4 operações fundamentais sobre qualquer recurso (usuário, produto, post). Em REST, cada uma mapeia para um método HTTP específico.
 
-Implementação completa:
-  const express = require("express");
-  const app = express();
+## 🌍 Analogia do mundo real
+Pense num **caderno de contatos**: você **adiciona** alguém (Create), **olha** a lista ou um contato (Read), **edita** o telefone de alguém (Update) e **apaga** quem você não fala mais (Delete). É exatamente o mesmo padrão de qualquer "lista de coisas" em software.
+
+## 🔧 Sintaxe e como funciona
+Mapeamento canônico HTTP → CRUD:
+  POST   /todos       → Create  (cria um novo)
+  GET    /todos       → Read    (lista todos)
+  GET    /todos/:id   → Read    (busca um)
+  PUT    /todos/:id   → Update  (substitui inteiro)
+  PATCH  /todos/:id   → Update  (parcial)
+  DELETE /todos/:id   → Delete  (apaga um)
+
+Status codes corretos:
+• **200 OK** — sucesso geral (GET, PUT)
+• **201 Created** — recurso criado (POST)
+• **204 No Content** — sucesso sem corpo (DELETE)
+• **400 Bad Request** — dados inválidos
+• **404 Not Found** — recurso não existe
+• **500 Internal Server Error** — bug no servidor
+
+## 📚 Exemplos comentados
   app.use(express.json());
-
-  let todos = [
-    { id: 1, text: "Estudar Node", done: false }
-  ];
+  let todos = [{ id: 1, text: "Estudar", done: false }];
   let nextId = 2;
 
-  // Listar todos
-  app.get("/todos", (req, res) => {
-    res.json(todos);
-  });
+  // READ all
+  app.get("/todos", (req, res) => res.json(todos));
 
-  // Buscar por ID
+  // READ one — 404 se não achar
   app.get("/todos/:id", (req, res) => {
-    const todo = todos.find(t => t.id === +req.params.id);
-    if (!todo) return res.status(404).json({ erro: "Não encontrado" });
-    res.json(todo);
+    const t = todos.find(t => t.id === +req.params.id);
+    if (!t) return res.status(404).json({ erro: "não encontrado" });
+    res.json(t);
   });
 
-  // Criar
+  // CREATE — 201 com o recurso criado
   app.post("/todos", (req, res) => {
-    const todo = { id: nextId++, text: req.body.text, done: false };
-    todos.push(todo);
-    res.status(201).json(todo);
+    const novo = { id: nextId++, text: req.body.text, done: false };
+    todos.push(novo);
+    res.status(201).json(novo);
   });
 
-  // Atualizar
-  app.put("/todos/:id", (req, res) => {
-    const todo = todos.find(t => t.id === +req.params.id);
-    if (!todo) return res.status(404).json({ erro: "Não encontrado" });
-    todo.text = req.body.text ?? todo.text;
-    todo.done = req.body.done ?? todo.done;
-    res.json(todo);
+  // UPDATE parcial — só sobrescreve campos enviados
+  app.patch("/todos/:id", (req, res) => {
+    const t = todos.find(t => t.id === +req.params.id);
+    if (!t) return res.status(404).json({ erro: "não encontrado" });
+    Object.assign(t, req.body);        // mescla campos
+    res.json(t);
   });
 
-  // Deletar
+  // DELETE — 204 sem corpo
   app.delete("/todos/:id", (req, res) => {
     todos = todos.filter(t => t.id !== +req.params.id);
     res.status(204).send();
   });
 
-Status codes:
-  200 OK, 201 Created, 204 No Content,
-  400 Bad Request, 404 Not Found, 500 Server Error`,
+## ⚠️ Erros comuns
+• Retornar **200** em criação (deveria ser **201**) ou esquecer de devolver o recurso criado (com o \`id\` gerado).
+• Não tratar **404** quando o \`:id\` não existe → cliente recebe \`null\` ou erro 500.
+• Usar **PUT** quando o cliente manda só alguns campos → você sobrescreve o resto com \`undefined\`. Para parciais, use **PATCH**.
+• Converter \`req.params.id\` esquecendo: ele vem como **string**, então \`id === 1\` é sempre \`false\`. Use \`+req.params.id\`.
+
+## 🚀 Quando usar na prática
+**Toda** API REST de gestão (admin, dashboards, e-commerce, blog, redes sociais) é basicamente CRUD em cima de várias entidades. Frameworks como NestJS, Strapi e o próprio PostgREST do Supabase geram CRUD automaticamente — entender o padrão é pré-requisito para usar qualquer um deles.`,
         starterCode: 'const express = require("express");\nconst app = express();\napp.use(express.json());\n// Implemente o CRUD\n',
         solution: 'const express = require("express");\nconst app = express();\napp.use(express.json());\n\nlet todos = [];\nlet id = 1;\n\napp.get("/todos", (req, res) => res.json(todos));\napp.post("/todos", (req, res) => {\n  const todo = { id: id++, text: req.body.text, done: false };\n  todos.push(todo);\n  res.status(201).json(todo);\n});\napp.delete("/todos/:id", (req, res) => {\n  todos = todos.filter(t => t.id !== +req.params.id);\n  res.status(204).send();\n});',
         expectedOutput: "express",
@@ -3866,52 +3895,61 @@ Status codes:
         id: "5-5",
         title: "Validação de Dados",
         description: "Crie um middleware de **validação** que verifica se os campos `nome` e `email` existem no body antes de criar um usuário.",
-        theory: `Validação garante que dados recebidos estejam corretos antes de processá-los. Nunca confie nos dados do cliente!
+        theory: `# Validação de dados — Nunca confie no cliente
 
-Validação manual:
+## 💡 O que é
+**Validação** é checar se os dados que chegaram do cliente fazem sentido **antes** de processá-los: campo obrigatório existe? email tem formato válido? idade é número positivo? Se não passar, retorne **400 Bad Request** com mensagens claras.
+
+## 🌍 Analogia do mundo real
+É o **porteiro de uma balada**: confere idade (número, ≥ 18), nome na lista, identidade válida. Quem não passa, **não entra** — e o porteiro explica o porquê. O segurança (sua rota) confia que **tudo lá dentro já foi checado**.
+
+## 🔧 Sintaxe e como funciona
   function validarUsuario(req, res, next) {
     const { nome, email } = req.body;
     const erros = [];
 
-    if (!nome || nome.trim().length < 2) {
-      erros.push("Nome deve ter pelo menos 2 caracteres");
-    }
-    if (!email || !email.includes("@")) {
-      erros.push("Email inválido");
-    }
+    if (!nome || nome.trim().length < 2) erros.push({ campo: "nome", msg: "mínimo 2 letras" });
+    if (!email || !email.includes("@")) erros.push({ campo: "email", msg: "email inválido" });
 
-    if (erros.length > 0) {
-      return res.status(400).json({ erros });
-    }
-    next();
+    if (erros.length) return res.status(400).json({ erros });
+    next();                              // tudo certo, segue
   }
 
   app.post("/users", validarUsuario, (req, res) => {
-    // dados já validados!
-    res.status(201).json(req.body);
+    res.status(201).json(req.body);     // dados já confiáveis
   });
 
-Padrão de resposta de erro:
-  {
-    "erros": [
-      { "campo": "email", "mensagem": "Email inválido" },
-      { "campo": "nome", "mensagem": "Nome é obrigatório" }
-    ]
-  }
+Dimensões da validação: **presença** (existe?), **tipo** (string/number/bool?), **formato** (regex de email/CPF), **tamanho** (min/max), **range** (entre X e Y), **unicidade** (já existe no banco?).
 
-Tipos de validação:
-  Presença   → campo existe e não está vazio?
-  Tipo       → é string? número? boolean?
-  Formato    → email válido? CPF? telefone?
-  Tamanho    → mínimo/máximo de caracteres?
-  Range      → número entre X e Y?
-  Unicidade  → já existe no banco?
+## 📚 Exemplos comentados
+  // 1. Validação manual simples
+  if (!req.body.email?.includes("@")) return res.status(400).json({ erro: "email" });
 
-Sanitização — limpar dados:
-  const nome = req.body.nome.trim();
-  const email = req.body.email.toLowerCase().trim();
+  // 2. Sanitização — limpa antes de salvar
+  const email = req.body.email.trim().toLowerCase();
+  const nome  = req.body.nome.trim();
 
-Dica: Para projetos grandes, use bibliotecas como Joi, Zod ou express-validator.`,
+  // 3. Validação com Zod (recomendado em projetos sérios)
+  import { z } from "zod";
+  const UserSchema = z.object({
+    nome:  z.string().min(2),
+    email: z.string().email(),
+    idade: z.number().int().min(18).max(120),
+  });
+  app.post("/users", (req, res) => {
+    const parsed = UserSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ erros: parsed.error.issues });
+    // parsed.data agora é tipado!
+  });
+
+## ⚠️ Erros comuns
+• **Confiar no front** ("já validei lá") — qualquer um faz \`curl\` direto. Valide **sempre** no backend.
+• Retornar mensagem genérica ("dados inválidos") → frustra o usuário. Diga **qual** campo e **por quê**.
+• Não **sanitizar** (trim, lowercase) → mesmo email aparece como "ana@x.com" e " Ana@X.com " no banco.
+• Validar **depois** de tocar no banco → desperdício de query e brecha de segurança.
+
+## 🚀 Quando usar na prática
+**Toda** entrada do cliente: corpos de POST/PUT, query strings, params, headers, uploads de arquivo (tamanho/MIME). Em projetos modernos, **Zod** vira a fonte da verdade: o mesmo schema valida no backend e gera tipos TypeScript no frontend.`,
         starterCode: '// Crie o middleware de validação\n',
         solution: 'function validarUsuario(req, res, next) {\n  const { nome, email } = req.body;\n  const erros = [];\n  if (!nome || nome.trim().length < 2) erros.push("Nome inválido");\n  if (!email || !email.includes("@")) erros.push("Email inválido");\n  if (erros.length) return res.status(400).json({ erros });\n  next();\n}',
         expectedOutput: "validar",
@@ -3922,47 +3960,42 @@ Dica: Para projetos grandes, use bibliotecas como Joi, Zod ou express-validator.
         id: "5-6",
         title: "Conexão com Banco de Dados",
         description: "Conecte ao banco de dados usando um **pool de conexões** e faça uma query SELECT simples.",
-        theory: `Em aplicações reais, o servidor precisa se conectar a um banco de dados para persistir dados.
+        theory: `# Conexão com banco — Pool e queries seguras
 
-Pool de conexões — reutiliza conexões:
-  const { Pool } = require("pg");  // PostgreSQL
+## 💡 O que é
+Para persistir dados de verdade (não em memória), o servidor abre conexões com um **banco de dados** (Postgres, MySQL...). Como abrir uma conexão é **caro**, usamos um **pool**: um conjunto de conexões prontas que são emprestadas e devolvidas.
+
+## 🌍 Analogia do mundo real
+Pense num **estacionamento de bicicletas compartilhadas**: em vez de cada cliente comprar uma bike (abrir conexão), você pega uma do **pool**, usa, devolve. Se 50 clientes querem ao mesmo tempo, eles **enfileiram** até alguém devolver. Muito mais rápido e sustentável que comprar bike nova toda vez.
+
+## 🔧 Sintaxe e como funciona
+  const { Pool } = require("pg");
 
   const pool = new Pool({
-    host: "localhost",
-    port: 5432,
-    user: "admin",
-    password: "senha",
-    database: "meu_app",
-    max: 20  // máximo de conexões simultâneas
+    connectionString: process.env.DATABASE_URL,
+    max: 20,                            // máx. de conexões simultâneas
   });
 
-Fazendo queries:
-  // SELECT
-  const result = await pool.query("SELECT * FROM usuarios");
-  console.log(result.rows);
-
-  // INSERT com parâmetros (previne SQL injection!)
-  await pool.query(
-    "INSERT INTO usuarios (nome, email) VALUES ($1, $2)",
-    ["Ana", "ana@mail.com"]
+  // SEMPRE com parâmetros ($1, $2) — nunca interpolação!
+  const { rows } = await pool.query(
+    "SELECT * FROM usuarios WHERE id = $1",
+    [id]
   );
 
-  // UPDATE
-  await pool.query(
-    "UPDATE usuarios SET nome = $1 WHERE id = $2",
-    ["Ana Silva", 1]
-  );
+Por que parâmetros importam? Porque **interpolação direta abre SQL Injection**:
+  ❌  pool.query(\`SELECT * FROM users WHERE name = '\${nome}'\`)
+      // se nome = "'; DROP TABLE users; --"  → desastre
+  ✅  pool.query("SELECT * FROM users WHERE name = $1", [nome])
+      // o driver escapa automaticamente
 
-⚠️ NUNCA use string interpolation em queries!
-  ❌ pool.query(\`SELECT * FROM users WHERE id = \${id}\`)  // SQL INJECTION!
-  ✅ pool.query("SELECT * FROM users WHERE id = $1", [id])  // Seguro!
-
-Organizando com funções:
-  async function buscarUsuarios() {
-    const { rows } = await pool.query("SELECT * FROM usuarios");
+## 📚 Exemplos comentados
+  // 1. Buscar todos
+  async function listarUsuarios() {
+    const { rows } = await pool.query("SELECT id, nome, email FROM usuarios");
     return rows;
   }
 
+  // 2. Inserir e devolver o registro criado (RETURNING)
   async function criarUsuario(nome, email) {
     const { rows } = await pool.query(
       "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *",
@@ -3971,18 +4004,30 @@ Organizando com funções:
     return rows[0];
   }
 
-Transactions — operações atômicas:
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
-    await client.query("UPDATE contas SET saldo = saldo - 100 WHERE id = 1");
-    await client.query("UPDATE contas SET saldo = saldo + 100 WHERE id = 2");
-    await client.query("COMMIT");
-  } catch (err) {
-    await client.query("ROLLBACK");
-  } finally {
-    client.release();
-  }`,
+  // 3. Transação — duas queries que precisam acontecer juntas
+  async function transferir(de, para, valor) {
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+      await client.query("UPDATE contas SET saldo = saldo - $1 WHERE id = $2", [valor, de]);
+      await client.query("UPDATE contas SET saldo = saldo + $1 WHERE id = $2", [valor, para]);
+      await client.query("COMMIT");          // confirma as duas
+    } catch (e) {
+      await client.query("ROLLBACK");        // desfaz tudo
+      throw e;
+    } finally {
+      client.release();                       // devolve a conexão ao pool
+    }
+  }
+
+## ⚠️ Erros comuns
+• **Interpolação de strings em queries** → SQL Injection (a vulnerabilidade #1 da web por décadas).
+• Esquecer **\`client.release()\`** em transações → o pool esgota e o servidor trava.
+• Abrir um **\`new Pool()\`** por requisição → defeating the purpose. Crie **um** pool global no boot.
+• Não tratar erros assíncronos com \`try/catch\` → processo Node cai inteiro com "Unhandled promise rejection".
+
+## 🚀 Quando usar na prática
+**Toda** API que persiste dados. Em projetos com Lovable Cloud, você raramente escreve SQL bruto — o **Supabase JS client** já cuida do pool e dos parâmetros por você. Mas entender o conceito é essencial para debugar performance e segurança.`,
         starterCode: '// Conecte ao banco\n',
         solution: 'const { Pool } = require("pg");\n\nconst pool = new Pool({ connectionString: process.env.DATABASE_URL });\n\nasync function buscarUsuarios() {\n  const { rows } = await pool.query("SELECT * FROM usuarios");\n  return rows;\n}\n\nasync function criarUsuario(nome, email) {\n  const { rows } = await pool.query(\n    "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *",\n    [nome, email]\n  );\n  return rows[0];\n}',
         expectedOutput: "pool.query",
@@ -3993,43 +4038,64 @@ Transactions — operações atômicas:
         id: "5-7",
         title: "JWT Auth",
         description: "Crie um middleware que verifica um **token JWT** no header Authorization e protege uma rota.",
-        theory: `JWT (JSON Web Token) é o padrão para autenticação em APIs. O servidor gera um token após login e o cliente envia em cada requisição.
+        theory: `# JWT — Autenticação com tokens
 
-Fluxo:
-  1. Cliente faz login (email + senha)
-  2. Servidor valida e retorna um JWT
-  3. Cliente envia o JWT no header: Authorization: Bearer <token>
-  4. Servidor verifica o JWT em cada requisição
+## 💡 O que é
+**JWT** (JSON Web Token) é uma string assinada que carrega informações do usuário (id, email, role). Após login, o servidor entrega um JWT e o cliente o envia em **toda** requisição protegida no header \`Authorization: Bearer <token>\`. O servidor verifica a **assinatura** sem precisar consultar o banco.
 
-Instalação: npm install jsonwebtoken
+## 🌍 Analogia do mundo real
+JWT é como uma **pulseira de festival** com um **lacre holográfico**: você prova quem é uma vez na entrada, recebe a pulseira, e em cada palco o segurança só olha o lacre — sem ligar para o escritório central. Se alguém tentar falsificar, o lacre não bate. A pulseira tem **validade** (\`expiresIn\`).
 
-Gerando um token:
+## 🔧 Sintaxe e como funciona
+Um JWT tem 3 partes: **header.payload.signature** (Base64URL).
+
   const jwt = require("jsonwebtoken");
-  const SECRET = "minha-chave-secreta";
+  const SECRET = process.env.JWT_SECRET;     // NUNCA hardcoded em produção
 
+  // 1. Gerar (no login)
   const token = jwt.sign(
-    { id: user.id, email: user.email },
+    { sub: user.id, email: user.email },     // payload (claims)
     SECRET,
     { expiresIn: "1h" }
   );
 
-Verificando o token (middleware):
-  function autenticar(req, res, next) {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ erro: "Token não fornecido" });
+  // 2. Verificar (em cada request protegida)
+  const decoded = jwt.verify(token, SECRET); // throw se inválido/expirado
 
+## 📚 Exemplos comentados
+  // 1. Rota de login — emite o token
+  app.post("/login", async (req, res) => {
+    const user = await validarCredenciais(req.body.email, req.body.senha);
+    if (!user) return res.status(401).json({ erro: "credenciais inválidas" });
+    const token = jwt.sign({ sub: user.id }, SECRET, { expiresIn: "1h" });
+    res.json({ token });
+  });
+
+  // 2. Middleware de autenticação
+  function autenticar(req, res, next) {
+    const token = req.headers.authorization?.split(" ")[1];   // "Bearer xxx"
+    if (!token) return res.status(401).json({ erro: "sem token" });
     try {
-      const decoded = jwt.verify(token, SECRET);
-      req.usuario = decoded;
+      req.usuario = jwt.verify(token, SECRET);
       next();
     } catch {
-      res.status(401).json({ erro: "Token inválido" });
+      res.status(401).json({ erro: "token inválido ou expirado" });
     }
   }
 
+  // 3. Rota protegida
   app.get("/perfil", autenticar, (req, res) => {
-    res.json({ usuario: req.usuario });
-  });`,
+    res.json({ id: req.usuario.sub });
+  });
+
+## ⚠️ Erros comuns
+• Guardar **dados sensíveis** no payload (senha, dados de cartão) — o payload é só **Base64**, qualquer um decodifica.
+• Usar **SECRET fraco** ou versionado no Git → qualquer um forja tokens.
+• Token **sem \`expiresIn\`** → vaza uma vez e vale para sempre.
+• Aceitar JWT **sem verificar** (\`jwt.decode\` em vez de \`jwt.verify\`) → bypass total da autenticação.
+
+## 🚀 Quando usar na prática
+**Praticamente toda API moderna** (mobile, SPA, microsserviços). Em Lovable Cloud, o **Supabase Auth** já gerencia JWTs por você — login, refresh, RLS no Postgres tudo amarrado. Você raramente assina manualmente, mas precisa entender o conceito para debugar sessões.`,
         starterCode: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n// Crie o middleware\n',
         solution: 'const jwt = require("jsonwebtoken");\nconst SECRET = "segredo";\n\nfunction autenticar(req, res, next) {\n  const token = req.headers.authorization?.split(" ")[1];\n  if (!token) return res.status(401).json({ erro: "Token não fornecido" });\n  try {\n    req.usuario = jwt.verify(token, SECRET);\n    next();\n  } catch {\n    res.status(401).json({ erro: "Token inválido" });\n  }\n}',
         expectedOutput: "jwt.verify",
@@ -4040,51 +4106,65 @@ Verificando o token (middleware):
         id: "5-8",
         title: "Padrão MVC",
         description: "Organize uma rota de usuários seguindo o padrão **MVC**: crie um controller e um model separados.",
-        theory: `MVC (Model-View-Controller) organiza o código em camadas com responsabilidades claras.
+        theory: `# MVC — Organizando o código por responsabilidade
 
-Model → acessa e manipula dados:
-  // models/userModel.js
-  const users = [];
-  
-  const UserModel = {
-    getAll: () => users,
-    getById: (id) => users.find(u => u.id === id),
-    create: (data) => {
-      const user = { id: Date.now(), ...data };
-      users.push(user);
-      return user;
-    }
+## 💡 O que é
+**MVC** = **M**odel + **V**iew + **C**ontroller. É um padrão para separar o código em três camadas, cada uma com **uma única responsabilidade**: dados, apresentação e lógica. Em APIs Node, normalmente não há "View" tradicional (o front faz isso) — então adaptamos para **Routes → Controllers → Models**.
+
+## 🌍 Analogia do mundo real
+Pense num **restaurante**:
+• **Garçom (Routes/Controller)** — recebe o pedido, traduz para a cozinha e entrega o prato. Não cozinha.
+• **Cozinheiro (Service/Lógica)** — sabe a receita, combina ingredientes.
+• **Despenseiro (Model/DB)** — sabe onde fica cada ingrediente. Não sabe o que está sendo cozinhado.
+
+Trocar o garçom não muda a receita. Trocar o estoque não muda o garçom. Cada um faz uma coisa só.
+
+## 🔧 Sintaxe e como funciona
+Estrutura de pastas típica:
+  src/
+    routes/userRoutes.js          ← define URLs e qual controller chamar
+    controllers/userController.js ← traduz HTTP <-> service
+    services/userService.js       ← regras de negócio
+    models/userModel.js           ← acesso ao banco
+
+## 📚 Exemplos comentados
+  // models/userModel.js — só conversa com o banco
+  module.exports = {
+    getAll:  ()        => pool.query("SELECT * FROM users").then(r => r.rows),
+    create:  (data)    => pool.query("INSERT INTO users(nome) VALUES($1) RETURNING *", [data.nome]).then(r => r.rows[0]),
   };
-  module.exports = UserModel;
 
-Controller → lógica de negócio:
-  // controllers/userController.js
+  // controllers/userController.js — traduz req/res
   const UserModel = require("../models/userModel");
-
-  const UserController = {
-    listar: (req, res) => {
-      res.json(UserModel.getAll());
+  module.exports = {
+    listar: async (req, res) => {
+      const users = await UserModel.getAll();
+      res.json(users);
     },
-    criar: (req, res) => {
-      const user = UserModel.create(req.body);
-      res.status(201).json(user);
-    }
+    criar:  async (req, res) => {
+      const novo = await UserModel.create(req.body);
+      res.status(201).json(novo);
+    },
   };
-  module.exports = UserController;
 
-Routes → define as rotas:
-  // routes/userRoutes.js
+  // routes/userRoutes.js — só amarra URL ao controller
   const router = require("express").Router();
-  const UserController = require("../controllers/userController");
-
-  router.get("/", UserController.listar);
-  router.post("/", UserController.criar);
+  const c = require("../controllers/userController");
+  router.get("/",  c.listar);
+  router.post("/", c.criar);
   module.exports = router;
 
-  // app.js
-  app.use("/users", userRoutes);
+  // app.js — monta tudo
+  app.use("/users", require("./routes/userRoutes"));
 
-Benefícios: código organizado, testável, escalável.`,
+## ⚠️ Erros comuns
+• **Controller fazendo SQL direto** → você perde o motivo do MVC. Mantenha SQL no model.
+• **Model sabendo de \`req\`/\`res\`** → ele vira inútil para reuso fora de rotas (jobs, CLIs).
+• Camadas demais para projeto pequeno → começar com MVC simples e evoluir só quando dói.
+• Importação circular (\`controller → service → controller\`) → quebra o boot do Node.
+
+## 🚀 Quando usar na prática
+Qualquer API que vai **crescer**. Para um endpoint de 5 linhas, MVC é overkill. Para um sistema com 30+ rotas e múltiplos devs, MVC (ou variações como **Clean Architecture** e **Hexagonal**) é o que mantém o código sustentável.`,
         starterCode: '// Organize em MVC\n',
         solution: '// Model\nconst users = [];\nconst getAll = () => users;\nconst create = (data) => { const u = {id: Date.now(), ...data}; users.push(u); return u; };\n\n// Controller\nconst listar = (req, res) => res.json(getAll());\nconst criar = (req, res) => res.status(201).json(create(req.body));',
         expectedOutput: "Controller",
@@ -4095,33 +4175,57 @@ Benefícios: código organizado, testável, escalável.`,
         id: "5-9",
         title: "File System (fs)",
         description: "Use o módulo **fs** para ler e escrever um arquivo JSON com dados de usuários.",
-        theory: `O módulo fs (File System) do Node.js permite manipular arquivos e pastas no servidor.
+        theory: `# fs — Lendo e escrevendo arquivos
 
-Importando:
-  const fs = require("fs");
+## 💡 O que é
+O módulo **\`fs\`** (File System) do Node permite ler, escrever, listar e apagar arquivos e pastas diretamente do disco do servidor. Quase tudo tem **duas versões**: síncrona (\`readFileSync\`) e assíncrona (\`fs/promises\`). **Em servidores, use sempre a assíncrona.**
 
-Leitura síncrona:
-  const data = fs.readFileSync("dados.json", "utf-8");
-  const obj = JSON.parse(data);
+## 🌍 Analogia do mundo real
+\`fs\` síncrono é como **ir buscar um livro na biblioteca e parar a aula inteira** até voltar — ninguém aprende nada nesse meio tempo. \`fs\` assíncrono é mandar um **monitor** buscar enquanto a aula continua. Em um servidor com 100 alunos (requisições), essa diferença decide se ele atende todos ou trava.
 
-Leitura assíncrona (recomendado):
+## 🔧 Sintaxe e como funciona
+  // Versão moderna (Promises) — preferida
   const fs = require("fs/promises");
-  async function ler() {
-    const data = await fs.readFile("dados.json", "utf-8");
-    return JSON.parse(data);
+
+  // Ler texto
+  const txt = await fs.readFile("dados.json", "utf-8");
+  const obj = JSON.parse(txt);
+
+  // Escrever texto (sobrescreve)
+  await fs.writeFile("users.json", JSON.stringify(obj, null, 2));
+
+  // Outras operações úteis
+  await fs.mkdir("uploads", { recursive: true });
+  const arquivos = await fs.readdir(".");
+  await fs.unlink("temp.txt");
+
+Sem \`utf-8\` → você recebe um **Buffer** (bytes brutos) em vez de string.
+
+## 📚 Exemplos comentados
+  // 1. Ler JSON
+  const fs = require("fs/promises");
+  const data = JSON.parse(await fs.readFile("config.json", "utf-8"));
+
+  // 2. Append em log (não sobrescreve)
+  await fs.appendFile("acesso.log", \`\${new Date().toISOString()} - GET /\\n\`);
+
+  // 3. Ler arquivo só se existir
+  try {
+    const conteudo = await fs.readFile("opcional.txt", "utf-8");
+    console.log(conteudo);
+  } catch (e) {
+    if (e.code === "ENOENT") console.log("arquivo não existe — ok");
+    else throw e;
   }
 
-Escrita:
-  const usuarios = [{ nome: "Ana", idade: 25 }];
-  fs.writeFileSync("users.json", JSON.stringify(usuarios, null, 2));
+## ⚠️ Erros comuns
+• Usar **versão sync** (\`readFileSync\`) em rotas de API → bloqueia o event loop e o servidor inteiro trava enquanto lê.
+• Esquecer **\`"utf-8"\`** → recebe Buffer e \`JSON.parse\` quebra.
+• Não tratar **\`ENOENT\`** (arquivo não existe) → erro 500 quando o normal seria criar/ignorar.
+• Ler arquivo **enorme** com \`readFile\` → carrega tudo na RAM. Para arquivos grandes, use **streams** (\`fs.createReadStream\`).
 
-Outras operações:
-  fs.existsSync("arquivo.txt")
-  fs.mkdirSync("pasta")
-  fs.readdirSync(".")
-  fs.unlinkSync("arquivo.txt")
-
-Dica: Sempre use versões async em servidores web — sync bloqueia o event loop!`,
+## 🚀 Quando usar na prática
+**Logs**, **uploads** salvos em disco, **caches**, **leitura de configs**, **geração de relatórios** (CSV, PDF), **scripts de automação**. Em ambientes serverless (Vercel, edge functions) o filesystem é **efêmero/somente-leitura** — para persistir, use storage de objetos (Supabase Storage, S3).`,
         starterCode: 'const fs = require("fs");\n// Leia e escreva JSON\n',
         solution: 'const fs = require("fs");\n\nconst usuarios = [{ nome: "Ana", idade: 25 }, { nome: "Bruno", idade: 30 }];\nfs.writeFileSync("users.json", JSON.stringify(usuarios, null, 2));\nconst data = fs.readFileSync("users.json", "utf-8");\nconsole.log(JSON.parse(data));',
         expectedOutput: "Ana",
@@ -4132,39 +4236,61 @@ Dica: Sempre use versões async em servidores web — sync bloqueia o event loop
         id: "5-10",
         title: "Async/Await no Node",
         description: "Use **Promise.all** para buscar usuários e produtos em paralelo.",
-        theory: `No Node.js, quase tudo é assíncrono. Dominar async/await é essencial!
+        theory: `# Async no Node — Promise.all, race e padrões
 
-Promise.all — executar em paralelo:
-  async function buscarDados() {
-    const [usuarios, produtos] = await Promise.all([
-      buscarUsuarios(),
-      buscarProdutos()
-    ]);
-    console.log(usuarios, produtos);
-  }
+## 💡 O que é
+No Node, quase **toda** I/O (rede, disco, banco) é assíncrona. \`async/await\` é a sintaxe limpa para esperar essas operações. Mas o segredo de performance é saber **paralelizar** com \`Promise.all\` em vez de esperar uma de cada vez.
 
-Promise.allSettled — não para se uma falhar:
-  const resultados = await Promise.allSettled([
-    fetch("/api/1"),
-    fetch("/api/2"),
-  ]);
+## 🌍 Analogia do mundo real
+Imagine pedir **café**, **pão** e **suco** no balcão.
+• **Sequencial** (\`await\` um após o outro): pede café, espera 30s, pede pão, espera 30s, pede suco, espera 30s = **90s**.
+• **Paralelo** (\`Promise.all\`): faz os 3 pedidos juntos, todos prontos em **30s**.
+Mesma quantidade de trabalho, **3× mais rápido** — porque enquanto um fica pronto, os outros já estão sendo feitos.
 
-Promise.race — retorna o primeiro:
-  const primeiro = await Promise.race([
-    buscarDoBanco(),
-    buscarDoCache()
-  ]);
+## 🔧 Sintaxe e como funciona
+  // ❌ Sequencial — lento
+  const users    = await buscarUsuarios();    // 100ms
+  const products = await buscarProdutos();    // 100ms  → total 200ms
 
-Padrão retry:
+  // ✅ Paralelo — rápido
+  const [users, products] = await Promise.all([
+    buscarUsuarios(),
+    buscarProdutos(),
+  ]);                                          // total ~100ms
+
+Métodos importantes:
+• **\`Promise.all([...])\`** — espera **todas**; se uma falhar, a Promise toda rejeita.
+• **\`Promise.allSettled([...])\`** — espera todas; **nunca** rejeita; cada item vira \`{status, value|reason}\`.
+• **\`Promise.race([...])\`** — resolve/rejeita com a **primeira** que terminar (útil para timeout).
+• **\`Promise.any([...])\`** — resolve com a **primeira sucesso**, ignora falhas.
+
+## 📚 Exemplos comentados
+  // 1. Paralelo simples
+  const [u, p] = await Promise.all([buscarUsuarios(), buscarProdutos()]);
+
+  // 2. Tolerante a falhas
+  const resultados = await Promise.allSettled([fetch("/a"), fetch("/b")]);
+  resultados.forEach(r => r.status === "fulfilled" ? console.log(r.value) : console.error(r.reason));
+
+  // 3. Retry com backoff exponencial
   async function comRetry(fn, tentativas = 3) {
     for (let i = 0; i < tentativas; i++) {
       try { return await fn(); }
       catch (err) {
         if (i === tentativas - 1) throw err;
-        await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+        await new Promise(r => setTimeout(r, 1000 * 2 ** i));   // 1s, 2s, 4s
       }
     }
-  }`,
+  }
+
+## ⚠️ Erros comuns
+• \`await\` em **loop** quando dava para paralelizar → API 10× mais lenta.
+• Esquecer **\`await\`** antes de uma Promise → você grava \`Promise { <pending> }\` no banco.
+• Usar \`Promise.all\` quando uma falha **não** deveria abortar as outras → use \`allSettled\`.
+• Misturar \`async/await\` com \`.then()\` no mesmo bloco → código ilegível e propenso a bugs.
+
+## 🚀 Quando usar na prática
+**Sempre** que sua rota faz mais de uma chamada externa (banco + cache + API de terceiro), avalie se elas são **independentes** — se forem, \`Promise.all\` é grátis e drasticamente mais rápido. **Retry com backoff** é padrão para chamadas a APIs flaky (pagamento, envio de email).`,
         starterCode: '// Use async/await e Promise.all\n',
         solution: 'function buscarUsuarios() {\n  return new Promise(resolve => setTimeout(() => resolve(["Ana", "Bruno"]), 100));\n}\nfunction buscarProdutos() {\n  return new Promise(resolve => setTimeout(() => resolve(["Notebook", "Mouse"]), 100));\n}\n\nasync function main() {\n  const [users, products] = await Promise.all([buscarUsuarios(), buscarProdutos()]);\n  console.log("Usuários:", users);\n  console.log("Produtos:", products);\n}\nmain();',
         expectedOutput: "Usuários:",
@@ -4178,33 +4304,52 @@ Padrão retry:
         id: "5-11",
         title: "Variáveis de Ambiente",
         description: "Configure **variáveis de ambiente** com dotenv para armazenar a porta e uma chave de API.",
-        theory: `Variáveis de ambiente armazenam configurações sensíveis FORA do código.
+        theory: `# Variáveis de ambiente — Configuração fora do código
 
-Instalação: npm install dotenv
+## 💡 O que é
+**Variáveis de ambiente** são valores fornecidos pelo sistema operacional (ou pelo arquivo \`.env\`) ao processo Node, acessados via \`process.env.NOME\`. Servem para guardar **configurações que mudam por ambiente** (dev/staging/prod) e **segredos** (chaves de API, senhas) — coisas que **nunca** podem ir para o Git.
 
-Criando o .env:
+## 🌍 Analogia do mundo real
+Pense numa **receita de bolo** publicada em livro: ela diz "use o forno na temperatura X". O código é a receita; **\`X\` muda a cada cozinha** (dev usa 180°, prod usa 220°). A receita não muda — quem muda é o ambiente. \`.env\` é a "etiqueta na sua cozinha" dizendo qual valor usar.
+
+## 🔧 Sintaxe e como funciona
+Arquivo **\`.env\`** (raiz do projeto, **gitignored**):
   PORT=3000
-  DB_URL=postgresql://user:pass@host/db
-  API_KEY=sk_live_abc123
+  DATABASE_URL=postgres://user:senha@host/db
+  API_KEY=sk_live_xxx
 
-Usando no código:
-  require("dotenv").config();
-  const porta = process.env.PORT || 3000;
+No código:
+  require("dotenv").config();           // carrega .env em process.env
+  const port = process.env.PORT ?? 3000;
   const apiKey = process.env.API_KEY;
+  if (!apiKey) throw new Error("API_KEY não configurada");
 
-Regras IMPORTANTES:
-  1. SEMPRE adicione .env ao .gitignore!
-  2. Crie um .env.example com as chaves (sem valores)
-  3. NUNCA faça commit de .env com dados reais
-  4. Use SCREAMING_SNAKE_CASE
+Convenção: **SCREAMING_SNAKE_CASE**, valores como string (Node não converte tipos sozinho).
 
-Validação:
-  const required = ["PORT", "DB_URL", "API_KEY"];
-  for (const key of required) {
-    if (!process.env[key]) {
-      throw new Error(\`Variável \${key} não configurada!\`);
-    }
-  }`,
+## 📚 Exemplos comentados
+  // 1. Carregar e validar no boot
+  require("dotenv").config();
+  const obrigatorias = ["DATABASE_URL", "JWT_SECRET"];
+  for (const k of obrigatorias) if (!process.env[k]) throw new Error(\`falta \${k}\`);
+
+  // 2. Defaults para dev
+  const port = Number(process.env.PORT ?? 3000);
+  const isProd = process.env.NODE_ENV === "production";
+
+  // 3. Arquivo de exemplo versionado (.env.example)
+  // PORT=
+  // DATABASE_URL=
+  // API_KEY=
+  // → comitado no Git como template para novos devs
+
+## ⚠️ Erros comuns
+• **Comitar o \`.env\`** com chaves reais no Git → vazamento permanente (mesmo deletando depois, o histórico fica).
+• Esquecer de criar **\`.env.example\`** → novo dev clona o projeto e não sabe quais variáveis configurar.
+• Esperar que \`process.env.PORT\` seja **número** — sempre vem **string**. Use \`Number(...)\`.
+• Chamar \`dotenv.config()\` **depois** de já ter usado \`process.env\` em outros arquivos.
+
+## 🚀 Quando usar na prática
+**Toda** configuração que: (a) muda entre ambientes (URLs, portas, flags) ou (b) é segredo (senhas, tokens, chaves). Em Lovable Cloud, secrets são gerenciados pela plataforma e injetados nas edge functions automaticamente — você nunca os vê no código.`,
         starterCode: '// Configure dotenv\n',
         solution: 'require("dotenv").config();\n\nconst PORT = process.env.PORT || 3000;\nconst API_KEY = process.env.API_KEY;\n\nconsole.log("Porta:", PORT);\nif (!API_KEY) console.log("⚠️ API_KEY não configurada!");',
         expectedOutput: "Porta:",
