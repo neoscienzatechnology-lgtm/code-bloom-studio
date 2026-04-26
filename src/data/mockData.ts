@@ -2921,36 +2921,54 @@ O padrão clássico para **carregar dados externos** em um componente React: dis
         id: "4-1",
         title: "Seletores Básicos",
         description: "Escreva CSS para deixar todos os `<h1>` com cor **azul** e todos os `<p>` com tamanho de fonte **18px**.",
-        theory: `CSS (Cascading Style Sheets) controla a aparência visual do HTML. Cada regra CSS tem um seletor e declarações.
+        theory: `# Seletores CSS
 
-![CSS estilizando uma página web](https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=600&h=300&fit=crop)
+## 💡 O que é
+Um **seletor** diz **a quais elementos HTML** uma regra de estilo se aplica. Sem seletor, o navegador não sabe **onde** colorir, alinhar ou espaçar.
 
-Estrutura:
+## 🌍 Analogia do mundo real
+Pense num **professor entrando numa sala lotada**: para dar uma instrução, ele precisa dizer **a quem**. Pode falar com "todos os alunos da fileira da janela" (tag), "quem está com camiseta vermelha" (classe), ou "Pedro Silva" (id, único). O seletor é exatamente esse "endereçamento".
+
+## 🔧 Sintaxe e como funciona
   seletor {
-    propriedade: valor;
+    propriedade: valor;       /* termina sempre com ; */
+    outra: valor;
   }
 
-Tipos de seletores:
-• Tag: h1 { } → todos os <h1>
-• Classe: .destaque { } → elementos com class="destaque"
-• ID: #titulo { } → elemento com id="titulo"
-• Universal: * { } → todos os elementos
+Tipos principais:
+• \`h1\` — **tag**: todos os \`<h1>\` da página.
+• \`.destaque\` — **classe** (use \`.\`): elementos com \`class="destaque"\`. **O mais usado**.
+• \`#titulo\` — **id** (use \`#\`): único, deve aparecer só uma vez.
+• \`*\` — **universal**: todos os elementos.
 
-Propriedades comuns:
-  color: blue;           → cor do texto
-  font-size: 18px;       → tamanho da fonte
-  background-color: red; → cor de fundo
-  margin: 10px;          → espaço externo
-  padding: 20px;         → espaço interno
-  border: 1px solid black; → borda
+**Especificidade** (quem ganha quando há conflito): \`id\` > \`classe\` > \`tag\`. Quanto mais específico, mais prioridade.
 
-Combinando seletores:
-  h1, h2 { }           → h1 E h2
-  .card p { }           → <p> dentro de .card
-  .card > p { }         → <p> filho direto de .card
-  .card:hover { }       → .card quando mouse está sobre
+## 📚 Exemplos comentados
+  /* 1. Por tag — afeta TODOS os parágrafos */
+  p {
+    color: #333;
+    font-size: 16px;
+  }
 
-Especificidade: ID > Classe > Tag. Quanto mais específico, maior a prioridade.`,
+  /* 2. Por classe — só onde class="card" */
+  .card {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  /* 3. Combinando: descendentes, pseudo-classe e múltiplos seletores */
+  .card p { color: gray; }     /* <p> dentro de .card */
+  .card > p { color: black; }  /* só <p> filho DIRETO de .card */
+  .botao:hover { opacity: 0.8; }/* quando o mouse passa por cima */
+  h1, h2, h3 { font-family: serif; } /* aplica em vários ao mesmo tempo */
+
+## ⚠️ Erros comuns
+• Esquecer o **\`.\`** antes da classe (\`card { ... }\` em vez de \`.card { ... }\`) → a regra vira seletor de tag e provavelmente não casa com nada.
+• Esquecer o **\`;\`** no fim das declarações → o navegador descarta a próxima regra silenciosamente.
+• Abusar de \`#id\` em CSS → especificidade alta demais, difícil de sobrescrever depois. Prefira **classes**.
+
+## 🚀 Quando usar na prática
+Toda página estilizada usa seletores. Em projetos reais, **classes são o padrão** (Tailwind, BEM, CSS modules). Use \`tag\` para resets globais (\`body\`, \`*\`), \`#id\` raramente, e combine com pseudo-classes (\`:hover\`, \`:focus\`) para interatividade.`,
         starterCode: '/* Estilize h1 e p */\n',
         solution: 'h1 {\n  color: blue;\n}\np {\n  font-size: 18px;\n}',
         expectedOutput: "color: blue",
@@ -2961,39 +2979,58 @@ Especificidade: ID > Classe > Tag. Quanto mais específico, maior a prioridade.`
         id: "4-2",
         title: "Flexbox — Centralizando",
         description: "Use Flexbox para centralizar um elemento **horizontal e verticalmente** dentro do container.",
-        theory: `Flexbox é um sistema de layout poderoso para alinhar e distribuir elementos em uma direção (linha ou coluna).
+        theory: `# Flexbox — alinhamento em uma direção
 
-Ativando Flexbox:
+## 💡 O que é
+**Flexbox** é o sistema de layout do CSS para organizar itens em **uma linha ou uma coluna**, distribuindo espaço e alinhando do jeito que você quiser. É a ferramenta padrão para centralizar, fazer barras de navegação e qualquer arrumação 1D.
+
+## 🌍 Analogia do mundo real
+Imagine **uma prateleira ajustável de livros**: você decide se os livros ficam um do lado do outro (\`row\`) ou empilhados (\`column\`), se ficam **encostados à esquerda, centralizados ou espalhados** (\`justify-content\`), e se ficam **no topo, no meio ou na base** da prateleira (\`align-items\`). O Flexbox é exatamente esse "modo prateleira" para o navegador.
+
+## 🔧 Sintaxe e como funciona
   .container {
-    display: flex;
+    display: flex;                 /* ativa o modo flex no PAI */
+    flex-direction: row;           /* row (padrão) | column */
+    justify-content: center;       /* alinha no EIXO PRINCIPAL */
+    align-items: center;           /* alinha no EIXO CRUZADO */
+    gap: 16px;                     /* espaço entre os filhos */
   }
 
 Eixos:
-• Eixo principal (main axis) — horizontal por padrão
-• Eixo cruzado (cross axis) — perpendicular ao principal
+• \`flex-direction: row\` → eixo principal **horizontal** (justify=horizontal, align=vertical).
+• \`flex-direction: column\` → eixo principal **vertical** (os papéis se invertem!).
 
-Propriedades do container:
-  justify-content → alinha no eixo PRINCIPAL
-    flex-start | center | flex-end | space-between | space-around
-
-  align-items → alinha no eixo CRUZADO
-    flex-start | center | flex-end | stretch | baseline
-
-  flex-direction → muda a direção
-    row (padrão) | column | row-reverse | column-reverse
-
-  gap → espaço entre itens
-    gap: 16px;
-
-Centralizando perfeitamente:
+## 📚 Exemplos comentados
+  /* 1. Centralizar perfeitamente (o clássico) */
   .container {
     display: flex;
-    justify-content: center;  /* horizontal */
-    align-items: center;      /* vertical */
-    height: 100vh;            /* precisa de altura! */
+    justify-content: center;      /* horizontal */
+    align-items: center;          /* vertical */
+    height: 100vh;                /* precisa ter altura! */
   }
 
-Dica: Para centralizar vertical, o container PRECISA ter uma altura definida!`,
+  /* 2. Barra de navegação: logo na esquerda, menu na direita */
+  .navbar {
+    display: flex;
+    justify-content: space-between;  /* extremos opostos */
+    align-items: center;
+    padding: 16px;
+  }
+
+  /* 3. Coluna de cards com espaçamento uniforme */
+  .lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+## ⚠️ Erros comuns
+• Aplicar \`display: flex\` no **filho** em vez do **pai** → não funciona; flex se ativa no **container**.
+• Tentar centralizar verticalmente sem dar **altura** ao container → o pai tem altura zero, então "centro vertical" é ele mesmo.
+• Confundir \`justify-content\` e \`align-items\` quando \`flex-direction\` é \`column\` — os eixos **trocam de papel**.
+
+## 🚀 Quando usar na prática
+Em **quase toda barra de navegação, header, footer, lista de botões, cards lado a lado, formulários**. Sempre que pensar "preciso alinhar essas coisas em linha (ou coluna)", Flexbox é a primeira ferramenta. Para layouts 2D (linhas + colunas), use **Grid**.`,
         starterCode: '.container {\n  /* Centralize com Flexbox */\n  height: 100vh;\n}\n',
         solution: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n}',
         expectedOutput: "justify-content: center",
@@ -3004,36 +3041,65 @@ Dica: Para centralizar vertical, o container PRECISA ter uma altura definida!`,
         id: "4-3",
         title: "CSS Grid",
         description: "Crie um layout de **3 colunas iguais** usando CSS Grid com um gap de 16px.",
-        theory: `CSS Grid é um sistema de layout bidimensional — controla linhas E colunas ao mesmo tempo.
+        theory: `# CSS Grid — layout em duas dimensões
 
-Ativando Grid:
+## 💡 O que é
+**CSS Grid** organiza elementos em **linhas E colunas ao mesmo tempo**. É a ferramenta certa para galerias de cards, layouts de página inteira (header/sidebar/main/footer) e qualquer coisa que pareça uma tabela visual.
+
+## 🌍 Analogia do mundo real
+Pense numa **caixa de ovos**: você define quantas **fileiras** e quantas **colunas** existem, e cada ovo (item) ocupa uma célula. Pode ter ovos pequenos (1 célula) ou um ovo gigante que ocupa **2 células de largura** — o quadro é planejado de antemão. Flexbox é uma prateleira (1D); Grid é a caixa de ovos (2D).
+
+## 🔧 Sintaxe e como funciona
   .grid {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);   /* 3 colunas iguais */
+    grid-template-rows: 100px auto;          /* 1ª linha 100px, 2ª se ajusta */
+    gap: 16px;                               /* espaço entre células */
   }
 
-Definindo colunas:
-  grid-template-columns: 200px 200px 200px;    → 3 colunas de 200px
-  grid-template-columns: 1fr 1fr 1fr;           → 3 colunas iguais
-  grid-template-columns: repeat(3, 1fr);         → mesma coisa, mais limpo
-  grid-template-columns: 1fr 2fr 1fr;           → do meio é o dobro
+A unidade **\`fr\`** (fraction) divide o **espaço disponível**:
+• \`1fr 1fr 1fr\` → três partes iguais.
+• \`1fr 2fr 1fr\` → meio leva o dobro das laterais.
+• \`200px 1fr\` → primeira coluna fixa, segunda preenche o resto.
 
-fr = fração do espaço disponível
+## 📚 Exemplos comentados
+  /* 1. Galeria de 3 colunas iguais */
+  .galeria {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
 
-Definindo linhas:
-  grid-template-rows: 100px auto 50px;
+  /* 2. Grid responsivo SEM media query (mágico!) */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    /* coloca quantas colunas couberem, cada uma com no mínimo 250px */
+  }
 
-Espaçamento:
-  gap: 16px;            → espaço entre todas as células
-  column-gap: 20px;     → só entre colunas
-  row-gap: 10px;        → só entre linhas
+  /* 3. Layout de página: header em cima, sidebar + main, footer embaixo */
+  .pagina {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 1fr 40px;
+    grid-template-areas:
+      "header header"
+      "side   main"
+      "footer footer";
+  }
+  .header { grid-area: header; }
+  .side   { grid-area: side; }
+  .main   { grid-area: main; }
+  .footer { grid-area: footer; }
 
-Grid responsivo automático:
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  /* Cria quantas colunas couberem, mínimo 250px cada */
+## ⚠️ Erros comuns
+• Esquecer **\`display: grid\`** no container → as propriedades \`grid-template-*\` viram inúteis.
+• Usar **\`px\` em todas as colunas** quando deveria ser \`fr\` → layout não se adapta a telas diferentes.
+• Confundir \`gap\` com \`margin\` nos filhos → use **\`gap\`** no Grid; margem nos filhos vira sobreposição confusa.
 
-Quando usar Grid vs Flexbox:
-• Grid → layouts 2D (linhas + colunas), grids de cards
-• Flexbox → layouts 1D (uma direção), alinhamento`,
+## 🚀 Quando usar na prática
+Galerias de produtos, dashboards com múltiplos painéis, layout de página inteira, listagens com cards de tamanhos variados. **Regra geral**: layouts em **uma direção** → Flexbox; layouts em **duas direções (linhas + colunas)** → Grid. Nada impede combinar os dois (Grid no pai, Flexbox dentro de cada célula).`,
         starterCode: '.grid {\n  /* Crie o grid */\n}\n',
         solution: '.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}',
         expectedOutput: "grid-template-columns",
@@ -3044,43 +3110,67 @@ Quando usar Grid vs Flexbox:
         id: "4-4",
         title: "Variáveis CSS",
         description: "Defina variáveis CSS `--cor-primaria` (roxo) e `--espacamento` (16px) no `:root` e use-as em um `.card`.",
-        theory: `Variáveis CSS (Custom Properties) permitem reutilizar valores em todo o CSS. Mudou em um lugar? Muda em todos!
+        theory: `# Variáveis CSS (Custom Properties)
 
-Definindo variáveis no :root (globais):
+## 💡 O que é
+Variáveis CSS guardam um **valor reutilizável** (cor, espaçamento, fonte) que você define **uma vez** e usa em toda a folha de estilo. Ao mudar a variável, **tudo que a usa muda junto**.
+
+## 🌍 Analogia do mundo real
+Pense num **interruptor central da casa**: você troca uma lâmpada do tipo "luz quente" no painel principal, e **todos os cômodos** que pegam dali mudam de tom. Sem variáveis, você teria que **subir em cada cômodo trocando lâmpada por lâmpada** (caçar e substituir cor por cor no CSS inteiro).
+
+## 🔧 Sintaxe e como funciona
+  /* 1. Definir no :root para virar global */
   :root {
     --cor-primaria: #6c5ce7;
-    --cor-texto: #333;
     --espacamento: 16px;
-    --raio-borda: 8px;
+    --raio: 8px;
   }
 
-Usando variáveis:
+  /* 2. Usar com var() */
   .card {
-    color: var(--cor-texto);
-    padding: var(--espacamento);
-    border-radius: var(--raio-borda);
     background: var(--cor-primaria);
+    padding: var(--espacamento);
+    border-radius: var(--raio);
   }
 
-Valor fallback (se a variável não existir):
-  color: var(--cor-link, blue);
+  /* 3. Valor fallback se a variável não existir */
+  .link { color: var(--cor-link, blue); }
 
-Variáveis locais (só dentro do elemento):
-  .tema-escuro {
-    --cor-fundo: #1a1a2e;
-    --cor-texto: #eee;
+Variáveis **respeitam o escopo do CSS**: se você redefinir dentro de um seletor, ela vale só para os descendentes daquele elemento — base de **temas claro/escuro**.
+
+## 📚 Exemplos comentados
+  /* 1. Design tokens — paleta centralizada */
+  :root {
+    --primary: #6c5ce7;
+    --primary-hover: #5a4bd1;
+    --texto: #1a1a2e;
+    --bg: #ffffff;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
   }
 
-Alterar temas facilmente:
-  :root { --bg: white; --text: black; }
-  .dark { --bg: #1a1a2e; --text: white; }
+  /* 2. Tema escuro — sobrescreve as MESMAS variáveis */
+  .dark {
+    --bg: #1a1a2e;
+    --texto: #eee;
+  }
+  body { background: var(--bg); color: var(--texto); }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
+  /* 3. Variável local a um componente */
+  .alerta {
+    --cor-alerta: red;
+    border-left: 4px solid var(--cor-alerta);
+    color: var(--cor-alerta);
   }
 
-Variáveis CSS são essenciais para design systems e temas dinâmicos!`,
+## ⚠️ Erros comuns
+• Esquecer os **dois traços** no início (\`-cor: red\` em vez de \`--cor: red\`) → não vira variável.
+• Usar a variável **fora do escopo** onde foi definida → cai no fallback ou herda \`undefined\` e o valor some.
+• Tentar fazer **operações matemáticas** direto: \`padding: var(--x) * 2\` ❌. Use \`calc()\`: \`padding: calc(var(--x) * 2)\` ✅.
+
+## 🚀 Quando usar na prática
+**Sempre** em projetos reais: cores de marca, espaçamentos, raios de borda, tamanhos de fonte. É a base de **design systems** (Tailwind, shadcn/ui) e o jeito mais simples de implementar **tema claro/escuro** sem JavaScript pesado. Em projetos React/Vite, casa lindo com Tailwind via \`hsl(var(--primary))\`.`,
         starterCode: ':root {\n  /* Defina variáveis */\n}\n.card {\n  /* Use as variáveis */\n}\n',
         solution: ':root {\n  --cor-primaria: purple;\n  --espacamento: 16px;\n}\n.card {\n  color: var(--cor-primaria);\n  padding: var(--espacamento);\n}',
         expectedOutput: "--cor-primaria",
@@ -3091,46 +3181,60 @@ Variáveis CSS são essenciais para design systems e temas dinâmicos!`,
         id: "4-5",
         title: "Animações",
         description: "Crie uma animação `@keyframes` chamada `fadeIn` que vai de `opacity: 0` para `opacity: 1`. Aplique-a a `.elemento`.",
-        theory: `Animações CSS dão vida à sua página! Existem duas formas: transitions (simples) e @keyframes (complexas).
+        theory: `# Animações com @keyframes
 
-Transitions — mudanças suaves ao interagir:
-  .botao {
-    background: blue;
-    transition: background 0.3s ease;
-  }
-  .botao:hover {
-    background: darkblue;
-  }
+## 💡 O que é
+\`@keyframes\` define **passos de uma animação** (de onde começa, por onde passa, onde termina) e a propriedade \`animation\` aplica esses passos a um elemento. Diferente do \`transition\` (que precisa de um gatilho como \`:hover\`), animações **rodam sozinhas**.
 
-@keyframes — animações completas:
+## 🌍 Analogia do mundo real
+Pense num **flipbook** (aquele caderninho com desenhos que vira filme ao folhear): cada \`@keyframes\` é o **roteiro** dizendo "no quadro 1, está aqui; no quadro 50, está acolá". O \`animation\` é o **dedo folheando** — define em quanto tempo, com que ritmo e quantas vezes a cena se repete.
+
+## 🔧 Sintaxe e como funciona
+  /* 1. Definir o roteiro */
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-Aplicando a animação:
+  /* 2. Aplicar */
   .elemento {
-    animation: fadeIn 1s ease-in;
+    animation: fadeIn 1s ease-out forwards;
+    /*          nome  duração timing  fill-mode */
   }
 
-Propriedades de animation:
-  animation-name: fadeIn;
-  animation-duration: 1s;
-  animation-timing-function: ease-in;
-  animation-delay: 0.5s;
-  animation-iteration-count: infinite;  /* repete sempre */
-  animation-fill-mode: forwards;        /* mantém o estado final */
+Propriedades de \`animation\` (na shorthand):
+• **duração**: \`1s\`, \`300ms\`.
+• **timing**: \`ease\` (padrão, suave), \`linear\` (constante), \`ease-out\` (desacelera), \`cubic-bezier(...)\`.
+• **delay**: \`0.5s\` antes de começar.
+• **iteration-count**: número ou \`infinite\`.
+• **fill-mode**: \`forwards\` mantém o estado final, \`backwards\` aplica o inicial antes de começar.
 
-Shorthand:
-  animation: fadeIn 1s ease-in 0.5s infinite forwards;
+## 📚 Exemplos comentados
+  /* 1. Fade-in simples (entrada de modal/card) */
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+  .modal { animation: fadeIn 0.3s ease-out; }
 
-Timing functions: ease, linear, ease-in, ease-out, ease-in-out, cubic-bezier()`,
+  /* 2. Pulse infinito (bolinha de notificação) */
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.2); }
+  }
+  .badge { animation: pulse 1.5s ease-in-out infinite; }
+
+  /* 3. Slide-in vindo da esquerda */
+  @keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+  }
+  .menu { animation: slideInLeft 0.4s ease-out forwards; }
+
+## ⚠️ Erros comuns
+• Esquecer **\`forwards\`** quando quer manter o estado final → o elemento "volta" ao estado original ao terminar.
+• Animar propriedades **caras** como \`top\`, \`left\`, \`width\` → causa relayout e fica travado. Prefira **\`transform\`** e **\`opacity\`** (a GPU acelera).
+• Usar animação muito longa em UI (\`3s\`) → parece lento. Para microinterações, **150–400ms** é o ideal.
+
+## 🚀 Quando usar na prática
+Entradas de modais, toasts e cards (fade-in/slide-in), loaders (spin), feedback de botão (pulse), destaque de notificações novas, animações de onboarding. Para interações simples (mudança de cor no hover), prefira **\`transition\`**; para animações **autônomas** ou com vários passos, use **\`@keyframes\`**.`,
         starterCode: '/* Crie a animação e aplique */\n',
         solution: '@keyframes fadeIn {\n  from { opacity: 0; }\n  to { opacity: 1; }\n}\n.elemento {\n  animation: fadeIn 1s ease-in;\n}',
         expectedOutput: "@keyframes fadeIn",
@@ -3141,42 +3245,50 @@ Timing functions: ease, linear, ease-in, ease-out, ease-in-out, cubic-bezier()`,
         id: "4-6",
         title: "Media Queries",
         description: "Escreva uma media query que muda a cor de fundo do `body` para **escuro** quando a tela for menor que **768px**.",
-        theory: `Media queries permitem aplicar CSS diferente dependendo do tamanho da tela, orientação ou tipo de dispositivo.
+        theory: `# Media Queries — design responsivo
 
-Sintaxe:
+## 💡 O que é
+Uma **media query** aplica regras de CSS **só quando a tela atende uma condição** (ex.: largura abaixo de 768px). É o que faz seu site **se adaptar a celular, tablet e desktop** sem precisar de páginas separadas.
+
+## 🌍 Analogia do mundo real
+Pense num **camaleão**: dependendo do **ambiente** (galho, folha, pedra), ele muda de cor automaticamente. A media query é o "sensor" que diz "estou em ambiente celular, troco para layout compacto" — o site continua o mesmo, mas se **camufla** ao tamanho disponível.
+
+## 🔧 Sintaxe e como funciona
   @media (condição) {
-    /* CSS para essa condição */
+    /* regras CSS aplicadas SÓ quando a condição é verdadeira */
   }
 
-Breakpoints comuns:
-  @media (max-width: 768px) { }   → tablets e menores
-  @media (max-width: 480px) { }   → celulares
-  @media (min-width: 1024px) { }  → desktops
+Condições mais usadas:
+• \`(max-width: 768px)\` → tela **até** 768px (mobile/tablet pequeno).
+• \`(min-width: 1024px)\` → tela **de** 1024px **para cima** (desktop).
+• \`(prefers-color-scheme: dark)\` → quando o SO está em modo escuro.
 
-Abordagem Mobile-First (recomendada):
-  /* CSS base = mobile */
-  .container { padding: 16px; }
+**Estratégia mobile-first** (recomendada): escreva o CSS base pensando em **celular** e use \`min-width\` para acrescentar estilos nas telas maiores. Vai por camadas, não por exceções.
 
-  /* Desktop */
-  @media (min-width: 768px) {
-    .container { padding: 32px; }
-  }
-
-Exemplos práticos:
-  /* Menu hamburger no mobile */
-  .menu { display: flex; }
+## 📚 Exemplos comentados
+  /* 1. Mudar fundo abaixo de 768px */
   @media (max-width: 768px) {
-    .menu { display: none; }
-    .hamburger { display: block; }
+    body { background: #1a1a2e; }
   }
 
-  /* Grid responsivo */
-  .grid { grid-template-columns: 1fr; }
+  /* 2. Mobile-first: padding cresce com a tela */
+  .container { padding: 16px; }                      /* base = mobile */
+  @media (min-width: 768px)  { .container { padding: 24px; } }
+  @media (min-width: 1280px) { .container { padding: 48px; } }
+
+  /* 3. Grid responsivo: 1 coluna no mobile, 3 no desktop */
+  .cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
   @media (min-width: 768px) {
-    .grid { grid-template-columns: repeat(3, 1fr); }
+    .cards { grid-template-columns: repeat(3, 1fr); }
   }
 
-Dica: Sempre teste seu site em diferentes tamanhos! Use DevTools > Toggle Device Toolbar.`,
+## ⚠️ Erros comuns
+• **Misturar \`max-width\` e \`min-width\`** sem cuidado → regras se sobrepõem em ordens confusas. Adote **uma direção** (mobile-first com \`min-width\`).
+• Usar **breakpoints fixos demais** (specíficos para iPhone X) → o ideal é usar valores **lógicos** (\`640\`, \`768\`, \`1024\`, \`1280\`) que cobrem famílias de dispositivos.
+• Esquecer a **viewport meta tag** no HTML (\`<meta name="viewport" content="width=device-width, initial-scale=1">\`) → o celular renderiza como desktop minúsculo e a media query nem dispara.
+
+## 🚀 Quando usar na prática
+Em **todo site moderno**: layout muda de coluna única para grid de 3, menu vira hamburger, fontes diminuem, padding encolhe. Em projetos com Tailwind, em vez de \`@media\` cru, você usa as variantes \`sm:\`, \`md:\`, \`lg:\` — que **internamente são media queries**. Saber CSS puro te dá controle quando o framework não cobre o caso.`,
         starterCode: '/* Responsividade */\n',
         solution: '@media (max-width: 768px) {\n  body {\n    background-color: #1a1a2e;\n  }\n}',
         expectedOutput: "@media",
@@ -3187,47 +3299,61 @@ Dica: Sempre teste seu site em diferentes tamanhos! Use DevTools > Toggle Device
         id: "4-7",
         title: "Pseudo-elementos",
         description: "Use **::before** para adicionar um emoji 🔥 antes de todo elemento `.destaque`.",
-        theory: `Pseudo-elementos criam "elementos virtuais" dentro do CSS — sem adicionar HTML extra!
+        theory: `# Pseudo-elementos (::before / ::after)
 
-Pseudo-elementos principais:
-  ::before → insere conteúdo ANTES do elemento
-  ::after  → insere conteúdo DEPOIS do elemento
-  ::first-line → estiliza a primeira linha de texto
-  ::first-letter → estiliza a primeira letra
-  ::selection → estiliza texto selecionado
+## 💡 O que é
+Pseudo-elementos são **elementos "fantasmas"** que o CSS injeta **antes** ou **depois** do conteúdo real de um elemento, **sem precisar mexer no HTML**. Servem para ícones, ornamentos, tooltips e efeitos decorativos.
 
-Sintaxe:
+## 🌍 Analogia do mundo real
+É como **pendurar um adesivo decorativo** num porta-retrato sem furar a parede: o porta-retrato (HTML) continua intacto, mas o visual ganha algo extra (o adesivo = pseudo-elemento). \`::before\` é colar o adesivo **antes**, \`::after\` é colar **depois** — e você pode estilizá-los como qualquer outro elemento.
+
+## 🔧 Sintaxe e como funciona
   .destaque::before {
-    content: "🔥 ";  /* OBRIGATÓRIO! */
+    content: "🔥 ";       /* OBRIGATÓRIO — sem isso, nada aparece */
+    color: orange;
+    margin-right: 4px;
   }
 
-  .citacao::before {
-    content: """;
-    font-size: 3rem;
-    color: purple;
-  }
+Pseudo-elementos disponíveis:
+• \`::before\` — antes do conteúdo.
+• \`::after\` — depois do conteúdo.
+• \`::first-line\` — primeira linha de texto.
+• \`::first-letter\` — primeira letra (estilo "capitular").
+• \`::selection\` — texto selecionado pelo usuário.
 
-Usos criativos:
-  /* Linha decorativa */
+⚠️ Use **dois pontos** (\`::\`) na sintaxe moderna; \`:\` ainda funciona para compatibilidade antiga.
+
+## 📚 Exemplos comentados
+  /* 1. Ícone antes do texto */
+  .destaque::before { content: "🔥 "; }
+
+  /* 2. Linha decorativa abaixo de um título */
   .titulo::after {
-    content: "";
+    content: "";              /* vazio, mas obrigatório */
     display: block;
-    width: 50px;
-    height: 3px;
+    width: 48px; height: 3px;
     background: purple;
     margin-top: 8px;
   }
 
-  /* Tooltip */
+  /* 3. Tooltip lendo um atributo data-* do HTML */
+  .info { position: relative; }
   .info::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    background: #333;
-    color: white;
-    padding: 4px 8px;
+    content: attr(data-tooltip);   /* puxa o texto do data-tooltip */
+    position: absolute; bottom: 100%; left: 0;
+    background: #333; color: white;
+    padding: 4px 8px; border-radius: 4px;
+    opacity: 0; transition: opacity .2s;
   }
+  .info:hover::after { opacity: 1; }
 
-IMPORTANTE: ::before e ::after PRECISAM da propriedade content para aparecer, mesmo que vazia (content: "").`,
+## ⚠️ Erros comuns
+• Esquecer **\`content\`** → o pseudo-elemento simplesmente **não renderiza**, mesmo com width/height/background definidos.
+• Tentar adicionar pseudo-elemento em **elementos vazios** como \`<img>\`, \`<input>\`, \`<br>\` → não funciona; eles não têm "conteúdo" onde inserir.
+• Esquecer **\`position: relative\`** no pai quando o \`::after\` usa \`position: absolute\` → o tooltip vaza para fora ou se ancora no lugar errado.
+
+## 🚀 Quando usar na prática
+Adicionar **ícones decorativos** sem poluir o HTML, criar **tooltips** simples só com CSS, fazer **bordas/divisores ornamentais**, números automáticos em listas customizadas, marcas d'água. Sempre que quiser **um detalhe visual extra** sem precisar criar uma \`<div>\` só para isso, pseudo-elementos são a resposta.`,
         starterCode: '/* Use pseudo-elementos */\n',
         solution: '.destaque::before {\n  content: "🔥 ";\n}',
         expectedOutput: "::before",
@@ -3238,44 +3364,65 @@ IMPORTANTE: ::before e ::after PRECISAM da propriedade content para aparecer, me
         id: "4-8",
         title: "Transitions",
         description: "Crie um botão que muda de cor suavemente ao passar o mouse, usando **transition** com duração de 0.3s.",
-        theory: `Transitions criam animações suaves entre dois estados de um elemento (ex: hover, focus, active).
+        theory: `# Transitions — interpolação suave entre estados
 
-Sintaxe:
-  transition: propriedade duração timing-function delay;
+## 💡 O que é
+\`transition\` faz o navegador **interpolar suavemente** a mudança de uma propriedade CSS quando ela acontece (ex.: cor muda no \`:hover\`, tamanho muda quando ganha uma classe). Em vez de **pular** do valor A para B, vai **passando** por todos os valores intermediários no tempo definido.
 
-Exemplo:
+## 🌍 Analogia do mundo real
+Pense num **dimmer de lâmpada**: sem dimmer, a luz acende **estalando** do escuro para o claro (CSS sem transition). Com dimmer, ela vai **subindo gradualmente** ao longo de meio segundo. \`transition\` é o dimmer do CSS — você diz **qual luz**, **em quanto tempo** e **com que ritmo**.
+
+## 🔧 Sintaxe e como funciona
   .botao {
     background: #6c5ce7;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    transition: background 0.3s ease;
+    /*           ↑propriedade ↑duração ↑timing  */
+  }
+  .botao:hover { background: #5a4bd1; }   /* o gatilho: mudança de estado */
+
+Shorthand completa:
+  transition: <propriedade> <duração> <timing-function> <delay>;
+
+Múltiplas propriedades de uma vez:
+  transition: background 0.3s ease, transform 0.2s ease-out;
+
+\`transition: all 0.3s ease;\` anima tudo, mas **evite** — pode animar coisas inesperadas (largura, altura) e ficar pesado.
+
+## 📚 Exemplos comentados
+  /* 1. Botão com hover suave */
+  .botao {
+    background: #6c5ce7; color: white; padding: 12px 24px;
     transition: background 0.3s ease;
   }
+  .botao:hover { background: #5a4bd1; }
 
-  .botao:hover {
-    background: #5a4bd1;
+  /* 2. Card que sobe e ganha sombra ao passar o mouse */
+  .card {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
   }
-
-Múltiplas propriedades:
-  transition: background 0.3s ease, transform 0.2s ease;
-
   .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
   }
 
-Todas as propriedades:
-  transition: all 0.3s ease;  /* anima tudo (pode ser pesado) */
+  /* 3. Input destacando ao receber foco */
+  input {
+    border: 1px solid #ccc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108,92,231,0.2);
+    outline: none;
+  }
 
-Timing functions:
-  ease     → início lento, meio rápido, fim lento (padrão)
-  linear   → velocidade constante
-  ease-in  → início lento
-  ease-out → fim lento
-  ease-in-out → início e fim lentos
-  cubic-bezier(x1,y1,x2,y2) → personalizado`,
+## ⚠️ Erros comuns
+• Colocar a transition no **\`:hover\`** em vez de no estado normal → ao tirar o mouse, a volta é abrupta (pula sem suavizar). Sempre **declare \`transition\` no estado base**.
+• Tentar animar propriedades **não-animáveis** (\`display: none\` → \`block\`) → não interpola. Use \`opacity\` + \`visibility\` ou \`max-height\` para ocultar/mostrar suavemente.
+• Animar \`width\`/\`height\`/\`top\` quando podia usar \`transform\` → \`transform\` é **acelerado por GPU** e roda muito mais suave.
+
+## 🚀 Quando usar na prática
+**Microinterações** que dão polidez: hover de botões/cards, focus em inputs, abrir/fechar dropdowns, troca de tema. Para animações **autônomas** (sem gatilho do usuário) ou com vários passos, prefira **\`@keyframes\`**. Duração ideal para UI: **150–300ms**.`,
         starterCode: '.botao {\n  /* Adicione transition */\n}\n.botao:hover {\n  /* Estado hover */\n}\n',
         solution: '.botao {\n  background: #6c5ce7;\n  color: white;\n  padding: 12px 24px;\n  transition: background 0.3s ease;\n}\n.botao:hover {\n  background: #5a4bd1;\n}',
         expectedOutput: "transition",
@@ -3286,45 +3433,52 @@ Timing functions:
         id: "4-9",
         title: "Box Model",
         description: "Explique e aplique o **box model**: crie um `.card` com padding de **20px**, margin de **16px** e borda de **2px solid**. Use `box-sizing: border-box`.",
-        theory: `O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
+        theory: `# Box Model — a caixa de todo elemento
 
-De dentro para fora:
-  1. Content → o conteúdo (texto, imagem)
-  2. Padding → espaço INTERNO (entre conteúdo e borda)
-  3. Border  → a borda do elemento
-  4. Margin  → espaço EXTERNO (entre este e outros elementos)
+## 💡 O que é
+Todo elemento HTML renderizado é uma **caixa retangular** com 4 camadas concêntricas: **content** (conteúdo), **padding** (espaço interno), **border** (borda), **margin** (espaço externo). Entender essa estrutura é o que permite **calcular tamanhos** sem surpresa.
 
-Visualização:
-  ┌──────── margin ─────────┐
-  │  ┌──── border ────────┐ │
-  │  │  ┌── padding ───┐  │ │
-  │  │  │  [content]   │  │ │
-  │  │  └──────────────┘  │ │
-  │  └────────────────────┘ │
-  └─────────────────────────┘
+## 🌍 Analogia do mundo real
+Pense num **presente embrulhado**: o **brinquedo** é o content, o **papel-bolha** ao redor é o padding, a **caixa de papelão** é o border, e o **espaço vazio** entre essa caixa e os outros pacotes na mesa é o margin. Mexer em cada camada muda **só** aquela camada.
 
-Propriedades:
-  padding: 20px;              → todos os lados
-  padding: 10px 20px;         → vertical horizontal
-  padding: 5px 10px 15px 20px; → top right bottom left
-  padding-top: 10px;          → só o topo
-
-  margin: funciona igual ao padding
-  margin: 0 auto;             → centraliza horizontalmente!
-
-box-sizing — MUITO IMPORTANTE:
-  /* Sem border-box (padrão): */
-  width: 200px + padding + border = tamanho total MAIOR que 200px
-
-  /* Com border-box: */
-  width: 200px INCLUI padding e border
-
-  /* Sempre use: */
-  * {
-    box-sizing: border-box;
+## 🔧 Sintaxe e como funciona
+  .card {
+    width: 300px;
+    padding: 20px;        /* espaço dentro, ao redor do conteúdo */
+    border: 2px solid #ccc;
+    margin: 16px;         /* espaço fora, separando dos vizinhos */
   }
 
-Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maior vence). Isso NÃO acontece com padding!`,
+A grande pegadinha é o **\`box-sizing\`**:
+• \`content-box\` (padrão antigo) → \`width: 300px\` é só o conteúdo. Padding e border **somam por fora** → caixa fica 300 + 40 + 4 = 344px.
+• \`border-box\` (recomendado) → \`width: 300px\` **inclui** padding e border. O que você vê é o que você pede.
+
+Reset universal (faça em todo projeto):
+  *, *::before, *::after { box-sizing: border-box; }
+
+## 📚 Exemplos comentados
+  /* 1. Padding com 1, 2, 3 ou 4 valores */
+  padding: 20px;              /* todos os lados */
+  padding: 10px 20px;         /* vertical | horizontal */
+  padding: 5px 10px 15px 20px; /* top | right | bottom | left (sentido horário) */
+
+  /* 2. Centralizar bloco horizontalmente */
+  .card { width: 600px; margin: 0 auto; }   /* auto nas laterais = centraliza */
+
+  /* 3. Card típico com border-box */
+  * { box-sizing: border-box; }
+  .card {
+    width: 100%; padding: 24px; border: 1px solid #eee;
+    /* width continua 100%, sem estourar */
+  }
+
+## ⚠️ Erros comuns
+• Esquecer **\`box-sizing: border-box\`** → seu card de \`width: 100%\` + \`padding: 20px\` **estoura o pai** porque vira 100% + 40px.
+• **Margin collapse**: dois elementos verticais com margin colapsam — só vale o **maior**, não a soma. Não acontece com **padding** nem em flex/grid.
+• Aplicar \`width: 100%\` num input com border e padding sem \`border-box\` → input fica maior que o container e quebra o layout.
+
+## 🚀 Quando usar na prática
+**Sempre** — toda página estilizada depende de entender o box model. O reset \`* { box-sizing: border-box }\` é prática padrão (incluído por defaut em frameworks como Tailwind). Quando algo "ficou maior do que devia" ou "tem espaço estranho que não some", **olhe primeiro padding, margin e box-sizing**.`,
         starterCode: '/* Aplique o box model */\n',
         solution: '* {\n  box-sizing: border-box;\n}\n.card {\n  padding: 20px;\n  margin: 16px;\n  border: 2px solid #6c5ce7;\n}',
         expectedOutput: "box-sizing",
@@ -3338,52 +3492,57 @@ Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maio
         id: "4-10",
         title: "Posicionamento (position)",
         description: "Crie um elemento **fixo** no canto inferior direito da tela (como um botão de chat flutuante) usando `position: fixed`.",
-        theory: `A propriedade position controla COMO o elemento é posicionado na página.
+        theory: `# Position — controlando onde os elementos ficam
 
-Valores:
-  static (padrão) → fluxo normal do documento
-  relative → deslocado em relação à sua posição original
-  absolute → posicionado em relação ao ancestral posicionado mais próximo
-  fixed → posicionado em relação à VIEWPORT (não rola)
-  sticky → alterna entre relative e fixed ao rolar
+## 💡 O que é
+A propriedade \`position\` decide **como** o navegador posiciona um elemento e **a quem** ele se ancora. É a chave para fazer **overlays, modais, tooltips, navbars fixas, headers que grudam ao rolar** e botões flutuantes.
 
-Exemplos:
-  /* Relative — desloca sem sair do fluxo */
+## 🌍 Analogia do mundo real
+Pense num **mural de avisos**: a maioria dos papéis fica **no fluxo**, encostados um no outro (\`static\`). Você pode **deslocar levemente** um papel sem mexer nos vizinhos (\`relative\`), **fixar com tachinha em qualquer ponto do mural** (\`absolute\`), ou colar um papel no **vidro da sala** que não acompanha o mural quando ele desliza (\`fixed\`). \`sticky\` é o aviso que **rola junto até certo ponto e depois trava**.
+
+## 🔧 Sintaxe e como funciona
   .elemento {
-    position: relative;
-    top: 10px;
-    left: 20px;
+    position: <static | relative | absolute | fixed | sticky>;
+    top: 0; right: 0; bottom: 0; left: 0;   /* só funcionam com position ≠ static */
+    z-index: 10;                              /* qual fica "na frente" */
   }
 
-  /* Absolute — sai do fluxo, posiciona dentro do pai relative */
-  .pai { position: relative; }
-  .filho {
-    position: absolute;
-    top: 0;
-    right: 0;  /* canto superior direito do pai */
+Diferença essencial:
+• \`static\` — padrão; \`top/left/...\` são ignorados.
+• \`relative\` — desloca **a partir da posição original**, mas **mantém o espaço** no fluxo.
+• \`absolute\` — **sai do fluxo** e se ancora no **ancestral mais próximo com \`position\` ≠ static** (ou no \`<html>\`, se nenhum tiver).
+• \`fixed\` — fixo na **viewport**; não rola com a página.
+• \`sticky\` — vira \`fixed\` ao **passar do offset \`top\`** durante o scroll.
+
+## 📚 Exemplos comentados
+  /* 1. Tooltip ancorado no card (clássico relative + absolute) */
+  .card { position: relative; }                    /* "âncora" */
+  .card .tooltip {
+    position: absolute; top: -8px; right: -8px;    /* canto sup. direito */
   }
 
-  /* Fixed — fica fixo na tela (botão flutuante, navbar fixa) */
+  /* 2. Botão de chat fixo no canto inferior direito da tela */
   .chat-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: fixed; bottom: 20px; right: 20px;
     z-index: 100;
   }
 
-  /* Sticky — gruda ao rolar */
+  /* 3. Header que rola e depois gruda no topo */
   .header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    position: sticky; top: 0;
+    background: white; z-index: 50;
   }
 
-z-index controla a sobreposição (qual fica "na frente"):
-  z-index: 1;    → acima do padrão
-  z-index: 100;  → acima de z-index menores
-  Só funciona com position diferente de static!
+  /* Bônus: overlay que cobre todo o pai */
+  .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
 
-Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).`,
+## ⚠️ Erros comuns
+• Usar \`position: absolute\` no filho **sem dar \`position: relative\`** ao pai → o filho ancora no \`<html>\` e voa para o canto da página.
+• Esquecer **\`z-index\`** em modais/dropdowns → ficam por baixo do header. Lembre: \`z-index\` **só funciona com position ≠ static**.
+• Usar \`position: fixed\` em containers que precisam **rolar com o conteúdo** → vira "elemento que não some" no lugar errado.
+
+## 🚀 Quando usar na prática
+**\`relative\` + \`absolute\`** é o combo para **tooltips, badges, dropdowns, ícones sobrepostos**. **\`fixed\`** para **navbars sempre visíveis, botões flutuantes (chat/voltar ao topo), modais**. **\`sticky\`** para **headers de tabela, filtros laterais, menus de seção**. Em layouts modernos com Flexbox/Grid, você usa \`position\` **só para casos específicos** — não para layout principal.`,
         starterCode: '/* Crie o elemento fixo */\n',
         solution: '.chat-btn {\n  position: fixed;\n  bottom: 20px;\n  right: 20px;\n  z-index: 100;\n  padding: 16px;\n  border-radius: 50%;\n  background: #6c5ce7;\n  color: white;\n}',
         expectedOutput: "position: fixed",
@@ -3394,50 +3553,56 @@ Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).`,
         id: "4-11",
         title: "Flexbox Avançado",
         description: "Crie um layout com **sidebar fixa** (250px) e **conteúdo flexível** que ocupa o resto usando `flex-grow`.",
-        theory: `Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
+        theory: `# Flexbox avançado — controle fino com flex/grow/shrink
 
-Propriedades dos itens flex:
-  flex-grow   → quanto o item CRESCE para preencher espaço extra
-  flex-shrink → quanto o item ENCOLHE se faltar espaço
-  flex-basis  → tamanho base antes de crescer/encolher
+## 💡 O que é
+As propriedades **dos filhos flex** (\`flex-grow\`, \`flex-shrink\`, \`flex-basis\`) decidem **como cada item ocupa o espaço sobrando** ou **como encolhe quando falta espaço**. Combinadas com \`flex-wrap\` e \`order\`, dão controle total do layout em uma direção.
 
-Shorthand:
-  flex: grow shrink basis;
-  flex: 1;           → flex: 1 1 0% (cresce igualmente)
-  flex: 0 0 250px;   → não cresce, não encolhe, 250px fixo
+## 🌍 Analogia do mundo real
+Pense em **passageiros num banco de ônibus**: alguns são "magrinhos" e fixos (\`flex: 0 0 250px\` — sempre 250px, não cresce, não encolhe). Outros são **flexíveis** (\`flex: 1\` — esticam para preencher o resto do banco). Quando o ônibus enche e o banco aperta, \`flex-shrink\` decide **quem se espreme primeiro**. \`order\` é o **passageiro VIP** que pula para frente sem precisar mudar a fila original.
 
-Layout sidebar + conteúdo:
-  .layout {
-    display: flex;
-    min-height: 100vh;
-  }
-  .sidebar {
-    flex: 0 0 250px;    /* fixa em 250px */
-    background: #1a1a2e;
-  }
-  .conteudo {
-    flex: 1;            /* ocupa todo o resto */
-    padding: 20px;
-  }
+## 🔧 Sintaxe e como funciona
+  /* Container */
+  .layout { display: flex; }
 
-Outros valores úteis:
-  align-self → alinha individualmente no eixo cruzado
-    align-self: flex-start | center | flex-end | stretch
+  /* Filhos — shorthand: flex: <grow> <shrink> <basis> */
+  .sidebar  { flex: 0 0 250px; }   /* não cresce, não encolhe, 250px fixos */
+  .conteudo { flex: 1; }           /* = flex: 1 1 0% — ocupa o restante */
 
-  order → muda a ordem visual (sem alterar o HTML!)
-    .item-especial { order: -1; }  /* aparece primeiro */
+Significados:
+• **flex-grow** (padrão 0) — quanto cresce do espaço sobrando. \`1\` = pega tudo; \`2\` ao lado de \`1\` = pega o dobro.
+• **flex-shrink** (padrão 1) — quanto encolhe quando falta. \`0\` = nunca encolhe.
+• **flex-basis** (padrão \`auto\`) — tamanho **inicial** antes de crescer/encolher.
 
-Flex wrap — quebra de linha:
-  .container {
+Atalhos comuns:
+• \`flex: 1\` — cresce igual aos irmãos.
+• \`flex: 0 0 200px\` — fixo em 200px.
+• \`flex: 1 1 300px\` — base 300px, cresce e encolhe.
+
+## 📚 Exemplos comentados
+  /* 1. Layout clássico: sidebar fixa + conteúdo elástico */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar  { flex: 0 0 250px; background: #1a1a2e; }
+  .conteudo { flex: 1; padding: 24px; }
+
+  /* 2. Grid responsivo SEM media query (cards quebram linha sozinhos) */
+  .cards {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
   }
-  .item {
-    flex: 1 1 300px;  /* mínimo 300px, cresce/encolhe */
-  }
+  .cards > .card { flex: 1 1 280px; }   /* mínimo 280px, cresce até preencher */
 
-Isso cria um grid responsivo SEM media queries!`,
+  /* 3. Reordenar visualmente sem mexer no HTML */
+  .item.destaque { order: -1; }          /* aparece primeiro, mesmo estando por último */
+
+## ⚠️ Erros comuns
+• Usar \`flex: 1\` na sidebar quando ela deveria ser **fixa** → ela vai esticar e empurrar o conteúdo. Use \`flex: 0 0 250px\`.
+• Esquecer **\`flex-wrap: wrap\`** num grid de cards → tudo fica numa linha só, item espremido virando faixa fininha.
+• Confundir \`flex-basis\` com \`width\` — em flexbox, \`basis\` é o **tamanho inicial considerado pelo cálculo de grow/shrink**; \`width\` muitas vezes é ignorada na presença de \`basis\`.
+
+## 🚀 Quando usar na prática
+**Layouts de aplicação web**: sidebar + main, header com logo à esquerda e ações à direita, listas de cards que quebram em várias linhas, splits redimensionáveis, timelines. Quando o **CSS Grid** parece exagero (não tem 2D), Flexbox avançado costuma resolver com 3 linhas.`,
         starterCode: '/* Layout sidebar + conteúdo */\n',
         solution: '.layout {\n  display: flex;\n  min-height: 100vh;\n}\n.sidebar {\n  flex: 0 0 250px;\n  background: #1a1a2e;\n}\n.conteudo {\n  flex: 1;\n  padding: 20px;\n}',
         expectedOutput: "flex: 1",
@@ -3464,46 +3629,56 @@ Isso cria um grid responsivo SEM media queries!`,
         id: "5-1",
         title: "Introdução ao Node.js",
         description: "Crie um servidor HTTP simples com Node.js que responde **\"Olá, Node!\"** na porta 3000.",
-        theory: `Node.js permite rodar JavaScript no servidor — fora do navegador! É usado por Netflix, PayPal, LinkedIn e milhares de empresas.
+        theory: `# Node.js — JavaScript no servidor
 
-O que é Node.js:
-• Runtime JavaScript baseado no motor V8 do Chrome
-• Assíncrono e orientado a eventos
-• Ideal para APIs, servidores web, microserviços
+## 💡 O que é
+**Node.js** é um runtime que executa JavaScript **fora do navegador**, no servidor. Com ele, o mesmo JS que você usa para o front roda também no back: servidores HTTP, APIs, scripts, ferramentas de build (Vite, webpack), CLIs.
 
-Criando um servidor HTTP:
-  const http = require("http");
+## 🌍 Analogia do mundo real
+Imagine que **JavaScript** é um motor potente. No navegador ele move um **carrinho de brinquedo** (manipula a página). No Node, o mesmo motor é colocado num **caminhão** (servidor) — agora ele atende milhares de clientes ao mesmo tempo, lê arquivos, conversa com bancos de dados e roda 24h/dia. **Mesma linguagem, máquina diferente.**
 
-  const server = http.createServer((req, res) => {
+## 🔧 Sintaxe e como funciona
+  // server.js — servidor HTTP nativo, sem framework
+  const http = require("http");                    // CommonJS (padrão antigo do Node)
+
+  const server = http.createServer((req, res) => { // callback para cada requisição
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("Olá, Node!");
   });
 
-  server.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
-  });
+  server.listen(3000, () => console.log("rodando em http://localhost:3000"));
 
 Conceitos-chave:
-  require() → importa módulos
-  createServer() → cria o servidor
-  req → dados da requisição (URL, headers, método)
-  res → objeto de resposta (enviar dados ao cliente)
+• **\`require()\`** — importa módulos (no estilo CommonJS). Em projetos modernos com \`"type": "module"\`, usa-se \`import\` (ESM).
+• **\`req\`** — dados da requisição (URL, método, headers, body).
+• **\`res\`** — objeto para **enviar** a resposta (status, headers, corpo).
+• **npm** — gerenciador de pacotes: \`npm init -y\`, \`npm install express\`, \`npm install -D nodemon\`.
+• **package.json** — manifesto do projeto (nome, scripts, dependências).
 
-NPM (Node Package Manager):
-  npm init -y           → cria o package.json
-  npm install express   → instala um pacote
-  npm install -D nodemon → instala como dev dependency
+## 📚 Exemplos comentados
+  // 1. Servidor mínimo
+  const http = require("http");
+  http.createServer((_, res) => res.end("ok")).listen(3000);
 
-package.json — descreve seu projeto:
-  {
-    "name": "meu-app",
-    "scripts": {
-      "start": "node server.js",
-      "dev": "nodemon server.js"
-    }
-  }
+  // 2. Roteamento manual baseado em URL
+  http.createServer((req, res) => {
+    if (req.url === "/")        res.end("Home");
+    else if (req.url === "/oi") res.end("Olá!");
+    else { res.statusCode = 404; res.end("Não encontrado"); }
+  }).listen(3000);
 
-Rode com: node server.js ou npm start`,
+  // 3. Script utilitário (não é servidor)
+  const fs = require("fs");
+  const linhas = fs.readFileSync("./lista.txt", "utf-8").split("\\n");
+  console.log(\`O arquivo tem \${linhas.length} linhas\`);
+
+## ⚠️ Erros comuns
+• Esquecer **\`server.listen(porta)\`** → o processo fica vivo mas **não escuta nada**.
+• Misturar **\`require\`** (CommonJS) com **\`import\`** (ESM) no mesmo projeto sem configurar o \`package.json\` → erros estranhos de "Cannot use import statement outside a module".
+• Bloquear o **event loop** com operações pesadas síncronas (\`while(true)\`, \`fs.readFileSync\` em loop) → o servidor para de responder a outros clientes.
+
+## 🚀 Quando usar na prática
+**APIs REST** (com Express/Fastify), **backends de SPA**, **edge functions**, **scripts de automação** (build, deploy, migrações), **CLIs** (\`npx create-...\`), **realtime** (WebSockets, Socket.io), **microserviços**. Para a maioria dos projetos web modernos, Node é o backend padrão — e mesmo se você usar outra linguagem no back, vai usar Node nas ferramentas de front.`,
         starterCode: 'const http = require("http");\n// Crie o servidor\n',
         solution: 'const http = require("http");\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { "Content-Type": "text/plain" });\n  res.end("Olá, Node!");\n});\n\nserver.listen(3000, () => {\n  console.log("Servidor na porta 3000");\n});',
         expectedOutput: "Olá, Node!",
