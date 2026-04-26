@@ -2268,38 +2268,58 @@ Regras de ouro:
         id: "3-2",
         title: "Props",
         description: "Crie um componente `Cartao` que recebe uma prop `nome` (string) e exibe **\"Bem-vindo, [nome]!\"**.",
-        theory: `Props (propriedades) são a forma de passar dados de um componente pai para um componente filho. São como parâmetros de uma função!
+        theory: `# Props — passando dados entre componentes
 
-Passando props:
+## 💡 O que é
+**Props** (de "properties") são os **dados que um componente pai envia para um filho**. Funcionam como argumentos de uma função: o pai entrega, o filho recebe e usa para renderizar.
+
+## 🌍 Analogia do mundo real
+Pense numa **carta** que você entrega para alguém: o envelope traz o nome do destinatário, o assunto, talvez uma foto. O destinatário (componente filho) **lê e exibe** o conteúdo, mas **não rasura** o que veio escrito. Props são exatamente isso: leitura apenas.
+
+## 🔧 Sintaxe e como funciona
+  // Pai: passa props como atributos JSX
   <Cartao nome="Ana" idade={25} />
+    //    ↑ string         ↑ número (chaves para qualquer não-string)
 
-Recebendo props:
-  function Cartao(props) {
-    return <p>Olá, {props.nome}!</p>;
-  }
-
-Com desestruturação (mais limpo):
-  function Cartao({ nome, idade }) {
+  // Filho: recebe via desestruturação
+  function Cartao({ nome, idade }: { nome: string; idade: number }) {
     return <p>{nome} tem {idade} anos</p>;
   }
 
-Com TypeScript — tipagem segura:
+Tipando com **interface** (recomendado em projetos sérios):
   interface CartaoProps {
     nome: string;
     idade: number;
-    ativo?: boolean;  // ? = opcional
+    ativo?: boolean;   // ? = opcional
   }
+  function Cartao({ nome, idade }: CartaoProps) { ... }
 
-  function Cartao({ nome, idade }: CartaoProps) {
-    return <p>{nome} tem {idade} anos</p>;
+## 📚 Exemplos comentados
+  // 1. Prop simples
+  function Saudacao({ nome }: { nome: string }) {
+    return <h1>Olá, {nome}!</h1>;       // usa a prop dentro do JSX
   }
+  <Saudacao nome="Bruno" />              // pai entrega "Bruno"
 
-  // Ou inline:
-  function Cartao({ nome }: { nome: string }) {
-    return <p>Olá, {nome}!</p>;
+  // 2. Várias props com valor padrão
+  function Botao({ texto, cor = "azul" }: { texto: string; cor?: string }) {
+    return <button style={{ background: cor }}>{texto}</button>;
   }
+  <Botao texto="Salvar" />               // cor cai no padrão "azul"
 
-IMPORTANTE: Props são somente leitura! O componente filho NUNCA deve modificar as props que recebe.`,
+  // 3. Prop especial: children (o que está entre as tags)
+  function Caixa({ children }: { children: React.ReactNode }) {
+    return <div className="caixa">{children}</div>;
+  }
+  <Caixa><p>Qualquer conteúdo aqui</p></Caixa>
+
+## ⚠️ Erros comuns
+• **Tentar mudar a prop dentro do filho** (\`props.nome = "X"\`) → props são **somente leitura**; mude no pai e ele re-renderiza o filho.
+• Esquecer as **chaves** para valores não-string: \`idade="25"\` vira string em vez de número.
+• **Nome da prop diferente** entre pai e filho (\`<Cartao name="Ana" />\` mas filho espera \`nome\`) → chega \`undefined\`.
+
+## 🚀 Quando usar na prática
+Toda vez que um componente precisa **exibir algo que vem de fora**: um título dinâmico, dados de um usuário, uma cor de tema, uma função de callback. Props são o "fio" que conecta os componentes da árvore — sem props, todo componente seria estático.`,
         starterCode: '// Componente com props\n',
         solution: 'function Cartao({ nome }: { nome: string }) {\n  return <p>Bem-vindo, {nome}!</p>;\n}',
         expectedOutput: "Bem-vindo,",
