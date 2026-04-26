@@ -2979,39 +2979,58 @@ Toda página estilizada usa seletores. Em projetos reais, **classes são o padr�
         id: "4-2",
         title: "Flexbox — Centralizando",
         description: "Use Flexbox para centralizar um elemento **horizontal e verticalmente** dentro do container.",
-        theory: `Flexbox é um sistema de layout poderoso para alinhar e distribuir elementos em uma direção (linha ou coluna).
+        theory: `# Flexbox — alinhamento em uma direção
 
-Ativando Flexbox:
+## 💡 O que é
+**Flexbox** é o sistema de layout do CSS para organizar itens em **uma linha ou uma coluna**, distribuindo espaço e alinhando do jeito que você quiser. É a ferramenta padrão para centralizar, fazer barras de navegação e qualquer arrumação 1D.
+
+## 🌍 Analogia do mundo real
+Imagine **uma prateleira ajustável de livros**: você decide se os livros ficam um do lado do outro (\`row\`) ou empilhados (\`column\`), se ficam **encostados à esquerda, centralizados ou espalhados** (\`justify-content\`), e se ficam **no topo, no meio ou na base** da prateleira (\`align-items\`). O Flexbox é exatamente esse "modo prateleira" para o navegador.
+
+## 🔧 Sintaxe e como funciona
   .container {
-    display: flex;
+    display: flex;                 /* ativa o modo flex no PAI */
+    flex-direction: row;           /* row (padrão) | column */
+    justify-content: center;       /* alinha no EIXO PRINCIPAL */
+    align-items: center;           /* alinha no EIXO CRUZADO */
+    gap: 16px;                     /* espaço entre os filhos */
   }
 
 Eixos:
-• Eixo principal (main axis) — horizontal por padrão
-• Eixo cruzado (cross axis) — perpendicular ao principal
+• \`flex-direction: row\` → eixo principal **horizontal** (justify=horizontal, align=vertical).
+• \`flex-direction: column\` → eixo principal **vertical** (os papéis se invertem!).
 
-Propriedades do container:
-  justify-content → alinha no eixo PRINCIPAL
-    flex-start | center | flex-end | space-between | space-around
-
-  align-items → alinha no eixo CRUZADO
-    flex-start | center | flex-end | stretch | baseline
-
-  flex-direction → muda a direção
-    row (padrão) | column | row-reverse | column-reverse
-
-  gap → espaço entre itens
-    gap: 16px;
-
-Centralizando perfeitamente:
+## 📚 Exemplos comentados
+  /* 1. Centralizar perfeitamente (o clássico) */
   .container {
     display: flex;
-    justify-content: center;  /* horizontal */
-    align-items: center;      /* vertical */
-    height: 100vh;            /* precisa de altura! */
+    justify-content: center;      /* horizontal */
+    align-items: center;          /* vertical */
+    height: 100vh;                /* precisa ter altura! */
   }
 
-Dica: Para centralizar vertical, o container PRECISA ter uma altura definida!`,
+  /* 2. Barra de navegação: logo na esquerda, menu na direita */
+  .navbar {
+    display: flex;
+    justify-content: space-between;  /* extremos opostos */
+    align-items: center;
+    padding: 16px;
+  }
+
+  /* 3. Coluna de cards com espaçamento uniforme */
+  .lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+## ⚠️ Erros comuns
+• Aplicar \`display: flex\` no **filho** em vez do **pai** → não funciona; flex se ativa no **container**.
+• Tentar centralizar verticalmente sem dar **altura** ao container → o pai tem altura zero, então "centro vertical" é ele mesmo.
+• Confundir \`justify-content\` e \`align-items\` quando \`flex-direction\` é \`column\` — os eixos **trocam de papel**.
+
+## 🚀 Quando usar na prática
+Em **quase toda barra de navegação, header, footer, lista de botões, cards lado a lado, formulários**. Sempre que pensar "preciso alinhar essas coisas em linha (ou coluna)", Flexbox é a primeira ferramenta. Para layouts 2D (linhas + colunas), use **Grid**.`,
         starterCode: '.container {\n  /* Centralize com Flexbox */\n  height: 100vh;\n}\n',
         solution: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n}',
         expectedOutput: "justify-content: center",
