@@ -68,21 +68,40 @@ export const courses: Course[] = [
         id: "1-1",
         title: "Olá, Mundo!",
         description: "Seu primeiro programa! Use a função `print()` para exibir a mensagem **\"Olá, Mundo!\"** no console.",
-        theory: `Em Python, a função print() é usada para exibir informações na tela (console). Ela é a primeira coisa que todo programador aprende!
+        theory: `# A função print()
+
+## 💡 O que é
+\`print()\` é a função do Python que **mostra informações na tela** (no terminal/console). É a primeira ferramenta que você aprende para "conversar" com o computador e ver o que seu código está fazendo.
 
 ![Terminal Python mostrando o print](https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=300&fit=crop)
 
-Como funciona:
-• print() recebe um valor entre parênteses e o exibe no terminal.
-• Textos (strings) devem estar entre aspas — simples ('texto') ou duplas ("texto").
-• Você pode exibir números sem aspas: print(42)
+## 🌍 Analogia do mundo real
+Pense em \`print()\` como o **microfone** do seu programa. Sem ele, o computador "pensa" em silêncio e você nunca descobre o que ele calculou. Quando você fala \`print("Olá")\`, é como apertar o botão do microfone para o público (você) ouvir.
 
-Exemplos:
-  print("Olá!")        → exibe: Olá!
-  print('Python')      → exibe: Python
-  print(2 + 3)         → exibe: 5
+## 🔧 Sintaxe e como funciona
+A receita básica:
+  print(valor)
 
-Dica: print() sempre pula uma linha após exibir. Para exibir várias coisas na mesma linha, separe com vírgula: print("A", "B") → A B`,
+• \`print\` → o nome da função (sempre minúsculo).
+• \`(\` e \`)\` → os parênteses dizem ao Python "execute essa função".
+• \`valor\` → o que você quer mostrar: um texto entre aspas, um número, ou o resultado de uma conta.
+
+## 📚 Exemplos comentados
+  print("Olá!")          # mostra: Olá!     (texto entre aspas)
+  print('Python')        # mostra: Python   (aspas simples também valem)
+  print(42)              # mostra: 42       (número não usa aspas)
+  print(2 + 3)           # mostra: 5        (Python calcula antes de mostrar)
+  print("A", "B")        # mostra: A B      (vírgula separa com espaço)
+  print("Linha 1")
+  print("Linha 2")       # cada print pula uma linha automaticamente
+
+## ⚠️ Erros comuns
+• **Esquecer os parênteses**: \`print "oi"\` → SyntaxError. Em Python 3, print é função, sempre precisa de \`( )\`.
+• **Misturar aspas**: \`print("Olá')\` → SyntaxError. Comece e termine com o mesmo tipo (\`"\` ou \`'\`).
+• **Aspas em números quando não deveria**: \`print("2" + "3")\` mostra "23" (junta texto), não 5.
+
+## 🚀 Quando usar na prática
+\`print()\` é seu melhor amigo na hora de **depurar** (encontrar bugs). Quando algo não funciona, espalhe \`print()\` pelo código para ver o valor das variáveis em cada etapa. Programadores profissionais usam print o tempo todo para investigar problemas antes de passar para ferramentas mais avançadas.`,
         starterCode: '# Escreva seu código aqui\n',
         solution: 'print("Olá, Mundo!")',
         expectedOutput: "Olá, Mundo!",
