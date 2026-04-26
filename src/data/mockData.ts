@@ -2384,37 +2384,51 @@ Em **qualquer dado que muda dentro de um componente** e precisa refletir na tela
         id: "3-4",
         title: "useEffect",
         description: "Use `useEffect` para exibir **\"Componente montado!\"** no console quando o componente for renderizado pela primeira vez.",
-        theory: `useEffect permite executar "efeitos colaterais" — código que roda fora do fluxo normal de renderização (API calls, timers, DOM, etc).
+        theory: `# useEffect — efeitos colaterais
 
-Sintaxe:
+## 💡 O que é
+\`useEffect\` é o hook para executar código **fora do fluxo normal de renderização**: chamadas a APIs, timers, listeners de eventos, manipulação direta do DOM, sincronização com sistemas externos.
+
+## 🌍 Analogia do mundo real
+Pense num **chef de cozinha**: ele monta o prato (renderização), serve, e **só depois** vai lavar a louça e desligar o forno (efeitos colaterais). \`useEffect\` é exatamente esse "depois que a tela já está na mesa, faça essas coisinhas extras". E quando o cliente vai embora (componente desmonta), o chef volta para **fechar o gás** — esse é o \`return\` de cleanup.
+
+## 🔧 Sintaxe e como funciona
   useEffect(() => {
-    // código do efeito
-  }, [dependências]);
+    // código do efeito (roda DEPOIS da renderização)
+    return () => {
+      // cleanup (roda antes do próximo efeito ou ao desmontar)
+    };
+  }, [dependencias]);
 
-O array de dependências controla QUANDO o efeito roda:
+O **array de dependências** controla **quando** roda:
+• \`[]\`  → uma vez só, na montagem.
+• \`[x, y]\` → toda vez que \`x\` ou \`y\` mudarem.
+• **sem array** → toda renderização (quase sempre é bug — gera loop).
 
-1. [] vazio → roda só UMA vez (na montagem):
+## 📚 Exemplos comentados
+  // 1. Roda só ao montar (carregar dados, log inicial)
   useEffect(() => {
-    console.log("Montou!");
+    console.log("Componente montado!");
   }, []);
 
-2. [variavel] → roda quando a variável muda:
+  // 2. Roda quando 'nome' muda (atualizar título da aba)
   useEffect(() => {
-    console.log("Nome mudou:", nome);
+    document.title = \`Olá, \${nome}\`;
   }, [nome]);
 
-3. Sem array → roda TODA renderização (evite!):
+  // 3. Timer com cleanup (essencial para não vazar memória)
   useEffect(() => {
-    console.log("Renderizou");
-  });
-
-Cleanup (limpeza) — roda quando o componente desmonta:
-  useEffect(() => {
-    const timer = setInterval(() => console.log("tick"), 1000);
-    return () => clearInterval(timer);  // cleanup!
+    const id = setInterval(() => console.log("tick"), 1000);
+    return () => clearInterval(id);   // limpa quando desmonta
   }, []);
 
-Usos comuns: buscar dados de API, ouvir eventos, atualizar título da página.`,
+## ⚠️ Erros comuns
+• **Esquecer o array de dependências** → efeito roda em toda render. Se ele atualiza estado, vira **loop infinito**.
+• **Esquecer o cleanup** em timers/listeners/subscriptions → bugs depois que o componente sai da tela (o \`setInterval\` continua rodando).
+• **Omitir uma variável** que é usada dentro do efeito → o efeito usa um valor "congelado" e antigo (problema de stale closure).
+
+## 🚀 Quando usar na prática
+Buscar dados de API ao abrir uma tela, atualizar o título da aba, registrar/remover \`addEventListener\`, criar timers, sincronizar com \`localStorage\`. Para fetching mais complexo em projetos reais, **TanStack Query** (React Query) substitui boa parte do uso de \`useEffect\` com cache automático.`,
         starterCode: 'import { useEffect } from "react";\n// Use useEffect\n',
         solution: 'import { useEffect } from "react";\nfunction App() {\n  useEffect(() => {\n    console.log("Componente montado!");\n  }, []);\n  return <div>App</div>;\n}',
         expectedOutput: "Componente montado!",
