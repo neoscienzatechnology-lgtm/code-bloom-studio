@@ -3245,42 +3245,50 @@ Entradas de modais, toasts e cards (fade-in/slide-in), loaders (spin), feedback 
         id: "4-6",
         title: "Media Queries",
         description: "Escreva uma media query que muda a cor de fundo do `body` para **escuro** quando a tela for menor que **768px**.",
-        theory: `Media queries permitem aplicar CSS diferente dependendo do tamanho da tela, orientação ou tipo de dispositivo.
+        theory: `# Media Queries — design responsivo
 
-Sintaxe:
+## 💡 O que é
+Uma **media query** aplica regras de CSS **só quando a tela atende uma condição** (ex.: largura abaixo de 768px). É o que faz seu site **se adaptar a celular, tablet e desktop** sem precisar de páginas separadas.
+
+## 🌍 Analogia do mundo real
+Pense num **camaleão**: dependendo do **ambiente** (galho, folha, pedra), ele muda de cor automaticamente. A media query é o "sensor" que diz "estou em ambiente celular, troco para layout compacto" — o site continua o mesmo, mas se **camufla** ao tamanho disponível.
+
+## 🔧 Sintaxe e como funciona
   @media (condição) {
-    /* CSS para essa condição */
+    /* regras CSS aplicadas SÓ quando a condição é verdadeira */
   }
 
-Breakpoints comuns:
-  @media (max-width: 768px) { }   → tablets e menores
-  @media (max-width: 480px) { }   → celulares
-  @media (min-width: 1024px) { }  → desktops
+Condições mais usadas:
+• \`(max-width: 768px)\` → tela **até** 768px (mobile/tablet pequeno).
+• \`(min-width: 1024px)\` → tela **de** 1024px **para cima** (desktop).
+• \`(prefers-color-scheme: dark)\` → quando o SO está em modo escuro.
 
-Abordagem Mobile-First (recomendada):
-  /* CSS base = mobile */
-  .container { padding: 16px; }
+**Estratégia mobile-first** (recomendada): escreva o CSS base pensando em **celular** e use \`min-width\` para acrescentar estilos nas telas maiores. Vai por camadas, não por exceções.
 
-  /* Desktop */
-  @media (min-width: 768px) {
-    .container { padding: 32px; }
-  }
-
-Exemplos práticos:
-  /* Menu hamburger no mobile */
-  .menu { display: flex; }
+## 📚 Exemplos comentados
+  /* 1. Mudar fundo abaixo de 768px */
   @media (max-width: 768px) {
-    .menu { display: none; }
-    .hamburger { display: block; }
+    body { background: #1a1a2e; }
   }
 
-  /* Grid responsivo */
-  .grid { grid-template-columns: 1fr; }
+  /* 2. Mobile-first: padding cresce com a tela */
+  .container { padding: 16px; }                      /* base = mobile */
+  @media (min-width: 768px)  { .container { padding: 24px; } }
+  @media (min-width: 1280px) { .container { padding: 48px; } }
+
+  /* 3. Grid responsivo: 1 coluna no mobile, 3 no desktop */
+  .cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
   @media (min-width: 768px) {
-    .grid { grid-template-columns: repeat(3, 1fr); }
+    .cards { grid-template-columns: repeat(3, 1fr); }
   }
 
-Dica: Sempre teste seu site em diferentes tamanhos! Use DevTools > Toggle Device Toolbar.`,
+## ⚠️ Erros comuns
+• **Misturar \`max-width\` e \`min-width\`** sem cuidado → regras se sobrepõem em ordens confusas. Adote **uma direção** (mobile-first com \`min-width\`).
+• Usar **breakpoints fixos demais** (specíficos para iPhone X) → o ideal é usar valores **lógicos** (\`640\`, \`768\`, \`1024\`, \`1280\`) que cobrem famílias de dispositivos.
+• Esquecer a **viewport meta tag** no HTML (\`<meta name="viewport" content="width=device-width, initial-scale=1">\`) → o celular renderiza como desktop minúsculo e a media query nem dispara.
+
+## 🚀 Quando usar na prática
+Em **todo site moderno**: layout muda de coluna única para grid de 3, menu vira hamburger, fontes diminuem, padding encolhe. Em projetos com Tailwind, em vez de \`@media\` cru, você usa as variantes \`sm:\`, \`md:\`, \`lg:\` — que **internamente são media queries**. Saber CSS puro te dá controle quando o framework não cobre o caso.`,
         starterCode: '/* Responsividade */\n',
         solution: '@media (max-width: 768px) {\n  body {\n    background-color: #1a1a2e;\n  }\n}',
         expectedOutput: "@media",
