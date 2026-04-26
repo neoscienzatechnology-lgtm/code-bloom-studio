@@ -116,21 +116,49 @@ A receita básica:
         id: "1-2",
         title: "Variáveis e Tipos",
         description: "Crie uma variável chamada `nome` com seu nome e outra chamada `idade` com sua idade. Depois use `print()` para exibir: **\"Meu nome é [nome] e tenho [idade] anos\"**.",
-        theory: `Variáveis são "caixas" que guardam valores na memória do computador. Em Python, você cria uma variável simplesmente atribuindo um valor com o sinal de igual (=).
+        theory: `# Variáveis e Tipos
 
-Tipos principais:
-• str (texto): nome = "Lucas" — sempre entre aspas
-• int (número inteiro): idade = 20
-• float (decimal): altura = 1.75
-• bool (verdadeiro/falso): ativo = True
+## 💡 O que é
+Uma **variável** é um nome que você dá para um valor guardado na memória do computador. Em vez de repetir o valor toda hora, você usa o nome. O **tipo** descreve a natureza do valor (texto, número inteiro, decimal, verdadeiro/falso).
 
-Para juntar texto com variáveis, use f-strings (strings formatadas):
-  nome = "Ana"
-  idade = 25
+## 🌍 Analogia do mundo real
+Imagine **etiquetas coladas em potes** na cozinha. O pote é a memória do computador, o conteúdo (açúcar, sal, arroz) é o valor, e a etiqueta com o nome é a variável. Quando você fala "me passa o açúcar", ninguém precisa pegar todos os potes — vai direto na etiqueta certa.
+
+## 🔧 Sintaxe e como funciona
+A receita é sempre: **nome = valor**
+  nome = "Lucas"
+  idade = 20
+
+O sinal \`=\` NÃO é "igualdade matemática" — é "atribuição": pega o valor da direita e coloca dentro da variável da esquerda.
+
+**Os 4 tipos básicos:**
+• \`str\` (string/texto): sempre entre aspas — \`"Lucas"\`, \`'oi'\`
+• \`int\` (inteiro): números sem casas decimais — \`20\`, \`-7\`
+• \`float\` (decimal): números com ponto — \`1.75\`, \`3.14\`
+• \`bool\` (booleano): só dois valores — \`True\` ou \`False\` (com maiúscula!)
+
+## 📚 Exemplos comentados
+  nome = "Ana"              # str — texto entre aspas
+  idade = 25                # int — número inteiro
+  altura = 1.68             # float — decimal usa PONTO, não vírgula
+  ativo = True              # bool — sem aspas, T maiúsculo
+  print(type(nome))         # mostra: <class 'str'> (descobre o tipo)
+
+  # f-string: a forma moderna de juntar texto com variáveis
   print(f"Eu sou {nome} e tenho {idade} anos")
-  → exibe: Eu sou Ana e tenho 25 anos
+  # mostra: Eu sou Ana e tenho 25 anos
 
-O f antes das aspas ativa a interpolação. Dentro de {}, coloque qualquer variável ou expressão Python.`,
+  # Dentro de {} pode entrar qualquer expressão Python:
+  print(f"Em 5 anos terei {idade + 5}")    # mostra: Em 5 anos terei 30
+
+## ⚠️ Erros comuns
+• **Esquecer aspas em texto**: \`nome = Lucas\` → NameError (Python procura uma variável "Lucas").
+• **Vírgula em decimal**: \`altura = 1,68\` cria uma tupla (1, 68), não um decimal! Use **ponto**.
+• **Esquecer o \`f\`**: \`print("Olá, {nome}")\` mostra literalmente "{nome}", sem trocar pelo valor.
+• **\`true\`/\`false\` minúsculo**: dá NameError. Em Python é \`True\` e \`False\` com maiúscula.
+
+## 🚀 Quando usar na prática
+Variáveis são **a base de tudo**: armazenar entrada do usuário, guardar resultados de cálculos, manter o estado de um jogo, lembrar a configuração escolhida. Tipos certos evitam bugs (somar dois números é diferente de juntar dois textos!) e facilitam a leitura do código.`,
         starterCode: '# Crie as variáveis e exiba a mensagem\nnome = ""\nidade = 0\n',
         solution: 'nome = "Lucas"\nidade = 20\nprint(f"Meu nome é {nome} e tenho {idade} anos")',
         expectedOutput: "Meu nome é",
@@ -145,25 +173,50 @@ O f antes das aspas ativa a interpolação. Dentro de {}, coloque qualquer vari�
         id: "1-3",
         title: "Operações Matemáticas",
         description: "Calcule a **soma**, **subtração**, **multiplicação** e **divisão** de dois números (10 e 3) e exiba cada resultado com `print()`.",
-        theory: `Python funciona como uma calculadora poderosa! Os operadores matemáticos básicos são:
+        theory: `# Operações Matemáticas
 
-Operadores:
-• + → soma: 10 + 3 = 13
-• - → subtração: 10 - 3 = 7
-• * → multiplicação: 10 * 3 = 30
-• / → divisão (resultado decimal): 10 / 3 = 3.333...
-• // → divisão inteira (sem decimais): 10 // 3 = 3
-• % → módulo (resto da divisão): 10 % 3 = 1
-• ** → potência: 2 ** 3 = 8
+## 💡 O que é
+Python é uma **calculadora poderosa**: tem operadores para fazer todas as contas matemáticas básicas e algumas especiais (resto da divisão, potência). Você pode calcular direto, ou guardar o resultado numa variável para usar depois.
 
-Você pode guardar resultados em variáveis:
-  resultado = 10 + 3
-  print(resultado)  → 13
+## 🌍 Analogia do mundo real
+Pense numa **calculadora científica**. Os botões \`+ - × ÷\` você já conhece. Python adiciona dois botões "secretos" muito úteis: o \`%\` que diz "quanto sobrou da divisão?" (igual quando você divide pizza e fica um pedaço) e o \`**\` que faz potência (multiplicar um número por ele mesmo várias vezes).
 
-Ou calcular direto no print():
-  print(10 * 3)  → 30
+## 🔧 Sintaxe e como funciona
+Os 7 operadores aritméticos:
+• \`+\`  → soma          \`10 + 3\` = 13
+• \`-\`  → subtração     \`10 - 3\` = 7
+• \`*\`  → multiplicação \`10 * 3\` = 30
+• \`/\`  → divisão       \`10 / 3\` = 3.333... (sempre float)
+• \`//\` → divisão inteira \`10 // 3\` = 3 (descarta o resto)
+• \`%\`  → módulo (resto) \`10 % 3\` = 1
+• \`**\` → potência      \`2 ** 3\` = 8
 
-A ordem das operações segue a matemática: parênteses > potência > multiplicação/divisão > soma/subtração.`,
+A **ordem das operações** segue a matemática: parênteses → potência → \`*\` \`/\` \`%\` \`//\` → \`+\` \`-\`. Use \`( )\` para forçar a ordem que você quer.
+
+## 📚 Exemplos comentados
+  resultado = 10 + 3              # guarda 13 na variável
+  print(resultado)                # mostra: 13
+
+  print(7 / 2)                    # 3.5  (sempre vira decimal)
+  print(7 // 2)                   # 3    (descarta o ".5")
+  print(7 % 2)                    # 1    (sobra 1 ao dividir)
+
+  print(2 + 3 * 4)                # 14   (multiplicação primeiro)
+  print((2 + 3) * 4)              # 20   (parênteses forçam soma antes)
+
+  preco = 100
+  desconto = 0.15
+  final = preco * (1 - desconto)  # 85.0
+  print(f"Pagar: R$ {final:.2f}")  # mostra: Pagar: R$ 85.00
+
+## ⚠️ Erros comuns
+• **Confundir \`/\` com \`//\`**: \`10 / 2\` dá \`5.0\` (float), \`10 // 2\` dá \`5\` (int). Importa quando você precisa de inteiro.
+• **Dividir por zero**: \`10 / 0\` → ZeroDivisionError. Sempre verifique o denominador antes.
+• **Esquecer parênteses**: \`100 - 10 * 2\` é \`80\`, não \`180\`. Multiplicação vem primeiro.
+• **Misturar tipos sem querer**: \`"5" + 3\` → TypeError. Converta com \`int("5") + 3\`.
+
+## 🚀 Quando usar na prática
+Praticamente todo programa faz contas: calcular preço com desconto, converter unidades, calcular médias e estatísticas, ajustar coordenadas em jogos, calcular paginação ("quantas páginas se cada uma tem 10 itens?" → \`total // 10\`). O operador \`%\` é especialmente útil para descobrir se um número é par (\`x % 2 == 0\`) ou para ciclar valores.`,
         starterCode: 'a = 10\nb = 3\n# Calcule e exiba os resultados\n',
         solution: 'a = 10\nb = 3\nprint(a + b)\nprint(a - b)\nprint(a * b)\nprint(a / b)',
         expectedOutput: "13",
@@ -174,35 +227,64 @@ A ordem das operações segue a matemática: parênteses > potência > multiplic
         id: "1-4",
         title: "Condicionais (if/else)",
         description: "Crie uma variável `nota` com valor 7. Se a nota for >= 7, exiba **\"Aprovado!\"**, senão exiba **\"Reprovado!\"**.",
-        theory: `Condicionais permitem que seu programa tome decisões! Com if/else, o código executa blocos diferentes dependendo de uma condição.
+        theory: `# Condicionais (if / elif / else)
 
-Estrutura:
+## 💡 O que é
+Condicionais permitem que seu programa **tome decisões**. Em vez de executar tudo em sequência, o código escolhe um caminho ou outro dependendo de uma **condição** ser verdadeira ou falsa.
+
+## 🌍 Analogia do mundo real
+É exatamente como uma **bifurcação numa estrada com placas**: "Se está chovendo, pegue o caminho coberto; senão, vá pela praia." A condição é a placa; o \`if\` é a decisão; o \`else\` é o "senão". Quando há mais de duas opções (chuva, sol, neblina), entra o \`elif\` ("senão se").
+
+## 🔧 Sintaxe e como funciona
+A estrutura básica:
   if condição:
-      # código se verdadeiro
+      # bloco que roda se for True
+  elif outra_condição:
+      # bloco que roda se a primeira foi False mas essa é True
   else:
-      # código se falso
+      # bloco que roda se nenhuma das anteriores foi True
 
-Operadores de comparação:
-• == igual a          • != diferente de
-• > maior que        • < menor que
-• >= maior ou igual  • <= menor ou igual
+**Operadores de comparação** (sempre devolvem \`True\` ou \`False\`):
+• \`==\` igual a       • \`!=\` diferente de
+• \`>\`  maior que     • \`<\`  menor que
+• \`>=\` maior ou igual • \`<=\` menor ou igual
 
-Exemplo:
+**Operadores lógicos** para combinar condições:
+• \`and\` → as duas precisam ser True
+• \`or\`  → pelo menos uma True
+• \`not\` → inverte (True vira False)
+
+Dois detalhes que Python EXIGE: os **dois pontos \`:\`** ao final da linha do if/elif/else, e a **indentação de 4 espaços** para indicar o que está dentro do bloco.
+
+## 📚 Exemplos comentados
   temperatura = 30
   if temperatura > 25:
-      print("Está quente!")
+      print("Está quente!")        # roda porque 30 > 25
   else:
       print("Está fresco.")
 
-Para múltiplas condições, use elif:
+  nota = 8
   if nota >= 9:
       print("Excelente!")
   elif nota >= 7:
-      print("Bom!")
+      print("Bom!")                 # roda — pula o if, cai no primeiro elif True
   else:
       print("Precisa melhorar")
 
-IMPORTANTE: Em Python, a indentação (4 espaços) define o bloco de código. Não esqueça dos dois pontos (:) após a condição!`,
+  # Combinando condições
+  idade = 20
+  tem_carteira = True
+  if idade >= 18 and tem_carteira:
+      print("Pode dirigir")
+
+## ⚠️ Erros comuns
+• **Confundir \`=\` com \`==\`**: \`if x = 5:\` → SyntaxError. \`=\` é atribuição, \`==\` é comparação.
+• **Esquecer os \`:\`**: \`if x > 5\` (sem dois pontos) → SyntaxError.
+• **Indentação errada**: misturar tabs e espaços, ou indentar com 2 espaços onde o resto usa 4 → IndentationError.
+• **Cobrir todos os casos**: se você só tem \`if\` e \`elif\` sem \`else\`, e nenhuma condição for True, NADA acontece — é uma fonte clássica de bug silencioso.
+
+## 🚀 Quando usar na prática
+Toda lógica de negócio nasce de condicionais: aplicar desconto se o cliente é VIP, mostrar tela de login se o usuário não está autenticado, decidir se um e-mail vai pra caixa de entrada ou pra spam, escolher a mensagem ("Bom dia/Boa tarde/Boa noite") com base na hora. Sempre que o código precisa **escolher**, é if/elif/else.`,
         starterCode: 'nota = 7\n# Use if/else para verificar\n',
         solution: 'nota = 7\nif nota >= 7:\n    print("Aprovado!")\nelse:\n    print("Reprovado!")',
         expectedOutput: "Aprovado!",
@@ -217,27 +299,53 @@ IMPORTANTE: Em Python, a indentação (4 espaços) define o bloco de código. N�
         id: "1-5",
         title: "Loops com for",
         description: "Use um loop `for` para exibir os números de **1 a 5**, cada um em uma linha.",
-        theory: `O loop for repete um bloco de código para cada item em uma sequência. É ideal quando você sabe quantas vezes quer repetir.
+        theory: `# Loops com for
 
-Sintaxe básica:
+## 💡 O que é
+O loop \`for\` **repete um bloco de código para cada item de uma sequência** (lista, texto, range de números). É a ferramenta certa quando você sabe sobre o que iterar — uma lista de e-mails, todas as letras de uma palavra, números de 1 a 100.
+
+## 🌍 Analogia do mundo real
+Imagine um **carteiro entregando cartas em uma rua**. Ele não escreve um código diferente para cada casa — ele tem UMA rotina ("toque a campainha, entregue a carta") e repete em cada casa do bairro. O loop \`for\` é a rotina; a sequência (\`range\`, lista, string) é a rua com suas casas.
+
+## 🔧 Sintaxe e como funciona
+A receita é:
   for variavel in sequência:
-      # código a repetir
+      # código que roda uma vez para cada item
 
-A função range() gera uma sequência de números:
-• range(5) → 0, 1, 2, 3, 4 (começa em 0!)
-• range(1, 6) → 1, 2, 3, 4, 5 (de 1 até 5)
-• range(0, 10, 2) → 0, 2, 4, 6, 8 (de 2 em 2)
+A \`variavel\` recebe o valor de cada item, **um de cada vez**, na ordem.
 
-Exemplos:
+A função \`range()\` é a fonte mais comum de sequências numéricas:
+• \`range(5)\`        → 0, 1, 2, 3, 4 (sempre **começa em 0** e **para antes** do número)
+• \`range(1, 6)\`     → 1, 2, 3, 4, 5 (de 1 até 6-1)
+• \`range(0, 10, 2)\` → 0, 2, 4, 6, 8 (de 2 em 2 — terceiro argumento é o "passo")
+
+## 📚 Exemplos comentados
   for i in range(3):
       print(i)
-  # Exibe: 0, 1, 2
+  # mostra: 0, 1, 2 (cada um em uma linha)
 
   for letra in "Python":
       print(letra)
-  # Exibe cada letra em uma linha
+  # mostra: P, y, t, h, o, n (string é iterável)
 
-Você pode usar for com listas, strings, range() e muitos outros objetos iteráveis.`,
+  cores = ["azul", "vermelho", "verde"]
+  for cor in cores:
+      print(f"Cor: {cor}")
+
+  # Somando os números de 1 a 10
+  total = 0
+  for n in range(1, 11):
+      total = total + n
+  print(total)  # 55
+
+## ⚠️ Erros comuns
+• **\`range(1, 5)\` e esperar incluir 5**: o número final fica de fora! Para ir "até 5", use \`range(1, 6)\`.
+• **Esquecer dois pontos ou indentação**: mesmas regras do \`if\` — \`:\` no fim e 4 espaços dentro.
+• **Modificar a lista enquanto itera**: \`for x in lista: lista.remove(x)\` causa comportamento estranho. Crie uma nova lista em vez disso.
+• **Usar \`for\` quando \`while\` seria melhor**: se você não sabe quantas vezes repetir (ex.: "até o usuário digitar sair"), use \`while\`, não \`for\`.
+
+## 🚀 Quando usar na prática
+\`for\` é onipresente: processar cada linha de um arquivo, somar todos os pedidos do mês, enviar e-mail para cada inscrito, validar cada campo de um formulário, desenhar cada inimigo de um jogo na tela. Sempre que tem uma **coleção de coisas para tratar uma a uma**, é \`for\`.`,
         starterCode: '# Use for para contar de 1 a 5\n',
         solution: 'for i in range(1, 6):\n    print(i)',
         expectedOutput: "1",
@@ -251,28 +359,60 @@ Você pode usar for com listas, strings, range() e muitos outros objetos iteráv
         id: "1-6",
         title: "Listas",
         description: "Crie uma lista chamada `frutas` com 3 frutas e use um loop `for` para exibir cada uma.",
-        theory: `Listas são coleções ordenadas de itens. Em Python, criamos listas usando colchetes [] e separando os itens por vírgula.
+        theory: `# Listas
 
-Criando listas:
+## 💡 O que é
+Uma **lista** é uma coleção **ordenada** e **modificável** de itens. Você pode guardar quantos itens quiser, de qualquer tipo (até misturar tipos!), e alterar a coleção depois (adicionar, remover, ordenar).
+
+## 🌍 Analogia do mundo real
+Pense numa **lista de compras numerada**: ela tem uma ordem clara (item 1, item 2, item 3...), você pode acrescentar coisas no fim, riscar itens do meio, e contar quantas faltam. Em Python, a numeração começa em **0** (não em 1) — o primeiro item é o de índice 0.
+
+## 🔧 Sintaxe e como funciona
+Criando: use **colchetes** \`[ ]\` e separe itens por vírgula.
   frutas = ["maçã", "banana", "uva"]
   numeros = [1, 2, 3, 4, 5]
-  mista = ["texto", 42, True, 3.14]
+  mista = ["texto", 42, True, 3.14]    # tipos diferentes, sem problema
 
-Acessando itens (o índice começa em 0!):
-  frutas[0]  → "maçã"
-  frutas[1]  → "banana"
-  frutas[-1] → "uva" (último item)
+**Acessando itens** (índice começa em 0):
+  frutas[0]   → "maçã"   (primeiro)
+  frutas[1]   → "banana"
+  frutas[-1]  → "uva"    (último — índices negativos contam de trás pra frente)
 
-Métodos úteis:
-  frutas.append("manga")   → adiciona ao final
-  frutas.remove("banana")  → remove o item
-  len(frutas)              → quantidade de itens
-  frutas.sort()            → ordena a lista
+**Métodos essenciais** (operações comuns):
+  frutas.append("manga")   # adiciona no FINAL
+  frutas.insert(0, "kiwi") # adiciona em uma posição específica
+  frutas.remove("banana")  # remove pela primeira ocorrência do valor
+  frutas.pop()             # remove e RETORNA o último
+  len(frutas)              # quantos itens tem
+  frutas.sort()            # ordena no lugar (alfabética/numérica)
+  "uva" in frutas          # True/False — testa se contém
 
-Percorrendo com for:
-  for fruta in frutas:
-      print(fruta)
-  # Exibe cada fruta em uma linha`,
+## 📚 Exemplos comentados
+  notas = [7, 8, 9, 6, 10]
+  print(notas[0])              # 7   (primeira nota)
+  print(notas[-1])             # 10  (última)
+  print(len(notas))            # 5   (quantidade)
+
+  notas.append(8)              # agora tem 6 itens
+  notas.sort()                 # [6, 7, 8, 8, 9, 10]
+  media = sum(notas) / len(notas)
+  print(f"Média: {media}")     # Média: 8.0
+
+  # Iterando: o for percorre na ordem
+  for nota in notas:
+      print(nota)
+
+  # Slicing (fatias) — pega pedaços
+  print(notas[0:3])            # [6, 7, 8] — do índice 0 ao 2
+
+## ⚠️ Erros comuns
+• **Índice fora do tamanho**: \`notas[10]\` quando só tem 6 itens → IndexError.
+• **Esquecer que começa em 0**: o "5º item" tem índice 4, não 5.
+• **\`append\` vs \`extend\`**: \`lista.append([1,2])\` adiciona a lista \`[1,2]\` como UM item; \`lista.extend([1,2])\` adiciona 1 e 2 separadamente.
+• **\`sort()\` retorna None**: \`x = lista.sort()\` deixa \`x\` como None! \`sort()\` ordena no lugar. Para obter cópia ordenada, use \`sorted(lista)\`.
+
+## 🚀 Quando usar na prática
+Listas estão em todo lugar: produtos de um carrinho, mensagens de um chat, registros lidos do banco, jogadores de uma partida, tarefas de um to-do. Sempre que você precisa de **uma sequência de itens onde a ordem importa e a quantidade pode variar**, listas são a escolha padrão.`,
         starterCode: '# Crie a lista e exiba cada fruta\n',
         solution: 'frutas = ["maçã", "banana", "uva"]\nfor fruta in frutas:\n    print(fruta)',
         expectedOutput: "maçã",
@@ -283,35 +423,64 @@ Percorrendo com for:
         id: "1-7",
         title: "Funções",
         description: "Crie uma função chamada `saudacao` que recebe um `nome` e retorna **\"Olá, [nome]!\"**. Depois chame a função e exiba o resultado.",
-        theory: `Funções são blocos de código reutilizáveis. Você define uma vez e chama quantas vezes precisar!
+        theory: `# Funções
 
-Definindo uma função:
+## 💡 O que é
+Uma **função** é um pedaço de código com nome próprio que você define **uma vez** e chama **quantas vezes quiser**. Ela pode receber dados de entrada (parâmetros) e devolver um resultado (return).
+
+## 🌍 Analogia do mundo real
+Uma função é como uma **receita de bolo**: você escreve a receita uma vez ("misture A com B, asse por 30 min, devolva o bolo"). Depois, sempre que quiser bolo, basta chamar "fazer_bolo" — não precisa reescrever a receita. Os **ingredientes** que você passa são os parâmetros; o **bolo pronto** é o que a função retorna.
+
+## 🔧 Sintaxe e como funciona
+A receita:
   def nome_da_funcao(parametro1, parametro2):
-      # código da função
+      # corpo da função
       return resultado
 
-• def → palavra-chave para definir funções
-• Parâmetros são valores que a função recebe
-• return devolve um resultado (opcional)
+• \`def\` → palavra-chave que diz "estou definindo uma função".
+• \`nome_da_funcao\` → use verbo no infinitivo, em \`snake_case\`.
+• \`parametros\` → entradas que a função recebe (opcional).
+• \`return\` → devolve um valor (opcional). Sem return, a função devolve \`None\`.
 
-Exemplos:
+**Definir vs chamar:**
+  def somar(a, b):     # 1) DEFINE — o código não roda ainda
+      return a + b
+  somar(3, 5)          # 2) CHAMA — agora sim roda e devolve 8
+
+## 📚 Exemplos comentados
   def somar(a, b):
       return a + b
 
   resultado = somar(3, 5)
-  print(resultado)  → 8
+  print(resultado)              # 8
 
   def cumprimentar(nome):
       return f"Olá, {nome}!"
 
-  print(cumprimentar("Ana"))  → Olá, Ana!
+  print(cumprimentar("Ana"))    # Olá, Ana!
 
-Funções sem return:
+  # Função sem return — só executa ações
   def exibir_menu():
       print("1 - Jogar")
       print("2 - Sair")
 
-Dica: Nomeie funções com verbos que descrevam o que elas fazem!`,
+  exibir_menu()
+
+  # Parâmetros com valor padrão
+  def saudacao(nome, saudacao="Olá"):
+      return f"{saudacao}, {nome}!"
+
+  print(saudacao("Bruno"))                # Olá, Bruno!
+  print(saudacao("Bruno", "Bom dia"))     # Bom dia, Bruno!
+
+## ⚠️ Erros comuns
+• **Confundir definir com chamar**: \`def somar(a, b): return a+b\` sozinho não faz nada — você precisa escrever \`somar(2, 3)\` em algum lugar.
+• **Esquecer o \`return\`**: \`x = somar(2, 3)\` quando \`somar\` não tem return → \`x\` vira \`None\`, não 5.
+• **Quantidade errada de argumentos**: \`somar(3)\` quando a função pede dois → TypeError.
+• **Variáveis dentro da função somem fora**: o que é criado dentro de \`def\` é local. Para sair, use \`return\`.
+
+## 🚀 Quando usar na prática
+Funções são a base da **organização e reuso** de código: validar um e-mail, calcular o frete, formatar uma data, autenticar um usuário. Regra de ouro: se você está copiando e colando o mesmo trecho duas vezes, transforme em função. Bônus: funções pequenas com nomes claros tornam o código praticamente autoexplicativo — você lê \`calcular_imposto(salario)\` e já entende.`,
         starterCode: '# Defina a função e chame-a\n',
         solution: 'def saudacao(nome):\n    return f"Olá, {nome}!"\n\nprint(saudacao("Python"))',
         expectedOutput: "Olá,",
@@ -322,33 +491,68 @@ Dica: Nomeie funções com verbos que descrevam o que elas fazem!`,
         id: "1-8",
         title: "Dicionários",
         description: "Crie um dicionário `aluno` com as chaves `nome`, `idade` e `curso`. Exiba o nome do aluno.",
-        theory: `Dicionários guardam pares de chave:valor. São como uma agenda onde cada nome (chave) tem um telefone (valor).
+        theory: `# Dicionários
 
-Criando dicionários:
+## 💡 O que é
+Um **dicionário** guarda dados em pares **chave: valor**. Em vez de acessar pela posição (como na lista), você acessa **pelo nome da chave**. É a estrutura ideal para representar "coisas com várias propriedades" (um aluno tem nome, idade, curso).
+
+## 🌍 Analogia do mundo real
+É exatamente como uma **agenda telefônica**: você não procura "o terceiro contato" — procura "Maria" e o catálogo te entrega o número dela. O nome (Maria) é a **chave**; o telefone é o **valor**. Outra analogia: o dicionário de verdade — você procura a palavra e encontra o significado.
+
+## 🔧 Sintaxe e como funciona
+Criando: use **chaves** \`{ }\` com pares \`chave: valor\` separados por vírgula.
   aluno = {
       "nome": "Lucas",
       "idade": 20,
       "curso": "Python"
   }
 
-Acessando valores:
-  aluno["nome"]     → "Lucas"
-  aluno.get("idade") → 20 (mais seguro, retorna None se não existir)
+**Regras das chaves:**
+• Devem ser únicas (se repetir, o último valor vence).
+• Geralmente são strings, mas podem ser números ou tuplas.
+• Listas NÃO podem ser chaves (são mutáveis).
 
-Modificando:
-  aluno["idade"] = 21          → altera o valor
-  aluno["email"] = "l@mail.com" → adiciona nova chave
+**Operações principais:**
+  aluno["nome"]              # acesso direto — KeyError se não existir
+  aluno.get("idade")         # acesso seguro — devolve None se não existir
+  aluno.get("email", "—")    # com valor padrão se não existir
+  aluno["email"] = "l@x.com" # adiciona ou atualiza
+  del aluno["idade"]         # remove uma chave
+  "nome" in aluno            # True/False — testa se a chave existe
+  len(aluno)                 # quantos pares tem
 
-Métodos úteis:
-  aluno.keys()    → todas as chaves
-  aluno.values()  → todos os valores
-  aluno.items()   → pares (chave, valor)
+## 📚 Exemplos comentados
+  aluno = {"nome": "Lucas", "idade": 20, "curso": "Python"}
+  print(aluno["nome"])                      # Lucas
+  print(aluno.get("email", "sem email"))    # sem email (chave não existe)
 
-Percorrendo:
-  for chave, valor in aluno.items():
+  # Modificando
+  aluno["idade"] = 21          # altera valor
+  aluno["email"] = "l@x.com"   # adiciona nova chave
+
+  # Iterando — três formas
+  for chave in aluno:                       # só as chaves
+      print(chave)
+  for valor in aluno.values():              # só os valores
+      print(valor)
+  for chave, valor in aluno.items():        # ambos (mais útil)
       print(f"{chave}: {valor}")
 
-Dicionários são essenciais para representar dados estruturados como perfis de usuário, configurações, etc.`,
+  # Dicionário aninhado (estrutura de dados real)
+  usuario = {
+      "nome": "Ana",
+      "endereco": {"cidade": "Recife", "uf": "PE"}
+  }
+  print(usuario["endereco"]["cidade"])      # Recife
+
+## ⚠️ Erros comuns
+• **Acessar chave inexistente com \`[ ]\`**: \`aluno["telefone"]\` → KeyError. Use \`.get()\` quando não tem certeza.
+• **Sintaxe parecida com JSON, mas não é**: chaves devem estar entre aspas em Python (\`"nome"\`, não \`nome\`). Aspas obrigatórias.
+• **Confundir com set**: \`{1, 2, 3}\` é set (sem chave:valor); \`{}\` vazio é dict, não set.
+• **Esperar ordem alfabética**: dicionários mantêm a ordem de inserção (Python 3.7+), não ordem alfabética.
+
+## 🚀 Quando usar na prática
+Dicionários são a estrutura nº 1 para **dados estruturados**: perfil de usuário, configurações de app, resposta de uma API (JSON vira dict naturalmente), inventário de jogo (\`{"poção": 5, "espada": 1}\`), contagem de palavras num texto. Sempre que pensar "preciso guardar várias informações sobre uma coisa", pense em dicionário.`,
         starterCode: '# Crie o dicionário e exiba o nome\n',
         solution: 'aluno = {"nome": "Lucas", "idade": 20, "curso": "Python"}\nprint(aluno["nome"])',
         expectedOutput: "Lucas",
@@ -359,37 +563,58 @@ Dicionários são essenciais para representar dados estruturados como perfis de 
         id: "1-9",
         title: "List Comprehension",
         description: "Use **list comprehension** para criar uma lista com os quadrados dos números de 1 a 5.",
-        theory: `List comprehension é uma forma elegante e concisa de criar listas em Python. Em vez de usar um loop for com append, você faz tudo em uma linha!
+        theory: `# List Comprehension
 
-Sintaxe:
+## 💡 O que é
+**List comprehension** é uma forma compacta de criar uma nova lista **transformando** ou **filtrando** outra. O que normalmente seriam 3 linhas (criar lista vazia → loop → \`append\`) vira **uma linha** legível.
+
+## 🌍 Analogia do mundo real
+Pense numa **linha de produção**: você joga itens crus de um lado, eles passam por uma máquina (a transformação) — opcionalmente por um filtro — e saem itens prontos do outro. List comprehension é essa linha de produção descrita em uma frase: "para cada x da entrada, produza f(x), pulando os que não passam no filtro".
+
+## 🔧 Sintaxe e como funciona
+A receita base:
   nova_lista = [expressão for item in iterável]
 
-Exemplos:
-  quadrados = [x**2 for x in range(1, 6)]
-  # [1, 4, 9, 16, 25]
+Com filtro (condicional):
+  nova_lista = [expressão for item in iterável if condição]
 
+**Lê-se da esquerda para a direita** assim: "Para cada \`item\` em \`iterável\` (se passar na \`condição\`), coloque \`expressão\` na nova lista."
+
+## 📚 Exemplos comentados
+  # Versão tradicional (3 linhas)
+  quadrados = []
+  for x in range(1, 6):
+      quadrados.append(x ** 2)
+  # quadrados = [1, 4, 9, 16, 25]
+
+  # Mesma coisa em list comprehension (1 linha)
+  quadrados = [x ** 2 for x in range(1, 6)]
+
+  # Transformando strings
   maiusculas = [nome.upper() for nome in ["ana", "bruno"]]
   # ["ANA", "BRUNO"]
 
-Com condição (filtro):
+  # Filtrando — só os pares
   pares = [x for x in range(10) if x % 2 == 0]
   # [0, 2, 4, 6, 8]
 
-  grandes = [x for x in numeros if x > 10]
+  # Combinando transformação + filtro
+  notas = [4, 7, 5, 9, 6, 8]
+  aprovados = [n for n in notas if n >= 7]
+  # [7, 9, 8]
 
-Com expressão condicional:
-  resultado = ["par" if x%2==0 else "ímpar" for x in range(5)]
+  # Expressão condicional NA expressão (não é filtro)
+  status = ["par" if x % 2 == 0 else "ímpar" for x in range(5)]
+  # ["par", "ímpar", "par", "ímpar", "par"]
 
-Equivalência com loop:
-  # Loop tradicional:
-  quadrados = []
-  for x in range(1, 6):
-      quadrados.append(x**2)
+## ⚠️ Erros comuns
+• **Confundir os dois \`if\`**: \`[x for x in lista if x>0]\` é filtro; \`[x if x>0 else 0 for x in lista]\` é expressão condicional. A posição muda tudo.
+• **Forçar lógica complexa numa linha**: se ficou com 3 condições e 2 transformações, volte ao loop normal — fica mais legível.
+• **Esquecer dos colchetes**: \`x for x in range(5)\` (sem \`[ ]\`) cria um *generator*, não uma lista.
+• **Recriar coisa que já existe**: \`[x for x in lista]\` é só uma cópia ineficiente — use \`list(lista)\` ou \`lista[:]\`.
 
-  # List comprehension (mesma coisa!):
-  quadrados = [x**2 for x in range(1, 6)]
-
-Dica: Use list comprehension para transformações simples. Para lógica complexa, prefira loops normais.`,
+## 🚀 Quando usar na prática
+List comprehension é o jeito **idiomático Python** de transformar dados: extrair os e-mails de uma lista de usuários, converter strings para int, filtrar os produtos com estoque > 0, normalizar nomes para minúsculo. Programadores Python experientes leem \`[u.email for u in users if u.ativo]\` quase como uma frase em português.`,
         starterCode: '# Use list comprehension\n',
         solution: 'quadrados = [x**2 for x in range(1, 6)]\nprint(quadrados)',
         expectedOutput: "[1, 4, 9, 16, 25]",
@@ -403,29 +628,45 @@ Dica: Use list comprehension para transformações simples. Para lógica complex
         id: "1-10",
         title: "Try/Except",
         description: "Use **try/except** para tentar converter a string **\"abc\"** em número e exibir **\"Erro: valor inválido!\"** se falhar.",
-        theory: `Try/except permite tratar erros sem que o programa quebre. Você "tenta" executar algo e "captura" o erro se acontecer.
+        theory: `# Try / Except (tratamento de erros)
 
-Sintaxe:
+## 💡 O que é
+\`try / except\` permite **prever erros** e **reagir a eles** sem que o programa quebre. Em vez de o Python parar tudo com uma mensagem feia, você mostra uma mensagem amigável e segue em frente.
+
+## 🌍 Analogia do mundo real
+É como **dirigir com cinto de segurança**: você não dirige esperando bater, mas se algo der errado, o cinto te protege. O bloco \`try\` é a estrada normal; o \`except\` é o cinto que entra em ação quando há um acidente. Sem try/except, qualquer "buraco" (erro) joga seu programa para fora da pista.
+
+## 🔧 Sintaxe e como funciona
+Estrutura básica:
   try:
-      # código que pode dar erro
+      # código que PODE dar erro
   except TipoDoErro:
-      # o que fazer se der erro
+      # o que fazer se DEU esse erro
+  else:
+      # roda se NÃO deu erro (opcional)
+  finally:
+      # roda SEMPRE, com ou sem erro (opcional)
 
-Exemplo:
+**Tipos de erro mais comuns:**
+• \`ValueError\`         → valor errado: \`int("abc")\`
+• \`TypeError\`          → tipo errado: \`1 + "2"\`
+• \`ZeroDivisionError\`  → divisão por zero
+• \`FileNotFoundError\`  → arquivo não existe
+• \`KeyError\`           → chave inexistente em dict
+• \`IndexError\`         → índice fora da lista
+
+Você pode capturar a mensagem do erro com \`as\`:
+  except ValueError as e:
+      print(f"Detalhe: {e}")
+
+## 📚 Exemplos comentados
+  # Caso 1: conversão pode falhar
   try:
       numero = int("abc")
   except ValueError:
-      print("Valor inválido!")
+      print("Valor inválido!")        # roda — int("abc") falha
 
-Tipos comuns de erro:
-  ValueError    → valor errado (int("abc"))
-  TypeError     → tipo errado (1 + "2")
-  ZeroDivisionError → divisão por zero
-  FileNotFoundError → arquivo não existe
-  KeyError      → chave não existe no dicionário
-  IndexError    → índice fora da lista
-
-Múltiplos excepts:
+  # Caso 2: vários excepts diferentes
   try:
       resultado = 10 / 0
   except ZeroDivisionError:
@@ -433,15 +674,24 @@ Múltiplos excepts:
   except ValueError:
       print("Valor inválido!")
 
-Bloco finally (roda SEMPRE):
+  # Caso 3: with else e finally
   try:
-      arquivo = open("dados.txt")
-  except FileNotFoundError:
-      print("Arquivo não encontrado")
+      x = int(input("Digite um número: "))
+  except ValueError:
+      print("Não era número!")
+  else:
+      print(f"Número válido: {x}")    # só roda se NÃO deu erro
   finally:
-      print("Finalizando...")  # roda sempre
+      print("Programa finalizado.")    # roda sempre
 
-Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
+## ⚠️ Erros comuns
+• **except genérico (\`except:\` sem tipo)**: pega TUDO, inclusive Ctrl+C e bugs reais. Sempre especifique o tipo.
+• **try gigante**: colocar 50 linhas dentro do try torna impossível saber qual delas falhou. Mantenha o try **pequeno e focado**.
+• **Engolir o erro**: \`except: pass\` esconde problemas e dificulta debug. No mínimo, faça \`print(e)\` ou \`logging\`.
+• **Confundir \`else\` com \`else\` do if**: aqui, \`else\` significa "se não deu erro" — é raro, use só quando precisar.
+
+## 🚀 Quando usar na prática
+Use try/except em pontos onde **não dá pra confiar 100%** no que vem de fora: ler um arquivo (pode não existir), converter input do usuário (pode digitar errado), chamar uma API (a internet pode cair), acessar uma chave de dict opcional. **Não** use para tudo — código com try em volta de cada linha fica ilegível e esconde lógica.`,
         starterCode: '# Use try/except\n',
         solution: 'try:\n    numero = int("abc")\nexcept ValueError:\n    print("Erro: valor inválido!")',
         expectedOutput: "Erro: valor inválido!",
@@ -455,40 +705,70 @@ Dica: Nunca use except genérico (sem tipo). Capture erros específicos!`,
         id: "1-11",
         title: "Trabalhando com Arquivos",
         description: "Abra um arquivo chamado **\"dados.txt\"**, escreva **\"Olá, arquivo!\"** nele e depois leia o conteúdo com `print()`.",
-        theory: `Manipular arquivos é essencial para qualquer programa real — ler configurações, salvar dados, processar logs, exportar relatórios.
+        theory: `# Trabalhando com Arquivos
 
-A função open() abre um arquivo. O modo determina o que você pode fazer:
-• "r" → leitura (padrão) — erro se não existir
-• "w" → escrita (cria ou SOBRESCREVE)
-• "a" → append (adiciona ao final)
-• "r+" → leitura e escrita
-• "x" → cria novo (erro se já existir)
+## 💡 O que é
+Manipular arquivos é como o programa **persiste informação** entre execuções. Sem isso, tudo que ele calcula some quando você fecha. Python usa \`open()\` para abrir o arquivo, e o bloco \`with\` para garantir que ele é fechado direitinho.
 
-Escrevendo em um arquivo:
-  with open("dados.txt", "w") as f:
-      f.write("Linha 1\n")
-      f.write("Linha 2\n")
+## 🌍 Analogia do mundo real
+Pense num **caderno**: você precisa primeiro abrir (\`open\`), decidir se vai ler ou escrever (modo), fazer a ação, e depois fechar. Esquecer de fechar o caderno é como deixar a torneira aberta — desperdiça recursos. O bloco \`with\` é o "fecha sozinho quando termina" — você não precisa lembrar.
 
-Lendo um arquivo:
+## 🔧 Sintaxe e como funciona
+Forma recomendada (com \`with\`, sempre):
   with open("dados.txt", "r") as f:
-      conteudo = f.read()       → lê tudo de uma vez
-      # ou
-      linhas = f.readlines()    → lista de linhas
-      # ou
-      for linha in f:           → itera linha a linha (eficiente)
+      conteudo = f.read()
+  # arquivo já está fechado aqui — automaticamente
 
-O bloco with garante que o arquivo é FECHADO automaticamente, mesmo se der erro. Sempre use with!
+**Modos principais** (segundo argumento do \`open\`):
+• \`"r"\` → **read** (leitura). Padrão. Erro se o arquivo não existir.
+• \`"w"\` → **write** (escrita). **APAGA** o conteúdo existente!
+• \`"a"\` → **append** (adicionar). Escreve no final, sem apagar.
+• \`"x"\` → **exclusive create**. Cria novo, erro se já existir.
+• \`"r+"\` → leitura **e** escrita.
+• Adicione \`"b"\` para binário (\`"rb"\`, \`"wb"\`) — imagens, PDFs.
 
-Verificando se existe:
+**Métodos de leitura:**
+  f.read()        → string com TUDO de uma vez
+  f.readlines()   → lista de strings (uma por linha)
+  for linha in f: → itera linha a linha (mais eficiente em arquivos grandes)
+
+**Métodos de escrita:**
+  f.write("texto")           → escreve sem pular linha
+  f.writelines(lista_strs)   → escreve várias
+
+## 📚 Exemplos comentados
+  # Escrevendo
+  with open("dados.txt", "w") as f:
+      f.write("Linha 1\\n")            # \\n pula linha
+      f.write("Linha 2\\n")
+
+  # Lendo tudo de uma vez
+  with open("dados.txt", "r") as f:
+      conteudo = f.read()
+      print(conteudo)
+
+  # Lendo linha a linha (eficiente para arquivos grandes)
+  with open("dados.txt", "r") as f:
+      for linha in f:
+          print(linha.strip())          # strip remove o \\n do final
+
+  # Adicionando ao final sem apagar
+  with open("dados.txt", "a") as f:
+      f.write("Linha 3\\n")
+
+  # Verificando se existe antes
   import os
   if os.path.exists("dados.txt"):
-      print("Arquivo existe!")
+      print("Existe!")
 
-Modos binários (para imagens, PDFs):
-  with open("foto.png", "rb") as f:
-      dados = f.read()
+## ⚠️ Erros comuns
+• **Modo \`"w"\` apaga tudo**: abrir um arquivo com conteúdo importante em modo \`"w"\` zera ele. Use \`"a"\` para adicionar.
+• **Esquecer de fechar (sem \`with\`)**: \`f = open(...)\` sem \`f.close()\` deixa o arquivo "preso" até o programa terminar. **Sempre use \`with\`.**
+• **Codificação errada**: arquivos com acentos podem dar UnicodeDecodeError. Resolva com \`open(..., encoding="utf-8")\`.
+• **Esquecer \`\\n\` no \`write\`**: \`write\` não pula linha sozinho — o que você escreve sai colado.
 
-Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prático que escrever linha a linha.`,
+## 🚀 Quando usar na prática
+Salvar configurações do app, exportar relatórios em CSV, registrar logs de erro, ler arquivos de input (planilhas, JSON, textos), fazer cache local de dados pesados. Para dados estruturados (listas, dicionários), prefira o módulo \`json\` (\`json.dump\`/\`json.load\`) — é muito mais prático que escrever linha por linha.`,
         starterCode: '# Escreva e leia o arquivo\n',
         solution: 'with open("dados.txt", "w") as f:\n    f.write("Olá, arquivo!")\n\nwith open("dados.txt", "r") as f:\n    print(f.read())',
         expectedOutput: "Olá, arquivo!",
@@ -503,49 +783,64 @@ Dica: Para dados estruturados, use json.dump() e json.load() — muito mais prá
         id: "1-12",
         title: "Módulos e Imports",
         description: "Importe o módulo **math** e calcule a raiz quadrada de **144** usando `math.sqrt()`. Exiba o resultado.",
-        theory: `Módulos organizam o código em arquivos separados e permitem reutilizar funcionalidades. Python tem centenas de módulos prontos na biblioteca padrão!
+        theory: `# Módulos e Imports
 
-Importando módulos:
+## 💡 O que é
+Um **módulo** é um arquivo \`.py\` cheio de funções, classes e variáveis prontas para usar. Em vez de reinventar tudo, você **importa** o módulo e ganha acesso ao que tem dentro. Python já vem com **centenas** de módulos prontos (a "biblioteca padrão") — e ainda existem milhares no PyPI.
+
+## 🌍 Analogia do mundo real
+Imagine uma **caixa de ferramentas**: você não fabrica martelo do zero toda vez que precisa — abre a caixa e pega. O \`import math\` é exatamente isso: "abre a caixa de ferramentas matemáticas". \`math.sqrt(16)\` é "pega a ferramenta sqrt da caixa math". E \`pip install\` é ir até a loja comprar uma caixa nova.
+
+## 🔧 Sintaxe e como funciona
+**Quatro formas de importar:**
   import math
-  print(math.sqrt(16))  → 4.0
-  print(math.pi)        → 3.14159...
+  math.sqrt(16)              # acesso pelo prefixo do módulo
 
-Importando funções específicas:
-  from math import sqrt, pi
-  print(sqrt(16))       → 4.0 (sem prefixo math.)
+  from math import sqrt
+  sqrt(16)                   # importa só a função, sem prefixo
 
-Importando com alias:
-  import numpy as np
-  import pandas as pd
+  from math import sqrt, pi  # importa várias de uma vez
+  print(pi)
 
-Módulos úteis da biblioteca padrão:
-  math       → funções matemáticas (sqrt, ceil, floor, pi)
-  random     → números aleatórios (random, randint, choice)
-  datetime   → datas e horários
-  os         → sistema operacional (arquivos, pastas)
-  json       → ler/escrever JSON
-  re         → expressões regulares
-  collections → estruturas especiais (Counter, defaultdict)
-  itertools  → iteradores eficientes
+  import numpy as np         # alias (apelido) — convenção em libs grandes
+  np.array([1, 2, 3])
 
-Criando seus módulos:
-  # utils.py
+**Como Python encontra o módulo:** procura no diretório atual, depois nos módulos da biblioteca padrão, depois nos pacotes instalados via \`pip\`.
+
+## 📚 Exemplos comentados
+  import math
+  print(math.sqrt(144))        # 12.0
+  print(math.pi)               # 3.141592...
+  print(math.ceil(4.1))        # 5 (arredonda para cima)
+
+  import random
+  print(random.randint(1, 6))  # número entre 1 e 6 (dado!)
+  print(random.choice(["pedra", "papel", "tesoura"]))
+
+  from datetime import datetime
+  agora = datetime.now()
+  print(agora.strftime("%d/%m/%Y"))
+
+  # Criando seu próprio módulo
+  # arquivo: utils.py
   def saudacao(nome):
       return f"Olá, {nome}!"
 
-  # main.py
+  # arquivo: main.py
   from utils import saudacao
   print(saudacao("Ana"))
 
-Pacotes (pastas com módulos):
-  meu_projeto/
-    __init__.py      → marca como pacote
-    utils.py
-    models.py
+**Módulos da biblioteca padrão que vale conhecer:**
+\`math\` (matemática), \`random\` (aleatórios), \`datetime\` (datas), \`os\` (sistema operacional), \`json\` (JSON), \`re\` (regex), \`collections\` (estruturas especiais), \`itertools\` (iteradores).
 
-  from meu_projeto.utils import saudacao
+## ⚠️ Erros comuns
+• **\`from módulo import *\`**: importa TUDO e polui o namespace — pode sobrescrever variáveis suas sem aviso. Evite.
+• **Conflito de nome**: criar um arquivo \`math.py\` na sua pasta pode fazer Python importar o seu em vez do oficial. Não use nomes de módulos famosos.
+• **Esquecer de instalar**: \`import requests\` falha se o pacote não foi instalado. Rode \`pip install requests\` primeiro.
+• **Import circular**: A importa B que importa A → ImportError. Reorganize o código.
 
-Instalando pacotes externos: pip install requests`,
+## 🚀 Quando usar na prática
+**Sempre** que precisar de algo que provavelmente alguém já fez: cálculo de juros (\`decimal\`), parsing de URL (\`urllib\`), criptografia (\`hashlib\`), envio de e-mail (\`smtplib\`), manipulação de planilhas (\`openpyxl\`, via pip), requisições HTTP (\`requests\`). Antes de implementar do zero, pesquise — quase sempre tem módulo pronto.`,
         starterCode: '# Importe math e calcule\n',
         solution: 'import math\nprint(math.sqrt(144))',
         expectedOutput: "12.0",
@@ -559,58 +854,90 @@ Instalando pacotes externos: pip install requests`,
         id: "1-13",
         title: "Orientação a Objetos",
         description: "Crie uma classe **Carro** com atributos `marca` e `modelo` e um método `info()` que retorna **\"[marca] [modelo]\"**.",
-        theory: `Programação Orientada a Objetos (POO) organiza o código em "objetos" que combinam dados (atributos) e comportamentos (métodos).
+        theory: `# Orientação a Objetos
 
-Criando uma classe:
+## 💡 O que é
+**POO** (Programação Orientada a Objetos) é um jeito de organizar código em **objetos** que combinam **dados** (atributos) e **comportamentos** (métodos). Em vez de funções soltas e variáveis espalhadas, você junta tudo o que pertence a uma "coisa" no mesmo lugar.
+
+## 🌍 Analogia do mundo real
+Uma **classe** é como a **planta de um carro** desenhada pelo engenheiro. Um **objeto** (instância) é cada carro REAL fabricado a partir dessa planta. Todos seguem a mesma planta (mesmos atributos: cor, marca, modelo; mesmos métodos: ligar, frear), mas cada carro tem seus próprios valores (um vermelho, outro azul). \`__init__\` é a linha de montagem que dá os valores iniciais; \`self\` é o "este carro aqui" que cada método se refere.
+
+## 🔧 Sintaxe e como funciona
+Definindo uma classe:
   class Carro:
       def __init__(self, marca, modelo):
-          self.marca = marca
+          self.marca = marca       # atributo
           self.modelo = modelo
 
-      def info(self):
+      def info(self):              # método
           return f"{self.marca} {self.modelo}"
 
-  meu_carro = Carro("Toyota", "Corolla")
-  print(meu_carro.info())  → "Toyota Corolla"
+  meu_carro = Carro("Toyota", "Corolla")   # cria um objeto
+  print(meu_carro.info())                  # Toyota Corolla
 
-Conceitos-chave:
-  class → define o "molde"
-  __init__ → construtor (inicializa o objeto)
-  self → referência ao próprio objeto
-  Instância → objeto criado a partir da classe
+**Conceitos-chave:**
+• \`class\` → palavra-chave para definir a planta. Use \`PascalCase\` no nome.
+• \`__init__\` → o **construtor**, chamado automaticamente ao criar o objeto.
+• \`self\` → referência ao próprio objeto. SEMPRE primeiro parâmetro dos métodos.
+• \`atributo\` → dado guardado dentro do objeto (\`self.marca\`).
+• \`método\` → função que pertence à classe.
 
-Herança — reutilizar código:
+**Herança** — uma classe pode reutilizar outra:
   class Veiculo:
       def __init__(self, marca):
           self.marca = marca
       def ligar(self):
-          return "Veículo ligado!"
+          return "Ligado!"
 
-  class Carro(Veiculo):
+  class Carro(Veiculo):                # Carro HERDA de Veiculo
       def __init__(self, marca, portas):
-          super().__init__(marca)
+          super().__init__(marca)      # chama o init do pai
           self.portas = portas
 
   c = Carro("Ford", 4)
-  c.ligar()  → "Veículo ligado!" (herdado)
+  print(c.ligar())  # "Ligado!" — método herdado
 
-Encapsulamento:
-  class Conta:
-      def __init__(self, saldo):
-          self.__saldo = saldo    # privado (convenção __)
+## 📚 Exemplos comentados
+  class ContaBancaria:
+      def __init__(self, titular, saldo=0):
+          self.titular = titular
+          self.saldo = saldo
 
       def depositar(self, valor):
           if valor > 0:
-              self.__saldo += valor
+              self.saldo += valor
+              return f"Depósito de R$ {valor}. Saldo: R$ {self.saldo}"
+          return "Valor inválido"
 
-      def ver_saldo(self):
-          return self.__saldo
+      def sacar(self, valor):
+          if 0 < valor <= self.saldo:
+              self.saldo -= valor
+              return f"Saque de R$ {valor}. Saldo: R$ {self.saldo}"
+          return "Saldo insuficiente"
 
-Métodos especiais (dunder methods):
-  __str__  → representação em string (print)
-  __len__  → len(objeto)
-  __eq__   → comparação com ==
-  __repr__ → representação para debug`,
+  conta = ContaBancaria("Ana", 100)
+  print(conta.depositar(50))   # Saldo: R$ 150
+  print(conta.sacar(30))       # Saldo: R$ 120
+
+  # Métodos especiais (dunder)
+  class Ponto:
+      def __init__(self, x, y):
+          self.x = x
+          self.y = y
+      def __str__(self):                         # define como print mostra
+          return f"Ponto({self.x}, {self.y})"
+
+  p = Ponto(3, 4)
+  print(p)                # Ponto(3, 4)
+
+## ⚠️ Erros comuns
+• **Esquecer o \`self\`**: \`def info():\` em vez de \`def info(self):\` → TypeError.
+• **Acessar atributo sem \`self.\` dentro do método**: \`return marca\` → NameError. Use \`return self.marca\`.
+• **Confundir classe com instância**: \`Carro.ligar()\` em vez de \`meu_carro.ligar()\` → TypeError (faltou self).
+• **Esquecer \`super().__init__()\`** na herança: o construtor do pai não roda e atributos somem.
+
+## 🚀 Quando usar na prática
+POO brilha quando você tem **muitas "coisas" do mesmo tipo** com estado próprio: usuários de um app (cada um tem nome, e-mail, histórico), produtos de uma loja, personagens de um jogo, requisições HTTP. Frameworks como Django, FastAPI e PyTorch são fortemente baseados em classes. Para scripts curtos sem estado complexo, funções soltas costumam ser suficientes — POO é ferramenta, não regra.`,
         starterCode: '# Crie a classe Carro\n',
         solution: 'class Carro:\n    def __init__(self, marca, modelo):\n        self.marca = marca\n        self.modelo = modelo\n    def info(self):\n        return f"{self.marca} {self.modelo}"\n\nc = Carro("Toyota", "Corolla")\nprint(c.info())',
         expectedOutput: "Toyota Corolla",
@@ -625,40 +952,72 @@ Métodos especiais (dunder methods):
         id: "1-14",
         title: "Lambda e Map/Filter",
         description: "Use **lambda** com **map()** para triplicar cada número da lista `[2, 4, 6, 8]` e exiba o resultado.",
-        theory: `Lambda são funções anônimas (sem nome) de uma linha. Perfeitas para operações simples e rápidas.
+        theory: `# Lambda, map() e filter()
 
-Sintaxe:
+## 💡 O que é
+**Lambda** é uma função pequena, de **uma linha**, sem nome. \`map()\` aplica uma função em **cada item** de uma sequência. \`filter()\` mantém apenas os itens que **passam num teste**. Juntos, formam o estilo "funcional" do Python.
+
+## 🌍 Analogia do mundo real
+Imagine uma **fábrica com esteiras**:
+• \`map\` é a **estação de pintura**: cada item passa, recebe a pintura (a transformação) e segue.
+• \`filter\` é o **inspetor de qualidade**: cada item passa, e só os aprovados continuam.
+• \`lambda\` é o **operário simples** dessas estações — uma instrução curta, sem precisar de manual de 30 páginas (uma função normal com \`def\`).
+
+## 🔧 Sintaxe e como funciona
+**Lambda:**
   lambda parametros: expressão
 
-Exemplos:
+Equivalente a:
+  def funcao(parametros):
+      return expressão
+
+**map(função, iterável)** → aplica a função em cada item:
+  list(map(funcao, lista))
+
+**filter(função, iterável)** → mantém só onde a função devolve True:
+  list(filter(funcao, lista))
+
+(Tanto map quanto filter devolvem um *iterator preguiçoso*; envolva em \`list()\` para ver o resultado.)
+
+## 📚 Exemplos comentados
+  # Lambda básica
   dobro = lambda x: x * 2
-  print(dobro(5))  → 10
+  print(dobro(5))                       # 10
 
   soma = lambda a, b: a + b
-  print(soma(3, 7))  → 10
+  print(soma(3, 7))                     # 10
 
-map() — aplica função a cada item:
+  # map: transforma cada item
   nums = [1, 2, 3, 4]
   dobros = list(map(lambda x: x * 2, nums))
   # [2, 4, 6, 8]
 
-filter() — filtra por condição:
-  nums = [1, 2, 3, 4, 5, 6]
-  pares = list(filter(lambda x: x % 2 == 0, nums))
+  # filter: mantém só os que passam
+  pares = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4, 5, 6]))
   # [2, 4, 6]
 
-sorted() com key:
+  # sorted() com key= aceita lambda — ordena por critério customizado
   nomes = ["Carlos", "Ana", "Bruno"]
-  ordenado = sorted(nomes, key=lambda x: len(x))
+  por_tamanho = sorted(nomes, key=lambda x: len(x))
   # ["Ana", "Bruno", "Carlos"]
 
   alunos = [{"nome": "Ana", "nota": 8}, {"nome": "Bruno", "nota": 9}]
   por_nota = sorted(alunos, key=lambda a: a["nota"], reverse=True)
+  # Bruno primeiro (nota maior)
 
-Lambda vs def:
-  ✅ Lambda para operações simples de uma linha
-  ❌ Lambda para lógica complexa (use def)
-  ✅ Lambda como argumento de map/filter/sorted`,
+  # Combinando map + filter
+  numeros = [1, 2, 3, 4, 5, 6]
+  quadrados_pares = list(map(lambda x: x**2, filter(lambda x: x%2==0, numeros)))
+  # [4, 16, 36]
+
+## ⚠️ Erros comuns
+• **Lambda com lógica complexa**: se ficou ilegível, transforme em \`def\` com nome.
+• **Esquecer \`list()\`**: \`map(...)\` sozinho devolve um objeto map, não uma lista. Para ver, envolva em \`list()\`.
+• **\`filter(None, lista)\`**: passar \`None\` como função filtra valores "falsy" (0, "", None) — comportamento útil mas que pega gente desprevenida.
+• **List comprehension às vezes é mais legível**: \`[x*2 for x in nums]\` é geralmente preferível a \`list(map(lambda x: x*2, nums))\` em código Python idiomático.
+
+## 🚀 Quando usar na prática
+\`lambda + sorted/min/max\` é o caso mais comum: ordenar uma lista de objetos por um campo (\`sorted(produtos, key=lambda p: p.preco)\`). \`map\` e \`filter\` aparecem muito em código que processa streams de dados (logs, eventos, registros de banco). Em código mais "Pythonic" do dia a dia, list comprehensions tendem a vencer — mas conhecer lambda é essencial porque APIs de bibliotecas (Pandas, sorted, etc.) pedem funções como argumento o tempo todo.`,
         starterCode: '# Use lambda com map\nnums = [2, 4, 6, 8]\n',
         solution: 'nums = [2, 4, 6, 8]\nresultado = list(map(lambda x: x * 3, nums))\nprint(resultado)',
         expectedOutput: "[6, 12, 18, 24]",
