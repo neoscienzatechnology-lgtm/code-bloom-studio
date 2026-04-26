@@ -3299,47 +3299,61 @@ Em **todo site moderno**: layout muda de coluna única para grid de 3, menu vira
         id: "4-7",
         title: "Pseudo-elementos",
         description: "Use **::before** para adicionar um emoji 🔥 antes de todo elemento `.destaque`.",
-        theory: `Pseudo-elementos criam "elementos virtuais" dentro do CSS — sem adicionar HTML extra!
+        theory: `# Pseudo-elementos (::before / ::after)
 
-Pseudo-elementos principais:
-  ::before → insere conteúdo ANTES do elemento
-  ::after  → insere conteúdo DEPOIS do elemento
-  ::first-line → estiliza a primeira linha de texto
-  ::first-letter → estiliza a primeira letra
-  ::selection → estiliza texto selecionado
+## 💡 O que é
+Pseudo-elementos são **elementos "fantasmas"** que o CSS injeta **antes** ou **depois** do conteúdo real de um elemento, **sem precisar mexer no HTML**. Servem para ícones, ornamentos, tooltips e efeitos decorativos.
 
-Sintaxe:
+## 🌍 Analogia do mundo real
+É como **pendurar um adesivo decorativo** num porta-retrato sem furar a parede: o porta-retrato (HTML) continua intacto, mas o visual ganha algo extra (o adesivo = pseudo-elemento). \`::before\` é colar o adesivo **antes**, \`::after\` é colar **depois** — e você pode estilizá-los como qualquer outro elemento.
+
+## 🔧 Sintaxe e como funciona
   .destaque::before {
-    content: "🔥 ";  /* OBRIGATÓRIO! */
+    content: "🔥 ";       /* OBRIGATÓRIO — sem isso, nada aparece */
+    color: orange;
+    margin-right: 4px;
   }
 
-  .citacao::before {
-    content: """;
-    font-size: 3rem;
-    color: purple;
-  }
+Pseudo-elementos disponíveis:
+• \`::before\` — antes do conteúdo.
+• \`::after\` — depois do conteúdo.
+• \`::first-line\` — primeira linha de texto.
+• \`::first-letter\` — primeira letra (estilo "capitular").
+• \`::selection\` — texto selecionado pelo usuário.
 
-Usos criativos:
-  /* Linha decorativa */
+⚠️ Use **dois pontos** (\`::\`) na sintaxe moderna; \`:\` ainda funciona para compatibilidade antiga.
+
+## 📚 Exemplos comentados
+  /* 1. Ícone antes do texto */
+  .destaque::before { content: "🔥 "; }
+
+  /* 2. Linha decorativa abaixo de um título */
   .titulo::after {
-    content: "";
+    content: "";              /* vazio, mas obrigatório */
     display: block;
-    width: 50px;
-    height: 3px;
+    width: 48px; height: 3px;
     background: purple;
     margin-top: 8px;
   }
 
-  /* Tooltip */
+  /* 3. Tooltip lendo um atributo data-* do HTML */
+  .info { position: relative; }
   .info::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    background: #333;
-    color: white;
-    padding: 4px 8px;
+    content: attr(data-tooltip);   /* puxa o texto do data-tooltip */
+    position: absolute; bottom: 100%; left: 0;
+    background: #333; color: white;
+    padding: 4px 8px; border-radius: 4px;
+    opacity: 0; transition: opacity .2s;
   }
+  .info:hover::after { opacity: 1; }
 
-IMPORTANTE: ::before e ::after PRECISAM da propriedade content para aparecer, mesmo que vazia (content: "").`,
+## ⚠️ Erros comuns
+• Esquecer **\`content\`** → o pseudo-elemento simplesmente **não renderiza**, mesmo com width/height/background definidos.
+• Tentar adicionar pseudo-elemento em **elementos vazios** como \`<img>\`, \`<input>\`, \`<br>\` → não funciona; eles não têm "conteúdo" onde inserir.
+• Esquecer **\`position: relative\`** no pai quando o \`::after\` usa \`position: absolute\` → o tooltip vaza para fora ou se ancora no lugar errado.
+
+## 🚀 Quando usar na prática
+Adicionar **ícones decorativos** sem poluir o HTML, criar **tooltips** simples só com CSS, fazer **bordas/divisores ornamentais**, números automáticos em listas customizadas, marcas d'água. Sempre que quiser **um detalhe visual extra** sem precisar criar uma \`<div>\` só para isso, pseudo-elementos são a resposta.`,
         starterCode: '/* Use pseudo-elementos */\n',
         solution: '.destaque::before {\n  content: "🔥 ";\n}',
         expectedOutput: "::before",
