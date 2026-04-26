@@ -3433,45 +3433,52 @@ Múltiplas propriedades de uma vez:
         id: "4-9",
         title: "Box Model",
         description: "Explique e aplique o **box model**: crie um `.card` com padding de **20px**, margin de **16px** e borda de **2px solid**. Use `box-sizing: border-box`.",
-        theory: `O Box Model é o fundamento de todo layout CSS. Todo elemento HTML é uma "caixa" com 4 camadas:
+        theory: `# Box Model — a caixa de todo elemento
 
-De dentro para fora:
-  1. Content → o conteúdo (texto, imagem)
-  2. Padding → espaço INTERNO (entre conteúdo e borda)
-  3. Border  → a borda do elemento
-  4. Margin  → espaço EXTERNO (entre este e outros elementos)
+## 💡 O que é
+Todo elemento HTML renderizado é uma **caixa retangular** com 4 camadas concêntricas: **content** (conteúdo), **padding** (espaço interno), **border** (borda), **margin** (espaço externo). Entender essa estrutura é o que permite **calcular tamanhos** sem surpresa.
 
-Visualização:
-  ┌──────── margin ─────────┐
-  │  ┌──── border ────────┐ │
-  │  │  ┌── padding ───┐  │ │
-  │  │  │  [content]   │  │ │
-  │  │  └──────────────┘  │ │
-  │  └────────────────────┘ │
-  └─────────────────────────┘
+## 🌍 Analogia do mundo real
+Pense num **presente embrulhado**: o **brinquedo** é o content, o **papel-bolha** ao redor é o padding, a **caixa de papelão** é o border, e o **espaço vazio** entre essa caixa e os outros pacotes na mesa é o margin. Mexer em cada camada muda **só** aquela camada.
 
-Propriedades:
-  padding: 20px;              → todos os lados
-  padding: 10px 20px;         → vertical horizontal
-  padding: 5px 10px 15px 20px; → top right bottom left
-  padding-top: 10px;          → só o topo
-
-  margin: funciona igual ao padding
-  margin: 0 auto;             → centraliza horizontalmente!
-
-box-sizing — MUITO IMPORTANTE:
-  /* Sem border-box (padrão): */
-  width: 200px + padding + border = tamanho total MAIOR que 200px
-
-  /* Com border-box: */
-  width: 200px INCLUI padding e border
-
-  /* Sempre use: */
-  * {
-    box-sizing: border-box;
+## 🔧 Sintaxe e como funciona
+  .card {
+    width: 300px;
+    padding: 20px;        /* espaço dentro, ao redor do conteúdo */
+    border: 2px solid #ccc;
+    margin: 16px;         /* espaço fora, separando dos vizinhos */
   }
 
-Margin collapse: margins verticais de elementos adjacentes se sobrepõem (o maior vence). Isso NÃO acontece com padding!`,
+A grande pegadinha é o **\`box-sizing\`**:
+• \`content-box\` (padrão antigo) → \`width: 300px\` é só o conteúdo. Padding e border **somam por fora** → caixa fica 300 + 40 + 4 = 344px.
+• \`border-box\` (recomendado) → \`width: 300px\` **inclui** padding e border. O que você vê é o que você pede.
+
+Reset universal (faça em todo projeto):
+  *, *::before, *::after { box-sizing: border-box; }
+
+## 📚 Exemplos comentados
+  /* 1. Padding com 1, 2, 3 ou 4 valores */
+  padding: 20px;              /* todos os lados */
+  padding: 10px 20px;         /* vertical | horizontal */
+  padding: 5px 10px 15px 20px; /* top | right | bottom | left (sentido horário) */
+
+  /* 2. Centralizar bloco horizontalmente */
+  .card { width: 600px; margin: 0 auto; }   /* auto nas laterais = centraliza */
+
+  /* 3. Card típico com border-box */
+  * { box-sizing: border-box; }
+  .card {
+    width: 100%; padding: 24px; border: 1px solid #eee;
+    /* width continua 100%, sem estourar */
+  }
+
+## ⚠️ Erros comuns
+• Esquecer **\`box-sizing: border-box\`** → seu card de \`width: 100%\` + \`padding: 20px\` **estoura o pai** porque vira 100% + 40px.
+• **Margin collapse**: dois elementos verticais com margin colapsam — só vale o **maior**, não a soma. Não acontece com **padding** nem em flex/grid.
+• Aplicar \`width: 100%\` num input com border e padding sem \`border-box\` → input fica maior que o container e quebra o layout.
+
+## 🚀 Quando usar na prática
+**Sempre** — toda página estilizada depende de entender o box model. O reset \`* { box-sizing: border-box }\` é prática padrão (incluído por defaut em frameworks como Tailwind). Quando algo "ficou maior do que devia" ou "tem espaço estranho que não some", **olhe primeiro padding, margin e box-sizing**.`,
         starterCode: '/* Aplique o box model */\n',
         solution: '* {\n  box-sizing: border-box;\n}\n.card {\n  padding: 20px;\n  margin: 16px;\n  border: 2px solid #6c5ce7;\n}',
         expectedOutput: "box-sizing",
