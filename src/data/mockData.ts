@@ -1044,30 +1044,57 @@ Equivalente a:
         id: "2-1",
         title: "Console.log",
         description: "Use `console.log()` para exibir **\"Olá, JavaScript!\"** no console.",
-        theory: `console.log() é a função mais usada para depuração em JavaScript. Ela exibe valores no console do navegador ou terminal.
+        theory: `# console.log
+
+## 💡 O que é
+\`console.log()\` é a função que **mostra valores no console** do navegador (DevTools, F12) ou do terminal Node.js. É a ferramenta nº 1 para "espiar" o que seu código está fazendo enquanto roda.
 
 ![JavaScript no console do navegador](https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=600&h=300&fit=crop)
 
-Como usar:
-  console.log("texto")     → exibe texto
-  console.log(42)           → exibe número
-  console.log(true)         → exibe booleano
-  console.log(variavel)     → exibe o valor da variável
+## 🌍 Analogia do mundo real
+Pense no console como o **painel de instrumentos do carro**: o motor (seu código) trabalha por baixo, mas o painel mostra velocidade, temperatura, gasolina. Sem painel, você dirige no escuro. \`console.log\` é como pedir ao painel: "mostra aí o valor dessa variável agora".
 
-Você pode exibir vários valores de uma vez:
-  console.log("Nome:", nome, "Idade:", idade)
+## 🔧 Sintaxe e como funciona
+A receita:
+  console.log(valor)
 
-Existem outros métodos do console:
-  console.warn("aviso")   → exibe um alerta amarelo
-  console.error("erro")   → exibe um erro vermelho
-  console.table([1,2,3])  → exibe em formato de tabela
+• \`console\` → o objeto global "console" (vem do navegador/Node).
+• \`.log\` → o método para imprimir.
+• \`(valor)\` → o que você quer ver: texto, número, variável, objeto, array, expressão.
 
-Em JavaScript, toda linha termina com ponto e vírgula (;) — não é obrigatório, mas é uma boa prática.
+Você pode passar **vários valores** separados por vírgula — saem com espaço entre eles:
+  console.log("Nome:", nome, "Idade:", idade);
 
-Strings podem usar aspas simples, duplas ou crases (template literals):
-  console.log('simples')
-  console.log("duplas")
-  console.log(\`crases\`)`,
+**Outros métodos do console** que vale conhecer:
+  console.warn("aviso")     → linha amarela com ⚠️
+  console.error("erro")     → linha vermelha com ❌
+  console.table([...])      → mostra arrays/objetos como tabela bonita
+  console.dir(objeto)       → expande propriedades de um objeto
+
+## 📚 Exemplos comentados
+  console.log("Olá!");                      // Olá!
+  console.log(42);                          // 42 (número, sem aspas)
+  console.log(true);                        // true (booleano)
+  console.log(2 + 3);                       // 5 (calcula antes)
+  console.log("Soma:", 2 + 3);              // Soma: 5
+
+  const usuario = { nome: "Ana", idade: 25 };
+  console.log(usuario);                     // {nome: 'Ana', idade: 25}
+  console.table([usuario, { nome: "Bruno" }]); // tabela formatada
+
+  // Strings: 3 tipos de aspas
+  console.log('simples');
+  console.log("duplas");
+  console.log(\`crases\`);                    // template literal
+
+## ⚠️ Erros comuns
+• **\`Console.log\`** com C maiúsculo → ReferenceError. JavaScript é case-sensitive, é tudo minúsculo.
+• **Esquecer parênteses**: \`console.log "oi"\` → SyntaxError. Sempre use \`(...)\`.
+• **\`console.log(variavel)\` antes de declará-la**: ReferenceError. Declare a variável primeiro.
+• **Confundir console.log com return**: \`console.log\` mostra na tela mas NÃO devolve o valor para o código que chamou.
+
+## 🚀 Quando usar na prática
+Em desenvolvimento, console.log é seu **detector de problemas**: imprima valores em pontos-chave para descobrir onde algo deu errado. Em código de produção, prefira ferramentas de logging adequadas (Sentry, LogRocket) e remova/silencie os console.log antes do deploy. Profissionais também usam \`console.table\` e \`console.dir\` para inspecionar arrays de objetos rapidamente.`,
         starterCode: '// Exiba a mensagem\n',
         solution: 'console.log("Olá, JavaScript!");',
         expectedOutput: "Olá, JavaScript!",
@@ -1081,31 +1108,65 @@ Strings podem usar aspas simples, duplas ou crases (template literals):
         id: "2-2",
         title: "let, const e var",
         description: "Declare uma constante `PI` com valor 3.14 e uma variável `raio` com valor 5. Calcule a **área do círculo** (PI * raio²) e exiba o resultado.",
-        theory: `Em JavaScript moderno (ES6+), usamos let e const para declarar variáveis. var é o jeito antigo e deve ser evitado.
+        theory: `# let, const e var
 
-const — para valores que NUNCA mudam:
+## 💡 O que é
+São as **três formas de declarar variáveis** em JavaScript. Em código moderno (ES6+), use \`const\` por padrão, \`let\` quando precisar reatribuir, e **evite \`var\`** — ele tem comportamento confuso de escopo que causa bugs.
+
+## 🌍 Analogia do mundo real
+Pense em **etiquetas de produtos no estoque**:
+• \`const\` é uma etiqueta **lacrada com cola permanente**: depois de colada, não muda de produto.
+• \`let\` é uma etiqueta de **velcro**: você pode tirar e colar em outro produto quando quiser.
+• \`var\` é a etiqueta antiga, **bagunçada**, que às vezes "vaza" para outras prateleiras (bug de escopo) — descontinuada na prática.
+
+## 🔧 Sintaxe e como funciona
+  const NOME = valor;       // não pode reatribuir
+  let nome = valor;         // pode reatribuir
+  var nome = valor;         // legado — evite
+
+**Diferença crítica de escopo:**
+• \`let\` e \`const\` têm **escopo de bloco** (\`{ }\`): existem só dentro do bloco onde foram criados (if, for, função).
+• \`var\` tem **escopo de função**: vaza para fora de blocos. Causa surpresas.
+
+**Regra de ouro:** Comece com \`const\`. Só troque para \`let\` se precisar reatribuir.
+
+## 📚 Exemplos comentados
   const PI = 3.14;
-  const NOME = "CodeQuest";
-  // PI = 4; ← ERRO! Não pode reatribuir
+  // PI = 4;            ← TypeError: Assignment to constant variable
 
-let — para valores que PODEM mudar:
   let pontuacao = 0;
-  pontuacao = 10;  // OK!
-  let nivel = 1;
-  nivel++;         // OK! nivel agora é 2
+  pontuacao = 10;        // OK, foi reatribuída
+  pontuacao++;           // pontuacao = 11
 
-var — EVITE! Tem comportamento confuso com escopo:
-  var x = 10; // funciona, mas prefira let/const
+  const usuario = { nome: "Ana" };
+  usuario.nome = "Bruno";  // OK! Mudei a propriedade, não a variável
+  // usuario = {};        ← Erro! Não posso reatribuir o objeto inteiro
 
-Regra de ouro: Use const por padrão. Só mude para let quando precisar reatribuir.
+  // Escopo de bloco com let
+  if (true) {
+    let x = 10;
+  }
+  // console.log(x);     ← ReferenceError: x não existe aqui
 
-Tipos de dados:
-  const texto = "string";     // String
-  const numero = 42;          // Number
-  const decimal = 3.14;       // Number
-  const booleano = true;      // Boolean
-  const nulo = null;          // Null
-  const indefinido = undefined; // Undefined`,
+  // var "vaza" do bloco — comportamento bizarro
+  if (true) { var y = 10; }
+  console.log(y);        // 10 (vazou! não deveria existir aqui)
+
+**Tipos de dados primitivos:**
+  const texto = "string";       // String
+  const numero = 42;            // Number (inteiro ou decimal)
+  const booleano = true;        // Boolean
+  const nulo = null;            // Null (intencionalmente vazio)
+  const indef = undefined;      // Undefined (não foi atribuído)
+
+## ⚠️ Erros comuns
+• **Reatribuir \`const\`**: \`const x = 1; x = 2;\` → TypeError.
+• **Esquecer que \`const\` em objeto/array protege a referência, não o conteúdo**: você pode mudar propriedades, só não pode trocar o objeto inteiro.
+• **Usar variável antes de declarar**: \`console.log(x); let x = 5;\` → ReferenceError ("temporal dead zone").
+• **Misturar \`var\` com \`let\` no mesmo código**: confunde escopo. Adote \`const\`/\`let\` em todo lugar.
+
+## 🚀 Quando usar na prática
+Em código real, **~90% das declarações são \`const\`**: importações, configurações, funções, componentes React, objetos com dados que você só lê. \`let\` aparece em contadores de loops e em estado mutável local. \`var\` só vai aparecer em códigos antigos que você precisa manter — em projetos novos, simplesmente não use.`,
         starterCode: '// Declare as variáveis e calcule\n',
         solution: 'const PI = 3.14;\nlet raio = 5;\nconsole.log(PI * raio * raio);',
         expectedOutput: "78.5",
@@ -1116,34 +1177,75 @@ Tipos de dados:
         id: "2-3",
         title: "Arrow Functions",
         description: "Crie uma arrow function chamada `dobro` que recebe um número e retorna o **dobro** dele. Exiba o resultado de `dobro(7)`.",
-        theory: `Arrow functions são uma forma moderna e concisa de escrever funções em JavaScript (ES6+).
+        theory: `# Arrow Functions
 
-Função tradicional:
+## 💡 O que é
+**Arrow functions** (\`=>\`) são a forma moderna e compacta de escrever funções em JavaScript (ES6+). Mesmo comportamento de \`function\`, mas com sintaxe mais curta e uma diferença importante em \`this\`.
+
+## 🌍 Analogia do mundo real
+Imagine duas formas de assinar um documento:
+• \`function\` é a **assinatura completa** com nome, RG e endereço — formal, longa, oficial.
+• \`=>\` é a **rubrica rápida** — mesma validade, ocupa menos espaço, é o que você usa no dia a dia.
+
+A "seta" \`=>\` literalmente aponta da entrada (parâmetros) para a saída (resultado).
+
+## 🔧 Sintaxe e como funciona
+**Função tradicional:**
   function somar(a, b) {
     return a + b;
   }
 
-Arrow function equivalente:
+**Arrow function equivalente:**
   const somar = (a, b) => {
     return a + b;
   };
 
-Versão curta (uma linha, return implícito):
+**Versão curta** (uma linha → \`return\` implícito):
   const somar = (a, b) => a + b;
 
-Com um só parâmetro (parênteses opcionais):
-  const dobro = n => n * 2;
-  const quadrado = n => n ** 2;
+**Variações:**
+• Um parâmetro: parênteses opcionais → \`n => n * 2\`
+• Sem parâmetros: parênteses vazios obrigatórios → \`() => "Olá"\`
+• Vários parâmetros: parênteses obrigatórios → \`(a, b, c) => a + b + c\`
+• Retornar objeto: envolva em parênteses → \`() => ({ x: 1 })\`  (sem isso, \`{}\` vira bloco)
 
-Sem parâmetros:
-  const saudar = () => "Olá!";
+**Diferença crítica:** arrow functions **NÃO têm seu próprio \`this\`** — herdam do contexto onde foram criadas. Isso é o motivo principal de usá-las em callbacks e React.
 
-Quando usar:
-• Callbacks: [1,2,3].map(n => n * 2)
-• Funções curtas e simples
-• Quando não precisa de this próprio
+## 📚 Exemplos comentados
+  // Sintaxes equivalentes — mesma coisa, mais curta
+  const dobro = function(n) { return n * 2; };
+  const dobro = (n) => { return n * 2; };
+  const dobro = (n) => n * 2;
+  const dobro = n => n * 2;          // parêntese opcional num só param
 
-Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram criadas. Isso é útil em React e callbacks!`,
+  // Como callback: extremamente comum
+  const nums = [1, 2, 3];
+  const dobros = nums.map(n => n * 2);   // [2, 4, 6]
+
+  // Sem parâmetros
+  const agora = () => Date.now();
+
+  // Retornando objeto (cuidado com os parênteses!)
+  const usuario = (nome) => ({ nome, ativo: true });
+
+  // Diferença de "this"
+  class Timer {
+    constructor() {
+      this.segundos = 0;
+      // arrow function herda this da classe — funciona!
+      setInterval(() => { this.segundos++; }, 1000);
+      // function tradicional teria this errado — bug clássico
+    }
+  }
+
+## ⚠️ Erros comuns
+• **\`return\` numa arrow com bloco**: \`n => { n * 2 }\` retorna \`undefined\` (faltou \`return\`). Use \`n => n * 2\` (sem chaves) ou adicione \`return\`.
+• **Retornar objeto sem parênteses**: \`() => { x: 1 }\` o JS lê \`{ }\` como bloco e dá erro. Envolva: \`() => ({ x: 1 })\`.
+• **Usar arrow como método de classe esperando \`this\` próprio**: arrow herda — pode dar resultado inesperado se você queria o \`this\` do objeto.
+• **Esquecer \`const\`** antes da arrow: ela precisa ser atribuída a uma variável (ou usada inline como callback).
+
+## 🚀 Quando usar na prática
+Arrow functions são o **padrão moderno** para: callbacks (\`map\`, \`filter\`, \`forEach\`), event handlers em React, funções pequenas utilitárias. Use \`function\` tradicional quando precisar de \`this\` dinâmico (raro), métodos de objeto/classe que dependam do \`this\` do dono, ou para hoisting (chamada antes da definição).`,
         starterCode: '// Crie a arrow function\n',
         solution: 'const dobro = (n) => n * 2;\nconsole.log(dobro(7));',
         expectedOutput: "14",
@@ -1158,7 +1260,61 @@ Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram cr
         id: "2-4",
         title: "Template Literals",
         description: "Crie variáveis `nome` e `lang` e use template literals para exibir: **\"Olá, [nome]! Bem-vindo ao [lang].\"**",
-        theory: "Template literals (ou template strings) usam crases em vez de aspas e permitem interpolação de variáveis e expressões.\n\nSintaxe:\n  const nome = \"Ana\";\n  const msg = `Olá, ${nome}!`;  // → \"Olá, Ana!\"\n\nInterpolação com ${}:\n  const a = 10, b = 20;\n  console.log(`Soma: ${a + b}`);  // → \"Soma: 30\"\n  console.log(`Dobro: ${a * 2}`); // → \"Dobro: 20\"\n\nStrings multilinha (sem precisar de \\n):\n  const html = `\n    <div>\n      <h1>${titulo}</h1>\n    </div>\n  `;\n\nComparação com concatenação antiga:\n  // Antigo (confuso):\n  \"Olá, \" + nome + \"! Você tem \" + idade + \" anos.\"\n  \n  // Moderno (limpo):\n  `Olá, ${nome}! Você tem ${idade} anos.`\n\nTemplate literals são MUITO mais legíveis e são o padrão em código moderno!",
+        theory: `# Template Literals
+
+## 💡 O que é
+**Template literals** (template strings) são strings escritas com **crases** \`\` \`...\` \`\` em vez de aspas. Permitem **interpolar** variáveis e expressões diretamente no texto com \`\${...}\`, e suportam **múltiplas linhas** sem precisar de \`\\n\`.
+
+## 🌍 Analogia do mundo real
+É como **preencher um formulário com lacunas** em vez de colar pedacinhos com fita: em vez de \`"Olá, " + nome + "! Você tem " + idade + " anos."\` (frágil, difícil de ler), você escreve a frase inteira e marca os buracos: \\\`Olá, \${nome}! Você tem \${idade} anos.\\\`. O formulário é a string; \`\${}\` são as lacunas.
+
+## 🔧 Sintaxe e como funciona
+  const msg = \\\`texto comum \${expressão} mais texto\\\`;
+
+• Use **crase** \\\` (não aspas).
+• Dentro de \`\${...}\` cabe **qualquer expressão JavaScript**: variáveis, operações, chamadas de função, ternários.
+• Quebras de linha dentro da crase **viram \\n no resultado** automaticamente.
+
+## 📚 Exemplos comentados
+  const nome = "Ana";
+  const msg = \\\`Olá, \${nome}!\\\`;
+  console.log(msg);                            // Olá, Ana!
+
+  // Expressão dentro de \${ }
+  const a = 10, b = 20;
+  console.log(\\\`Soma: \${a + b}\\\`);              // Soma: 30
+  console.log(\\\`Dobro: \${a * 2}\\\`);             // Dobro: 20
+
+  // Chamando função
+  const upper = (s) => s.toUpperCase();
+  console.log(\\\`HEY \${upper("ana")}!\\\`);        // HEY ANA!
+
+  // Strings multilinha — sem precisar de \\n
+  const html = \\\`
+    <div class="card">
+      <h1>\${titulo}</h1>
+      <p>\${conteudo}</p>
+    </div>
+  \\\`;
+
+  // Ternário dentro da interpolação
+  const idade = 17;
+  console.log(\\\`Você é \${idade >= 18 ? "adulto" : "menor"}\\\`);
+
+  // Comparação com a forma antiga (concatenação)
+  // Antigo (frágil):
+  "Olá, " + nome + "! Você tem " + idade + " anos.";
+  // Moderno (limpo):
+  \\\`Olá, \${nome}! Você tem \${idade} anos.\\\`;
+
+## ⚠️ Erros comuns
+• **Usar aspas em vez de crase**: \`"Olá, \${nome}"\` mostra literalmente \`\${nome}\` — só funciona com crase \\\`.
+• **Esquecer o \`$\` antes de \`{ }\`**: \\\`Olá, {nome}\\\` mostra \`{nome}\` literal. Precisa ser \`\${...}\`.
+• **Crase no meio do texto**: precisa escapar com \`\\\\\\\`\` ou trocar a estratégia.
+• **Indentação aparece na saída**: tudo entre as crases é literal — espaços e quebras de linha viram parte da string.
+
+## 🚀 Quando usar na prática
+Template literals são **a forma padrão** de construir strings com variáveis em JS moderno: mensagens de log, queries SQL, HTML dinâmico, URLs com parâmetros, mensagens de erro. Em React, são onipresentes em \`className\`, atributos dinâmicos e textos. **Aprenda e use sempre** — concatenação com \`+\` virou estilo "antigo".`,
         starterCode: '// Use template literals\n',
         solution: 'const nome = "Dev";\nconst lang = "JavaScript";\nconsole.log(`Olá, ${nome}! Bem-vindo ao ${lang}.`);',
         expectedOutput: "Olá,",
@@ -1169,37 +1325,77 @@ Arrow functions NÃO têm seu próprio this — herdam do contexto onde foram cr
         id: "2-5",
         title: "Desestruturação",
         description: "Dado o objeto `{nome: \"Ana\", idade: 25, cidade: \"SP\"}`, use desestruturação para extrair `nome` e `cidade`, e exiba ambas.",
-        theory: `Desestruturação (destructuring) permite extrair valores de objetos e arrays de forma direta e elegante.
+        theory: `# Desestruturação (Destructuring)
 
-Desestruturação de objetos:
+## 💡 O que é
+**Desestruturação** é uma sintaxe que extrai valores de **objetos** ou **arrays** para variáveis individuais, em uma linha só. Em vez de \`const nome = pessoa.nome\` repetido várias vezes, você escreve \`const { nome, idade } = pessoa\` — ganha legibilidade e menos código.
+
+## 🌍 Analogia do mundo real
+É como **descarregar uma caixa etiquetada**: em vez de tirar item por item dizendo "pega o açúcar, pega o sal, pega o arroz", você abre a caixa com um molde já etiquetado e cada item vai direto pro lugar certo na bancada. Nas listas (arrays), você usa o **lugar** (1º, 2º, 3º); nos objetos, você usa o **nome** da etiqueta.
+
+## 🔧 Sintaxe e como funciona
+**Objetos** — extrai pelo NOME da chave:
+  const { chave1, chave2 } = objeto;
+
+**Arrays** — extrai pela POSIÇÃO:
+  const [primeiro, segundo] = array;
+
+**Recursos extras:**
+• Renomear: \`const { nome: firstName } = pessoa\`
+• Valor padrão: \`const { email = "—" } = pessoa\`
+• Pular itens em array: \`const [, , terceira] = cores\`
+• Coletar o resto: \`const { nome, ...resto } = pessoa\`
+
+## 📚 Exemplos comentados
   const pessoa = { nome: "Ana", idade: 25, cidade: "SP" };
-  
-  // Sem desestruturação:
+
+  // Forma antiga (verbosa)
   const nome = pessoa.nome;
   const cidade = pessoa.cidade;
-  
-  // Com desestruturação:
+
+  // Com desestruturação (uma linha)
   const { nome, cidade } = pessoa;
-  // nome = "Ana", cidade = "SP"
+  console.log(nome, cidade);                    // Ana SP
 
-Renomeando variáveis:
-  const { nome: firstName } = pessoa;
-  // firstName = "Ana"
+  // Renomeando — útil para evitar conflito de nomes
+  const { nome: firstName, idade: age } = pessoa;
+  // firstName = "Ana", age = 25
 
-Valores padrão:
+  // Valor padrão se a chave não existir
   const { email = "não informado" } = pessoa;
+  // email = "não informado"
 
-Desestruturação de arrays:
+  // Arrays — pela posição
   const cores = ["vermelho", "verde", "azul"];
-  const [primeira, segunda] = cores;
-  // primeira = "vermelho", segunda = "verde"
+  const [primeira, segunda] = cores;            // primeira="vermelho", segunda="verde"
+  const [, , terceira] = cores;                 // pula 2, pega "azul"
 
-  // Pulando elementos:
-  const [, , terceira] = cores;  // terceira = "azul"
+  // Direto nos parâmetros de função (muito comum em React)
+  function Saudacao({ nome, sobrenome = "" }) {
+    return \\\`Olá, \${nome} \${sobrenome}\\\`;
+  }
+  Saudacao({ nome: "Ana" });                    // "Olá, Ana "
 
-Muito usado em React:
-  const [count, setCount] = useState(0);
-  const { nome, email } = props;`,
+  // Trocar valores sem variável temporária
+  let a = 1, b = 2;
+  [a, b] = [b, a];                              // a=2, b=1
+
+  // Resto: pega uma chave + tudo o que sobrou
+  const { nome, ...outras } = pessoa;
+  // nome="Ana", outras={ idade: 25, cidade: "SP" }
+
+## ⚠️ Erros comuns
+• **Nome diferente da chave** sem renomear: \`const { fullName } = pessoa\` quando \`pessoa.fullName\` não existe → \`fullName\` vira \`undefined\`.
+• **Confundir objeto com array**: usar \`{ }\` com array (\`const { 0: a } = arr\` funciona, mas é estranho); use \`[ ]\` para arrays.
+• **Desestruturar \`null\` ou \`undefined\`**: \`const { x } = null\` → TypeError. Sempre verifique se o valor existe.
+• **Esquecer parênteses ao usar inline depois de declarar**: \`{ a, b } = obj\` (sem \`const\`/\`let\`) precisa de parênteses → \`({ a, b } = obj)\`.
+
+## 🚀 Quando usar na prática
+**Onipresente em React e código moderno**:
+• \`const [count, setCount] = useState(0)\` — array destructuring puro.
+• \`function Botao({ label, onClick }) { ... }\` — extrai props nos parâmetros.
+• \`const { data, error } = await fetch(...)\` — extrai resposta de APIs.
+• Reorganizar dados de objetos retornados por bibliotecas em variáveis com nomes claros.`,
         starterCode: 'const pessoa = { nome: "Ana", idade: 25, cidade: "SP" };\n// Desestruture e exiba\n',
         solution: 'const pessoa = { nome: "Ana", idade: 25, cidade: "SP" };\nconst { nome, cidade } = pessoa;\nconsole.log(nome, cidade);',
         expectedOutput: "Ana",
@@ -1210,30 +1406,62 @@ Muito usado em React:
         id: "2-6",
         title: "Array Methods (map)",
         description: "Dado o array `[1, 2, 3, 4, 5]`, use `.map()` para criar um novo array com o **dobro** de cada número. Exiba o resultado.",
-        theory: `O método .map() cria um NOVO array transformando cada item do array original. É um dos métodos mais usados em JavaScript!
+        theory: `# Array.map()
 
-Sintaxe:
-  const novoArray = array.map((item, index) => transformação);
+## 💡 O que é
+\`.map()\` é um método de array que **cria um NOVO array** transformando cada item do original. Você passa uma função que define a transformação, e o map a aplica em cada elemento, na ordem.
 
-Exemplo:
+## 🌍 Analogia do mundo real
+Imagine uma **esteira numa fábrica de embalagens**: produtos crus entram, passam por uma máquina (a função de transformação) e saem embalados do outro lado. A esteira **não modifica** os produtos originais — gera uma nova fila de produtos transformados. \`.map()\` é exatamente isso: array de entrada → função de transformação → novo array de saída.
+
+## 🔧 Sintaxe e como funciona
+  const novoArray = arrayOriginal.map((item, index) => transformação);
+
+• \`item\` → o valor atual sendo processado.
+• \`index\` (opcional) → a posição (0, 1, 2...).
+• A função deve **retornar** o novo valor — esquecer o return é o erro nº 1.
+• \`.map()\` SEMPRE devolve array com o **mesmo tamanho** do original.
+
+**Princípio importante: imutabilidade.** \`.map()\` NÃO altera o array original. Esse comportamento é a base do estilo "funcional" e do React.
+
+## 📚 Exemplos comentados
   const nums = [1, 2, 3, 4, 5];
+
+  // Dobrar cada número
   const dobros = nums.map(n => n * 2);
   // dobros = [2, 4, 6, 8, 10]
+  // nums   = [1, 2, 3, 4, 5]   ← intacto
 
-Outros métodos importantes de array:
-  .filter() — filtra itens por condição:
-    [1,2,3,4,5].filter(n => n > 3)  → [4, 5]
+  // Transformar objetos — extrair um campo
+  const usuarios = [
+    { nome: "Ana", idade: 25 },
+    { nome: "Bruno", idade: 30 }
+  ];
+  const nomes = usuarios.map(u => u.nome);
+  // ["Ana", "Bruno"]
 
-  .reduce() — acumula um resultado:
-    [1,2,3].reduce((soma, n) => soma + n, 0)  → 6
+  // Usando o index
+  const lista = ["maçã", "banana", "uva"];
+  const numeradas = lista.map((item, i) => \\\`\${i + 1}. \${item}\\\`);
+  // ["1. maçã", "2. banana", "3. uva"]
 
-  .find() — encontra o primeiro item:
-    [1,2,3].find(n => n > 2)  → 3
+  // Em React: renderizar lista de componentes
+  // posts.map(post => <Card key={post.id} title={post.title} />)
 
-  .forEach() — executa algo para cada item (sem retorno):
-    [1,2,3].forEach(n => console.log(n))
+**Métodos parentes** (mesma família, vale conhecer):
+  .filter(fn)   → mantém só os que passam no teste
+  .reduce(fn,i) → acumula em um único valor
+  .find(fn)     → retorna o primeiro que passa
+  .forEach(fn)  → executa para cada um (sem retorno — uso para efeitos)
 
-IMPORTANTE: .map() NÃO altera o array original! Ele retorna um novo array. Isso é "imutabilidade" — muito valorizado em programação moderna e React.`,
+## ⚠️ Erros comuns
+• **Esquecer o \`return\`**: \`nums.map(n => { n * 2 })\` retorna \`[undefined, undefined, ...]\`. Sem chaves: \`n => n * 2\` (return implícito) OU com chaves e \`return\` explícito.
+• **Usar map só pelo efeito colateral**: se você não vai usar o array retornado, use \`.forEach()\` — comunica a intenção melhor.
+• **Esperar que altere o original**: \`.map()\` retorna novo array. \`nums.map(...)\` sem \`const x =\` joga o resultado fora.
+• **Em React, esquecer da \`key\`**: \`items.map(item => <Card />)\` sem \`key={item.id}\` gera warning e bugs de re-render.
+
+## 🚀 Quando usar na prática
+\`.map()\` é **provavelmente o método de array que você mais vai usar**: extrair campo específico de uma lista de objetos vinda de API, formatar valores para exibição, transformar dados antes de salvar, e — em React — renderizar listas de componentes (\`<ul>{items.map(...)}</ul>\`). Sempre que pensar "preciso transformar cada item desta lista", a resposta é \`.map\`.`,
         starterCode: 'const nums = [1, 2, 3, 4, 5];\n// Use map para dobrar\n',
         solution: 'const nums = [1, 2, 3, 4, 5];\nconst dobros = nums.map(n => n * 2);\nconsole.log(dobros);',
         expectedOutput: "2,4,6,8,10",
@@ -1244,37 +1472,76 @@ IMPORTANTE: .map() NÃO altera o array original! Ele retorna um novo array. Isso
         id: "2-7",
         title: "Promises",
         description: "Crie uma Promise que resolve com **\"Dados carregados!\"** após 1 segundo. Use `.then()` para exibir a mensagem.",
-        theory: `Promises representam o resultado futuro de uma operação assíncrona — algo que vai acontecer, mas não agora.
+        theory: `# Promises
 
-Uma Promise tem 3 estados:
-• Pending (pendente) — ainda executando
-• Fulfilled (resolvida) — completou com sucesso
-• Rejected (rejeitada) — falhou
+## 💡 O que é
+Uma **Promise** é um objeto que representa o **resultado futuro** de uma operação assíncrona — algo que VAI acontecer (com sucesso ou falha), mas não agora. Ela permite que você **espere** sem travar o resto do programa.
 
-Criando uma Promise:
+## 🌍 Analogia do mundo real
+Imagine pedir comida num restaurante: você recebe uma **comanda numerada** (a Promise). Você não fica parado na cozinha esperando — pode conversar, mexer no celular. Quando a comida fica pronta, eles te chamam pelo número (\`.then\`). Se acabar o ingrediente, te avisam que não vai dar (\`.catch\`). A comanda em si não é a comida — é a **promessa de uma resposta futura**.
+
+## 🔧 Sintaxe e como funciona
+**Os 3 estados de uma Promise:**
+• \`pending\` (pendente) → ainda processando (a comida está sendo preparada).
+• \`fulfilled\` (resolvida) → terminou com sucesso (chegou a comida).
+• \`rejected\` (rejeitada) → terminou com erro (acabou o ingrediente).
+
+**Criando:**
   const promessa = new Promise((resolve, reject) => {
-    // operação assíncrona
-    const sucesso = true;
-    if (sucesso) {
-      resolve("Deu certo!");    // sucesso
-    } else {
-      reject("Deu errado!");    // erro
-    }
+    // operação assíncrona aqui
+    if (sucesso) resolve(valor);
+    else         reject(erro);
   });
 
-Consumindo com .then() e .catch():
+**Consumindo com \`.then\` / \`.catch\` / \`.finally\`:**
   promessa
-    .then(resultado => console.log(resultado))  // sucesso
-    .catch(erro => console.log(erro));           // erro
+    .then(valor => { /* chegou! */ })
+    .catch(erro => { /* falhou */ })
+    .finally(() => { /* roda sempre */ });
 
-Simulando espera com setTimeout:
+Cada \`.then\` pode **encadear** outro \`.then\` (chaining), passando seu retorno para o próximo.
+
+## 📚 Exemplos comentados
+  // Promise simples que sempre resolve
+  const ok = new Promise((resolve) => {
+    resolve("Dados carregados!");
+  });
+  ok.then(msg => console.log(msg));            // "Dados carregados!"
+
+  // Simulando espera com setTimeout
   const carregar = new Promise((resolve) => {
     setTimeout(() => resolve("Pronto!"), 2000);
   });
-  carregar.then(msg => console.log(msg));
-  // Após 2 segundos: "Pronto!"
+  carregar.then(msg => console.log(msg));      // após 2s: "Pronto!"
 
-Promises são a base para chamadas de API, leitura de arquivos, e qualquer operação que leva tempo.`,
+  // Tratando sucesso E erro
+  const dividir = (a, b) => new Promise((resolve, reject) => {
+    if (b === 0) reject(new Error("Divisão por zero"));
+    else         resolve(a / b);
+  });
+
+  dividir(10, 2)
+    .then(r => console.log("Resultado:", r))   // Resultado: 5
+    .catch(e => console.log("Erro:", e.message));
+
+  // Encadeando .then (cada um recebe o resultado do anterior)
+  fetch("/api/usuario")
+    .then(res => res.json())                   // converte resposta em JSON
+    .then(data => console.log(data.nome))      // usa o JSON
+    .catch(err => console.error(err));
+
+  // Promise.all — espera VÁRIAS promises ao mesmo tempo
+  Promise.all([fetch("/a"), fetch("/b")])
+    .then(([resA, resB]) => { /* ambas chegaram */ });
+
+## ⚠️ Erros comuns
+• **Esquecer o \`.catch\`**: erros silenciosos viram "UnhandledPromiseRejection". Sempre trate erros.
+• **Não retornar dentro de \`.then\`**: o próximo \`.then\` recebe \`undefined\` se o anterior não retornar.
+• **Confundir \`Promise\` com o valor**: \`const x = fetch(...)\` deixa \`x\` como Promise, NÃO como o resultado. Use \`.then\` ou \`await\`.
+• **Criar Promise para algo síncrono**: se já tem o valor, não precisa de Promise — devolva direto.
+
+## 🚀 Quando usar na prática
+Promises são a base de **tudo o que demora** em JavaScript: chamadas a APIs (\`fetch\`), leitura de arquivos no Node, queries em banco de dados, animações com timer. Praticamente toda biblioteca moderna devolve Promises. Hoje, em código novo, você quase sempre vai usar Promises com \`async/await\` (próxima lição) — que é uma sintaxe ainda mais limpa por cima delas.`,
         starterCode: '// Crie uma Promise\n',
         solution: 'const promessa = new Promise((resolve) => {\n  setTimeout(() => resolve("Dados carregados!"), 1000);\n});\npromessa.then(msg => console.log(msg));',
         expectedOutput: "Dados carregados!",
@@ -1285,42 +1552,72 @@ Promises são a base para chamadas de API, leitura de arquivos, e qualquer opera
         id: "2-8",
         title: "Async/Await",
         description: "Converta a Promise anterior para usar **async/await**. Crie uma função `async` que aguarda o resultado e exibe **\"Pronto!\"**.",
-        theory: `async/await é uma forma mais limpa de trabalhar com Promises. Faz código assíncrono parecer síncrono!
+        theory: `# async / await
 
-Sintaxe:
-  async function buscarDados() {
+## 💡 O que é
+\`async/await\` é uma **sintaxe moderna** para trabalhar com Promises. Faz código assíncrono **parecer e ler como código síncrono** — linha por linha, top-down — sem cadeias de \`.then\` aninhadas.
+
+## 🌍 Analogia do mundo real
+Lembra da analogia da comanda do restaurante (Promises)? Com \`.then\`, você fala: "quando a comida chegar, faça X; quando o suco chegar, faça Y". É como ficar passando bilhetes pro garçom. Com \`await\`, você simplesmente diz: **"espera a comida... agora come"**. O computador continua trabalhando em outras tarefas durante a espera, mas o SEU código fica linear, fácil de seguir.
+
+## 🔧 Sintaxe e como funciona
+**Duas palavras-chave:**
+• \`async\` antes da função → essa função sempre devolve uma Promise e **permite usar \`await\` dentro**.
+• \`await\` antes de uma Promise → **pausa** a função até a Promise resolver, e devolve o valor resolvido.
+
+  async function buscar() {
     const resultado = await algumaPromise();
     console.log(resultado);
   }
 
-• async antes da função → permite usar await dentro
-• await antes de uma Promise → espera ela resolver
+**Tratando erros**: use \`try/catch\` (do JavaScript normal!).
 
-Comparação:
-  // Com .then():
+## 📚 Exemplos comentados
+  // Forma antiga com .then (chaining)
   fetch("/api/dados")
     .then(res => res.json())
-    .then(data => console.log(data));
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
 
-  // Com async/await (mais legível):
-  async function buscar() {
-    const res = await fetch("/api/dados");
-    const data = await res.json();
-    console.log(data);
-  }
-
-Tratando erros com try/catch:
+  // Mesma coisa com async/await — linear, mais legível
   async function buscar() {
     try {
-      const res = await fetch("/api");
+      const res = await fetch("/api/dados");
       const data = await res.json();
-      return data;
-    } catch (erro) {
-      console.error("Falhou:", erro);
+      console.log(data);
+    } catch (err) {
+      console.error("Falhou:", err);
     }
   }
 
-async/await é o padrão moderno para código assíncrono em JavaScript e React!`,
+  // Aguardando múltiplas operações em série
+  async function fluxo() {
+    const usuario = await fetchUsuario();
+    const posts = await fetchPosts(usuario.id);   // só roda quando usuario chegar
+    return posts;
+  }
+
+  // Aguardando em PARALELO (mais rápido!)
+  async function paralelo() {
+    const [a, b] = await Promise.all([
+      fetch("/api/a"),
+      fetch("/api/b")
+    ]);
+    return { a, b };
+  }
+
+  // async function SEMPRE devolve Promise
+  async function ola() { return "oi"; }
+  ola().then(v => console.log(v));    // "oi"
+
+## ⚠️ Erros comuns
+• **\`await\` fora de \`async\`**: \`const x = await fetch(...)\` em escopo top-level antigo → SyntaxError (módulos modernos permitem top-level await; verifique seu setup).
+• **Esquecer o \`await\`**: \`const data = res.json()\` deixa \`data\` como Promise, não como o JSON. Esquecer await é um bug clássico e silencioso.
+• **Encadear awaits que poderiam ser paralelos**: dois \`await fetch(...)\` em sequência são lentos se um não depende do outro. Use \`Promise.all\`.
+• **Esquecer try/catch**: erros em \`await\` viram exceções não tratadas. Sempre envolva em \`try/catch\` (ou trate com \`.catch\` no chamador).
+
+## 🚀 Quando usar na prática
+**Padrão moderno** para tudo que envolve espera: chamadas a APIs, leitura de arquivos no Node, queries em banco de dados, integrações com serviços externos. Em React, \`useEffect(() => { async function load() { const d = await fetch(...) } load(); }, [])\`. Em código novo, prefira sempre \`async/await\` em vez de \`.then\` — só use \`.then\` para uma transformação rápida em uma linha.`,
         starterCode: '// Use async/await\n',
         solution: 'async function carregar() {\n  const msg = await new Promise(resolve => setTimeout(() => resolve("Pronto!"), 1000));\n  console.log(msg);\n}\ncarregar();',
         expectedOutput: "Pronto!",
@@ -1331,36 +1628,73 @@ async/await é o padrão moderno para código assíncrono em JavaScript e React!
         id: "2-9",
         title: "Spread e Rest",
         description: "Use o operador **spread** para combinar dois arrays `[1,2,3]` e `[4,5,6]` em um só. Depois crie uma função com **rest** que soma todos os argumentos.",
-        theory: `Spread (...) e Rest (...) usam a mesma sintaxe (três pontos) mas fazem coisas opostas!
+        theory: `# Spread e Rest
 
-Spread → EXPANDE um array/objeto:
+## 💡 O que é
+\`...\` (três pontos) tem **dois usos opostos** dependendo do contexto:
+• **Spread** → **expande** um array/objeto em itens individuais.
+• **Rest** → **agrupa** vários itens em um array.
+
+A sintaxe é igual; o que muda é **onde** você usa.
+
+## 🌍 Analogia do mundo real
+Imagine um **kit de talheres**:
+• **Spread** é abrir o kit e **espalhar** garfo, faca e colher pela mesa.
+• **Rest** é **juntar** garfo, faca e colher avulsos e fechar o kit de novo.
+
+Mesma operação em sentido inverso. O JS sabe qual é qual pelo lugar onde aparece (do lado direito de \`=\` é spread; em parâmetros de função ou desestruturação é rest).
+
+## 🔧 Sintaxe e como funciona
+**Spread — em LITERAIS de array/objeto:**
+  const c = [...a, ...b];                    // junta arrays
+  const novo = { ...obj, prop: valor };      // copia + adiciona/altera
+
+**Rest — em PARÂMETROS de função ou desestruturação:**
+  function f(...args) { /* args é array */ }
+  const [primeiro, ...resto] = lista;        // resto vira array
+  const { a, ...outras } = objeto;           // outras vira objeto
+
+## 📚 Exemplos comentados
+  // SPREAD em arrays
   const a = [1, 2, 3];
   const b = [4, 5, 6];
-  const c = [...a, ...b];  // [1, 2, 3, 4, 5, 6]
+  const c = [...a, ...b];                    // [1, 2, 3, 4, 5, 6]
+  const copia = [...a];                      // cópia rasa de a
+  const comExtra = [0, ...a, 4];             // [0, 1, 2, 3, 4]
 
-  const obj1 = { nome: "Ana", idade: 25 };
-  const obj2 = { ...obj1, cidade: "SP" };
+  // SPREAD em objetos
+  const usuario = { nome: "Ana", idade: 25 };
+  const completo = { ...usuario, cidade: "SP" };
   // { nome: "Ana", idade: 25, cidade: "SP" }
 
-Rest → COLETA argumentos em um array:
-  function somar(...numeros) {
-    return numeros.reduce((a, b) => a + b, 0);
-  }
-  somar(1, 2, 3, 4);  // 10
-
-  // Rest em desestruturação:
-  const [primeiro, ...resto] = [1, 2, 3, 4];
-  // primeiro = 1, resto = [2, 3, 4]
-
-Usos comuns:
-  // Copiar array (sem referência):
-  const copia = [...original];
-
-  // Copiar objeto com alteração:
   const atualizado = { ...usuario, idade: 26 };
+  // { nome: "Ana", idade: 26 } — sobrescreve a chave existente
 
-  // Passar array como argumentos:
-  Math.max(...numeros);`,
+  // SPREAD para passar array como argumentos
+  Math.max(...[3, 7, 1, 9]);                 // 9 (igual a Math.max(3,7,1,9))
+
+  // REST em parâmetros — recebe N argumentos como array
+  function somar(...numeros) {
+    return numeros.reduce((acc, n) => acc + n, 0);
+  }
+  somar(1, 2, 3, 4);                         // 10
+
+  // REST em desestruturação de array
+  const [primeiro, ...resto] = [10, 20, 30, 40];
+  // primeiro=10, resto=[20, 30, 40]
+
+  // REST em desestruturação de objeto
+  const { nome, ...outras } = { nome: "Ana", idade: 25, cidade: "SP" };
+  // nome="Ana", outras={idade: 25, cidade: "SP"}
+
+## ⚠️ Erros comuns
+• **Confundir spread com cópia profunda**: \`{ ...obj }\` faz cópia **rasa** — objetos aninhados ainda compartilham referência. Para cópia profunda, use \`structuredClone(obj)\`.
+• **Ordem importa**: \`{ a: 1, ...obj }\` vs \`{ ...obj, a: 1 }\` — quem vier depois sobrescreve.
+• **Rest precisa ser o ÚLTIMO**: \`function(a, ...rest, b)\` → SyntaxError. \`...rest\` sempre fecha a lista.
+• **Spread em \`null\`/\`undefined\`**: spread de array (\`[...null]\`) → TypeError; spread de objeto (\`{ ...null }\`) → ok (vira \`{}\`). Cuidado com os tipos.
+
+## 🚀 Quando usar na prática
+**Spread** é onipresente em React/Redux para atualizar estado **imutavelmente**: \`setUsuario({ ...usuario, nome: "Novo" })\`. Também é o jeito de copiar arrays/objetos antes de modificar. **Rest** brilha em funções flexíveis (\`function log(...args)\`) e em desestruturação para "pegar isso aqui e tudo o que sobrou". Os dois juntos são essenciais em código moderno.`,
         starterCode: '// Spread e Rest\n',
         solution: 'const a = [1, 2, 3];\nconst b = [4, 5, 6];\nconst combinado = [...a, ...b];\nconsole.log(combinado);\n\nfunction somar(...nums) {\n  return nums.reduce((acc, n) => acc + n, 0);\n}\nconsole.log(somar(1, 2, 3, 4));',
         expectedOutput: "1,2,3,4,5,6",
@@ -1374,53 +1708,99 @@ Usos comuns:
         id: "2-10",
         title: "Classes",
         description: "Crie uma classe **Animal** com propriedades `nome` e `som`. Adicione um método `falar()` que retorna **\"[nome] faz [som]!\"**.",
-        theory: `Classes em JavaScript (ES6+) são "moldes" para criar objetos com propriedades e métodos.
+        theory: `# Classes em JavaScript
 
-Sintaxe:
+## 💡 O que é
+**Classes** (ES6+) são "moldes" para criar objetos que combinam **propriedades** (dados) e **métodos** (comportamentos). É a sintaxe moderna e organizada para POO em JavaScript — por baixo, ainda usa prototypes, mas a leitura fica muito mais clara.
+
+## 🌍 Analogia do mundo real
+Uma classe é a **planta de uma casa**: define os cômodos (propriedades) e o que dá pra fazer em cada um (métodos). Cada **objeto** criado a partir dela é uma **casa real construída** com aquela planta. Todas as casas seguem o mesmo molde, mas cada uma tem seus próprios moradores e estado (cor da parede, móveis). \`new\` é o construtor erguendo uma casa nova; \`this\` é "essa casa aqui".
+
+## 🔧 Sintaxe e como funciona
   class Animal {
     constructor(nome, som) {
-      this.nome = nome;
+      this.nome = nome;     // propriedade
       this.som = som;
     }
 
-    falar() {
-      return \`\${this.nome} faz \${this.som}!\`;
+    falar() {              // método
+      return \\\`\${this.nome} faz \${this.som}!\\\`;
     }
   }
 
   const gato = new Animal("Gato", "miau");
-  console.log(gato.falar());  // "Gato faz miau!"
+  gato.falar();            // "Gato faz miau!"
 
-Conceitos:
-  constructor() → método especial, roda ao criar o objeto
-  this → referência ao objeto atual
-  new → cria uma instância da classe
+**Conceitos-chave:**
+• \`class\` → palavra-chave que define o molde. PascalCase no nome.
+• \`constructor\` → método especial chamado automaticamente ao usar \`new\`.
+• \`this\` → referência ao objeto sendo criado/usado no momento.
+• \`new\` → operador que cria uma instância da classe.
 
-Herança com extends:
+**Herança** com \`extends\` e \`super\`:
   class Cachorro extends Animal {
     constructor(nome) {
-      super(nome, "au au");  // chama o constructor pai
+      super(nome, "au au");    // chama o constructor pai
     }
-
     buscar(item) {
-      return \`\${this.nome} buscou \${item}!\`;
+      return \\\`\${this.nome} buscou \${item}!\\\`;
     }
   }
 
-  const rex = new Cachorro("Rex");
-  rex.falar();    // "Rex faz au au!"
-  rex.buscar("bola");  // "Rex buscou bola!"
-
-Getters e Setters:
-  class Pessoa {
-    #idade;  // campo privado (ES2022)
-
-    get idade() { return this.#idade; }
-    set idade(val) {
-      if (val < 0) throw new Error("Idade inválida");
-      this.#idade = val;
+## 📚 Exemplos comentados
+  class Carrinho {
+    constructor() {
+      this.itens = [];           // estado inicial
     }
-  }`,
+
+    adicionar(item) {
+      this.itens.push(item);
+    }
+
+    total() {
+      return this.itens.reduce((s, i) => s + i.preco, 0);
+    }
+  }
+
+  const c = new Carrinho();
+  c.adicionar({ nome: "Café", preco: 15 });
+  c.adicionar({ nome: "Pão", preco: 5 });
+  console.log(c.total());      // 20
+
+  // Herança
+  class CarrinhoVIP extends Carrinho {
+    total() {
+      return super.total() * 0.9;   // 10% desconto, reaproveita pai
+    }
+  }
+
+  // Getters e setters — métodos que parecem propriedades
+  class Pessoa {
+    #idade = 0;                  // # = privado (ES2022)
+    get idade() { return this.#idade; }
+    set idade(v) {
+      if (v < 0) throw new Error("Idade inválida");
+      this.#idade = v;
+    }
+  }
+  const p = new Pessoa();
+  p.idade = 30;                  // chama o setter
+  console.log(p.idade);          // 30 (chama o getter)
+
+  // Métodos estáticos — pertencem à classe, não à instância
+  class Util {
+    static formatar(n) { return n.toFixed(2); }
+  }
+  Util.formatar(3.14159);        // "3.14" — sem precisar de new
+
+## ⚠️ Erros comuns
+• **Esquecer \`new\`**: \`Animal("Gato")\` (sem new) → TypeError ou \`undefined\` em \`this\`. Sempre use \`new\`.
+• **Esquecer \`super()\` na herança**: classe filha sem \`super(...)\` no constructor → ReferenceError ao usar \`this\`.
+• **Perder o \`this\` em callbacks**: \`btn.onClick = obj.metodo\` perde o \`this\`. Use arrow function ou \`.bind\`.
+• **Achar que classes "criam" novos objetos imutáveis**: instâncias são **mutáveis** — modificar \`gato.nome = "X"\` funciona normalmente.
+
+## 🚀 Quando usar na prática
+Classes brilham quando você tem **muitas instâncias** com estado próprio: usuários, produtos, jogadores, conexões com banco, requisições. Frameworks como Angular, NestJS, e bibliotecas como Three.js usam classes intensivamente. Em React moderno, **componentes funcionais com hooks** substituíram quase todo uso de classes — mas você ainda vai encontrar classes em código legado, em libs OOP e em modelos de dados (ex.: Sequelize, Mongoose, TypeORM).`,
         starterCode: '// Crie a classe Animal\n',
         solution: 'class Animal {\n  constructor(nome, som) {\n    this.nome = nome;\n    this.som = som;\n  }\n  falar() {\n    return `${this.nome} faz ${this.som}!`;\n  }\n}\nconst gato = new Animal("Gato", "miau");\nconsole.log(gato.falar());',
         expectedOutput: "Gato faz miau!",
@@ -1434,18 +1814,43 @@ Getters e Setters:
         id: "2-11",
         title: "Array Methods Avançados",
         description: "Dado `[12, 5, 8, 130, 44]`, use **filter** para pegar números > 10, depois **reduce** para somá-los.",
-        theory: `Além de map(), JavaScript tem métodos poderosos de array que todo dev precisa dominar.
+        theory: `# Array Methods Avançados
 
-.filter() — retorna itens que passam no teste:
+## 💡 O que é
+Além de \`.map()\`, JavaScript tem um **arsenal de métodos de array** para filtrar, agregar, buscar e transformar dados sem loops. Dominar \`filter\`, \`reduce\`, \`find\`, \`some\` e \`every\` muda completamente como você escreve código.
+
+## 🌍 Analogia do mundo real
+Pense numa **central de triagem de cartas dos Correios**:
+• \`filter\` é o **selecionador** que separa cartas por critério (só as do CEP X).
+• \`reduce\` é o **caixa contador** que vai somando o peso de cada uma até chegar no total.
+• \`find\` é o **localizador** que para na primeira carta com determinado nome.
+• \`some\`/\`every\` são os **inspetores**: "tem alguma com selo internacional?" / "todas estão fechadas?".
+
+## 🔧 Sintaxe e como funciona
+  .filter(fn)     → NOVO array com itens onde fn devolve true
+  .reduce(fn, i)  → acumula em UM valor único (i = valor inicial)
+  .find(fn)       → o PRIMEIRO item onde fn é true (ou undefined)
+  .findIndex(fn)  → o ÍNDICE do primeiro item (ou -1)
+  .some(fn)       → true se PELO MENOS UM passa
+  .every(fn)      → true se TODOS passam
+  .flat(depth)    → achata arrays aninhados
+  .flatMap(fn)    → map seguido de flat (1 nível)
+  .includes(v)    → true se contém o valor
+
+A grande sacada: **todos esses métodos podem ser ENCADEADOS** (chaining) — saída de um vira entrada do próximo.
+
+## 📚 Exemplos comentados
   const nums = [12, 5, 8, 130, 44];
+
+  // filter — só os que passam no teste
   const grandes = nums.filter(n => n > 10);
   // [12, 130, 44]
 
-.reduce() — acumula um valor final:
+  // reduce — acumula em UM valor (acc=acumulador, n=item, 0=inicial)
   const soma = nums.reduce((acc, n) => acc + n, 0);
-  // 199 (0 é o valor inicial do acumulador)
+  // 199
 
-  // Contando ocorrências:
+  // reduce mais avançado: contar ocorrências
   const frutas = ["maçã", "banana", "maçã", "uva"];
   const contagem = frutas.reduce((acc, f) => {
     acc[f] = (acc[f] || 0) + 1;
@@ -1453,30 +1858,36 @@ Getters e Setters:
   }, {});
   // { maçã: 2, banana: 1, uva: 1 }
 
-.find() — retorna o PRIMEIRO que passa:
-  const primeiro = nums.find(n => n > 10);  // 12
+  // find — primeiro que passa
+  nums.find(n => n > 10);          // 12
+  nums.find(n => n > 9999);        // undefined
 
-.findIndex() — retorna o ÍNDICE do primeiro:
-  const idx = nums.findIndex(n => n > 100); // 3
+  // findIndex — posição do primeiro
+  nums.findIndex(n => n > 100);    // 3
 
-.some() — pelo menos UM passa?
-  nums.some(n => n > 100);  // true
+  // some / every — perguntas booleanas
+  nums.some(n => n > 100);         // true (130 passa)
+  nums.every(n => n > 0);          // true (todos positivos)
 
-.every() — TODOS passam?
-  nums.every(n => n > 0);   // true
+  // flat / flatMap — achatar
+  [[1, 2], [3, 4]].flat();         // [1, 2, 3, 4]
+  ["hello world", "foo bar"].flatMap(s => s.split(" "));
+  // ["hello", "world", "foo", "bar"]
 
-.flat() — achata arrays aninhados:
-  [[1,2], [3,4]].flat();  // [1, 2, 3, 4]
-
-.flatMap() — map + flat:
-  ["hello world"].flatMap(s => s.split(" "));  // ["hello", "world"]
-
-Encadeamento (chaining):
+  // ENCADEAMENTO (chaining) — onde brilha de verdade
   const resultado = nums
-    .filter(n => n > 10)
-    .map(n => n * 2)
-    .reduce((acc, n) => acc + n, 0);
-  // (12 + 130 + 44) * 2 = 372`,
+    .filter(n => n > 10)           // [12, 130, 44]
+    .map(n => n * 2)               // [24, 260, 88]
+    .reduce((acc, n) => acc + n, 0); // 372
+
+## ⚠️ Erros comuns
+• **\`reduce\` sem valor inicial**: \`[].reduce((a,b)=>a+b)\` → TypeError. SEMPRE passe o segundo argumento.
+• **Confundir \`find\` com \`filter\`**: \`find\` retorna **um item** (ou undefined); \`filter\` retorna **array** (vazio se nada passa).
+• **\`some\` em array vazio = false; \`every\` em array vazio = true**: comportamento padrão, mas pega gente desprevenida.
+• **Encadear muitos métodos**: legível, mas cada um cria array intermediário. Para arrays gigantes, considere um loop direto.
+
+## 🚀 Quando usar na prática
+**Todo dia**, em todo projeto: filtrar produtos por preço, somar valores de pedidos, buscar usuário por id, agrupar registros por categoria, validar se todos os campos estão preenchidos. Esses métodos substituem 90% dos loops \`for\` em JS moderno e tornam o código quase autoexplicativo: \`pedidos.filter(p => p.pago).reduce((s, p) => s + p.valor, 0)\` lê como uma frase.`,
         starterCode: 'const nums = [12, 5, 8, 130, 44];\n// filter e reduce\n',
         solution: 'const nums = [12, 5, 8, 130, 44];\nconst grandes = nums.filter(n => n > 10);\nconst soma = grandes.reduce((acc, n) => acc + n, 0);\nconsole.log(grandes);\nconsole.log(soma);',
         expectedOutput: "12,130,44",
@@ -1490,55 +1901,91 @@ Encadeamento (chaining):
         id: "2-12",
         title: "Closures",
         description: "Crie uma função **criarContador()** que retorna uma função interna. Cada vez que a função interna é chamada, incrementa e retorna o valor.",
-        theory: `Closure é quando uma função "lembra" das variáveis do escopo onde foi criada, mesmo após esse escopo ter terminado.
+        theory: `# Closures
 
-Exemplo simples:
+## 💡 O que é
+Uma **closure** acontece quando uma função "lembra" das variáveis do **escopo onde foi criada**, mesmo depois daquele escopo ter terminado de executar. É um dos conceitos mais poderosos (e confusos) de JavaScript — entendê-lo desbloqueia React hooks, callbacks e módulos.
+
+## 🌍 Analogia do mundo real
+Imagine um **fotógrafo de formatura**: ele tira a foto da turma toda numa sala. Anos depois, mesmo a sala não existindo mais, a foto **ainda preserva** quem estava lá. A função interna é a foto; o escopo externo é a sala. Quando você executa a função interna depois, ela "olha pra foto" e ainda enxerga as variáveis daquela sala original.
+
+## 🔧 Sintaxe e como funciona
+A receita básica:
+  function externa() {
+    let memoria = 0;          // variável do escopo externo
+    return function interna() {
+      memoria++;              // lê e modifica a "memória"
+      return memoria;
+    };
+  }
+
+Quando \`externa()\` termina, \`memoria\` **não é destruída** — fica viva enquanto a função interna existir. Cada chamada a \`externa()\` cria um **escopo independente** (memória própria).
+
+## 📚 Exemplos comentados
+  // 1) Contador clássico — guarda estado privado
   function criarContador() {
-    let count = 0;           // variável do escopo externo
+    let count = 0;
     return function() {
-      count++;               // a função interna "lembra" count
+      count++;
       return count;
     };
   }
 
   const contador = criarContador();
-  console.log(contador());  // 1
-  console.log(contador());  // 2
-  console.log(contador());  // 3
+  console.log(contador());    // 1
+  console.log(contador());    // 2
+  console.log(contador());    // 3
 
   const outro = criarContador();
-  console.log(outro());     // 1 (escopo independente!)
+  console.log(outro());       // 1 — escopo INDEPENDENTE!
 
-Por que isso funciona?
-  A função interna mantém uma referência ao escopo externo (closure).
-  Mesmo após criarContador() terminar, count continua vivo na memória.
-
-Usos práticos:
-  // Função factory com configuração
+  // 2) Function factory — cria funções configuradas
   function multiplicador(fator) {
-    return (n) => n * fator;
+    return (n) => n * fator;       // "lembra" do fator
   }
   const dobro = multiplicador(2);
   const triplo = multiplicador(3);
-  dobro(5);   // 10
-  triplo(5);  // 15
+  dobro(5);    // 10
+  triplo(5);   // 15
 
-  // Dados privados (encapsulamento)
-  function criarBanco() {
-    let saldo = 0;
+  // 3) Encapsulamento — dados privados sem classes
+  function criarConta(saldoInicial) {
+    let saldo = saldoInicial;        // PRIVADO, ninguém acessa direto
     return {
       depositar: (v) => { saldo += v; },
-      sacar: (v) => { saldo -= v; },
-      ver: () => saldo,
+      sacar:     (v) => { saldo -= v; },
+      ver:       () => saldo
     };
   }
+  const conta = criarConta(100);
+  conta.depositar(50);
+  conta.ver();                  // 150
+  // conta.saldo               ← undefined! protegido pela closure
 
-  const conta = criarBanco();
-  conta.depositar(100);
-  conta.ver();  // 100
-  // saldo não é acessível diretamente!
+  // 4) Bug clássico em loops — closures num for com var
+  for (var i = 0; i < 3; i++) {
+    setTimeout(() => console.log(i), 100);
+  }
+  // Imprime: 3, 3, 3 (todos compartilham o mesmo i!)
+  // Solução: trocar var por let → cada iteração ganha seu próprio escopo
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => console.log(i), 100);  // 0, 1, 2 ✓
+  }
 
-Closures são fundamentais para entender React hooks, callbacks e módulos.`,
+## ⚠️ Erros comuns
+• **Não perceber que cada chamada cria escopo novo**: \`criarContador()\` chamada duas vezes dá DUAS memórias separadas, não compartilhadas.
+• **\`var\` em loops com closures**: o famoso bug "imprime sempre o último valor". Use \`let\`.
+• **Closures retêm muita memória**: se a função interna lembra um objeto enorme, ele não é coletado pelo garbage collector. Cuidado em apps de longa duração.
+• **Confundir closure com escopo léxico simples**: closure é especificamente quando a função sobrevive ao escopo onde foi criada (é retornada, salva, passada).
+
+## 🚀 Quando usar na prática
+Closures estão **escondidas em todo lugar** no código moderno:
+• React hooks (\`useState\`, \`useCallback\`) usam closures internamente.
+• Callbacks de eventos lembram do estado do componente.
+• Módulos ES6 emulam variáveis privadas via closures.
+• Frameworks de teste (jest mocks, spies) e bibliotecas funcionais (lodash, ramda) dependem delas.
+
+Você não precisa criar closures conscientemente o tempo todo, mas precisa **reconhecê-las** para entender por que algumas coisas funcionam (e por que outras dão bug).`,
         starterCode: '// Crie a closure\n',
         solution: 'function criarContador() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  };\n}\n\nconst contador = criarContador();\nconsole.log(contador());\nconsole.log(contador());\nconsole.log(contador());',
         expectedOutput: "1",
@@ -1549,49 +1996,82 @@ Closures são fundamentais para entender React hooks, callbacks e módulos.`,
         id: "2-13",
         title: "Módulos ES6",
         description: "Crie um módulo que **exporta** uma função `somar` e outra `subtrair`. Depois importe e use ambas.",
-        theory: `Módulos ES6 (ESM) permitem dividir código em arquivos separados com import/export. É o padrão moderno do JavaScript.
+        theory: `# Módulos ES6 (import / export)
 
-Named exports — exportar várias coisas:
+## 💡 O que é
+**Módulos ES6** (ESM) permitem dividir seu código em **arquivos separados** que **exportam** funcionalidades e **importam** umas das outras. É o padrão moderno e oficial do JavaScript para organização de código.
+
+## 🌍 Analogia do mundo real
+Pense numa **caixa de ferramentas modular**: cada gaveta (arquivo) tem ferramentas específicas. Em vez de carregar uma caixa gigante com tudo dentro, você abre só a gaveta que precisa (\`import\`). Quem cria a gaveta decide quais ferramentas ficam visíveis (\`export\`). Resultado: código organizado, fácil de manter e mais leve para o navegador (só carrega o que usa).
+
+## 🔧 Sintaxe e como funciona
+**Named exports** — exportar várias coisas com nome:
   // math.js
   export function somar(a, b) { return a + b; }
   export function subtrair(a, b) { return a - b; }
   export const PI = 3.14;
 
-  // main.js
+  // outra forma — declarar e exportar separados
+  function dobrar(n) { return n * 2; }
+  export { dobrar };
+
+  // main.js — chaves \`{ }\` obrigatórias, mesmo nome
   import { somar, subtrair, PI } from "./math.js";
-  console.log(somar(2, 3));  // 5
 
-Default export — uma exportação principal:
+**Default export** — UMA coisa principal por arquivo:
   // logger.js
-  export default function log(msg) {
-    console.log(\`[LOG] \${msg}\`);
-  }
+  export default function log(msg) { console.log(\\\`[LOG] \${msg}\\\`); }
 
-  // main.js
+  // main.js — sem chaves, nome livre
   import log from "./logger.js";
-  log("teste");  // [LOG] teste
+  import qualquerNome from "./logger.js";  // funciona — você escolhe o nome
 
-Diferenças:
-  Named:   export { somar }   →  import { somar } from ...
-  Default: export default fn  →  import fn from ... (qualquer nome)
+**Diferença visual:**
+  Named:    export { x }       →  import { x } from "..."
+  Default:  export default x   →  import x from "..."
 
-Renomeando imports:
-  import { somar as add } from "./math.js";
+## 📚 Exemplos comentados
+  // utils.js — vários named + um default
+  export const VERSION = "1.0";
+  export function formatar(n) { return n.toFixed(2); }
+  export default class App { /* ... */ }
 
-Importando tudo:
+  // main.js — combina tudo
+  import App, { VERSION, formatar } from "./utils.js";
+
+  // Renomear ao importar
+  import { somar as add, subtrair as sub } from "./math.js";
+
+  // Importar TUDO como namespace
   import * as Math from "./math.js";
   Math.somar(1, 2);
 
-Re-exportando:
-  // index.js (barrel file)
-  export { somar } from "./math.js";
+  // Re-export (barrel file — index.js que centraliza)
+  // index.js
+  export { somar, subtrair } from "./math.js";
   export { default as Logger } from "./logger.js";
 
-CommonJS (Node.js antigo):
+  // Em outro arquivo
+  import { somar, Logger } from "./index.js";
+
+  // Comparação com CommonJS (Node.js antigo — evite em projetos novos)
+  // CommonJS:
   module.exports = { somar };
   const { somar } = require("./math");
 
-Sempre prefira ESM (import/export) em projetos modernos!`,
+  // ESM (moderno):
+  export { somar };
+  import { somar } from "./math.js";
+
+## ⚠️ Erros comuns
+• **Esquecer chaves em named import**: \`import somar from "./math.js"\` quando \`somar\` é named → \`somar\` vira \`undefined\`.
+• **Mais de um \`export default\`** no mesmo arquivo → SyntaxError. Default é único.
+• **Path errado**: caminhos relativos precisam de \`./\` ou \`../\` (\`import x from "math"\` é tratado como pacote npm).
+• **Esquecer extensão \`.js\`** em ambientes que exigem (Node ESM puro). Em bundlers (Vite, webpack), geralmente é opcional.
+• **Importar circular** (A importa B que importa A): pode resultar em \`undefined\` em uma das pontas.
+
+## 🚀 Quando usar na prática
+**Em todo projeto JavaScript moderno**: cada arquivo é um módulo. React, Vue, Node.js, ferramentas de build (Vite, webpack) — todos usam ESM. Padrões úteis: um componente/utilitário por arquivo (default export), constantes e helpers como named exports, e \`index.js\` como "barrel" para reexportar tudo de uma pasta. Em projetos antigos de Node, você vai ver CommonJS (\`require\`/\`module.exports\`) — saiba reconhecer, mas em código novo prefira ESM sempre.`,
         starterCode: '// Crie exports e imports\n',
         solution: '// math.js\nexport function somar(a, b) { return a + b; }\nexport function subtrair(a, b) { return a - b; }\n\n// main.js\n// import { somar, subtrair } from "./math.js";\nconsole.log(somar(10, 5));\nconsole.log(subtrair(10, 5));',
         expectedOutput: "15",
@@ -1605,62 +2085,101 @@ Sempre prefira ESM (import/export) em projetos modernos!`,
         id: "2-14",
         title: "Error Handling",
         description: "Crie uma função **dividir(a, b)** que lança um **Error** se b for 0. Use **try/catch** para capturar o erro.",
-        theory: `Tratamento de erros evita que seu programa quebre inesperadamente. JavaScript usa try/catch/finally.
+        theory: `# Tratamento de Erros (try / catch / throw)
 
-Sintaxe:
+## 💡 O que é
+Tratamento de erros permite **prever falhas** e **reagir a elas** sem que seu programa quebre. JavaScript usa \`try / catch / finally\` para capturar e \`throw\` para lançar erros, igual a outras linguagens.
+
+## 🌍 Analogia do mundo real
+É como **dirigir com cinto de segurança e airbag**: você não dirige esperando bater, mas se algo der errado, os sistemas de segurança entram em ação. \`try\` é a estrada normal; \`catch\` é o airbag que infla quando há acidente; \`finally\` é a equipe de limpeza que vai aparecer com ou sem batida; \`throw\` é o "alerta sonoro" que VOCÊ dispara quando detecta perigo.
+
+## 🔧 Sintaxe e como funciona
   try {
-    // código que pode falhar
-    const resultado = operacaoArriscada();
+    // código que PODE falhar
   } catch (erro) {
-    // tratamento do erro
-    console.error("Algo deu errado:", erro.message);
+    // o que fazer SE falhar (erro tem .message, .name, .stack)
   } finally {
-    // roda SEMPRE (opcional)
-    console.log("Finalizando...");
+    // roda SEMPRE, com ou sem erro (opcional)
   }
 
-Lançando erros customizados:
+**Lançando erros customizados:**
+  throw new Error("Mensagem aqui");
+
+**Tipos built-in que o JS pode disparar sozinho:**
+• \`Error\`          → genérico
+• \`TypeError\`      → tipo errado (\`null.toString()\`)
+• \`RangeError\`     → valor fora do intervalo
+• \`ReferenceError\` → variável não declarada
+• \`SyntaxError\`    → erro de sintaxe (raro em runtime)
+
+## 📚 Exemplos comentados
+  // 1) Capturar erro de operação
+  try {
+    const data = JSON.parse(textoSuspeito);
+  } catch (e) {
+    console.error("JSON inválido:", e.message);
+  }
+
+  // 2) Lançar erro próprio
   function dividir(a, b) {
-    if (b === 0) {
-      throw new Error("Divisão por zero!");
-    }
+    if (b === 0) throw new Error("Divisão por zero!");
     return a / b;
   }
 
-Tipos de erro built-in:
-  Error        → erro genérico
-  TypeError    → tipo errado
-  RangeError   → valor fora do intervalo
-  ReferenceError → variável não existe
-  SyntaxError  → erro de sintaxe
+  try {
+    console.log(dividir(10, 2));    // 5
+    console.log(dividir(10, 0));    // dispara erro
+  } catch (err) {
+    console.log("Erro:", err.message);   // "Erro: Divisão por zero!"
+  }
 
-Erros customizados:
+  // 3) Erros customizados (classes próprias)
   class ValidacaoError extends Error {
     constructor(campo, mensagem) {
       super(mensagem);
-      this.campo = campo;
       this.name = "ValidacaoError";
+      this.campo = campo;
     }
   }
 
-  throw new ValidacaoError("email", "Email inválido");
+  try {
+    if (!email.includes("@")) {
+      throw new ValidacaoError("email", "Email inválido");
+    }
+  } catch (e) {
+    if (e instanceof ValidacaoError) {
+      console.log(\\\`Campo \${e.campo}: \${e.message}\\\`);
+    } else {
+      throw e;   // re-lança se não é o esperado
+    }
+  }
 
-Promises e async/await:
-  // Com .catch()
-  fetch("/api").catch(err => console.error(err));
-
-  // Com try/catch em async
+  // 4) async/await — try/catch funciona normal
   async function buscar() {
     try {
       const res = await fetch("/api");
-      if (!res.ok) throw new Error("HTTP " + res.status);
+      if (!res.ok) throw new Error(\\\`HTTP \${res.status}\\\`);
       return await res.json();
     } catch (err) {
       console.error("Falha:", err.message);
+      return null;
     }
   }
 
-Dica: Sempre trate erros em chamadas de API e operações de I/O!`,
+  // 5) Promise pura — use .catch
+  fetch("/api")
+    .then(res => res.json())
+    .catch(err => console.error(err));
+
+## ⚠️ Erros comuns
+• **Engolir o erro com \`catch\` vazio**: \`catch(e) {}\` esconde problemas e dificulta debug. Pelo menos faça \`console.error(e)\`.
+• **\`try\` gigante**: envolver 100 linhas em try torna impossível saber qual delas falhou. Mantenha \`try\` **pequeno e focado**.
+• **Capturar tipo errado**: \`catch (e)\` pega TUDO. Se quer só um tipo, use \`if (e instanceof TipoX)\` e re-lance os outros.
+• **\`throw "string"\`**: tecnicamente funciona mas é má prática. Sempre use \`throw new Error(...)\` para ter \`stack trace\`.
+• **Esquecer \`await\` antes do \`fetch\`**: o erro vira "rejeição não tratada" porque o try terminou antes da Promise resolver.
+
+## 🚀 Quando usar na prática
+Use try/catch em pontos onde **não dá pra confiar 100%** no que vem de fora: parsing de JSON do usuário, chamadas a APIs (a internet pode cair), leitura de arquivos, validação de inputs. Não envolva tudo em try — código com try em cada linha fica ilegível e esconde lógica. Crie classes de erro customizadas para domínios importantes do seu app (ex.: \`PagamentoError\`, \`AutenticacaoError\`) — isso facilita reagir de forma diferente para cada caso.`,
         starterCode: '// Crie a função com error handling\n',
         solution: 'function dividir(a, b) {\n  if (b === 0) throw new Error("Divisão por zero!");\n  return a / b;\n}\n\ntry {\n  console.log(dividir(10, 2));\n  console.log(dividir(10, 0));\n} catch (err) {\n  console.log("Erro:", err.message);\n}',
         expectedOutput: "5",
