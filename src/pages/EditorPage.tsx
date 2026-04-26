@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { getLessonById } from "@/data/mockData";
+import { getAugmentedLessonById } from "@/data/checkpoints";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -30,6 +31,7 @@ const ONBOARDING_KEY = "codequest_editor_onboarding_seen";
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
+  const augmented = getAugmentedLessonById(courseId || "", lessonId || "");
   const data = getLessonById(courseId || "", lessonId || "");
   const { completeLesson, saveCode, isCompleted, getSavedCode } = useProgress();
   const { registerFailure, resetLesson, getAttempts } = useAttemptTracker();
@@ -67,9 +69,16 @@ const EditorPage = () => {
     return () => clearTimeout(timer);
   }, [code, lesson, saveCode]);
 
+  // Checkpoint lessons live on a dedicated route
+  if (augmented?.lesson.kind === "checkpoint") {
+    return <Navigate to={`/checkpoint/${courseId}/${lessonId}`} replace />;
+  }
   if (!data || !lesson || !course) return <Navigate to="/cursos" replace />;
 
-  const nextLesson = course.lessons[lessonIndex + 1];
+  // Compute the next step from the augmented course (so checkpoints are inserted)
+  const augCourse = augmented?.course ?? { lessons: [] as { id: string; kind: "lesson" | "checkpoint" }[] };
+  const augIdx = augCourse.lessons.findIndex((l) => l.id === lesson.id);
+  const nextLesson = augIdx >= 0 ? augCourse.lessons[augIdx + 1] : course.lessons[lessonIndex + 1];
   const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
   const alreadyCompleted = isCompleted(lesson.id);
 
@@ -143,8 +152,12 @@ const EditorPage = () => {
 
   const handleNext = () => {
     if (nextLesson) {
-      navigate(`/editor/${course.id}/${nextLesson.id}`);
-      window.location.href = `/editor/${course.id}/${nextLesson.id}`;
+      const nextHref =
+        "kind" in nextLesson && nextLesson.kind === "checkpoint"
+          ? `/checkpoint/${course.id}/${nextLesson.id}`
+          : `/editor/${course.id}/${nextLesson.id}`;
+      navigate(nextHref);
+      window.location.href = nextHref;
     } else {
       navigate(`/cursos/${course.id}`);
     }

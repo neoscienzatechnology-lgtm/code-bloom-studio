@@ -11,6 +11,7 @@ import CoursesPage from "./pages/CoursesPage.tsx";
 import RoadmapPage from "./pages/RoadmapPage.tsx";
 import CourseDetailPage from "./pages/CourseDetailPage.tsx";
 import EditorPage from "./pages/EditorPage.tsx";
+import CheckpointPage from "./pages/CheckpointPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/trilha" element={<PageWithNav><RoadmapPage /></PageWithNav>} />
             <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
             <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
+            <Route path="/checkpoint/:courseId/:lessonId" element={<PageWithNav><CheckpointPage /></PageWithNav>} />
             <Route path="/dashboard" element={<PageWithNav><ProtectedRoute><DashboardPage /></ProtectedRoute></PageWithNav>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
