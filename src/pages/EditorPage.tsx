@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
+import PaceCoach from "@/components/PaceCoach";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
