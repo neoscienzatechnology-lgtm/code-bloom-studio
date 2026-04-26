@@ -48,13 +48,13 @@ const CourseDetailPage = () => {
                 <Badge variant="outline" className="text-xs font-bold">{course.level}</Badge>
               </div>
 
-              {course.progress > 0 && (
+              {progressPct > 0 && (
                 <div className="max-w-md">
                   <div className="mb-1 flex justify-between text-xs">
                     <span className="text-muted-foreground">Progresso</span>
-                    <span className="font-bold text-accent">{course.progress}%</span>
+                    <span className="font-bold text-accent">{progressPct}%</span>
                   </div>
-                  <Progress value={course.progress} className="h-2.5 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
+                  <Progress value={progressPct} className="h-2.5 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
                 </div>
               )}
             </div>
@@ -65,61 +65,76 @@ const CourseDetailPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <h2 className="mb-4 text-xl font-black">Lições do Curso 📚</h2>
           <div className="space-y-3">
-            {course.lessons.map((lesson, i) => {
-              const isCompleted = i < completedLessons;
-              const isCurrent = i === completedLessons;
-              const isLocked = i > completedLessons;
+            {(() => {
+              let firstUnfinished = false;
+              return course.lessons.map((lesson, i) => {
+                const done = isCompleted(lesson.id);
+                const current = !done && !firstUnfinished;
+                if (current) firstUnfinished = true;
+                const locked = !done && !current;
+                const isCheckpoint = lesson.kind === "checkpoint";
+                const href = isCheckpoint
+                  ? `/checkpoint/${course.id}/${lesson.id}`
+                  : `/editor/${course.id}/${lesson.id}`;
 
-              return (
-                <motion.div
-                  key={lesson.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <Link
-                    to={isLocked ? "#" : `/editor/${course.id}/${lesson.id}`}
-                    className={`block ${isLocked ? "pointer-events-none" : ""}`}
+                return (
+                  <motion.div
+                    key={lesson.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
                   >
-                    <div className={`card-hover flex items-center gap-4 rounded-xl border p-4 transition-all ${
-                      isCompleted
-                        ? "border-accent/30 bg-accent/5"
-                        : isCurrent
-                        ? "border-primary/40 bg-primary/5 ring-1 ring-primary/20"
-                        : "border-border/20 bg-card opacity-50"
-                    }`}>
-                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black ${
-                        isCompleted
-                          ? "bg-accent/20 text-accent"
-                          : isCurrent
-                          ? "bg-primary/20 text-primary"
-                          : "bg-secondary text-muted-foreground"
-                      }`}>
-                        {isCompleted ? <CheckCircle2 size={20} /> : i + 1}
-                      </div>
+                    <Link
+                      to={locked ? "#" : href}
+                      className={`block ${locked ? "pointer-events-none" : ""}`}
+                    >
+                      <div className={`card-hover flex items-center gap-4 rounded-xl border p-4 transition-all ${
+                        done
+                          ? "border-accent/30 bg-accent/5"
+                          : current
+                          ? "border-primary/40 bg-primary/5 ring-1 ring-primary/20"
+                          : "border-border/20 bg-card opacity-50"
+                      } ${isCheckpoint ? "border-dashed" : ""}`}>
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black ${
+                          done
+                            ? "bg-accent/20 text-accent"
+                            : current
+                            ? "bg-primary/20 text-primary"
+                            : "bg-secondary text-muted-foreground"
+                        }`}>
+                          {done ? <CheckCircle2 size={20} /> : isCheckpoint ? <ShieldCheck size={18} /> : i + 1}
+                        </div>
 
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold truncate">{lesson.title}</h3>
-                        <p className="text-xs text-muted-foreground truncate">{lesson.description.slice(0, 80)}...</p>
-                      </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold truncate">{lesson.title}</h3>
+                            {isCheckpoint && (
+                              <span className="shrink-0 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                                Checkpoint
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground truncate">{lesson.description.slice(0, 80)}...</p>
+                        </div>
 
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="hidden text-xs font-bold text-accent sm:block">+{lesson.xpReward} XP</span>
-                        {isCurrent ? (
-                          <Button size="sm" className="gap-1 rounded-full bg-primary text-primary-foreground">
-                            <Play size={14} /> Iniciar
-                          </Button>
-                        ) : isCompleted ? (
-                          <ChevronRight size={18} className="text-accent" />
-                        ) : (
-                          <span className="text-xs text-muted-foreground">🔒</span>
-                        )}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="hidden text-xs font-bold text-accent sm:block">+{lesson.xpReward} XP</span>
+                          {current ? (
+                            <Button size="sm" className="gap-1 rounded-full bg-primary text-primary-foreground">
+                              <Play size={14} /> Iniciar
+                            </Button>
+                          ) : done ? (
+                            <ChevronRight size={18} className="text-accent" />
+                          ) : (
+                            <span className="text-xs text-muted-foreground">🔒</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
+                    </Link>
+                  </motion.div>
+                );
+              });
+            })()}
           </div>
         </motion.div>
       </div>
