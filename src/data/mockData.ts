@@ -3181,46 +3181,60 @@ Variáveis **respeitam o escopo do CSS**: se você redefinir dentro de um seleto
         id: "4-5",
         title: "Animações",
         description: "Crie uma animação `@keyframes` chamada `fadeIn` que vai de `opacity: 0` para `opacity: 1`. Aplique-a a `.elemento`.",
-        theory: `Animações CSS dão vida à sua página! Existem duas formas: transitions (simples) e @keyframes (complexas).
+        theory: `# Animações com @keyframes
 
-Transitions — mudanças suaves ao interagir:
-  .botao {
-    background: blue;
-    transition: background 0.3s ease;
-  }
-  .botao:hover {
-    background: darkblue;
-  }
+## 💡 O que é
+\`@keyframes\` define **passos de uma animação** (de onde começa, por onde passa, onde termina) e a propriedade \`animation\` aplica esses passos a um elemento. Diferente do \`transition\` (que precisa de um gatilho como \`:hover\`), animações **rodam sozinhas**.
 
-@keyframes — animações completas:
+## 🌍 Analogia do mundo real
+Pense num **flipbook** (aquele caderninho com desenhos que vira filme ao folhear): cada \`@keyframes\` é o **roteiro** dizendo "no quadro 1, está aqui; no quadro 50, está acolá". O \`animation\` é o **dedo folheando** — define em quanto tempo, com que ritmo e quantas vezes a cena se repete.
+
+## 🔧 Sintaxe e como funciona
+  /* 1. Definir o roteiro */
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-Aplicando a animação:
+  /* 2. Aplicar */
   .elemento {
-    animation: fadeIn 1s ease-in;
+    animation: fadeIn 1s ease-out forwards;
+    /*          nome  duração timing  fill-mode */
   }
 
-Propriedades de animation:
-  animation-name: fadeIn;
-  animation-duration: 1s;
-  animation-timing-function: ease-in;
-  animation-delay: 0.5s;
-  animation-iteration-count: infinite;  /* repete sempre */
-  animation-fill-mode: forwards;        /* mantém o estado final */
+Propriedades de \`animation\` (na shorthand):
+• **duração**: \`1s\`, \`300ms\`.
+• **timing**: \`ease\` (padrão, suave), \`linear\` (constante), \`ease-out\` (desacelera), \`cubic-bezier(...)\`.
+• **delay**: \`0.5s\` antes de começar.
+• **iteration-count**: número ou \`infinite\`.
+• **fill-mode**: \`forwards\` mantém o estado final, \`backwards\` aplica o inicial antes de começar.
 
-Shorthand:
-  animation: fadeIn 1s ease-in 0.5s infinite forwards;
+## 📚 Exemplos comentados
+  /* 1. Fade-in simples (entrada de modal/card) */
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+  .modal { animation: fadeIn 0.3s ease-out; }
 
-Timing functions: ease, linear, ease-in, ease-out, ease-in-out, cubic-bezier()`,
+  /* 2. Pulse infinito (bolinha de notificação) */
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.2); }
+  }
+  .badge { animation: pulse 1.5s ease-in-out infinite; }
+
+  /* 3. Slide-in vindo da esquerda */
+  @keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+  }
+  .menu { animation: slideInLeft 0.4s ease-out forwards; }
+
+## ⚠️ Erros comuns
+• Esquecer **\`forwards\`** quando quer manter o estado final → o elemento "volta" ao estado original ao terminar.
+• Animar propriedades **caras** como \`top\`, \`left\`, \`width\` → causa relayout e fica travado. Prefira **\`transform\`** e **\`opacity\`** (a GPU acelera).
+• Usar animação muito longa em UI (\`3s\`) → parece lento. Para microinterações, **150–400ms** é o ideal.
+
+## 🚀 Quando usar na prática
+Entradas de modais, toasts e cards (fade-in/slide-in), loaders (spin), feedback de botão (pulse), destaque de notificações novas, animações de onboarding. Para interações simples (mudança de cor no hover), prefira **\`transition\`**; para animações **autônomas** ou com vários passos, use **\`@keyframes\`**.`,
         starterCode: '/* Crie a animação e aplique */\n',
         solution: '@keyframes fadeIn {\n  from { opacity: 0; }\n  to { opacity: 1; }\n}\n.elemento {\n  animation: fadeIn 1s ease-in;\n}',
         expectedOutput: "@keyframes fadeIn",
