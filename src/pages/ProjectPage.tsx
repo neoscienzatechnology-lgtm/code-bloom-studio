@@ -16,6 +16,7 @@ import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import CodeEditor from "@/components/CodeEditor";
+import AITutor from "@/components/AITutor";
 import { getProjectById } from "@/data/projects";
 import { validateCode } from "@/utils/codeValidator";
 import { useProgress } from "@/hooks/useProgress";
@@ -417,6 +418,22 @@ const ProjectPage = () => {
           </div>
         </div>
       </div>
+
+      {step && (
+        <AITutor
+          contextId={`${project.id}-${step.id}`}
+          lessonContext={{
+            courseTitle: project.title,
+            language: project.language,
+            lessonTitle: `Projeto · Etapa ${state.currentStep + 1}: ${step.title}`,
+            description: step.description,
+            expectedOutput: step.expectedOutput,
+            starterCode: step.starterCode,
+            currentCode: code,
+            lastError: stepStatus === "err" ? output ?? undefined : undefined,
+          }}
+        />
+      )}
     </div>
   );
 };
