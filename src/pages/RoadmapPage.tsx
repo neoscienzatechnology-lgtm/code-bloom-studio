@@ -111,9 +111,11 @@ const RoadmapPage = () => {
 
                     const inner = (
                       <div
-                        className={`mimo-card relative flex items-center gap-4 border-2 p-4 transition-all ${statusStyle[status]}`}
+                        className={`mimo-card relative flex items-center gap-4 border-2 p-4 transition-all ${statusStyle[status]} ${
+                          lesson.kind === "checkpoint" ? "border-dashed" : ""
+                        }`}
                       >
-                        {/* Step number */}
+                        {/* Step number / icon */}
                         <div
                           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black ${
                             status === "completed"
@@ -127,6 +129,8 @@ const RoadmapPage = () => {
                             <CheckCircle2 size={18} />
                           ) : status === "locked" ? (
                             <Lock size={14} />
+                          ) : lesson.kind === "checkpoint" ? (
+                            <ShieldCheck size={18} />
                           ) : (
                             idx + 1
                           )}
@@ -137,6 +141,11 @@ const RoadmapPage = () => {
                             <h3 className="font-bold text-foreground">
                               {lesson.title}
                             </h3>
+                            {lesson.kind === "checkpoint" && (
+                              <span className="flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                                <ShieldCheck size={10} /> Checkpoint
+                              </span>
+                            )}
                             <span
                               className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${badge.cls}`}
                             >
@@ -150,7 +159,9 @@ const RoadmapPage = () => {
                           )}
                           {status === "available" && (
                             <p className="mt-0.5 text-xs text-primary font-bold">
-                              Você está aqui — comece esta lição
+                              {lesson.kind === "checkpoint"
+                                ? "Revisão obrigatória — passe para liberar o próximo bloco"
+                                : "Você está aqui — comece esta lição"}
                             </p>
                           )}
                           {status === "completed" && (
