@@ -1,18 +1,21 @@
 import { motion } from "framer-motion";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { getCourseById } from "@/data/mockData";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, BookOpen, ChevronRight, Play, CheckCircle2 } from "lucide-react";
+import { Clock, Users, BookOpen, ChevronRight, Play, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getAugmentedCourseById } from "@/data/checkpoints";
+import { useProgress } from "@/hooks/useProgress";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const course = getCourseById(courseId || "");
+  const course = getAugmentedCourseById(courseId || "");
+  const { isCompleted } = useProgress();
 
   if (!course) return <Navigate to="/cursos" replace />;
 
-  const completedLessons = Math.floor((course.progress / 100) * course.lessons.length);
+  const completedLessons = course.lessons.filter((l) => isCompleted(l.id)).length;
+  const progressPct = Math.round((completedLessons / course.lessons.length) * 100);
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
