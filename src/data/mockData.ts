@@ -2827,62 +2827,71 @@ Em **toda aplicação React com mais de uma tela**: dashboards, e-commerce, áre
         id: "3-11",
         title: "Fetching Data com useEffect",
         description: "Crie um componente que busca dados de uma **API** usando `useEffect` + `fetch` e exibe uma lista de usuários.",
-        theory: `Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
+        theory: `# Buscando dados de APIs com useEffect + fetch
 
-Padrão básico:
+## 💡 O que é
+O padrão clássico para **carregar dados externos** em um componente React: dispara um \`fetch\` dentro de \`useEffect\` quando o componente monta, guarda o resultado em \`useState\`, e renderiza **três telas possíveis** — carregando, erro, ou dados prontos.
+
+## 🌍 Analogia do mundo real
+É como **pedir comida por aplicativo**: você abre o app (componente monta), faz o pedido (\`fetch\`), e enquanto espera a tela mostra **"preparando seu pedido..."** (\`loading\`). Se o restaurante cancelar, aparece **"deu ruim"** (\`error\`). Quando chega, você vê **a comida na mesa** (os dados renderizados). Você nunca **fica olhando a porta sem fazer nada** — sempre tem um estado visual.
+
+## 🔧 Sintaxe e como funciona
   function Usuarios() {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [erro, setErro] = useState(null);
+    const [users,   setUsers]   = useState<User[]>([]);  // os dados
+    const [loading, setLoading] = useState(true);        // está carregando?
+    const [erro,    setErro]    = useState<string | null>(null);
 
     useEffect(() => {
-      fetch("https://jsonplaceholder.typicode.com/users")
+      fetch("https://api.exemplo.com/users")
         .then(res => {
-          if (!res.ok) throw new Error("Erro HTTP: " + res.status);
+          if (!res.ok) throw new Error("HTTP " + res.status);
           return res.json();
         })
-        .then(data => setUsers(data))
-        .catch(err => setErro(err.message))
+        .then(setUsers)
+        .catch(e => setErro(e.message))
         .finally(() => setLoading(false));
-    }, []);
+    }, []);          // [] = busca só uma vez, ao montar
 
-    if (loading) return <p>Carregando...</p>;
-    if (erro) return <p>Erro: {erro}</p>;
+    if (loading) return <p>Carregando…</p>;
+    if (erro)    return <p>Erro: {erro}</p>;
     return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
   }
 
-Com async/await:
+## 📚 Exemplos comentados
+  // 1. Versão com async/await (mais limpa)
   useEffect(() => {
     async function buscar() {
       try {
-        setLoading(true);
         const res = await fetch(URL);
-        const data = await res.json();
-        setUsers(data);
-      } catch (err) {
-        setErro(err.message);
-      } finally {
-        setLoading(false);
-      }
+        if (!res.ok) throw new Error("Falhou");
+        setUsers(await res.json());
+      } catch (e: any) { setErro(e.message); }
+      finally { setLoading(false); }
     }
     buscar();
   }, []);
 
-Estados essenciais para fetch:
-  data     → os dados recebidos
-  loading  → está carregando?
-  error    → deu erro?
-
-Cancelando fetch (cleanup):
+  // 2. Cancelar a requisição se o componente desmontar (evita warning + bug)
   useEffect(() => {
-    const controller = new AbortController();
-    fetch(URL, { signal: controller.signal })
-      .then(...)
-      .catch(...);
-    return () => controller.abort();
+    const ctrl = new AbortController();
+    fetch(URL, { signal: ctrl.signal })
+      .then(r => r.json()).then(setUsers)
+      .catch(e => { if (e.name !== "AbortError") setErro(e.message); });
+    return () => ctrl.abort();           // cleanup ao desmontar
   }, []);
 
-Dica: Para projetos reais, considere React Query (TanStack Query) — gerencia cache, refetch e loading automaticamente.`,
+  // 3. Refazer a busca quando uma dependência muda (ex.: termo de pesquisa)
+  useEffect(() => {
+    fetch(\`/api/buscar?q=\${termo}\`).then(r => r.json()).then(setResultados);
+  }, [termo]);                            // re-busca quando 'termo' mudar
+
+## ⚠️ Erros comuns
+• **Esquecer o \`[]\`** → loop infinito: o fetch atualiza o estado, o componente re-renderiza, dispara fetch de novo…
+• Não tratar **erro de rede** ou \`!res.ok\` → \`fetch\` **só rejeita em falha de rede**, não em status 4xx/5xx. Cheque \`res.ok\` manualmente.
+• Tentar \`setUsers\` **depois que o componente desmontou** → warning de memory leak. Use \`AbortController\` ou flag de cancelamento.
+
+## 🚀 Quando usar na prática
+**Toda tela que carrega dados ao abrir**: feed, dashboard, perfil de usuário, página de detalhes. Para projetos sérios, em vez de \`useEffect\` + \`fetch\` cru, prefira **TanStack Query (React Query)** ou **SWR** — eles dão cache automático, retry, refetch em foco e elimina 80% do boilerplate de \`loading\`/\`error\`.`,
         starterCode: 'import { useState, useEffect } from "react";\n// Busque dados da API\n',
         solution: 'import { useState, useEffect } from "react";\n\nfunction Usuarios() {\n  const [users, setUsers] = useState([]);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch("https://jsonplaceholder.typicode.com/users")\n      .then(res => res.json())\n      .then(data => { setUsers(data); setLoading(false); });\n  }, []);\n\n  if (loading) return <p>Carregando...</p>;\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}',
         expectedOutput: "useEffect",
