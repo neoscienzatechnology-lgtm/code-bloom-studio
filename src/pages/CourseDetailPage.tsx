@@ -2,9 +2,10 @@ import { motion } from "framer-motion";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, BookOpen, ChevronRight, Play, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Clock, Users, BookOpen, ChevronRight, Play, CheckCircle2, ShieldCheck, Hammer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getAugmentedCourseById } from "@/data/checkpoints";
+import { getProjectsByCourse } from "@/data/projects";
 import { useProgress } from "@/hooks/useProgress";
 
 const CourseDetailPage = () => {
@@ -16,6 +17,7 @@ const CourseDetailPage = () => {
 
   const completedLessons = course.lessons.filter((l) => isCompleted(l.id)).length;
   const progressPct = Math.round((completedLessons / course.lessons.length) * 100);
+  const projects = getProjectsByCourse(course.id);
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
@@ -137,6 +139,63 @@ const CourseDetailPage = () => {
             })()}
           </div>
         </motion.div>
+
+        {/* Projects */}
+        {projects.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mt-10"
+          >
+            <h2 className="mb-1 text-xl font-black flex items-center gap-2">
+              <Hammer size={18} className="text-primary" /> Projetos guiados
+            </h2>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Pratique o que aprendeu construindo algo real, etapa por etapa.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {projects.map((p) => {
+                const done = isCompleted(`project-${p.id}`);
+                return (
+                  <Link key={p.id} to={`/projeto/${p.id}`}>
+                    <div
+                      className={`card-hover flex h-full flex-col rounded-2xl border-2 p-5 transition-all ${
+                        done
+                          ? "border-accent/40 bg-accent/5"
+                          : "border-primary/30 bg-primary/5 hover:border-primary"
+                      }`}
+                    >
+                      <div className="mb-3 flex items-center gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-3xl">
+                          {p.emoji}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="truncate text-base font-extrabold text-foreground">
+                              {p.title}
+                            </h3>
+                            {done && (
+                              <CheckCircle2 size={14} className="shrink-0 text-accent" />
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {p.steps.length} etapas · +{p.xpReward} XP
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{p.goal}</p>
+                      <div className="mt-3 flex items-center gap-1.5 text-xs font-bold text-primary">
+                        {done ? "Refazer projeto" : "Começar projeto"}
+                        <ChevronRight size={14} />
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
