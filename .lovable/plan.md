@@ -55,8 +55,8 @@ Reescrever todas as teorias do curso de JavaScript no template.
 ### **Fase 3 — Curso 3 (React — 11 lições) ✅ CONCLUÍDA**
 Todas as 11 lições do curso "React & TypeScript" reescritas no template de 6 seções.
 
-### **Fase 4 — Cursos 4, 5 e 6** (próximos 3 cursos da lista)
-Reescrever no mesmo template.
+### **Fase 4 — Cursos 4 (CSS ✅), 5 (Node.js ✅) e 6 (SQL — pendente)**
+CSS Mágico (11/11 ✅) e Node.js Backend (11/11 ✅) concluídos. SQL & Bancos de Dados pendente para a próxima rodada.
 
 ### **Fase 5 — Cursos 7, 8 e 9** (últimos 3 cursos)
 Fechar a reescrita das 103 lições.
