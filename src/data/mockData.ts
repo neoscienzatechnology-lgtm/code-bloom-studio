@@ -3364,44 +3364,65 @@ Adicionar **ícones decorativos** sem poluir o HTML, criar **tooltips** simples 
         id: "4-8",
         title: "Transitions",
         description: "Crie um botão que muda de cor suavemente ao passar o mouse, usando **transition** com duração de 0.3s.",
-        theory: `Transitions criam animações suaves entre dois estados de um elemento (ex: hover, focus, active).
+        theory: `# Transitions — interpolação suave entre estados
 
-Sintaxe:
-  transition: propriedade duração timing-function delay;
+## 💡 O que é
+\`transition\` faz o navegador **interpolar suavemente** a mudança de uma propriedade CSS quando ela acontece (ex.: cor muda no \`:hover\`, tamanho muda quando ganha uma classe). Em vez de **pular** do valor A para B, vai **passando** por todos os valores intermediários no tempo definido.
 
-Exemplo:
+## 🌍 Analogia do mundo real
+Pense num **dimmer de lâmpada**: sem dimmer, a luz acende **estalando** do escuro para o claro (CSS sem transition). Com dimmer, ela vai **subindo gradualmente** ao longo de meio segundo. \`transition\` é o dimmer do CSS — você diz **qual luz**, **em quanto tempo** e **com que ritmo**.
+
+## 🔧 Sintaxe e como funciona
   .botao {
     background: #6c5ce7;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    transition: background 0.3s ease;
+    /*           ↑propriedade ↑duração ↑timing  */
+  }
+  .botao:hover { background: #5a4bd1; }   /* o gatilho: mudança de estado */
+
+Shorthand completa:
+  transition: <propriedade> <duração> <timing-function> <delay>;
+
+Múltiplas propriedades de uma vez:
+  transition: background 0.3s ease, transform 0.2s ease-out;
+
+\`transition: all 0.3s ease;\` anima tudo, mas **evite** — pode animar coisas inesperadas (largura, altura) e ficar pesado.
+
+## 📚 Exemplos comentados
+  /* 1. Botão com hover suave */
+  .botao {
+    background: #6c5ce7; color: white; padding: 12px 24px;
     transition: background 0.3s ease;
   }
+  .botao:hover { background: #5a4bd1; }
 
-  .botao:hover {
-    background: #5a4bd1;
+  /* 2. Card que sobe e ganha sombra ao passar o mouse */
+  .card {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
   }
-
-Múltiplas propriedades:
-  transition: background 0.3s ease, transform 0.2s ease;
-
   .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
   }
 
-Todas as propriedades:
-  transition: all 0.3s ease;  /* anima tudo (pode ser pesado) */
+  /* 3. Input destacando ao receber foco */
+  input {
+    border: 1px solid #ccc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108,92,231,0.2);
+    outline: none;
+  }
 
-Timing functions:
-  ease     → início lento, meio rápido, fim lento (padrão)
-  linear   → velocidade constante
-  ease-in  → início lento
-  ease-out → fim lento
-  ease-in-out → início e fim lentos
-  cubic-bezier(x1,y1,x2,y2) → personalizado`,
+## ⚠️ Erros comuns
+• Colocar a transition no **\`:hover\`** em vez de no estado normal → ao tirar o mouse, a volta é abrupta (pula sem suavizar). Sempre **declare \`transition\` no estado base**.
+• Tentar animar propriedades **não-animáveis** (\`display: none\` → \`block\`) → não interpola. Use \`opacity\` + \`visibility\` ou \`max-height\` para ocultar/mostrar suavemente.
+• Animar \`width\`/\`height\`/\`top\` quando podia usar \`transform\` → \`transform\` é **acelerado por GPU** e roda muito mais suave.
+
+## 🚀 Quando usar na prática
+**Microinterações** que dão polidez: hover de botões/cards, focus em inputs, abrir/fechar dropdowns, troca de tema. Para animações **autônomas** (sem gatilho do usuário) ou com vários passos, prefira **\`@keyframes\`**. Duração ideal para UI: **150–300ms**.`,
         starterCode: '.botao {\n  /* Adicione transition */\n}\n.botao:hover {\n  /* Estado hover */\n}\n',
         solution: '.botao {\n  background: #6c5ce7;\n  color: white;\n  padding: 12px 24px;\n  transition: background 0.3s ease;\n}\n.botao:hover {\n  background: #5a4bd1;\n}',
         expectedOutput: "transition",
