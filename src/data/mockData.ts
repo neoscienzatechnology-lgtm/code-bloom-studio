@@ -2330,42 +2330,50 @@ Toda vez que um componente precisa **exibir algo que vem de fora**: um título d
         id: "3-3",
         title: "useState",
         description: "Crie um **contador** com `useState`. O componente deve ter um botão que incrementa o valor e exibe o número atual.",
-        theory: `useState é o hook mais básico do React. Ele permite que componentes tenham estado — dados que podem mudar e re-renderizar a tela.
+        theory: `# useState — estado em componentes
 
-Sintaxe:
+## 💡 O que é
+\`useState\` é o hook que dá **memória** a um componente. Ele guarda um valor que pode mudar ao longo do tempo e, quando muda, **avisa o React para re-renderizar a tela** com o novo valor.
+
+## 🌍 Analogia do mundo real
+Pense num **placar de jogo de futebol**: o número visível é o estado, e o **juiz com o controle remoto** é a função \`setEstado\`. Quando o juiz aperta o botão, o placar atualiza para todo mundo ver. Você nunca pinta o placar com tinta direto (\`count = 5\` ❌) — sempre usa o controle (\`setCount(5)\` ✅).
+
+## 🔧 Sintaxe e como funciona
   const [valor, setValor] = useState(valorInicial);
+  //     ↑       ↑                    ↑
+  //  estado  atualizador        valor da 1ª render
 
-• valor → o estado atual
-• setValor → função para atualizar o estado
-• valorInicial → valor quando o componente é criado
+Fluxo a cada clique/evento:
+1. Você chama \`setValor(novo)\`.
+2. React agenda uma nova renderização.
+3. A função do componente roda **de novo**, agora com \`valor === novo\`.
+4. A tela é atualizada.
 
-Exemplo — Contador:
-  import { useState } from "react";
-
+## 📚 Exemplos comentados
+  // 1. Contador clássico
   function Contador() {
-    const [count, setCount] = useState(0);
-
+    const [count, setCount] = useState(0);              // começa em 0
     return (
-      <div>
-        <p>Contagem: {count}</p>
-        <button onClick={() => setCount(count + 1)}>
-          Incrementar
-        </button>
-      </div>
+      <button onClick={() => setCount(count + 1)}>     // clique → +1
+        Cliques: {count}
+      </button>
     );
   }
 
-Quando setCount é chamado:
-1. O estado muda
-2. O React re-renderiza o componente
-3. A tela atualiza com o novo valor
+  // 2. Usando o valor anterior (mais seguro em updates rápidos)
+  setCount(prev => prev + 1);   // recebe o valor mais recente como argumento
 
-NUNCA modifique o estado diretamente:
-  count = 5;           // ❌ ERRADO
-  setCount(5);         // ✅ CORRETO
+  // 3. Estado com objeto — sempre crie objeto NOVO (imutabilidade)
+  const [user, setUser] = useState({ nome: "Ana", idade: 25 });
+  setUser({ ...user, idade: 26 });   // spread copia + sobrescreve idade
 
-Para estado baseado no anterior:
-  setCount(prev => prev + 1);  // mais seguro`,
+## ⚠️ Erros comuns
+• **Mutar o estado direto**: \`count = 5\` ou \`user.idade = 26\` → React não percebe a mudança e a tela não atualiza.
+• **Usar valor desatualizado** em updates seguidos: \`setCount(count+1); setCount(count+1)\` só soma 1. Use \`setCount(prev => prev + 1)\`.
+• **Chamar \`useState\` dentro de \`if\`** ou loop → quebra a regra dos hooks. Sempre no topo do componente.
+
+## 🚀 Quando usar na prática
+Em **qualquer dado que muda dentro de um componente** e precisa refletir na tela: valor de input, item selecionado, modal aberto/fechado, lista filtrada, contador, página atual. É o hook que você mais vai usar — sem \`useState\`, a UI seria sempre estática.`,
         starterCode: 'import { useState } from "react";\n// Crie o contador\n',
         solution: 'import { useState } from "react";\nfunction Contador() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}',
         expectedOutput: "useState",
