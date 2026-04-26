@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
+import PaceCoach from "@/components/PaceCoach";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
@@ -51,6 +52,8 @@ const EditorPage = () => {
   const [showSolution, setShowSolution] = useState(false);
   const [solutionWarned, setSolutionWarned] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
+  const [bonusActive, setBonusActive] = useState(false);
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
@@ -68,6 +71,12 @@ const EditorPage = () => {
     const timer = setTimeout(() => saveCode(lesson.id, code, course?.id), 500);
     return () => clearTimeout(timer);
   }, [code, lesson, saveCode]);
+
+  // Reset pace coach when changing lessons
+  useEffect(() => {
+    setPaceMode(null);
+    setBonusActive(false);
+  }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
   if (augmented?.lesson.kind === "checkpoint") {
@@ -99,6 +108,7 @@ const EditorPage = () => {
       setIsCorrect(correct ? true : result.level === "close" ? null : false);
 
       if (correct) {
+        const priorAttempts = getAttempts(lesson.id);
         setOutput(lesson.expectedOutput);
         setReflectiveQ(null);
         resetLesson(lesson.id);
@@ -107,6 +117,12 @@ const EditorPage = () => {
         if (!alreadyCompleted) {
           completeLesson(lesson.id, lesson.xpReward, course.id);
           fireConfetti();
+        }
+        // Personalização: acertou de primeira → oferece desafio extra
+        if (priorAttempts === 0 && !alreadyCompleted && !bonusActive) {
+          setPaceMode("thriving");
+        } else {
+          setPaceMode(null);
         }
       } else {
         registerFailure(lesson.id, result.errorKind);
@@ -121,6 +137,11 @@ const EditorPage = () => {
 
         setOutput(composed);
         setReflectiveQ(result.reflectiveQuestion ?? null);
+
+        // Personalização: 3+ falhas seguidas → modo apoio
+        if (attempts >= 3) {
+          setPaceMode("struggling");
+        }
       }
       setRunning(false);
     }, 800);
@@ -365,6 +386,41 @@ const EditorPage = () => {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Personalização de ritmo: apoio extra ou desafio */}
+            <PaceCoach
+              mode={paceMode}
+              altExplanation={
+                lesson.hints[0]
+                  ? `Foque primeiro nisto: ${lesson.hints[0]} Tente reescrever o código em voz alta antes de digitar.`
+                  : "Releia o enunciado e tente descrever em uma frase o que o programa precisa fazer antes de codar."
+              }
+              bonusChallenge={`Conseguiu! Agora tente uma variação: faça o mesmo resultado, mas usando uma estrutura diferente (ex: outra forma de imprimir, uma variável intermediária, ou um pequeno loop). A resposta esperada continua sendo: ${lesson.expectedOutput}`}
+              onUseSimpler={() => {
+                // "Versão preparatória": começa do starterCode com guia em comentário
+                const guide = `// Versão guiada — siga os passos abaixo:\n// 1. Releia o exercício\n// 2. Use o exemplo da teoria como base\n// 3. Saída esperada: ${lesson.expectedOutput}\n\n${lesson.starterCode}`;
+                setCode(guide);
+                setOutput(null);
+                setIsCorrect(null);
+                setPaceMode(null);
+              }}
+              onRevealSolution={() => {
+                handleRevealSolution();
+                setPaceMode(null);
+              }}
+              onAcceptBonus={() => {
+                setBonusActive(true);
+                setPaceMode(null);
+              }}
+              onDismiss={() => setPaceMode(null)}
+            />
+
+            {bonusActive && (
+              <div className="mt-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-foreground">
+                <span className="font-bold text-accent">✨ Modo desafio ativo:</span>{" "}
+                tente refazer este exercício de uma forma diferente antes de avançar.
+              </div>
+            )}
           </motion.div>
         </div>
 
