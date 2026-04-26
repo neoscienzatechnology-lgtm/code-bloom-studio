@@ -3041,36 +3041,65 @@ Em **quase toda barra de navegação, header, footer, lista de botões, cards la
         id: "4-3",
         title: "CSS Grid",
         description: "Crie um layout de **3 colunas iguais** usando CSS Grid com um gap de 16px.",
-        theory: `CSS Grid é um sistema de layout bidimensional — controla linhas E colunas ao mesmo tempo.
+        theory: `# CSS Grid — layout em duas dimensões
 
-Ativando Grid:
+## 💡 O que é
+**CSS Grid** organiza elementos em **linhas E colunas ao mesmo tempo**. É a ferramenta certa para galerias de cards, layouts de página inteira (header/sidebar/main/footer) e qualquer coisa que pareça uma tabela visual.
+
+## 🌍 Analogia do mundo real
+Pense numa **caixa de ovos**: você define quantas **fileiras** e quantas **colunas** existem, e cada ovo (item) ocupa uma célula. Pode ter ovos pequenos (1 célula) ou um ovo gigante que ocupa **2 células de largura** — o quadro é planejado de antemão. Flexbox é uma prateleira (1D); Grid é a caixa de ovos (2D).
+
+## 🔧 Sintaxe e como funciona
   .grid {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);   /* 3 colunas iguais */
+    grid-template-rows: 100px auto;          /* 1ª linha 100px, 2ª se ajusta */
+    gap: 16px;                               /* espaço entre células */
   }
 
-Definindo colunas:
-  grid-template-columns: 200px 200px 200px;    → 3 colunas de 200px
-  grid-template-columns: 1fr 1fr 1fr;           → 3 colunas iguais
-  grid-template-columns: repeat(3, 1fr);         → mesma coisa, mais limpo
-  grid-template-columns: 1fr 2fr 1fr;           → do meio é o dobro
+A unidade **\`fr\`** (fraction) divide o **espaço disponível**:
+• \`1fr 1fr 1fr\` → três partes iguais.
+• \`1fr 2fr 1fr\` → meio leva o dobro das laterais.
+• \`200px 1fr\` → primeira coluna fixa, segunda preenche o resto.
 
-fr = fração do espaço disponível
+## 📚 Exemplos comentados
+  /* 1. Galeria de 3 colunas iguais */
+  .galeria {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
 
-Definindo linhas:
-  grid-template-rows: 100px auto 50px;
+  /* 2. Grid responsivo SEM media query (mágico!) */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    /* coloca quantas colunas couberem, cada uma com no mínimo 250px */
+  }
 
-Espaçamento:
-  gap: 16px;            → espaço entre todas as células
-  column-gap: 20px;     → só entre colunas
-  row-gap: 10px;        → só entre linhas
+  /* 3. Layout de página: header em cima, sidebar + main, footer embaixo */
+  .pagina {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 1fr 40px;
+    grid-template-areas:
+      "header header"
+      "side   main"
+      "footer footer";
+  }
+  .header { grid-area: header; }
+  .side   { grid-area: side; }
+  .main   { grid-area: main; }
+  .footer { grid-area: footer; }
 
-Grid responsivo automático:
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  /* Cria quantas colunas couberem, mínimo 250px cada */
+## ⚠️ Erros comuns
+• Esquecer **\`display: grid\`** no container → as propriedades \`grid-template-*\` viram inúteis.
+• Usar **\`px\` em todas as colunas** quando deveria ser \`fr\` → layout não se adapta a telas diferentes.
+• Confundir \`gap\` com \`margin\` nos filhos → use **\`gap\`** no Grid; margem nos filhos vira sobreposição confusa.
 
-Quando usar Grid vs Flexbox:
-• Grid → layouts 2D (linhas + colunas), grids de cards
-• Flexbox → layouts 1D (uma direção), alinhamento`,
+## 🚀 Quando usar na prática
+Galerias de produtos, dashboards com múltiplos painéis, layout de página inteira, listagens com cards de tamanhos variados. **Regra geral**: layouts em **uma direção** → Flexbox; layouts em **duas direções (linhas + colunas)** → Grid. Nada impede combinar os dois (Grid no pai, Flexbox dentro de cada célula).`,
         starterCode: '.grid {\n  /* Crie o grid */\n}\n',
         solution: '.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}',
         expectedOutput: "grid-template-columns",
