@@ -2682,46 +2682,70 @@ Para **valores globais que mudam pouco**: tema (claro/escuro), idioma, usuário 
         id: "3-9",
         title: "useReducer",
         description: "Implemente um **gerenciador de tarefas** usando `useReducer` com ações ADD, TOGGLE e REMOVE.",
-        theory: `useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
+        theory: `# useReducer — estado complexo com regras claras
 
-Sintaxe:
-  const [state, dispatch] = useReducer(reducer, estadoInicial);
+## 💡 O que é
+\`useReducer\` é uma alternativa ao \`useState\` para quando o estado tem **muitos campos** ou as **transições são complexas**. Você descreve **ações** que podem acontecer (\`ADD\`, \`REMOVE\`, \`TOGGLE\`) e uma **função reducer** decide como o estado muda para cada ação.
 
-O reducer é uma função pura:
+## 🌍 Analogia do mundo real
+Pense num **caixa eletrônico**: você não enfia a mão dentro do cofre para mexer no dinheiro (estado). Você aperta um **botão de ação** ("Sacar 100", "Depositar 50", "Consultar saldo") e uma **regra interna** decide como o saldo muda. \`dispatch\` é apertar o botão; o \`reducer\` é o software do caixa que processa cada operação de forma previsível e auditável.
+
+## 🔧 Sintaxe e como funciona
+  // 1. Função reducer (pura: mesma entrada → mesma saída, sem efeitos)
   function reducer(state, action) {
     switch (action.type) {
-      case "INCREMENT":
-        return { count: state.count + 1 };
-      case "DECREMENT":
-        return { count: state.count - 1 };
-      case "RESET":
-        return { count: 0 };
-      default:
-        return state;
+      case "INCREMENT": return { count: state.count + 1 };
+      case "RESET":     return { count: 0 };
+      default:          return state;     // sempre devolva algo
     }
   }
 
-Usando no componente:
-  function Contador() {
-    const [state, dispatch] = useReducer(reducer, { count: 0 });
-    return (
-      <div>
-        <p>{state.count}</p>
-        <button onClick={() => dispatch({ type: "INCREMENT" })}>+1</button>
-        <button onClick={() => dispatch({ type: "RESET" })}>Resetar</button>
-      </div>
-    );
-  }
+  // 2. Hook no componente
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+  //     ↑ estado atual    ↑ "envia" uma ação    ↑ valor inicial
 
-Ações com payload:
+  // 3. Disparando ações
+  dispatch({ type: "INCREMENT" });
   dispatch({ type: "ADD_TODO", payload: { text: "Estudar" } });
 
-  case "ADD_TODO":
-    return [...state, { id: Date.now(), text: action.payload.text, done: false }];
+## 📚 Exemplos comentados
+  // 1. Contador com várias ações
+  const reducer = (s, a) => {
+    if (a.type === "inc")   return { n: s.n + 1 };
+    if (a.type === "dec")   return { n: s.n - 1 };
+    if (a.type === "reset") return { n: 0 };
+    return s;
+  };
+  const [s, dispatch] = useReducer(reducer, { n: 0 });
 
-Quando usar useReducer vs useState:
-  useState → 1-2 variáveis simples
-  useReducer → estado complexo, múltiplas ações, lógica de atualização elaborada`,
+  // 2. Lista de tarefas (todo) — imutabilidade com spread/filter/map
+  function todoReducer(state, action) {
+    switch (action.type) {
+      case "ADD":    return [...state, { id: Date.now(), text: action.text, done: false }];
+      case "TOGGLE": return state.map(t => t.id === action.id ? { ...t, done: !t.done } : t);
+      case "REMOVE": return state.filter(t => t.id !== action.id);
+      default:       return state;
+    }
+  }
+
+  // 3. Estado de formulário com vários campos
+  const inicial = { nome: "", email: "", erro: null };
+  function form(state, a) {
+    switch (a.type) {
+      case "SET":    return { ...state, [a.field]: a.value };
+      case "ERRO":   return { ...state, erro: a.msg };
+      case "RESET":  return inicial;
+      default:       return state;
+    }
+  }
+
+## ⚠️ Erros comuns
+• **Mutar o state direto** dentro do reducer (\`state.count++\`) → quebra a comparação de igualdade do React. Sempre retorne **objeto/array novo**.
+• Esquecer o **\`default: return state\`** → ações desconhecidas fazem o estado virar \`undefined\`.
+• Colocar **lógica assíncrona** dentro do reducer (\`fetch\`, \`setTimeout\`) → reducer deve ser **puro**. Faça async em \`useEffect\` ou no handler que chama \`dispatch\`.
+
+## 🚀 Quando usar na prática
+Quando o estado tem **3+ campos relacionados** que mudam juntos, quando há **muitas ações diferentes** (ex.: lista de tarefas, carrinho, wizard de várias etapas), ou quando você quer um **histórico claro** das mudanças. Para 1-2 valores simples, \`useState\` continua sendo melhor.`,
         starterCode: 'import { useReducer } from "react";\n// Crie o reducer e o componente\n',
         solution: 'import { useReducer } from "react";\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case "ADD":\n      return [...state, { id: Date.now(), text: action.text, done: false }];\n    case "TOGGLE":\n      return state.map(t => t.id === action.id ? {...t, done: !t.done} : t);\n    case "REMOVE":\n      return state.filter(t => t.id !== action.id);\n    default: return state;\n  }\n}',
         expectedOutput: "useReducer",
