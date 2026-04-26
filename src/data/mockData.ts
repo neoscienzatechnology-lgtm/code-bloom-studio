@@ -2495,40 +2495,48 @@ Para **toda estrutura de dados que circula no app**: respostas de API, props de 
         id: "3-6",
         title: "Renderização de Listas",
         description: "Dado um array de nomes, renderize uma lista `<ul>` com um `<li>` para cada nome usando `.map()`.",
-        theory: `Em React, usamos .map() para renderizar listas de elementos. É o padrão para transformar arrays de dados em elementos JSX.
+        theory: `# Renderização de listas com .map()
 
-Renderizando uma lista:
-  const nomes = ["Ana", "Bruno", "Carlos"];
+## 💡 O que é
+Em React, transformar um **array de dados** numa **lista de elementos JSX** é feito com \`.map()\`. Cada item do array vira um elemento na tela, e o React precisa de uma \`key\` única para acompanhar quem é quem.
 
-  function Lista() {
-    return (
-      <ul>
-        {nomes.map(nome => (
-          <li key={nome}>{nome}</li>
-        ))}
-      </ul>
-    );
-  }
+## 🌍 Analogia do mundo real
+Imagine **etiquetas em um varal de roupas**: cada peça (item do array) precisa do seu **prendedor com nome** (\`key\`). Se você tirar uma camisa do meio, o varalista (React) consegue saber exatamente qual peça foi sem ter que reorganizar tudo. Sem prendedores, ele teria que **rebagunçar e remontar o varal inteiro** a cada mudança.
 
-A prop key é OBRIGATÓRIA em listas! Ela ajuda o React a identificar qual item mudou:
-  // ✅ Bom — ID único:
-  {users.map(user => <li key={user.id}>{user.nome}</li>)}
-
-  // ⚠️ Ok — se não tiver ID:
-  {items.map((item, index) => <li key={index}>{item}</li>)}
-
-  // ❌ Errado — sem key:
-  {items.map(item => <li>{item}</li>)}
-
-Renderização condicional dentro de listas:
-  {users.map(user => (
-    <li key={user.id}>
-      {user.nome} {user.ativo && "✅"}
-    </li>
+## 🔧 Sintaxe e como funciona
+  {array.map(item => (
+    <li key={item.id}>{item.nome}</li>
   ))}
 
-Dica: Filtre antes de mapear para mostrar apenas itens relevantes:
-  {users.filter(u => u.ativo).map(u => <li key={u.id}>{u.nome}</li>)}`,
+• \`.map\` percorre cada \`item\` e retorna um JSX.
+• \`{ }\` em volta porque é uma **expressão JavaScript dentro do JSX**.
+• \`key\` deve ser **única dentro daquela lista** — geralmente o \`id\` do item, **nunca o índice se a lista for reordenada**.
+
+## 📚 Exemplos comentados
+  // 1. Lista simples de strings (key = o próprio texto, se não repetir)
+  const nomes = ["Ana", "Bruno", "Carlos"];
+  <ul>
+    {nomes.map(n => <li key={n}>{n}</li>)}
+  </ul>
+
+  // 2. Lista de objetos (key = id estável vindo do backend)
+  const users = [{ id: 1, nome: "Ana" }, { id: 2, nome: "Bruno" }];
+  <ul>
+    {users.map(u => <li key={u.id}>{u.nome}</li>)}
+  </ul>
+
+  // 3. Filtrar antes de mapear (mostrar só ativos)
+  {users.filter(u => u.ativo).map(u => (
+    <li key={u.id}>{u.nome}</li>
+  ))}
+
+## ⚠️ Erros comuns
+• **Esquecer a \`key\`** → warning no console + bugs sutis em re-render.
+• Usar **\`index\` como key** quando a lista é reordenada/filtrada → React pode reusar o item errado e a tela fica inconsistente. Use \`index\` só em listas estáticas.
+• Esquecer as **chaves \`{ }\`** ao redor do \`.map\` no JSX → o array some da tela.
+
+## 🚀 Quando usar na prática
+Em **toda lista dinâmica**: feed de posts, lista de tarefas, resultados de busca, mensagens de chat, opções de um \`<select>\`, cards de produtos. Sempre que pensar "preciso renderizar N coisas a partir de um array", a resposta é \`.map\` com \`key\`.`,
         starterCode: 'const nomes = ["Ana", "Bruno", "Carlos"];\n// Renderize a lista\n',
         solution: 'const nomes = ["Ana", "Bruno", "Carlos"];\nfunction Lista() {\n  return <ul>{nomes.map(n => <li key={n}>{n}</li>)}</ul>;\n}',
         expectedOutput: "Ana",
