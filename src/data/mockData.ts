@@ -2547,40 +2547,62 @@ Em **toda lista dinâmica**: feed de posts, lista de tarefas, resultados de busc
         id: "3-7",
         title: "Custom Hooks",
         description: "Crie um custom hook **useContador** que encapsula a lógica de um contador com `incrementar`, `decrementar` e `resetar`.",
-        theory: `Custom Hooks permitem extrair lógica de estado reutilizável em funções separadas. O nome DEVE começar com "use".
+        theory: `# Custom Hooks — reutilizar lógica entre componentes
 
-Criando um custom hook:
-  function useContador(inicial = 0) {
-    const [count, setCount] = useState(inicial);
+## 💡 O que é
+Um **custom hook** é uma função JavaScript comum que **chama outros hooks** (\`useState\`, \`useEffect\`, etc.) e cujo nome **começa com \`use\`**. Ele serve para **empacotar uma lógica de estado reutilizável** e usar em vários componentes sem copiar e colar.
 
-    const incrementar = () => setCount(prev => prev + 1);
-    const decrementar = () => setCount(prev => prev - 1);
-    const resetar = () => setCount(inicial);
+## 🌍 Analogia do mundo real
+Pense numa **receita de bolo**: a primeira vez você descobre o passo a passo (misturar, bater, assar). Depois você **escreve a receita num cartão** (\`useBolo\`) e qualquer um na cozinha pode seguir. Sem precisar reaprender, sem variações que esquecem ingredientes — todo mundo faz **o mesmo bolo, do mesmo jeito**.
 
-    return { count, incrementar, decrementar, resetar };
+## 🔧 Sintaxe e como funciona
+  function useContador(inicial = 0) {                  // nome começa com "use"
+    const [count, setCount] = useState(inicial);       // pode usar hooks dentro
+    const incrementar = () => setCount(c => c + 1);
+    const resetar     = () => setCount(inicial);
+    return { count, incrementar, resetar };            // devolve o que o componente precisa
   }
 
-Usando o hook:
-  function MeuComponente() {
-    const { count, incrementar, resetar } = useContador(0);
-    return (
-      <div>
-        <p>{count}</p>
-        <button onClick={incrementar}>+1</button>
-        <button onClick={resetar}>Resetar</button>
-      </div>
-    );
+  // No componente:
+  const { count, incrementar, resetar } = useContador(0);
+
+Cada componente que chama \`useContador\` ganha **seu próprio estado independente** — o hook é uma "fábrica" de comportamentos, não um estado global.
+
+## 📚 Exemplos comentados
+  // 1. useToggle — alternar booleano
+  function useToggle(inicial = false) {
+    const [on, setOn] = useState(inicial);
+    const toggle = () => setOn(v => !v);
+    return [on, toggle] as const;
   }
 
-Regras dos Hooks:
-  1. Só chame hooks no TOPO do componente/hook
-  2. Nunca dentro de if, for ou funções aninhadas
-  3. Só chame em componentes React ou outros hooks
+  // 2. useLocalStorage — estado que persiste no navegador
+  function useLocalStorage<T>(key: string, inicial: T) {
+    const [valor, setValor] = useState<T>(() => {
+      const salvo = localStorage.getItem(key);
+      return salvo ? JSON.parse(salvo) : inicial;
+    });
+    useEffect(() => { localStorage.setItem(key, JSON.stringify(valor)); }, [key, valor]);
+    return [valor, setValor] as const;
+  }
 
-Exemplos úteis:
-  useLocalStorage(key, valor) → estado persistido
-  useWindowSize() → largura/altura da janela
-  useFetch(url) → busca dados com loading/error`,
+  // 3. useFetch — buscar dados com loading/erro
+  function useFetch(url: string) {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+      fetch(url).then(r => r.json()).then(setData).finally(() => setLoading(false));
+    }, [url]);
+    return { data, loading };
+  }
+
+## ⚠️ Erros comuns
+• **Nome sem \`use\`** (ex.: \`fazerContador\`) → React não aplica as regras de hooks e o ESLint não consegue te ajudar.
+• Chamar o hook **dentro de \`if\` ou loop** → quebra a regra "hooks sempre no topo".
+• Esperar **estado compartilhado** entre componentes — cada chamada cria um estado próprio. Para compartilhar, combine com **Context**.
+
+## 🚀 Quando usar na prática
+Sempre que você notar a **mesma lógica de \`useState\` + \`useEffect\` repetida em vários componentes**: leitura/escrita no localStorage, debouncing de input, fetch com loading, escutar tamanho da janela, autenticação. Custom hooks são a forma idiomática de organizar lógica em React moderno.`,
         starterCode: 'import { useState } from "react";\n// Crie o custom hook\n',
         solution: 'import { useState } from "react";\n\nfunction useContador(inicial = 0) {\n  const [count, setCount] = useState(inicial);\n  const incrementar = () => setCount(c => c + 1);\n  const decrementar = () => setCount(c => c - 1);\n  const resetar = () => setCount(inicial);\n  return { count, incrementar, decrementar, resetar };\n}',
         expectedOutput: "useContador",
