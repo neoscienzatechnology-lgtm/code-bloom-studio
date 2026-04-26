@@ -3492,52 +3492,57 @@ Reset universal (faça em todo projeto):
         id: "4-10",
         title: "Posicionamento (position)",
         description: "Crie um elemento **fixo** no canto inferior direito da tela (como um botão de chat flutuante) usando `position: fixed`.",
-        theory: `A propriedade position controla COMO o elemento é posicionado na página.
+        theory: `# Position — controlando onde os elementos ficam
 
-Valores:
-  static (padrão) → fluxo normal do documento
-  relative → deslocado em relação à sua posição original
-  absolute → posicionado em relação ao ancestral posicionado mais próximo
-  fixed → posicionado em relação à VIEWPORT (não rola)
-  sticky → alterna entre relative e fixed ao rolar
+## 💡 O que é
+A propriedade \`position\` decide **como** o navegador posiciona um elemento e **a quem** ele se ancora. É a chave para fazer **overlays, modais, tooltips, navbars fixas, headers que grudam ao rolar** e botões flutuantes.
 
-Exemplos:
-  /* Relative — desloca sem sair do fluxo */
+## 🌍 Analogia do mundo real
+Pense num **mural de avisos**: a maioria dos papéis fica **no fluxo**, encostados um no outro (\`static\`). Você pode **deslocar levemente** um papel sem mexer nos vizinhos (\`relative\`), **fixar com tachinha em qualquer ponto do mural** (\`absolute\`), ou colar um papel no **vidro da sala** que não acompanha o mural quando ele desliza (\`fixed\`). \`sticky\` é o aviso que **rola junto até certo ponto e depois trava**.
+
+## 🔧 Sintaxe e como funciona
   .elemento {
-    position: relative;
-    top: 10px;
-    left: 20px;
+    position: <static | relative | absolute | fixed | sticky>;
+    top: 0; right: 0; bottom: 0; left: 0;   /* só funcionam com position ≠ static */
+    z-index: 10;                              /* qual fica "na frente" */
   }
 
-  /* Absolute — sai do fluxo, posiciona dentro do pai relative */
-  .pai { position: relative; }
-  .filho {
-    position: absolute;
-    top: 0;
-    right: 0;  /* canto superior direito do pai */
+Diferença essencial:
+• \`static\` — padrão; \`top/left/...\` são ignorados.
+• \`relative\` — desloca **a partir da posição original**, mas **mantém o espaço** no fluxo.
+• \`absolute\` — **sai do fluxo** e se ancora no **ancestral mais próximo com \`position\` ≠ static** (ou no \`<html>\`, se nenhum tiver).
+• \`fixed\` — fixo na **viewport**; não rola com a página.
+• \`sticky\` — vira \`fixed\` ao **passar do offset \`top\`** durante o scroll.
+
+## 📚 Exemplos comentados
+  /* 1. Tooltip ancorado no card (clássico relative + absolute) */
+  .card { position: relative; }                    /* "âncora" */
+  .card .tooltip {
+    position: absolute; top: -8px; right: -8px;    /* canto sup. direito */
   }
 
-  /* Fixed — fica fixo na tela (botão flutuante, navbar fixa) */
+  /* 2. Botão de chat fixo no canto inferior direito da tela */
   .chat-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: fixed; bottom: 20px; right: 20px;
     z-index: 100;
   }
 
-  /* Sticky — gruda ao rolar */
+  /* 3. Header que rola e depois gruda no topo */
   .header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    position: sticky; top: 0;
+    background: white; z-index: 50;
   }
 
-z-index controla a sobreposição (qual fica "na frente"):
-  z-index: 1;    → acima do padrão
-  z-index: 100;  → acima de z-index menores
-  Só funciona com position diferente de static!
+  /* Bônus: overlay que cobre todo o pai */
+  .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
 
-Dica: position: absolute + inset: 0 = cobre todo o pai (overlay).`,
+## ⚠️ Erros comuns
+• Usar \`position: absolute\` no filho **sem dar \`position: relative\`** ao pai → o filho ancora no \`<html>\` e voa para o canto da página.
+• Esquecer **\`z-index\`** em modais/dropdowns → ficam por baixo do header. Lembre: \`z-index\` **só funciona com position ≠ static**.
+• Usar \`position: fixed\` em containers que precisam **rolar com o conteúdo** → vira "elemento que não some" no lugar errado.
+
+## 🚀 Quando usar na prática
+**\`relative\` + \`absolute\`** é o combo para **tooltips, badges, dropdowns, ícones sobrepostos**. **\`fixed\`** para **navbars sempre visíveis, botões flutuantes (chat/voltar ao topo), modais**. **\`sticky\`** para **headers de tabela, filtros laterais, menus de seção**. Em layouts modernos com Flexbox/Grid, você usa \`position\` **só para casos específicos** — não para layout principal.`,
         starterCode: '/* Crie o elemento fixo */\n',
         solution: '.chat-btn {\n  position: fixed;\n  bottom: 20px;\n  right: 20px;\n  z-index: 100;\n  padding: 16px;\n  border-radius: 50%;\n  background: #6c5ce7;\n  color: white;\n}',
         expectedOutput: "position: fixed",
