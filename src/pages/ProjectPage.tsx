@@ -427,6 +427,7 @@ const ProjectPage = () => {
             language: project.language,
             lessonTitle: `Projeto · Etapa ${state.currentStep + 1}: ${step.title}`,
             description: step.description,
+            theory: step.theory,
             expectedOutput: step.expectedOutput,
             starterCode: step.starterCode,
             currentCode: code,

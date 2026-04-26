@@ -13,6 +13,8 @@ export interface LessonContext {
   starterCode?: string;
   currentCode?: string;
   lastError?: string;
+  /** Material teórico oficial da lição — usado para alinhar termos/analogias. */
+  theory?: string;
 }
 
 interface Message {

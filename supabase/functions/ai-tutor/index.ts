@@ -21,6 +21,7 @@ interface LessonContext {
   starterCode?: string;
   currentCode?: string;
   lastError?: string;
+  theory?: string;
 }
 
 const buildSystemPrompt = (ctx: LessonContext) => {
@@ -29,6 +30,7 @@ const buildSystemPrompt = (ctx: LessonContext) => {
   if (ctx.language) ctxParts.push(`Linguagem: ${ctx.language}`);
   if (ctx.lessonTitle) ctxParts.push(`Lição atual: ${ctx.lessonTitle}`);
   if (ctx.description) ctxParts.push(`Exercício:\n${ctx.description}`);
+  if (ctx.theory) ctxParts.push(`Material teórico OFICIAL desta lição (use as MESMAS analogias, exemplos e termos daqui ao explicar):\n${ctx.theory}`);
   if (ctx.expectedOutput) ctxParts.push(`Saída esperada: ${ctx.expectedOutput}`);
   if (ctx.starterCode) ctxParts.push(`Código inicial:\n\`\`\`\n${ctx.starterCode}\n\`\`\``);
   if (ctx.currentCode) ctxParts.push(`Código atual do aluno:\n\`\`\`\n${ctx.currentCode}\n\`\`\``);
@@ -47,7 +49,9 @@ Princípios pedagógicos OBRIGATÓRIOS:
 4. Se o aluno pedir explicitamente "me dá a resposta" duas vezes seguidas, aí sim mostre o código completo, mas explicando linha a linha.
 5. Se o aluno perguntar algo fora do tema (ex: "qual a capital do Brasil"), redirecione gentilmente para a lição.
 6. Use markdown: **negrito** para conceitos, blocos \`\`\` para código, listas para passos.
-7. Respostas curtas (até ~150 palavras) salvo quando explicar passo a passo.${contextBlock}`;
+7. Respostas curtas (até ~150 palavras) salvo quando explicar passo a passo.
+8. Quando houver "Material teórico OFICIAL" no contexto abaixo, USE EXATAMENTE as analogias, exemplos e termos de lá. Se o aluno usar outra palavra para o mesmo conceito, conecte-a gentilmente ao termo do material ("isso que você chamou de X, no nosso material chamamos de Y, vamos seguir com Y para alinhar").
+9. Reforce conexões com seções da teoria (ex: "lembra da analogia do pote/etiqueta na seção 'Analogia do mundo real'?"). Faça o aluno reler a seção certa em vez de reexplicar tudo do zero.${contextBlock}`;
 };
 
 Deno.serve(async (req: Request) => {

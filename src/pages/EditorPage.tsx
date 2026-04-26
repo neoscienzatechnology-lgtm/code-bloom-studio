@@ -550,6 +550,7 @@ const EditorPage = () => {
           language: course.language,
           lessonTitle: lesson.title,
           description: lesson.description,
+          theory: lesson.theory,
           expectedOutput: lesson.expectedOutput,
           starterCode: lesson.starterCode,
           currentCode: code,
