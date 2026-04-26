@@ -2759,52 +2759,64 @@ Quando o estado tem **3+ campos relacionados** que mudam juntos, quando há **mu
         id: "3-10",
         title: "React Router",
         description: "Configure rotas com **React Router** para páginas Home (`/`), Sobre (`/sobre`) e Contato (`/contato`).",
-        theory: `React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
+        theory: `# React Router — navegação em SPAs
 
-Instalação: npm install react-router-dom
+## 💡 O que é
+**React Router** transforma sua aplicação React numa **SPA (Single Page Application)** com várias "páginas". O navegador **não recarrega** ao trocar de tela — só o conteúdo renderizado muda, deixando a navegação instantânea.
 
-Configuração básica:
+## 🌍 Analogia do mundo real
+Pense num **livro de receitas com abas coloridas**: o livro (a aplicação) já está aberto na sua mesa. Você só **vira para a aba** "Sobremesas" ou "Massas" — não precisa **comprar um novo livro** a cada mudança. \`<Link>\` é a aba; \`<Routes>\` é o sumário que decide qual receita mostrar; a URL no navegador é a **fitinha de marcação** indicando a página atual.
+
+## 🔧 Sintaxe e como funciona
+  // 1. Instale: npm install react-router-dom
   import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
   function App() {
     return (
-      <BrowserRouter>
+      <BrowserRouter>                    {/* envolve TUDO */}
         <nav>
-          <Link to="/">Home</Link>
+          <Link to="/">Home</Link>       {/* navegação sem reload */}
           <Link to="/sobre">Sobre</Link>
         </nav>
-        <Routes>
+        <Routes>                                            {/* qual rota mostrar */}
           <Route path="/" element={<Home />} />
           <Route path="/sobre" element={<Sobre />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />        {/* fallback 404 */}
         </Routes>
       </BrowserRouter>
     );
   }
 
-Link vs a:
-  <Link to="/sobre">Sobre</Link>    → navegação SPA (sem reload)
-  <a href="/sobre">Sobre</a>        → reload completo (evite!)
-
-Rotas dinâmicas:
+## 📚 Exemplos comentados
+  // 1. Rota dinâmica com parâmetro (:id) e useParams
   <Route path="/usuario/:id" element={<Perfil />} />
-
   function Perfil() {
-    const { id } = useParams();
+    const { id } = useParams();          // pega o valor da URL
     return <h1>Usuário {id}</h1>;
   }
 
-useNavigate — navegação programática:
-  const navigate = useNavigate();
-  navigate("/dashboard");
-  navigate(-1);  // voltar
+  // 2. Navegação programática com useNavigate (depois de submit, login, etc.)
+  function Login() {
+    const navigate = useNavigate();
+    const aoEntrar = () => navigate("/dashboard");
+    const voltar = () => navigate(-1);   // volta como o botão do navegador
+    return <button onClick={aoEntrar}>Entrar</button>;
+  }
 
-Rotas aninhadas:
+  // 3. Rotas aninhadas com <Outlet />
   <Route path="/dashboard" element={<Dashboard />}>
-    <Route path="perfil" element={<Perfil />} />
-    <Route path="config" element={<Config />} />
+    <Route path="perfil" element={<Perfil />} />        {/* /dashboard/perfil */}
+    <Route path="config" element={<Config />} />        {/* /dashboard/config */}
   </Route>
-  // Use <Outlet /> no Dashboard para renderizar as sub-rotas`,
+  // Dashboard renderiza <Outlet /> onde a sub-rota deve aparecer.
+
+## ⚠️ Erros comuns
+• Usar **\`<a href="/...">\`** em vez de \`<Link to="/...">\` → faz **reload completo** e perde todo o estado da SPA.
+• Esquecer o **\`<BrowserRouter>\`** envolvendo a aplicação → \`Link\`/\`useNavigate\` quebram com erro de "router context".
+• Confundir **rota dinâmica** (\`:id\`) com **query string** (\`?id=1\`). \`useParams\` lê \`:id\`; \`useSearchParams\` lê o \`?\`.
+
+## 🚀 Quando usar na prática
+Em **toda aplicação React com mais de uma tela**: dashboards, e-commerce, área logada, blogs. Para apps de página única (landing page) sem navegação, não precisa. Em projetos modernos de Lovable/Vite, o \`react-router-dom\` é a escolha padrão.`,
         starterCode: '// Configure as rotas\n',
         solution: 'import { BrowserRouter, Routes, Route, Link } from "react-router-dom";\n\nfunction Home() { return <h1>Home</h1>; }\nfunction Sobre() { return <h1>Sobre</h1>; }\nfunction Contato() { return <h1>Contato</h1>; }\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <nav>\n        <Link to="/">Home</Link>\n        <Link to="/sobre">Sobre</Link>\n        <Link to="/contato">Contato</Link>\n      </nav>\n      <Routes>\n        <Route path="/" element={<Home />} />\n        <Route path="/sobre" element={<Sobre />} />\n        <Route path="/contato" element={<Contato />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}',
         expectedOutput: "BrowserRouter",
