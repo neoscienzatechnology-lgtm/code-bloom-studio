@@ -197,7 +197,11 @@ const RoadmapPage = () => {
                           <div className="cursor-not-allowed">{inner}</div>
                         ) : (
                           <Link
-                            to={`/editor/${course.id}/${lesson.id}`}
+                            to={
+                              lesson.kind === "checkpoint"
+                                ? `/checkpoint/${course.id}/${lesson.id}`
+                                : `/editor/${course.id}/${lesson.id}`
+                            }
                             className="block"
                           >
                             {inner}
