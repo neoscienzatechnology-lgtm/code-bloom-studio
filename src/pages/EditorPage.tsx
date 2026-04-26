@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { getLessonById } from "@/data/mockData";
+import { getAugmentedLessonById } from "@/data/checkpoints";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -30,6 +31,11 @@ const ONBOARDING_KEY = "codequest_editor_onboarding_seen";
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
+  // If the lesson id is a checkpoint, route the user to the dedicated page
+  const augmented = getAugmentedLessonById(courseId || "", lessonId || "");
+  if (augmented?.lesson.kind === "checkpoint") {
+    return <Navigate to={`/checkpoint/${courseId}/${lessonId}`} replace />;
+  }
   const data = getLessonById(courseId || "", lessonId || "");
   const { completeLesson, saveCode, isCompleted, getSavedCode } = useProgress();
   const { registerFailure, resetLesson, getAttempts } = useAttemptTracker();
