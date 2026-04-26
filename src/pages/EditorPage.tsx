@@ -72,6 +72,12 @@ const EditorPage = () => {
     return () => clearTimeout(timer);
   }, [code, lesson, saveCode]);
 
+  // Reset pace coach when changing lessons
+  useEffect(() => {
+    setPaceMode(null);
+    setBonusActive(false);
+  }, [lessonId]);
+
   // Checkpoint lessons live on a dedicated route
   if (augmented?.lesson.kind === "checkpoint") {
     return <Navigate to={`/checkpoint/${courseId}/${lessonId}`} replace />;
