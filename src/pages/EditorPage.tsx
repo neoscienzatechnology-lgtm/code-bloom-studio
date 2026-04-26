@@ -22,6 +22,7 @@ import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import PaceCoach from "@/components/PaceCoach";
+import AITutor from "@/components/AITutor";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
@@ -541,6 +542,20 @@ const EditorPage = () => {
           </div>
         </div>
       </div>
+
+      <AITutor
+        contextId={lesson.id}
+        lessonContext={{
+          courseTitle: course.title,
+          language: course.language,
+          lessonTitle: lesson.title,
+          description: lesson.description,
+          expectedOutput: lesson.expectedOutput,
+          starterCode: lesson.starterCode,
+          currentCode: code,
+          lastError: isCorrect === false ? output ?? undefined : undefined,
+        }}
+      />
     </div>
   );
 };
