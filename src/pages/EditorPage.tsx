@@ -380,6 +380,41 @@ const EditorPage = () => {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Personalização de ritmo: apoio extra ou desafio */}
+            <PaceCoach
+              mode={paceMode}
+              altExplanation={
+                lesson.hints[0]
+                  ? `Foque primeiro nisto: ${lesson.hints[0]} Tente reescrever o código em voz alta antes de digitar.`
+                  : "Releia o enunciado e tente descrever em uma frase o que o programa precisa fazer antes de codar."
+              }
+              bonusChallenge={`Conseguiu! Agora tente uma variação: faça o mesmo resultado, mas usando uma estrutura diferente (ex: outra forma de imprimir, uma variável intermediária, ou um pequeno loop). A resposta esperada continua sendo: ${lesson.expectedOutput}`}
+              onUseSimpler={() => {
+                // "Versão preparatória": começa do starterCode com guia em comentário
+                const guide = `// Versão guiada — siga os passos abaixo:\n// 1. Releia o exercício\n// 2. Use o exemplo da teoria como base\n// 3. Saída esperada: ${lesson.expectedOutput}\n\n${lesson.starterCode}`;
+                setCode(guide);
+                setOutput(null);
+                setIsCorrect(null);
+                setPaceMode(null);
+              }}
+              onRevealSolution={() => {
+                handleRevealSolution();
+                setPaceMode(null);
+              }}
+              onAcceptBonus={() => {
+                setBonusActive(true);
+                setPaceMode(null);
+              }}
+              onDismiss={() => setPaceMode(null)}
+            />
+
+            {bonusActive && (
+              <div className="mt-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-foreground">
+                <span className="font-bold text-accent">✨ Modo desafio ativo:</span>{" "}
+                tente refazer este exercício de uma forma diferente antes de avançar.
+              </div>
+            )}
           </motion.div>
         </div>
 
