@@ -427,6 +427,7 @@ const ProjectPage = () => {
             language: project.language,
             lessonTitle: `Projeto · Etapa ${state.currentStep + 1}: ${step.title}`,
             description: step.description,
+            // Projetos não têm campo "theory" separado — a description já é detalhada
             expectedOutput: step.expectedOutput,
             starterCode: step.starterCode,
             currentCode: code,
