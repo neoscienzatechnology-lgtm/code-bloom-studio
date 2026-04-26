@@ -3629,46 +3629,56 @@ Atalhos comuns:
         id: "5-1",
         title: "Introdução ao Node.js",
         description: "Crie um servidor HTTP simples com Node.js que responde **\"Olá, Node!\"** na porta 3000.",
-        theory: `Node.js permite rodar JavaScript no servidor — fora do navegador! É usado por Netflix, PayPal, LinkedIn e milhares de empresas.
+        theory: `# Node.js — JavaScript no servidor
 
-O que é Node.js:
-• Runtime JavaScript baseado no motor V8 do Chrome
-• Assíncrono e orientado a eventos
-• Ideal para APIs, servidores web, microserviços
+## 💡 O que é
+**Node.js** é um runtime que executa JavaScript **fora do navegador**, no servidor. Com ele, o mesmo JS que você usa para o front roda também no back: servidores HTTP, APIs, scripts, ferramentas de build (Vite, webpack), CLIs.
 
-Criando um servidor HTTP:
-  const http = require("http");
+## 🌍 Analogia do mundo real
+Imagine que **JavaScript** é um motor potente. No navegador ele move um **carrinho de brinquedo** (manipula a página). No Node, o mesmo motor é colocado num **caminhão** (servidor) — agora ele atende milhares de clientes ao mesmo tempo, lê arquivos, conversa com bancos de dados e roda 24h/dia. **Mesma linguagem, máquina diferente.**
 
-  const server = http.createServer((req, res) => {
+## 🔧 Sintaxe e como funciona
+  // server.js — servidor HTTP nativo, sem framework
+  const http = require("http");                    // CommonJS (padrão antigo do Node)
+
+  const server = http.createServer((req, res) => { // callback para cada requisição
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("Olá, Node!");
   });
 
-  server.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
-  });
+  server.listen(3000, () => console.log("rodando em http://localhost:3000"));
 
 Conceitos-chave:
-  require() → importa módulos
-  createServer() → cria o servidor
-  req → dados da requisição (URL, headers, método)
-  res → objeto de resposta (enviar dados ao cliente)
+• **\`require()\`** — importa módulos (no estilo CommonJS). Em projetos modernos com \`"type": "module"\`, usa-se \`import\` (ESM).
+• **\`req\`** — dados da requisição (URL, método, headers, body).
+• **\`res\`** — objeto para **enviar** a resposta (status, headers, corpo).
+• **npm** — gerenciador de pacotes: \`npm init -y\`, \`npm install express\`, \`npm install -D nodemon\`.
+• **package.json** — manifesto do projeto (nome, scripts, dependências).
 
-NPM (Node Package Manager):
-  npm init -y           → cria o package.json
-  npm install express   → instala um pacote
-  npm install -D nodemon → instala como dev dependency
+## 📚 Exemplos comentados
+  // 1. Servidor mínimo
+  const http = require("http");
+  http.createServer((_, res) => res.end("ok")).listen(3000);
 
-package.json — descreve seu projeto:
-  {
-    "name": "meu-app",
-    "scripts": {
-      "start": "node server.js",
-      "dev": "nodemon server.js"
-    }
-  }
+  // 2. Roteamento manual baseado em URL
+  http.createServer((req, res) => {
+    if (req.url === "/")        res.end("Home");
+    else if (req.url === "/oi") res.end("Olá!");
+    else { res.statusCode = 404; res.end("Não encontrado"); }
+  }).listen(3000);
 
-Rode com: node server.js ou npm start`,
+  // 3. Script utilitário (não é servidor)
+  const fs = require("fs");
+  const linhas = fs.readFileSync("./lista.txt", "utf-8").split("\\n");
+  console.log(\`O arquivo tem \${linhas.length} linhas\`);
+
+## ⚠️ Erros comuns
+• Esquecer **\`server.listen(porta)\`** → o processo fica vivo mas **não escuta nada**.
+• Misturar **\`require\`** (CommonJS) com **\`import\`** (ESM) no mesmo projeto sem configurar o \`package.json\` → erros estranhos de "Cannot use import statement outside a module".
+• Bloquear o **event loop** com operações pesadas síncronas (\`while(true)\`, \`fs.readFileSync\` em loop) → o servidor para de responder a outros clientes.
+
+## 🚀 Quando usar na prática
+**APIs REST** (com Express/Fastify), **backends de SPA**, **edge functions**, **scripts de automação** (build, deploy, migrações), **CLIs** (\`npx create-...\`), **realtime** (WebSockets, Socket.io), **microserviços**. Para a maioria dos projetos web modernos, Node é o backend padrão — e mesmo se você usar outra linguagem no back, vai usar Node nas ferramentas de front.`,
         starterCode: 'const http = require("http");\n// Crie o servidor\n',
         solution: 'const http = require("http");\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { "Content-Type": "text/plain" });\n  res.end("Olá, Node!");\n});\n\nserver.listen(3000, () => {\n  console.log("Servidor na porta 3000");\n});',
         expectedOutput: "Olá, Node!",
