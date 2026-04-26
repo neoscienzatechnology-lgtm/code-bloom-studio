@@ -52,6 +52,8 @@ const EditorPage = () => {
   const [showSolution, setShowSolution] = useState(false);
   const [solutionWarned, setSolutionWarned] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
+  const [bonusActive, setBonusActive] = useState(false);
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
