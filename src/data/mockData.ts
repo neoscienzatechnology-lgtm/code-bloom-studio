@@ -3553,50 +3553,56 @@ Diferença essencial:
         id: "4-11",
         title: "Flexbox Avançado",
         description: "Crie um layout com **sidebar fixa** (250px) e **conteúdo flexível** que ocupa o resto usando `flex-grow`.",
-        theory: `Além do básico, Flexbox tem propriedades para os ITENS (filhos) que dão controle fino sobre o layout.
+        theory: `# Flexbox avançado — controle fino com flex/grow/shrink
 
-Propriedades dos itens flex:
-  flex-grow   → quanto o item CRESCE para preencher espaço extra
-  flex-shrink → quanto o item ENCOLHE se faltar espaço
-  flex-basis  → tamanho base antes de crescer/encolher
+## 💡 O que é
+As propriedades **dos filhos flex** (\`flex-grow\`, \`flex-shrink\`, \`flex-basis\`) decidem **como cada item ocupa o espaço sobrando** ou **como encolhe quando falta espaço**. Combinadas com \`flex-wrap\` e \`order\`, dão controle total do layout em uma direção.
 
-Shorthand:
-  flex: grow shrink basis;
-  flex: 1;           → flex: 1 1 0% (cresce igualmente)
-  flex: 0 0 250px;   → não cresce, não encolhe, 250px fixo
+## 🌍 Analogia do mundo real
+Pense em **passageiros num banco de ônibus**: alguns são "magrinhos" e fixos (\`flex: 0 0 250px\` — sempre 250px, não cresce, não encolhe). Outros são **flexíveis** (\`flex: 1\` — esticam para preencher o resto do banco). Quando o ônibus enche e o banco aperta, \`flex-shrink\` decide **quem se espreme primeiro**. \`order\` é o **passageiro VIP** que pula para frente sem precisar mudar a fila original.
 
-Layout sidebar + conteúdo:
-  .layout {
-    display: flex;
-    min-height: 100vh;
-  }
-  .sidebar {
-    flex: 0 0 250px;    /* fixa em 250px */
-    background: #1a1a2e;
-  }
-  .conteudo {
-    flex: 1;            /* ocupa todo o resto */
-    padding: 20px;
-  }
+## 🔧 Sintaxe e como funciona
+  /* Container */
+  .layout { display: flex; }
 
-Outros valores úteis:
-  align-self → alinha individualmente no eixo cruzado
-    align-self: flex-start | center | flex-end | stretch
+  /* Filhos — shorthand: flex: <grow> <shrink> <basis> */
+  .sidebar  { flex: 0 0 250px; }   /* não cresce, não encolhe, 250px fixos */
+  .conteudo { flex: 1; }           /* = flex: 1 1 0% — ocupa o restante */
 
-  order → muda a ordem visual (sem alterar o HTML!)
-    .item-especial { order: -1; }  /* aparece primeiro */
+Significados:
+• **flex-grow** (padrão 0) — quanto cresce do espaço sobrando. \`1\` = pega tudo; \`2\` ao lado de \`1\` = pega o dobro.
+• **flex-shrink** (padrão 1) — quanto encolhe quando falta. \`0\` = nunca encolhe.
+• **flex-basis** (padrão \`auto\`) — tamanho **inicial** antes de crescer/encolher.
 
-Flex wrap — quebra de linha:
-  .container {
+Atalhos comuns:
+• \`flex: 1\` — cresce igual aos irmãos.
+• \`flex: 0 0 200px\` — fixo em 200px.
+• \`flex: 1 1 300px\` — base 300px, cresce e encolhe.
+
+## 📚 Exemplos comentados
+  /* 1. Layout clássico: sidebar fixa + conteúdo elástico */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar  { flex: 0 0 250px; background: #1a1a2e; }
+  .conteudo { flex: 1; padding: 24px; }
+
+  /* 2. Grid responsivo SEM media query (cards quebram linha sozinhos) */
+  .cards {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
   }
-  .item {
-    flex: 1 1 300px;  /* mínimo 300px, cresce/encolhe */
-  }
+  .cards > .card { flex: 1 1 280px; }   /* mínimo 280px, cresce até preencher */
 
-Isso cria um grid responsivo SEM media queries!`,
+  /* 3. Reordenar visualmente sem mexer no HTML */
+  .item.destaque { order: -1; }          /* aparece primeiro, mesmo estando por último */
+
+## ⚠️ Erros comuns
+• Usar \`flex: 1\` na sidebar quando ela deveria ser **fixa** → ela vai esticar e empurrar o conteúdo. Use \`flex: 0 0 250px\`.
+• Esquecer **\`flex-wrap: wrap\`** num grid de cards → tudo fica numa linha só, item espremido virando faixa fininha.
+• Confundir \`flex-basis\` com \`width\` — em flexbox, \`basis\` é o **tamanho inicial considerado pelo cálculo de grow/shrink**; \`width\` muitas vezes é ignorada na presença de \`basis\`.
+
+## 🚀 Quando usar na prática
+**Layouts de aplicação web**: sidebar + main, header com logo à esquerda e ações à direita, listas de cards que quebram em várias linhas, splits redimensionáveis, timelines. Quando o **CSS Grid** parece exagero (não tem 2D), Flexbox avançado costuma resolver com 3 linhas.`,
         starterCode: '/* Layout sidebar + conteúdo */\n',
         solution: '.layout {\n  display: flex;\n  min-height: 100vh;\n}\n.sidebar {\n  flex: 0 0 250px;\n  background: #1a1a2e;\n}\n.conteudo {\n  flex: 1;\n  padding: 20px;\n}',
         expectedOutput: "flex: 1",
