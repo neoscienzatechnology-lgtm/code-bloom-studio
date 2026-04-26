@@ -12,6 +12,7 @@ import RoadmapPage from "./pages/RoadmapPage.tsx";
 import CourseDetailPage from "./pages/CourseDetailPage.tsx";
 import EditorPage from "./pages/EditorPage.tsx";
 import CheckpointPage from "./pages/CheckpointPage.tsx";
+import ProjectPage from "./pages/ProjectPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
