@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Navbar from "./components/Navbar.tsx";
 import CoursesPage from "./pages/CoursesPage.tsx";
+import RoadmapPage from "./pages/RoadmapPage.tsx";
 import CourseDetailPage from "./pages/CourseDetailPage.tsx";
 import EditorPage from "./pages/EditorPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
+            <Route path="/trilha" element={<PageWithNav><RoadmapPage /></PageWithNav>} />
             <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
             <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
             <Route path="/dashboard" element={<PageWithNav><ProtectedRoute><DashboardPage /></ProtectedRoute></PageWithNav>} />

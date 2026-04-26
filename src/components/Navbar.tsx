@@ -8,6 +8,7 @@ import { useProgress } from "@/hooks/useProgress";
 const navLinks = [
   { to: "/", label: "Início" },
   { to: "/cursos", label: "Cursos" },
+  { to: "/trilha", label: "Trilha" },
   { to: "/editor", label: "Praticar" },
   { to: "/dashboard", label: "Dashboard" },
 ];
