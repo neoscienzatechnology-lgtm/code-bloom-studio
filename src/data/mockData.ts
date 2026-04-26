@@ -2206,35 +2206,54 @@ Use try/catch em pontos onde **não dá pra confiar 100%** no que vem de fora: p
         id: "3-1",
         title: "Primeiro Componente",
         description: "Crie um componente funcional `Saudacao` que exibe **\"Olá, React!\"** em um `<h1>`. Exporte-o como default.",
-        theory: `Em React, a interface é construída com componentes — blocos reutilizáveis de UI. Cada componente é uma função que retorna JSX (HTML dentro do JavaScript).
+        theory: `# Componentes em React
 
-![Componentes React — blocos de UI reutilizáveis](https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=300&fit=crop)
+## 💡 O que é
+Um **componente** é uma função JavaScript que retorna **JSX** (uma sintaxe parecida com HTML) e descreve um pedaço da interface. Toda tela em React é uma árvore de componentes encaixados uns nos outros.
 
-Componente funcional básico:
-  function MeuComponente() {
-    return <h1>Olá!</h1>;
+## 🌍 Analogia do mundo real
+Pense em **peças de LEGO**: cada peça (\`<Botao />\`, \`<Cartao />\`, \`<Avatar />\`) é pequena, faz uma coisa só, e se encaixa com outras para montar telas inteiras. Você desenha uma vez e reusa em todo lugar.
+
+## 🔧 Sintaxe e como funciona
+  function MeuComponente() {       // 1. função com nome em PascalCase
+    return <h1>Olá!</h1>;          // 2. retorna UM elemento JSX
+  }
+  export default MeuComponente;    // 3. exporta para usar em outros arquivos
+
+Regras de ouro:
+• Nome **sempre** com letra maiúscula (\`Cartao\`, não \`cartao\`).
+• Retorne **um único elemento raiz** (use \`<div>\` ou o fragmento \`<>...</>\` para agrupar vários).
+• JSX troca alguns nomes do HTML: \`class\` → \`className\`, \`for\` → \`htmlFor\`, \`onclick\` → \`onClick\`.
+
+## 📚 Exemplos comentados
+  // 1. Componente puro estático
+  function Titulo() {
+    return <h1>Bem-vindo!</h1>;
   }
 
-Regras importantes:
-• O nome do componente DEVE começar com letra maiúscula
-• Deve retornar JSX (parece HTML, mas é JavaScript)
-• Só pode retornar UM elemento raiz (use <div> ou <> para agrupar)
-
-JSX vs HTML — diferenças:
-  class → className
-  for → htmlFor
-  onclick → onClick
-  style="..." → style={{...}}
-
-Exportando o componente:
-  export default MeuComponente;
-  // Em outro arquivo: import MeuComponente from "./MeuComponente"
-
-Expressões JavaScript dentro do JSX usam chaves {}:
+  // 2. Usando uma variável dentro do JSX com {}
   function Saudacao() {
     const nome = "React";
-    return <h1>Olá, {nome}!</h1>;
-  }`,
+    return <h1>Olá, {nome}!</h1>;   // chaves = expressão JS
+  }
+
+  // 3. Compondo componentes (um dentro do outro)
+  function App() {
+    return (
+      <div>
+        <Titulo />
+        <Saudacao />
+      </div>
+    );
+  }
+
+## ⚠️ Erros comuns
+• Esquecer a **letra maiúscula** no nome → React trata como tag HTML desconhecida.
+• Retornar **dois elementos irmãos sem agrupar** → erro de sintaxe; envolva em \`<>...</>\`.
+• Usar \`class="..."\` em vez de \`className="..."\` → o atributo é ignorado e o estilo não aplica.
+
+## 🚀 Quando usar na prática
+**Sempre.** Toda UI em React é construída assim. Componentes pequenos e focados (um botão, um input, um card) são combinados em componentes maiores (formulário, página) — exatamente como construir um app inteiro com LEGO.`,
         starterCode: '// Crie o componente Saudacao\n',
         solution: 'function Saudacao() {\n  return <h1>Olá, React!</h1>;\n}\nexport default Saudacao;',
         expectedOutput: "Olá, React!",
@@ -2249,38 +2268,58 @@ Expressões JavaScript dentro do JSX usam chaves {}:
         id: "3-2",
         title: "Props",
         description: "Crie um componente `Cartao` que recebe uma prop `nome` (string) e exibe **\"Bem-vindo, [nome]!\"**.",
-        theory: `Props (propriedades) são a forma de passar dados de um componente pai para um componente filho. São como parâmetros de uma função!
+        theory: `# Props — passando dados entre componentes
 
-Passando props:
+## 💡 O que é
+**Props** (de "properties") são os **dados que um componente pai envia para um filho**. Funcionam como argumentos de uma função: o pai entrega, o filho recebe e usa para renderizar.
+
+## 🌍 Analogia do mundo real
+Pense numa **carta** que você entrega para alguém: o envelope traz o nome do destinatário, o assunto, talvez uma foto. O destinatário (componente filho) **lê e exibe** o conteúdo, mas **não rasura** o que veio escrito. Props são exatamente isso: leitura apenas.
+
+## 🔧 Sintaxe e como funciona
+  // Pai: passa props como atributos JSX
   <Cartao nome="Ana" idade={25} />
+    //    ↑ string         ↑ número (chaves para qualquer não-string)
 
-Recebendo props:
-  function Cartao(props) {
-    return <p>Olá, {props.nome}!</p>;
-  }
-
-Com desestruturação (mais limpo):
-  function Cartao({ nome, idade }) {
+  // Filho: recebe via desestruturação
+  function Cartao({ nome, idade }: { nome: string; idade: number }) {
     return <p>{nome} tem {idade} anos</p>;
   }
 
-Com TypeScript — tipagem segura:
+Tipando com **interface** (recomendado em projetos sérios):
   interface CartaoProps {
     nome: string;
     idade: number;
-    ativo?: boolean;  // ? = opcional
+    ativo?: boolean;   // ? = opcional
   }
+  function Cartao({ nome, idade }: CartaoProps) { ... }
 
-  function Cartao({ nome, idade }: CartaoProps) {
-    return <p>{nome} tem {idade} anos</p>;
+## 📚 Exemplos comentados
+  // 1. Prop simples
+  function Saudacao({ nome }: { nome: string }) {
+    return <h1>Olá, {nome}!</h1>;       // usa a prop dentro do JSX
   }
+  <Saudacao nome="Bruno" />              // pai entrega "Bruno"
 
-  // Ou inline:
-  function Cartao({ nome }: { nome: string }) {
-    return <p>Olá, {nome}!</p>;
+  // 2. Várias props com valor padrão
+  function Botao({ texto, cor = "azul" }: { texto: string; cor?: string }) {
+    return <button style={{ background: cor }}>{texto}</button>;
   }
+  <Botao texto="Salvar" />               // cor cai no padrão "azul"
 
-IMPORTANTE: Props são somente leitura! O componente filho NUNCA deve modificar as props que recebe.`,
+  // 3. Prop especial: children (o que está entre as tags)
+  function Caixa({ children }: { children: React.ReactNode }) {
+    return <div className="caixa">{children}</div>;
+  }
+  <Caixa><p>Qualquer conteúdo aqui</p></Caixa>
+
+## ⚠️ Erros comuns
+• **Tentar mudar a prop dentro do filho** (\`props.nome = "X"\`) → props são **somente leitura**; mude no pai e ele re-renderiza o filho.
+• Esquecer as **chaves** para valores não-string: \`idade="25"\` vira string em vez de número.
+• **Nome da prop diferente** entre pai e filho (\`<Cartao name="Ana" />\` mas filho espera \`nome\`) → chega \`undefined\`.
+
+## 🚀 Quando usar na prática
+Toda vez que um componente precisa **exibir algo que vem de fora**: um título dinâmico, dados de um usuário, uma cor de tema, uma função de callback. Props são o "fio" que conecta os componentes da árvore — sem props, todo componente seria estático.`,
         starterCode: '// Componente com props\n',
         solution: 'function Cartao({ nome }: { nome: string }) {\n  return <p>Bem-vindo, {nome}!</p>;\n}',
         expectedOutput: "Bem-vindo,",
@@ -2291,42 +2330,50 @@ IMPORTANTE: Props são somente leitura! O componente filho NUNCA deve modificar 
         id: "3-3",
         title: "useState",
         description: "Crie um **contador** com `useState`. O componente deve ter um botão que incrementa o valor e exibe o número atual.",
-        theory: `useState é o hook mais básico do React. Ele permite que componentes tenham estado — dados que podem mudar e re-renderizar a tela.
+        theory: `# useState — estado em componentes
 
-Sintaxe:
+## 💡 O que é
+\`useState\` é o hook que dá **memória** a um componente. Ele guarda um valor que pode mudar ao longo do tempo e, quando muda, **avisa o React para re-renderizar a tela** com o novo valor.
+
+## 🌍 Analogia do mundo real
+Pense num **placar de jogo de futebol**: o número visível é o estado, e o **juiz com o controle remoto** é a função \`setEstado\`. Quando o juiz aperta o botão, o placar atualiza para todo mundo ver. Você nunca pinta o placar com tinta direto (\`count = 5\` ❌) — sempre usa o controle (\`setCount(5)\` ✅).
+
+## 🔧 Sintaxe e como funciona
   const [valor, setValor] = useState(valorInicial);
+  //     ↑       ↑                    ↑
+  //  estado  atualizador        valor da 1ª render
 
-• valor → o estado atual
-• setValor → função para atualizar o estado
-• valorInicial → valor quando o componente é criado
+Fluxo a cada clique/evento:
+1. Você chama \`setValor(novo)\`.
+2. React agenda uma nova renderização.
+3. A função do componente roda **de novo**, agora com \`valor === novo\`.
+4. A tela é atualizada.
 
-Exemplo — Contador:
-  import { useState } from "react";
-
+## 📚 Exemplos comentados
+  // 1. Contador clássico
   function Contador() {
-    const [count, setCount] = useState(0);
-
+    const [count, setCount] = useState(0);              // começa em 0
     return (
-      <div>
-        <p>Contagem: {count}</p>
-        <button onClick={() => setCount(count + 1)}>
-          Incrementar
-        </button>
-      </div>
+      <button onClick={() => setCount(count + 1)}>     // clique → +1
+        Cliques: {count}
+      </button>
     );
   }
 
-Quando setCount é chamado:
-1. O estado muda
-2. O React re-renderiza o componente
-3. A tela atualiza com o novo valor
+  // 2. Usando o valor anterior (mais seguro em updates rápidos)
+  setCount(prev => prev + 1);   // recebe o valor mais recente como argumento
 
-NUNCA modifique o estado diretamente:
-  count = 5;           // ❌ ERRADO
-  setCount(5);         // ✅ CORRETO
+  // 3. Estado com objeto — sempre crie objeto NOVO (imutabilidade)
+  const [user, setUser] = useState({ nome: "Ana", idade: 25 });
+  setUser({ ...user, idade: 26 });   // spread copia + sobrescreve idade
 
-Para estado baseado no anterior:
-  setCount(prev => prev + 1);  // mais seguro`,
+## ⚠️ Erros comuns
+• **Mutar o estado direto**: \`count = 5\` ou \`user.idade = 26\` → React não percebe a mudança e a tela não atualiza.
+• **Usar valor desatualizado** em updates seguidos: \`setCount(count+1); setCount(count+1)\` só soma 1. Use \`setCount(prev => prev + 1)\`.
+• **Chamar \`useState\` dentro de \`if\`** ou loop → quebra a regra dos hooks. Sempre no topo do componente.
+
+## 🚀 Quando usar na prática
+Em **qualquer dado que muda dentro de um componente** e precisa refletir na tela: valor de input, item selecionado, modal aberto/fechado, lista filtrada, contador, página atual. É o hook que você mais vai usar — sem \`useState\`, a UI seria sempre estática.`,
         starterCode: 'import { useState } from "react";\n// Crie o contador\n',
         solution: 'import { useState } from "react";\nfunction Contador() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}',
         expectedOutput: "useState",
@@ -2337,37 +2384,51 @@ Para estado baseado no anterior:
         id: "3-4",
         title: "useEffect",
         description: "Use `useEffect` para exibir **\"Componente montado!\"** no console quando o componente for renderizado pela primeira vez.",
-        theory: `useEffect permite executar "efeitos colaterais" — código que roda fora do fluxo normal de renderização (API calls, timers, DOM, etc).
+        theory: `# useEffect — efeitos colaterais
 
-Sintaxe:
+## 💡 O que é
+\`useEffect\` é o hook para executar código **fora do fluxo normal de renderização**: chamadas a APIs, timers, listeners de eventos, manipulação direta do DOM, sincronização com sistemas externos.
+
+## 🌍 Analogia do mundo real
+Pense num **chef de cozinha**: ele monta o prato (renderização), serve, e **só depois** vai lavar a louça e desligar o forno (efeitos colaterais). \`useEffect\` é exatamente esse "depois que a tela já está na mesa, faça essas coisinhas extras". E quando o cliente vai embora (componente desmonta), o chef volta para **fechar o gás** — esse é o \`return\` de cleanup.
+
+## 🔧 Sintaxe e como funciona
   useEffect(() => {
-    // código do efeito
-  }, [dependências]);
+    // código do efeito (roda DEPOIS da renderização)
+    return () => {
+      // cleanup (roda antes do próximo efeito ou ao desmontar)
+    };
+  }, [dependencias]);
 
-O array de dependências controla QUANDO o efeito roda:
+O **array de dependências** controla **quando** roda:
+• \`[]\`  → uma vez só, na montagem.
+• \`[x, y]\` → toda vez que \`x\` ou \`y\` mudarem.
+• **sem array** → toda renderização (quase sempre é bug — gera loop).
 
-1. [] vazio → roda só UMA vez (na montagem):
+## 📚 Exemplos comentados
+  // 1. Roda só ao montar (carregar dados, log inicial)
   useEffect(() => {
-    console.log("Montou!");
+    console.log("Componente montado!");
   }, []);
 
-2. [variavel] → roda quando a variável muda:
+  // 2. Roda quando 'nome' muda (atualizar título da aba)
   useEffect(() => {
-    console.log("Nome mudou:", nome);
+    document.title = \`Olá, \${nome}\`;
   }, [nome]);
 
-3. Sem array → roda TODA renderização (evite!):
+  // 3. Timer com cleanup (essencial para não vazar memória)
   useEffect(() => {
-    console.log("Renderizou");
-  });
-
-Cleanup (limpeza) — roda quando o componente desmonta:
-  useEffect(() => {
-    const timer = setInterval(() => console.log("tick"), 1000);
-    return () => clearInterval(timer);  // cleanup!
+    const id = setInterval(() => console.log("tick"), 1000);
+    return () => clearInterval(id);   // limpa quando desmonta
   }, []);
 
-Usos comuns: buscar dados de API, ouvir eventos, atualizar título da página.`,
+## ⚠️ Erros comuns
+• **Esquecer o array de dependências** → efeito roda em toda render. Se ele atualiza estado, vira **loop infinito**.
+• **Esquecer o cleanup** em timers/listeners/subscriptions → bugs depois que o componente sai da tela (o \`setInterval\` continua rodando).
+• **Omitir uma variável** que é usada dentro do efeito → o efeito usa um valor "congelado" e antigo (problema de stale closure).
+
+## 🚀 Quando usar na prática
+Buscar dados de API ao abrir uma tela, atualizar o título da aba, registrar/remover \`addEventListener\`, criar timers, sincronizar com \`localStorage\`. Para fetching mais complexo em projetos reais, **TanStack Query** (React Query) substitui boa parte do uso de \`useEffect\` com cache automático.`,
         starterCode: 'import { useEffect } from "react";\n// Use useEffect\n',
         solution: 'import { useEffect } from "react";\nfunction App() {\n  useEffect(() => {\n    console.log("Componente montado!");\n  }, []);\n  return <div>App</div>;\n}',
         expectedOutput: "Componente montado!",
@@ -2378,41 +2439,52 @@ Usos comuns: buscar dados de API, ouvir eventos, atualizar título da página.`,
         id: "3-5",
         title: "Interfaces TypeScript",
         description: "Defina uma interface `Usuario` com `nome` (string), `idade` (number) e `ativo` (boolean). Crie um objeto e exiba o nome.",
-        theory: `TypeScript adiciona tipagem estática ao JavaScript. Interfaces definem a "forma" dos dados — quais campos existem e seus tipos.
+        theory: `# Interfaces no TypeScript
 
-Definindo uma interface:
+## 💡 O que é
+Uma **interface** descreve a **forma** de um objeto: quais campos existem, com quais tipos, e quais são opcionais. O TypeScript usa isso para te avisar **antes de rodar o código** se você esqueceu um campo ou passou o tipo errado.
+
+## 🌍 Analogia do mundo real
+Interface é como um **formulário oficial em papel**: tem campos obrigatórios (nome, CPF, idade), alguns opcionais (telefone), e cada um pede um tipo específico (idade só aceita número, não letras). Se você entrega o formulário com um campo errado, o atendente devolve **antes mesmo de começar a processar**.
+
+## 🔧 Sintaxe e como funciona
   interface Usuario {
-    nome: string;
-    idade: number;
-    ativo: boolean;
-    email?: string;     // ? = campo opcional
+    nome: string;        // obrigatório, texto
+    idade: number;       // obrigatório, número
+    ativo: boolean;      // obrigatório, true/false
+    email?: string;      // ? = OPCIONAL
   }
 
-Usando a interface:
-  const user: Usuario = {
-    nome: "Ana",
-    idade: 25,
-    ativo: true
-  };
+  const u: Usuario = { nome: "Ana", idade: 25, ativo: true };
+  //      ↑ "anota" o tipo: TS verifica que tudo bate
 
-Se você errar um campo, o TypeScript avisa ANTES de rodar:
-  const user: Usuario = {
-    nome: "Ana",
-    idade: "25"  // ❌ Erro: string não é number
-  };
+Tipos primitivos mais usados: \`string\`, \`number\`, \`boolean\`, \`string[]\` (array), \`{ x: number }\` (objeto inline). Evite \`any\` (desliga as verificações).
 
-Tipos básicos do TypeScript:
-  string     → textos
-  number     → números (int e float)
-  boolean    → true/false
-  string[]   → array de strings
-  number[]   → array de números
-  any        → qualquer tipo (evite!)
+## 📚 Exemplos comentados
+  // 1. Interface simples + uso
+  interface Produto { nome: string; preco: number; }
+  const item: Produto = { nome: "Café", preco: 12 };
 
-Type vs Interface:
-  type Ponto = { x: number; y: number };
-  interface Ponto { x: number; y: number }
-  // Ambos funcionam! Interface é mais usada para objetos.`,
+  // 2. Campo opcional e união de tipos
+  interface Mensagem {
+    texto: string;
+    autor?: string;              // pode existir ou não
+    status: "lido" | "novo";     // só aceita esses dois valores
+  }
+
+  // 3. Tipando props de componente React
+  interface CartaoProps { titulo: string; destaque?: boolean; }
+  function Cartao({ titulo, destaque }: CartaoProps) {
+    return <h2 className={destaque ? "destaque" : ""}>{titulo}</h2>;
+  }
+
+## ⚠️ Erros comuns
+• Esquecer um **campo obrigatório** → erro de compilação ("property 'idade' is missing").
+• Confundir **\`?\` (opcional)** com **valor padrão** — interface só descreve a forma; valor default é responsabilidade do código.
+• Usar \`any\` para "calar" o TypeScript → você perde toda a proteção; prefira \`unknown\` se realmente não souber o tipo.
+
+## 🚀 Quando usar na prática
+Para **toda estrutura de dados que circula no app**: respostas de API, props de componentes, estado complexo, parâmetros de funções utilitárias, formato de itens em uma lista. Interfaces transformam bugs em runtime ("Cannot read property X of undefined") em erros que aparecem **enquanto você digita**.`,
         starterCode: '// Defina a interface e crie o objeto\n',
         solution: 'interface Usuario {\n  nome: string;\n  idade: number;\n  ativo: boolean;\n}\nconst user: Usuario = { nome: "Ana", idade: 25, ativo: true };\nconsole.log(user.nome);',
         expectedOutput: "Ana",
@@ -2423,40 +2495,48 @@ Type vs Interface:
         id: "3-6",
         title: "Renderização de Listas",
         description: "Dado um array de nomes, renderize uma lista `<ul>` com um `<li>` para cada nome usando `.map()`.",
-        theory: `Em React, usamos .map() para renderizar listas de elementos. É o padrão para transformar arrays de dados em elementos JSX.
+        theory: `# Renderização de listas com .map()
 
-Renderizando uma lista:
-  const nomes = ["Ana", "Bruno", "Carlos"];
+## 💡 O que é
+Em React, transformar um **array de dados** numa **lista de elementos JSX** é feito com \`.map()\`. Cada item do array vira um elemento na tela, e o React precisa de uma \`key\` única para acompanhar quem é quem.
 
-  function Lista() {
-    return (
-      <ul>
-        {nomes.map(nome => (
-          <li key={nome}>{nome}</li>
-        ))}
-      </ul>
-    );
-  }
+## 🌍 Analogia do mundo real
+Imagine **etiquetas em um varal de roupas**: cada peça (item do array) precisa do seu **prendedor com nome** (\`key\`). Se você tirar uma camisa do meio, o varalista (React) consegue saber exatamente qual peça foi sem ter que reorganizar tudo. Sem prendedores, ele teria que **rebagunçar e remontar o varal inteiro** a cada mudança.
 
-A prop key é OBRIGATÓRIA em listas! Ela ajuda o React a identificar qual item mudou:
-  // ✅ Bom — ID único:
-  {users.map(user => <li key={user.id}>{user.nome}</li>)}
-
-  // ⚠️ Ok — se não tiver ID:
-  {items.map((item, index) => <li key={index}>{item}</li>)}
-
-  // ❌ Errado — sem key:
-  {items.map(item => <li>{item}</li>)}
-
-Renderização condicional dentro de listas:
-  {users.map(user => (
-    <li key={user.id}>
-      {user.nome} {user.ativo && "✅"}
-    </li>
+## 🔧 Sintaxe e como funciona
+  {array.map(item => (
+    <li key={item.id}>{item.nome}</li>
   ))}
 
-Dica: Filtre antes de mapear para mostrar apenas itens relevantes:
-  {users.filter(u => u.ativo).map(u => <li key={u.id}>{u.nome}</li>)}`,
+• \`.map\` percorre cada \`item\` e retorna um JSX.
+• \`{ }\` em volta porque é uma **expressão JavaScript dentro do JSX**.
+• \`key\` deve ser **única dentro daquela lista** — geralmente o \`id\` do item, **nunca o índice se a lista for reordenada**.
+
+## 📚 Exemplos comentados
+  // 1. Lista simples de strings (key = o próprio texto, se não repetir)
+  const nomes = ["Ana", "Bruno", "Carlos"];
+  <ul>
+    {nomes.map(n => <li key={n}>{n}</li>)}
+  </ul>
+
+  // 2. Lista de objetos (key = id estável vindo do backend)
+  const users = [{ id: 1, nome: "Ana" }, { id: 2, nome: "Bruno" }];
+  <ul>
+    {users.map(u => <li key={u.id}>{u.nome}</li>)}
+  </ul>
+
+  // 3. Filtrar antes de mapear (mostrar só ativos)
+  {users.filter(u => u.ativo).map(u => (
+    <li key={u.id}>{u.nome}</li>
+  ))}
+
+## ⚠️ Erros comuns
+• **Esquecer a \`key\`** → warning no console + bugs sutis em re-render.
+• Usar **\`index\` como key** quando a lista é reordenada/filtrada → React pode reusar o item errado e a tela fica inconsistente. Use \`index\` só em listas estáticas.
+• Esquecer as **chaves \`{ }\`** ao redor do \`.map\` no JSX → o array some da tela.
+
+## 🚀 Quando usar na prática
+Em **toda lista dinâmica**: feed de posts, lista de tarefas, resultados de busca, mensagens de chat, opções de um \`<select>\`, cards de produtos. Sempre que pensar "preciso renderizar N coisas a partir de um array", a resposta é \`.map\` com \`key\`.`,
         starterCode: 'const nomes = ["Ana", "Bruno", "Carlos"];\n// Renderize a lista\n',
         solution: 'const nomes = ["Ana", "Bruno", "Carlos"];\nfunction Lista() {\n  return <ul>{nomes.map(n => <li key={n}>{n}</li>)}</ul>;\n}',
         expectedOutput: "Ana",
@@ -2467,40 +2547,62 @@ Dica: Filtre antes de mapear para mostrar apenas itens relevantes:
         id: "3-7",
         title: "Custom Hooks",
         description: "Crie um custom hook **useContador** que encapsula a lógica de um contador com `incrementar`, `decrementar` e `resetar`.",
-        theory: `Custom Hooks permitem extrair lógica de estado reutilizável em funções separadas. O nome DEVE começar com "use".
+        theory: `# Custom Hooks — reutilizar lógica entre componentes
 
-Criando um custom hook:
-  function useContador(inicial = 0) {
-    const [count, setCount] = useState(inicial);
+## 💡 O que é
+Um **custom hook** é uma função JavaScript comum que **chama outros hooks** (\`useState\`, \`useEffect\`, etc.) e cujo nome **começa com \`use\`**. Ele serve para **empacotar uma lógica de estado reutilizável** e usar em vários componentes sem copiar e colar.
 
-    const incrementar = () => setCount(prev => prev + 1);
-    const decrementar = () => setCount(prev => prev - 1);
-    const resetar = () => setCount(inicial);
+## 🌍 Analogia do mundo real
+Pense numa **receita de bolo**: a primeira vez você descobre o passo a passo (misturar, bater, assar). Depois você **escreve a receita num cartão** (\`useBolo\`) e qualquer um na cozinha pode seguir. Sem precisar reaprender, sem variações que esquecem ingredientes — todo mundo faz **o mesmo bolo, do mesmo jeito**.
 
-    return { count, incrementar, decrementar, resetar };
+## 🔧 Sintaxe e como funciona
+  function useContador(inicial = 0) {                  // nome começa com "use"
+    const [count, setCount] = useState(inicial);       // pode usar hooks dentro
+    const incrementar = () => setCount(c => c + 1);
+    const resetar     = () => setCount(inicial);
+    return { count, incrementar, resetar };            // devolve o que o componente precisa
   }
 
-Usando o hook:
-  function MeuComponente() {
-    const { count, incrementar, resetar } = useContador(0);
-    return (
-      <div>
-        <p>{count}</p>
-        <button onClick={incrementar}>+1</button>
-        <button onClick={resetar}>Resetar</button>
-      </div>
-    );
+  // No componente:
+  const { count, incrementar, resetar } = useContador(0);
+
+Cada componente que chama \`useContador\` ganha **seu próprio estado independente** — o hook é uma "fábrica" de comportamentos, não um estado global.
+
+## 📚 Exemplos comentados
+  // 1. useToggle — alternar booleano
+  function useToggle(inicial = false) {
+    const [on, setOn] = useState(inicial);
+    const toggle = () => setOn(v => !v);
+    return [on, toggle] as const;
   }
 
-Regras dos Hooks:
-  1. Só chame hooks no TOPO do componente/hook
-  2. Nunca dentro de if, for ou funções aninhadas
-  3. Só chame em componentes React ou outros hooks
+  // 2. useLocalStorage — estado que persiste no navegador
+  function useLocalStorage<T>(key: string, inicial: T) {
+    const [valor, setValor] = useState<T>(() => {
+      const salvo = localStorage.getItem(key);
+      return salvo ? JSON.parse(salvo) : inicial;
+    });
+    useEffect(() => { localStorage.setItem(key, JSON.stringify(valor)); }, [key, valor]);
+    return [valor, setValor] as const;
+  }
 
-Exemplos úteis:
-  useLocalStorage(key, valor) → estado persistido
-  useWindowSize() → largura/altura da janela
-  useFetch(url) → busca dados com loading/error`,
+  // 3. useFetch — buscar dados com loading/erro
+  function useFetch(url: string) {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+      fetch(url).then(r => r.json()).then(setData).finally(() => setLoading(false));
+    }, [url]);
+    return { data, loading };
+  }
+
+## ⚠️ Erros comuns
+• **Nome sem \`use\`** (ex.: \`fazerContador\`) → React não aplica as regras de hooks e o ESLint não consegue te ajudar.
+• Chamar o hook **dentro de \`if\` ou loop** → quebra a regra "hooks sempre no topo".
+• Esperar **estado compartilhado** entre componentes — cada chamada cria um estado próprio. Para compartilhar, combine com **Context**.
+
+## 🚀 Quando usar na prática
+Sempre que você notar a **mesma lógica de \`useState\` + \`useEffect\` repetida em vários componentes**: leitura/escrita no localStorage, debouncing de input, fetch com loading, escutar tamanho da janela, autenticação. Custom hooks são a forma idiomática de organizar lógica em React moderno.`,
         starterCode: 'import { useState } from "react";\n// Crie o custom hook\n',
         solution: 'import { useState } from "react";\n\nfunction useContador(inicial = 0) {\n  const [count, setCount] = useState(inicial);\n  const incrementar = () => setCount(c => c + 1);\n  const decrementar = () => setCount(c => c - 1);\n  const resetar = () => setCount(inicial);\n  return { count, incrementar, decrementar, resetar };\n}',
         expectedOutput: "useContador",
@@ -2511,46 +2613,62 @@ Exemplos úteis:
         id: "3-8",
         title: "useContext",
         description: "Crie um **ThemeContext** com React Context API que fornece o tema atual ('dark' ou 'light') para componentes filhos.",
-        theory: `useContext resolve o problema de "prop drilling" — passar props por muitos níveis de componentes.
+        theory: `# useContext — estado compartilhado sem prop drilling
 
-Criando o Context:
-  import { createContext, useContext, useState } from "react";
+## 💡 O que é
+O **Context API** + \`useContext\` permite que **vários componentes em níveis diferentes da árvore** leiam um valor (tema, usuário logado, idioma) **sem ter que passar a prop manualmente** por cada nível intermediário.
 
-  const ThemeContext = createContext("light");
+## 🌍 Analogia do mundo real
+Pense num **Wi-Fi do prédio**: o roteador (\`Provider\`) está no térreo e o sinal chega em todos os apartamentos. Os moradores (\`useContext\`) só precisam **conhecer a senha** para acessar — ninguém precisa **puxar um cabo** de um andar pro outro. Sem Context, você teria que **fazer um cabo passar por cada andar** (prop drilling: pai → filho → neto → bisneto).
 
-  function ThemeProvider({ children }) {
-    const [tema, setTema] = useState("light");
-    const toggleTema = () =>
-      setTema(t => t === "light" ? "dark" : "light");
+## 🔧 Sintaxe e como funciona
+  // 1. Criar o Context (uma vez, num arquivo separado)
+  const ThemeContext = createContext<"light" | "dark">("light");
 
+  // 2. Provider envolve a parte da árvore que vai usar
+  function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const [tema, setTema] = useState<"light" | "dark">("light");
     return (
-      <ThemeContext.Provider value={{ tema, toggleTema }}>
+      <ThemeContext.Provider value={{ tema, setTema }}>
         {children}
       </ThemeContext.Provider>
     );
   }
 
-Consumindo o Context:
+  // 3. Qualquer descendente lê com useContext
   function Botao() {
-    const { tema, toggleTema } = useContext(ThemeContext);
-    return (
-      <button
-        style={{ background: tema === "dark" ? "#333" : "#fff" }}
-        onClick={toggleTema}
-      >
-        Tema: {tema}
-      </button>
-    );
+    const { tema, setTema } = useContext(ThemeContext);
+    return <button onClick={() => setTema("dark")}>Tema: {tema}</button>;
   }
 
-Usando:
-  <ThemeProvider>
-    <App />    {/* todos os filhos acessam o tema */}
-  </ThemeProvider>
+## 📚 Exemplos comentados
+  // 1. AuthContext — usuário logado disponível em toda a app
+  const AuthContext = createContext<User | null>(null);
+  <AuthContext.Provider value={user}><App /></AuthContext.Provider>
+  // Em qualquer componente filho:
+  const user = useContext(AuthContext);
 
-Quando usar Context:
-  ✅ Tema, idioma, autenticação, preferências globais
-  ❌ Estado local de um formulário (use useState)`,
+  // 2. Combinando com custom hook (padrão recomendado)
+  export function useTheme() {
+    const ctx = useContext(ThemeContext);
+    if (!ctx) throw new Error("useTheme deve estar dentro de ThemeProvider");
+    return ctx;
+  }
+
+  // 3. Múltiplos contexts aninhados
+  <AuthProvider>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </AuthProvider>
+
+## ⚠️ Erros comuns
+• Usar Context para **estado que muda muito rápido** (ex.: posição do mouse) → todos os consumers re-renderizam, fica lento. Para isso prefira state local ou bibliotecas como Zustand.
+• Esquecer de envolver com o **Provider** → \`useContext\` devolve o valor padrão e nada funciona.
+• Colocar **funções inline novas no \`value\`** a cada render (\`value={{ x, fn: () => ... }}\`) → consumers re-renderizam à toa. Use \`useMemo\`/\`useCallback\` se for crítico.
+
+## 🚀 Quando usar na prática
+Para **valores globais que mudam pouco**: tema (claro/escuro), idioma, usuário logado, configurações da conta, dados de localização. Não use para **tudo** — Context é uma faca afiada; estado local com \`useState\` ainda é o padrão para a maioria dos casos.`,
         starterCode: 'import { createContext, useContext } from "react";\n// Crie o context\n',
         solution: 'import { createContext, useContext, useState } from "react";\n\nconst ThemeContext = createContext("light");\n\nfunction ThemeProvider({ children }) {\n  const [tema, setTema] = useState("light");\n  return (\n    <ThemeContext.Provider value={tema}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}',
         expectedOutput: "ThemeContext",
@@ -2564,46 +2682,70 @@ Quando usar Context:
         id: "3-9",
         title: "useReducer",
         description: "Implemente um **gerenciador de tarefas** usando `useReducer` com ações ADD, TOGGLE e REMOVE.",
-        theory: `useReducer é uma alternativa ao useState para lógica de estado complexa. Funciona como Redux em miniatura!
+        theory: `# useReducer — estado complexo com regras claras
 
-Sintaxe:
-  const [state, dispatch] = useReducer(reducer, estadoInicial);
+## 💡 O que é
+\`useReducer\` é uma alternativa ao \`useState\` para quando o estado tem **muitos campos** ou as **transições são complexas**. Você descreve **ações** que podem acontecer (\`ADD\`, \`REMOVE\`, \`TOGGLE\`) e uma **função reducer** decide como o estado muda para cada ação.
 
-O reducer é uma função pura:
+## 🌍 Analogia do mundo real
+Pense num **caixa eletrônico**: você não enfia a mão dentro do cofre para mexer no dinheiro (estado). Você aperta um **botão de ação** ("Sacar 100", "Depositar 50", "Consultar saldo") e uma **regra interna** decide como o saldo muda. \`dispatch\` é apertar o botão; o \`reducer\` é o software do caixa que processa cada operação de forma previsível e auditável.
+
+## 🔧 Sintaxe e como funciona
+  // 1. Função reducer (pura: mesma entrada → mesma saída, sem efeitos)
   function reducer(state, action) {
     switch (action.type) {
-      case "INCREMENT":
-        return { count: state.count + 1 };
-      case "DECREMENT":
-        return { count: state.count - 1 };
-      case "RESET":
-        return { count: 0 };
-      default:
-        return state;
+      case "INCREMENT": return { count: state.count + 1 };
+      case "RESET":     return { count: 0 };
+      default:          return state;     // sempre devolva algo
     }
   }
 
-Usando no componente:
-  function Contador() {
-    const [state, dispatch] = useReducer(reducer, { count: 0 });
-    return (
-      <div>
-        <p>{state.count}</p>
-        <button onClick={() => dispatch({ type: "INCREMENT" })}>+1</button>
-        <button onClick={() => dispatch({ type: "RESET" })}>Resetar</button>
-      </div>
-    );
-  }
+  // 2. Hook no componente
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+  //     ↑ estado atual    ↑ "envia" uma ação    ↑ valor inicial
 
-Ações com payload:
+  // 3. Disparando ações
+  dispatch({ type: "INCREMENT" });
   dispatch({ type: "ADD_TODO", payload: { text: "Estudar" } });
 
-  case "ADD_TODO":
-    return [...state, { id: Date.now(), text: action.payload.text, done: false }];
+## 📚 Exemplos comentados
+  // 1. Contador com várias ações
+  const reducer = (s, a) => {
+    if (a.type === "inc")   return { n: s.n + 1 };
+    if (a.type === "dec")   return { n: s.n - 1 };
+    if (a.type === "reset") return { n: 0 };
+    return s;
+  };
+  const [s, dispatch] = useReducer(reducer, { n: 0 });
 
-Quando usar useReducer vs useState:
-  useState → 1-2 variáveis simples
-  useReducer → estado complexo, múltiplas ações, lógica de atualização elaborada`,
+  // 2. Lista de tarefas (todo) — imutabilidade com spread/filter/map
+  function todoReducer(state, action) {
+    switch (action.type) {
+      case "ADD":    return [...state, { id: Date.now(), text: action.text, done: false }];
+      case "TOGGLE": return state.map(t => t.id === action.id ? { ...t, done: !t.done } : t);
+      case "REMOVE": return state.filter(t => t.id !== action.id);
+      default:       return state;
+    }
+  }
+
+  // 3. Estado de formulário com vários campos
+  const inicial = { nome: "", email: "", erro: null };
+  function form(state, a) {
+    switch (a.type) {
+      case "SET":    return { ...state, [a.field]: a.value };
+      case "ERRO":   return { ...state, erro: a.msg };
+      case "RESET":  return inicial;
+      default:       return state;
+    }
+  }
+
+## ⚠️ Erros comuns
+• **Mutar o state direto** dentro do reducer (\`state.count++\`) → quebra a comparação de igualdade do React. Sempre retorne **objeto/array novo**.
+• Esquecer o **\`default: return state\`** → ações desconhecidas fazem o estado virar \`undefined\`.
+• Colocar **lógica assíncrona** dentro do reducer (\`fetch\`, \`setTimeout\`) → reducer deve ser **puro**. Faça async em \`useEffect\` ou no handler que chama \`dispatch\`.
+
+## 🚀 Quando usar na prática
+Quando o estado tem **3+ campos relacionados** que mudam juntos, quando há **muitas ações diferentes** (ex.: lista de tarefas, carrinho, wizard de várias etapas), ou quando você quer um **histórico claro** das mudanças. Para 1-2 valores simples, \`useState\` continua sendo melhor.`,
         starterCode: 'import { useReducer } from "react";\n// Crie o reducer e o componente\n',
         solution: 'import { useReducer } from "react";\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case "ADD":\n      return [...state, { id: Date.now(), text: action.text, done: false }];\n    case "TOGGLE":\n      return state.map(t => t.id === action.id ? {...t, done: !t.done} : t);\n    case "REMOVE":\n      return state.filter(t => t.id !== action.id);\n    default: return state;\n  }\n}',
         expectedOutput: "useReducer",
@@ -2617,52 +2759,64 @@ Quando usar useReducer vs useState:
         id: "3-10",
         title: "React Router",
         description: "Configure rotas com **React Router** para páginas Home (`/`), Sobre (`/sobre`) e Contato (`/contato`).",
-        theory: `React Router permite criar Single Page Applications (SPAs) com navegação entre páginas sem recarregar.
+        theory: `# React Router — navegação em SPAs
 
-Instalação: npm install react-router-dom
+## 💡 O que é
+**React Router** transforma sua aplicação React numa **SPA (Single Page Application)** com várias "páginas". O navegador **não recarrega** ao trocar de tela — só o conteúdo renderizado muda, deixando a navegação instantânea.
 
-Configuração básica:
+## 🌍 Analogia do mundo real
+Pense num **livro de receitas com abas coloridas**: o livro (a aplicação) já está aberto na sua mesa. Você só **vira para a aba** "Sobremesas" ou "Massas" — não precisa **comprar um novo livro** a cada mudança. \`<Link>\` é a aba; \`<Routes>\` é o sumário que decide qual receita mostrar; a URL no navegador é a **fitinha de marcação** indicando a página atual.
+
+## 🔧 Sintaxe e como funciona
+  // 1. Instale: npm install react-router-dom
   import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
   function App() {
     return (
-      <BrowserRouter>
+      <BrowserRouter>                    {/* envolve TUDO */}
         <nav>
-          <Link to="/">Home</Link>
+          <Link to="/">Home</Link>       {/* navegação sem reload */}
           <Link to="/sobre">Sobre</Link>
         </nav>
-        <Routes>
+        <Routes>                                            {/* qual rota mostrar */}
           <Route path="/" element={<Home />} />
           <Route path="/sobre" element={<Sobre />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />        {/* fallback 404 */}
         </Routes>
       </BrowserRouter>
     );
   }
 
-Link vs a:
-  <Link to="/sobre">Sobre</Link>    → navegação SPA (sem reload)
-  <a href="/sobre">Sobre</a>        → reload completo (evite!)
-
-Rotas dinâmicas:
+## 📚 Exemplos comentados
+  // 1. Rota dinâmica com parâmetro (:id) e useParams
   <Route path="/usuario/:id" element={<Perfil />} />
-
   function Perfil() {
-    const { id } = useParams();
+    const { id } = useParams();          // pega o valor da URL
     return <h1>Usuário {id}</h1>;
   }
 
-useNavigate — navegação programática:
-  const navigate = useNavigate();
-  navigate("/dashboard");
-  navigate(-1);  // voltar
+  // 2. Navegação programática com useNavigate (depois de submit, login, etc.)
+  function Login() {
+    const navigate = useNavigate();
+    const aoEntrar = () => navigate("/dashboard");
+    const voltar = () => navigate(-1);   // volta como o botão do navegador
+    return <button onClick={aoEntrar}>Entrar</button>;
+  }
 
-Rotas aninhadas:
+  // 3. Rotas aninhadas com <Outlet />
   <Route path="/dashboard" element={<Dashboard />}>
-    <Route path="perfil" element={<Perfil />} />
-    <Route path="config" element={<Config />} />
+    <Route path="perfil" element={<Perfil />} />        {/* /dashboard/perfil */}
+    <Route path="config" element={<Config />} />        {/* /dashboard/config */}
   </Route>
-  // Use <Outlet /> no Dashboard para renderizar as sub-rotas`,
+  // Dashboard renderiza <Outlet /> onde a sub-rota deve aparecer.
+
+## ⚠️ Erros comuns
+• Usar **\`<a href="/...">\`** em vez de \`<Link to="/...">\` → faz **reload completo** e perde todo o estado da SPA.
+• Esquecer o **\`<BrowserRouter>\`** envolvendo a aplicação → \`Link\`/\`useNavigate\` quebram com erro de "router context".
+• Confundir **rota dinâmica** (\`:id\`) com **query string** (\`?id=1\`). \`useParams\` lê \`:id\`; \`useSearchParams\` lê o \`?\`.
+
+## 🚀 Quando usar na prática
+Em **toda aplicação React com mais de uma tela**: dashboards, e-commerce, área logada, blogs. Para apps de página única (landing page) sem navegação, não precisa. Em projetos modernos de Lovable/Vite, o \`react-router-dom\` é a escolha padrão.`,
         starterCode: '// Configure as rotas\n',
         solution: 'import { BrowserRouter, Routes, Route, Link } from "react-router-dom";\n\nfunction Home() { return <h1>Home</h1>; }\nfunction Sobre() { return <h1>Sobre</h1>; }\nfunction Contato() { return <h1>Contato</h1>; }\n\nfunction App() {\n  return (\n    <BrowserRouter>\n      <nav>\n        <Link to="/">Home</Link>\n        <Link to="/sobre">Sobre</Link>\n        <Link to="/contato">Contato</Link>\n      </nav>\n      <Routes>\n        <Route path="/" element={<Home />} />\n        <Route path="/sobre" element={<Sobre />} />\n        <Route path="/contato" element={<Contato />} />\n      </Routes>\n    </BrowserRouter>\n  );\n}',
         expectedOutput: "BrowserRouter",
@@ -2673,62 +2827,71 @@ Rotas aninhadas:
         id: "3-11",
         title: "Fetching Data com useEffect",
         description: "Crie um componente que busca dados de uma **API** usando `useEffect` + `fetch` e exibe uma lista de usuários.",
-        theory: `Buscar dados de APIs é uma das tarefas mais comuns em React. O padrão é usar useEffect + fetch (ou bibliotecas como React Query).
+        theory: `# Buscando dados de APIs com useEffect + fetch
 
-Padrão básico:
+## 💡 O que é
+O padrão clássico para **carregar dados externos** em um componente React: dispara um \`fetch\` dentro de \`useEffect\` quando o componente monta, guarda o resultado em \`useState\`, e renderiza **três telas possíveis** — carregando, erro, ou dados prontos.
+
+## 🌍 Analogia do mundo real
+É como **pedir comida por aplicativo**: você abre o app (componente monta), faz o pedido (\`fetch\`), e enquanto espera a tela mostra **"preparando seu pedido..."** (\`loading\`). Se o restaurante cancelar, aparece **"deu ruim"** (\`error\`). Quando chega, você vê **a comida na mesa** (os dados renderizados). Você nunca **fica olhando a porta sem fazer nada** — sempre tem um estado visual.
+
+## 🔧 Sintaxe e como funciona
   function Usuarios() {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [erro, setErro] = useState(null);
+    const [users,   setUsers]   = useState<User[]>([]);  // os dados
+    const [loading, setLoading] = useState(true);        // está carregando?
+    const [erro,    setErro]    = useState<string | null>(null);
 
     useEffect(() => {
-      fetch("https://jsonplaceholder.typicode.com/users")
+      fetch("https://api.exemplo.com/users")
         .then(res => {
-          if (!res.ok) throw new Error("Erro HTTP: " + res.status);
+          if (!res.ok) throw new Error("HTTP " + res.status);
           return res.json();
         })
-        .then(data => setUsers(data))
-        .catch(err => setErro(err.message))
+        .then(setUsers)
+        .catch(e => setErro(e.message))
         .finally(() => setLoading(false));
-    }, []);
+    }, []);          // [] = busca só uma vez, ao montar
 
-    if (loading) return <p>Carregando...</p>;
-    if (erro) return <p>Erro: {erro}</p>;
+    if (loading) return <p>Carregando…</p>;
+    if (erro)    return <p>Erro: {erro}</p>;
     return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
   }
 
-Com async/await:
+## 📚 Exemplos comentados
+  // 1. Versão com async/await (mais limpa)
   useEffect(() => {
     async function buscar() {
       try {
-        setLoading(true);
         const res = await fetch(URL);
-        const data = await res.json();
-        setUsers(data);
-      } catch (err) {
-        setErro(err.message);
-      } finally {
-        setLoading(false);
-      }
+        if (!res.ok) throw new Error("Falhou");
+        setUsers(await res.json());
+      } catch (e: any) { setErro(e.message); }
+      finally { setLoading(false); }
     }
     buscar();
   }, []);
 
-Estados essenciais para fetch:
-  data     → os dados recebidos
-  loading  → está carregando?
-  error    → deu erro?
-
-Cancelando fetch (cleanup):
+  // 2. Cancelar a requisição se o componente desmontar (evita warning + bug)
   useEffect(() => {
-    const controller = new AbortController();
-    fetch(URL, { signal: controller.signal })
-      .then(...)
-      .catch(...);
-    return () => controller.abort();
+    const ctrl = new AbortController();
+    fetch(URL, { signal: ctrl.signal })
+      .then(r => r.json()).then(setUsers)
+      .catch(e => { if (e.name !== "AbortError") setErro(e.message); });
+    return () => ctrl.abort();           // cleanup ao desmontar
   }, []);
 
-Dica: Para projetos reais, considere React Query (TanStack Query) — gerencia cache, refetch e loading automaticamente.`,
+  // 3. Refazer a busca quando uma dependência muda (ex.: termo de pesquisa)
+  useEffect(() => {
+    fetch(\`/api/buscar?q=\${termo}\`).then(r => r.json()).then(setResultados);
+  }, [termo]);                            // re-busca quando 'termo' mudar
+
+## ⚠️ Erros comuns
+• **Esquecer o \`[]\`** → loop infinito: o fetch atualiza o estado, o componente re-renderiza, dispara fetch de novo…
+• Não tratar **erro de rede** ou \`!res.ok\` → \`fetch\` **só rejeita em falha de rede**, não em status 4xx/5xx. Cheque \`res.ok\` manualmente.
+• Tentar \`setUsers\` **depois que o componente desmontou** → warning de memory leak. Use \`AbortController\` ou flag de cancelamento.
+
+## 🚀 Quando usar na prática
+**Toda tela que carrega dados ao abrir**: feed, dashboard, perfil de usuário, página de detalhes. Para projetos sérios, em vez de \`useEffect\` + \`fetch\` cru, prefira **TanStack Query (React Query)** ou **SWR** — eles dão cache automático, retry, refetch em foco e elimina 80% do boilerplate de \`loading\`/\`error\`.`,
         starterCode: 'import { useState, useEffect } from "react";\n// Busque dados da API\n',
         solution: 'import { useState, useEffect } from "react";\n\nfunction Usuarios() {\n  const [users, setUsers] = useState([]);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetch("https://jsonplaceholder.typicode.com/users")\n      .then(res => res.json())\n      .then(data => { setUsers(data); setLoading(false); });\n  }, []);\n\n  if (loading) return <p>Carregando...</p>;\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}',
         expectedOutput: "useEffect",

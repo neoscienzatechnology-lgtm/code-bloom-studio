@@ -52,8 +52,8 @@ Como são 103 lições de alta qualidade manual, vou dividir em **5 entregas** p
 ### **Fase 2 — Curso 2 (JavaScript Moderno — ~14 lições)**
 Reescrever todas as teorias do curso de JavaScript no template.
 
-### **Fase 3 — Curso 3 (React — ~12 lições)**
-Reescrever todas as teorias do curso de React.
+### **Fase 3 — Curso 3 (React — 11 lições) ✅ CONCLUÍDA**
+Todas as 11 lições do curso "React & TypeScript" reescritas no template de 6 seções.
 
 ### **Fase 4 — Cursos 4, 5 e 6** (próximos 3 cursos da lista)
 Reescrever no mesmo template.
