@@ -2921,36 +2921,54 @@ O padrão clássico para **carregar dados externos** em um componente React: dis
         id: "4-1",
         title: "Seletores Básicos",
         description: "Escreva CSS para deixar todos os `<h1>` com cor **azul** e todos os `<p>` com tamanho de fonte **18px**.",
-        theory: `CSS (Cascading Style Sheets) controla a aparência visual do HTML. Cada regra CSS tem um seletor e declarações.
+        theory: `# Seletores CSS
 
-![CSS estilizando uma página web](https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=600&h=300&fit=crop)
+## 💡 O que é
+Um **seletor** diz **a quais elementos HTML** uma regra de estilo se aplica. Sem seletor, o navegador não sabe **onde** colorir, alinhar ou espaçar.
 
-Estrutura:
+## 🌍 Analogia do mundo real
+Pense num **professor entrando numa sala lotada**: para dar uma instrução, ele precisa dizer **a quem**. Pode falar com "todos os alunos da fileira da janela" (tag), "quem está com camiseta vermelha" (classe), ou "Pedro Silva" (id, único). O seletor é exatamente esse "endereçamento".
+
+## 🔧 Sintaxe e como funciona
   seletor {
-    propriedade: valor;
+    propriedade: valor;       /* termina sempre com ; */
+    outra: valor;
   }
 
-Tipos de seletores:
-• Tag: h1 { } → todos os <h1>
-• Classe: .destaque { } → elementos com class="destaque"
-• ID: #titulo { } → elemento com id="titulo"
-• Universal: * { } → todos os elementos
+Tipos principais:
+• \`h1\` — **tag**: todos os \`<h1>\` da página.
+• \`.destaque\` — **classe** (use \`.\`): elementos com \`class="destaque"\`. **O mais usado**.
+• \`#titulo\` — **id** (use \`#\`): único, deve aparecer só uma vez.
+• \`*\` — **universal**: todos os elementos.
 
-Propriedades comuns:
-  color: blue;           → cor do texto
-  font-size: 18px;       → tamanho da fonte
-  background-color: red; → cor de fundo
-  margin: 10px;          → espaço externo
-  padding: 20px;         → espaço interno
-  border: 1px solid black; → borda
+**Especificidade** (quem ganha quando há conflito): \`id\` > \`classe\` > \`tag\`. Quanto mais específico, mais prioridade.
 
-Combinando seletores:
-  h1, h2 { }           → h1 E h2
-  .card p { }           → <p> dentro de .card
-  .card > p { }         → <p> filho direto de .card
-  .card:hover { }       → .card quando mouse está sobre
+## 📚 Exemplos comentados
+  /* 1. Por tag — afeta TODOS os parágrafos */
+  p {
+    color: #333;
+    font-size: 16px;
+  }
 
-Especificidade: ID > Classe > Tag. Quanto mais específico, maior a prioridade.`,
+  /* 2. Por classe — só onde class="card" */
+  .card {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  /* 3. Combinando: descendentes, pseudo-classe e múltiplos seletores */
+  .card p { color: gray; }     /* <p> dentro de .card */
+  .card > p { color: black; }  /* só <p> filho DIRETO de .card */
+  .botao:hover { opacity: 0.8; }/* quando o mouse passa por cima */
+  h1, h2, h3 { font-family: serif; } /* aplica em vários ao mesmo tempo */
+
+## ⚠️ Erros comuns
+• Esquecer o **\`.\`** antes da classe (\`card { ... }\` em vez de \`.card { ... }\`) → a regra vira seletor de tag e provavelmente não casa com nada.
+• Esquecer o **\`;\`** no fim das declarações → o navegador descarta a próxima regra silenciosamente.
+• Abusar de \`#id\` em CSS → especificidade alta demais, difícil de sobrescrever depois. Prefira **classes**.
+
+## 🚀 Quando usar na prática
+Toda página estilizada usa seletores. Em projetos reais, **classes são o padrão** (Tailwind, BEM, CSS modules). Use \`tag\` para resets globais (\`body\`, \`*\`), \`#id\` raramente, e combine com pseudo-classes (\`:hover\`, \`:focus\`) para interatividade.`,
         starterCode: '/* Estilize h1 e p */\n',
         solution: 'h1 {\n  color: blue;\n}\np {\n  font-size: 18px;\n}',
         expectedOutput: "color: blue",
