@@ -3110,43 +3110,67 @@ Galerias de produtos, dashboards com múltiplos painéis, layout de página inte
         id: "4-4",
         title: "Variáveis CSS",
         description: "Defina variáveis CSS `--cor-primaria` (roxo) e `--espacamento` (16px) no `:root` e use-as em um `.card`.",
-        theory: `Variáveis CSS (Custom Properties) permitem reutilizar valores em todo o CSS. Mudou em um lugar? Muda em todos!
+        theory: `# Variáveis CSS (Custom Properties)
 
-Definindo variáveis no :root (globais):
+## 💡 O que é
+Variáveis CSS guardam um **valor reutilizável** (cor, espaçamento, fonte) que você define **uma vez** e usa em toda a folha de estilo. Ao mudar a variável, **tudo que a usa muda junto**.
+
+## 🌍 Analogia do mundo real
+Pense num **interruptor central da casa**: você troca uma lâmpada do tipo "luz quente" no painel principal, e **todos os cômodos** que pegam dali mudam de tom. Sem variáveis, você teria que **subir em cada cômodo trocando lâmpada por lâmpada** (caçar e substituir cor por cor no CSS inteiro).
+
+## 🔧 Sintaxe e como funciona
+  /* 1. Definir no :root para virar global */
   :root {
     --cor-primaria: #6c5ce7;
-    --cor-texto: #333;
     --espacamento: 16px;
-    --raio-borda: 8px;
+    --raio: 8px;
   }
 
-Usando variáveis:
+  /* 2. Usar com var() */
   .card {
-    color: var(--cor-texto);
-    padding: var(--espacamento);
-    border-radius: var(--raio-borda);
     background: var(--cor-primaria);
+    padding: var(--espacamento);
+    border-radius: var(--raio);
   }
 
-Valor fallback (se a variável não existir):
-  color: var(--cor-link, blue);
+  /* 3. Valor fallback se a variável não existir */
+  .link { color: var(--cor-link, blue); }
 
-Variáveis locais (só dentro do elemento):
-  .tema-escuro {
-    --cor-fundo: #1a1a2e;
-    --cor-texto: #eee;
+Variáveis **respeitam o escopo do CSS**: se você redefinir dentro de um seletor, ela vale só para os descendentes daquele elemento — base de **temas claro/escuro**.
+
+## 📚 Exemplos comentados
+  /* 1. Design tokens — paleta centralizada */
+  :root {
+    --primary: #6c5ce7;
+    --primary-hover: #5a4bd1;
+    --texto: #1a1a2e;
+    --bg: #ffffff;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
   }
 
-Alterar temas facilmente:
-  :root { --bg: white; --text: black; }
-  .dark { --bg: #1a1a2e; --text: white; }
+  /* 2. Tema escuro — sobrescreve as MESMAS variáveis */
+  .dark {
+    --bg: #1a1a2e;
+    --texto: #eee;
+  }
+  body { background: var(--bg); color: var(--texto); }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
+  /* 3. Variável local a um componente */
+  .alerta {
+    --cor-alerta: red;
+    border-left: 4px solid var(--cor-alerta);
+    color: var(--cor-alerta);
   }
 
-Variáveis CSS são essenciais para design systems e temas dinâmicos!`,
+## ⚠️ Erros comuns
+• Esquecer os **dois traços** no início (\`-cor: red\` em vez de \`--cor: red\`) → não vira variável.
+• Usar a variável **fora do escopo** onde foi definida → cai no fallback ou herda \`undefined\` e o valor some.
+• Tentar fazer **operações matemáticas** direto: \`padding: var(--x) * 2\` ❌. Use \`calc()\`: \`padding: calc(var(--x) * 2)\` ✅.
+
+## 🚀 Quando usar na prática
+**Sempre** em projetos reais: cores de marca, espaçamentos, raios de borda, tamanhos de fonte. É a base de **design systems** (Tailwind, shadcn/ui) e o jeito mais simples de implementar **tema claro/escuro** sem JavaScript pesado. Em projetos React/Vite, casa lindo com Tailwind via \`hsl(var(--primary))\`.`,
         starterCode: ':root {\n  /* Defina variáveis */\n}\n.card {\n  /* Use as variáveis */\n}\n',
         solution: ':root {\n  --cor-primaria: purple;\n  --espacamento: 16px;\n}\n.card {\n  color: var(--cor-primaria);\n  padding: var(--espacamento);\n}',
         expectedOutput: "--cor-primaria",
