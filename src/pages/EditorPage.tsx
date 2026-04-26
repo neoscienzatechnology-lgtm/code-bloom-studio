@@ -102,6 +102,7 @@ const EditorPage = () => {
       setIsCorrect(correct ? true : result.level === "close" ? null : false);
 
       if (correct) {
+        const priorAttempts = getAttempts(lesson.id);
         setOutput(lesson.expectedOutput);
         setReflectiveQ(null);
         resetLesson(lesson.id);
@@ -110,6 +111,12 @@ const EditorPage = () => {
         if (!alreadyCompleted) {
           completeLesson(lesson.id, lesson.xpReward, course.id);
           fireConfetti();
+        }
+        // Personalização: acertou de primeira → oferece desafio extra
+        if (priorAttempts === 0 && !alreadyCompleted && !bonusActive) {
+          setPaceMode("thriving");
+        } else {
+          setPaceMode(null);
         }
       } else {
         registerFailure(lesson.id, result.errorKind);
@@ -124,6 +131,11 @@ const EditorPage = () => {
 
         setOutput(composed);
         setReflectiveQ(result.reflectiveQuestion ?? null);
+
+        // Personalização: 3+ falhas seguidas → modo apoio
+        if (attempts >= 3) {
+          setPaceMode("struggling");
+        }
       }
       setRunning(false);
     }, 800);
