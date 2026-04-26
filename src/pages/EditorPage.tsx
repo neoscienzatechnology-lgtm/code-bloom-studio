@@ -75,7 +75,10 @@ const EditorPage = () => {
   }
   if (!data || !lesson || !course) return <Navigate to="/cursos" replace />;
 
-  const nextLesson = course.lessons[lessonIndex + 1];
+  // Compute the next step from the augmented course (so checkpoints are inserted)
+  const augCourse = augmented?.course ?? { lessons: [] as { id: string; kind: "lesson" | "checkpoint" }[] };
+  const augIdx = augCourse.lessons.findIndex((l) => l.id === lesson.id);
+  const nextLesson = augIdx >= 0 ? augCourse.lessons[augIdx + 1] : course.lessons[lessonIndex + 1];
   const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
   const alreadyCompleted = isCompleted(lesson.id);
 
@@ -149,8 +152,12 @@ const EditorPage = () => {
 
   const handleNext = () => {
     if (nextLesson) {
-      navigate(`/editor/${course.id}/${nextLesson.id}`);
-      window.location.href = `/editor/${course.id}/${nextLesson.id}`;
+      const nextHref =
+        "kind" in nextLesson && nextLesson.kind === "checkpoint"
+          ? `/checkpoint/${course.id}/${nextLesson.id}`
+          : `/editor/${course.id}/${nextLesson.id}`;
+      navigate(nextHref);
+      window.location.href = nextHref;
     } else {
       navigate(`/cursos/${course.id}`);
     }
