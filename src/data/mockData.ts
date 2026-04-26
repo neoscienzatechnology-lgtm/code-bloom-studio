@@ -2613,46 +2613,62 @@ Sempre que você notar a **mesma lógica de \`useState\` + \`useEffect\` repetid
         id: "3-8",
         title: "useContext",
         description: "Crie um **ThemeContext** com React Context API que fornece o tema atual ('dark' ou 'light') para componentes filhos.",
-        theory: `useContext resolve o problema de "prop drilling" — passar props por muitos níveis de componentes.
+        theory: `# useContext — estado compartilhado sem prop drilling
 
-Criando o Context:
-  import { createContext, useContext, useState } from "react";
+## 💡 O que é
+O **Context API** + \`useContext\` permite que **vários componentes em níveis diferentes da árvore** leiam um valor (tema, usuário logado, idioma) **sem ter que passar a prop manualmente** por cada nível intermediário.
 
-  const ThemeContext = createContext("light");
+## 🌍 Analogia do mundo real
+Pense num **Wi-Fi do prédio**: o roteador (\`Provider\`) está no térreo e o sinal chega em todos os apartamentos. Os moradores (\`useContext\`) só precisam **conhecer a senha** para acessar — ninguém precisa **puxar um cabo** de um andar pro outro. Sem Context, você teria que **fazer um cabo passar por cada andar** (prop drilling: pai → filho → neto → bisneto).
 
-  function ThemeProvider({ children }) {
-    const [tema, setTema] = useState("light");
-    const toggleTema = () =>
-      setTema(t => t === "light" ? "dark" : "light");
+## 🔧 Sintaxe e como funciona
+  // 1. Criar o Context (uma vez, num arquivo separado)
+  const ThemeContext = createContext<"light" | "dark">("light");
 
+  // 2. Provider envolve a parte da árvore que vai usar
+  function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const [tema, setTema] = useState<"light" | "dark">("light");
     return (
-      <ThemeContext.Provider value={{ tema, toggleTema }}>
+      <ThemeContext.Provider value={{ tema, setTema }}>
         {children}
       </ThemeContext.Provider>
     );
   }
 
-Consumindo o Context:
+  // 3. Qualquer descendente lê com useContext
   function Botao() {
-    const { tema, toggleTema } = useContext(ThemeContext);
-    return (
-      <button
-        style={{ background: tema === "dark" ? "#333" : "#fff" }}
-        onClick={toggleTema}
-      >
-        Tema: {tema}
-      </button>
-    );
+    const { tema, setTema } = useContext(ThemeContext);
+    return <button onClick={() => setTema("dark")}>Tema: {tema}</button>;
   }
 
-Usando:
-  <ThemeProvider>
-    <App />    {/* todos os filhos acessam o tema */}
-  </ThemeProvider>
+## 📚 Exemplos comentados
+  // 1. AuthContext — usuário logado disponível em toda a app
+  const AuthContext = createContext<User | null>(null);
+  <AuthContext.Provider value={user}><App /></AuthContext.Provider>
+  // Em qualquer componente filho:
+  const user = useContext(AuthContext);
 
-Quando usar Context:
-  ✅ Tema, idioma, autenticação, preferências globais
-  ❌ Estado local de um formulário (use useState)`,
+  // 2. Combinando com custom hook (padrão recomendado)
+  export function useTheme() {
+    const ctx = useContext(ThemeContext);
+    if (!ctx) throw new Error("useTheme deve estar dentro de ThemeProvider");
+    return ctx;
+  }
+
+  // 3. Múltiplos contexts aninhados
+  <AuthProvider>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </AuthProvider>
+
+## ⚠️ Erros comuns
+• Usar Context para **estado que muda muito rápido** (ex.: posição do mouse) → todos os consumers re-renderizam, fica lento. Para isso prefira state local ou bibliotecas como Zustand.
+• Esquecer de envolver com o **Provider** → \`useContext\` devolve o valor padrão e nada funciona.
+• Colocar **funções inline novas no \`value\`** a cada render (\`value={{ x, fn: () => ... }}\`) → consumers re-renderizam à toa. Use \`useMemo\`/\`useCallback\` se for crítico.
+
+## 🚀 Quando usar na prática
+Para **valores globais que mudam pouco**: tema (claro/escuro), idioma, usuário logado, configurações da conta, dados de localização. Não use para **tudo** — Context é uma faca afiada; estado local com \`useState\` ainda é o padrão para a maioria dos casos.`,
         starterCode: 'import { createContext, useContext } from "react";\n// Crie o context\n',
         solution: 'import { createContext, useContext, useState } from "react";\n\nconst ThemeContext = createContext("light");\n\nfunction ThemeProvider({ children }) {\n  const [tema, setTema] = useState("light");\n  return (\n    <ThemeContext.Provider value={tema}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}',
         expectedOutput: "ThemeContext",
