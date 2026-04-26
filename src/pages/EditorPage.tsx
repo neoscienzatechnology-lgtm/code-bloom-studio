@@ -21,6 +21,7 @@ import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import { useProgress } from "@/hooks/useProgress";
+import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
 
@@ -31,6 +32,7 @@ const EditorPage = () => {
   const navigate = useNavigate();
   const data = getLessonById(courseId || "", lessonId || "");
   const { completeLesson, saveCode, isCompleted, getSavedCode } = useProgress();
+  const { registerFailure, resetLesson, getAttempts } = useAttemptTracker();
 
   const lesson = data?.lesson;
   const course = data?.course;
@@ -39,6 +41,7 @@ const EditorPage = () => {
   const savedCode = lesson ? getSavedCode(lesson.id) : undefined;
   const [code, setCode] = useState(savedCode ?? lesson?.starterCode ?? "");
   const [output, setOutput] = useState<string | null>(null);
+  const [reflectiveQ, setReflectiveQ] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hintIndex, setHintIndex] = useState(-1);
   const [showXP, setShowXP] = useState(false);
