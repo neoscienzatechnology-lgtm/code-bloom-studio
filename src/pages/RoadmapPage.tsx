@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Lock, CheckCircle2, PlayCircle, ChevronRight } from "lucide-react";
-import { courses } from "@/data/mockData";
+import { Lock, CheckCircle2, PlayCircle, ChevronRight, ShieldCheck } from "lucide-react";
+import { getAugmentedCourses } from "@/data/checkpoints";
 import { useProgress } from "@/hooks/useProgress";
 
 type LessonStatus = "completed" | "available" | "locked";
@@ -32,6 +32,7 @@ const statusBadge: Record<LessonStatus, { icon: JSX.Element; label: string; cls:
 
 const RoadmapPage = () => {
   const { isCompleted } = useProgress();
+  const courses = getAugmentedCourses();
 
   return (
     <div className="min-h-screen bg-background px-4 py-10 sm:px-6">
