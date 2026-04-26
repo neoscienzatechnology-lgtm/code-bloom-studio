@@ -2439,41 +2439,52 @@ Buscar dados de API ao abrir uma tela, atualizar o título da aba, registrar/rem
         id: "3-5",
         title: "Interfaces TypeScript",
         description: "Defina uma interface `Usuario` com `nome` (string), `idade` (number) e `ativo` (boolean). Crie um objeto e exiba o nome.",
-        theory: `TypeScript adiciona tipagem estática ao JavaScript. Interfaces definem a "forma" dos dados — quais campos existem e seus tipos.
+        theory: `# Interfaces no TypeScript
 
-Definindo uma interface:
+## 💡 O que é
+Uma **interface** descreve a **forma** de um objeto: quais campos existem, com quais tipos, e quais são opcionais. O TypeScript usa isso para te avisar **antes de rodar o código** se você esqueceu um campo ou passou o tipo errado.
+
+## 🌍 Analogia do mundo real
+Interface é como um **formulário oficial em papel**: tem campos obrigatórios (nome, CPF, idade), alguns opcionais (telefone), e cada um pede um tipo específico (idade só aceita número, não letras). Se você entrega o formulário com um campo errado, o atendente devolve **antes mesmo de começar a processar**.
+
+## 🔧 Sintaxe e como funciona
   interface Usuario {
-    nome: string;
-    idade: number;
-    ativo: boolean;
-    email?: string;     // ? = campo opcional
+    nome: string;        // obrigatório, texto
+    idade: number;       // obrigatório, número
+    ativo: boolean;      // obrigatório, true/false
+    email?: string;      // ? = OPCIONAL
   }
 
-Usando a interface:
-  const user: Usuario = {
-    nome: "Ana",
-    idade: 25,
-    ativo: true
-  };
+  const u: Usuario = { nome: "Ana", idade: 25, ativo: true };
+  //      ↑ "anota" o tipo: TS verifica que tudo bate
 
-Se você errar um campo, o TypeScript avisa ANTES de rodar:
-  const user: Usuario = {
-    nome: "Ana",
-    idade: "25"  // ❌ Erro: string não é number
-  };
+Tipos primitivos mais usados: \`string\`, \`number\`, \`boolean\`, \`string[]\` (array), \`{ x: number }\` (objeto inline). Evite \`any\` (desliga as verificações).
 
-Tipos básicos do TypeScript:
-  string     → textos
-  number     → números (int e float)
-  boolean    → true/false
-  string[]   → array de strings
-  number[]   → array de números
-  any        → qualquer tipo (evite!)
+## 📚 Exemplos comentados
+  // 1. Interface simples + uso
+  interface Produto { nome: string; preco: number; }
+  const item: Produto = { nome: "Café", preco: 12 };
 
-Type vs Interface:
-  type Ponto = { x: number; y: number };
-  interface Ponto { x: number; y: number }
-  // Ambos funcionam! Interface é mais usada para objetos.`,
+  // 2. Campo opcional e união de tipos
+  interface Mensagem {
+    texto: string;
+    autor?: string;              // pode existir ou não
+    status: "lido" | "novo";     // só aceita esses dois valores
+  }
+
+  // 3. Tipando props de componente React
+  interface CartaoProps { titulo: string; destaque?: boolean; }
+  function Cartao({ titulo, destaque }: CartaoProps) {
+    return <h2 className={destaque ? "destaque" : ""}>{titulo}</h2>;
+  }
+
+## ⚠️ Erros comuns
+• Esquecer um **campo obrigatório** → erro de compilação ("property 'idade' is missing").
+• Confundir **\`?\` (opcional)** com **valor padrão** — interface só descreve a forma; valor default é responsabilidade do código.
+• Usar \`any\` para "calar" o TypeScript → você perde toda a proteção; prefira \`unknown\` se realmente não souber o tipo.
+
+## 🚀 Quando usar na prática
+Para **toda estrutura de dados que circula no app**: respostas de API, props de componentes, estado complexo, parâmetros de funções utilitárias, formato de itens em uma lista. Interfaces transformam bugs em runtime ("Cannot read property X of undefined") em erros que aparecem **enquanto você digita**.`,
         starterCode: '// Defina a interface e crie o objeto\n',
         solution: 'interface Usuario {\n  nome: string;\n  idade: number;\n  ativo: boolean;\n}\nconst user: Usuario = { nome: "Ana", idade: 25, ativo: true };\nconsole.log(user.nome);',
         expectedOutput: "Ana",
