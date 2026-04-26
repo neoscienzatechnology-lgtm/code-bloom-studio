@@ -2206,35 +2206,54 @@ Use try/catch em pontos onde **não dá pra confiar 100%** no que vem de fora: p
         id: "3-1",
         title: "Primeiro Componente",
         description: "Crie um componente funcional `Saudacao` que exibe **\"Olá, React!\"** em um `<h1>`. Exporte-o como default.",
-        theory: `Em React, a interface é construída com componentes — blocos reutilizáveis de UI. Cada componente é uma função que retorna JSX (HTML dentro do JavaScript).
+        theory: `# Componentes em React
 
-![Componentes React — blocos de UI reutilizáveis](https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=300&fit=crop)
+## 💡 O que é
+Um **componente** é uma função JavaScript que retorna **JSX** (uma sintaxe parecida com HTML) e descreve um pedaço da interface. Toda tela em React é uma árvore de componentes encaixados uns nos outros.
 
-Componente funcional básico:
-  function MeuComponente() {
-    return <h1>Olá!</h1>;
+## 🌍 Analogia do mundo real
+Pense em **peças de LEGO**: cada peça (\`<Botao />\`, \`<Cartao />\`, \`<Avatar />\`) é pequena, faz uma coisa só, e se encaixa com outras para montar telas inteiras. Você desenha uma vez e reusa em todo lugar.
+
+## 🔧 Sintaxe e como funciona
+  function MeuComponente() {       // 1. função com nome em PascalCase
+    return <h1>Olá!</h1>;          // 2. retorna UM elemento JSX
+  }
+  export default MeuComponente;    // 3. exporta para usar em outros arquivos
+
+Regras de ouro:
+• Nome **sempre** com letra maiúscula (\`Cartao\`, não \`cartao\`).
+• Retorne **um único elemento raiz** (use \`<div>\` ou o fragmento \`<>...</>\` para agrupar vários).
+• JSX troca alguns nomes do HTML: \`class\` → \`className\`, \`for\` → \`htmlFor\`, \`onclick\` → \`onClick\`.
+
+## 📚 Exemplos comentados
+  // 1. Componente puro estático
+  function Titulo() {
+    return <h1>Bem-vindo!</h1>;
   }
 
-Regras importantes:
-• O nome do componente DEVE começar com letra maiúscula
-• Deve retornar JSX (parece HTML, mas é JavaScript)
-• Só pode retornar UM elemento raiz (use <div> ou <> para agrupar)
-
-JSX vs HTML — diferenças:
-  class → className
-  for → htmlFor
-  onclick → onClick
-  style="..." → style={{...}}
-
-Exportando o componente:
-  export default MeuComponente;
-  // Em outro arquivo: import MeuComponente from "./MeuComponente"
-
-Expressões JavaScript dentro do JSX usam chaves {}:
+  // 2. Usando uma variável dentro do JSX com {}
   function Saudacao() {
     const nome = "React";
-    return <h1>Olá, {nome}!</h1>;
-  }`,
+    return <h1>Olá, {nome}!</h1>;   // chaves = expressão JS
+  }
+
+  // 3. Compondo componentes (um dentro do outro)
+  function App() {
+    return (
+      <div>
+        <Titulo />
+        <Saudacao />
+      </div>
+    );
+  }
+
+## ⚠️ Erros comuns
+• Esquecer a **letra maiúscula** no nome → React trata como tag HTML desconhecida.
+• Retornar **dois elementos irmãos sem agrupar** → erro de sintaxe; envolva em \`<>...</>\`.
+• Usar \`class="..."\` em vez de \`className="..."\` → o atributo é ignorado e o estilo não aplica.
+
+## 🚀 Quando usar na prática
+**Sempre.** Toda UI em React é construída assim. Componentes pequenos e focados (um botão, um input, um card) são combinados em componentes maiores (formulário, página) — exatamente como construir um app inteiro com LEGO.`,
         starterCode: '// Crie o componente Saudacao\n',
         solution: 'function Saudacao() {\n  return <h1>Olá, React!</h1>;\n}\nexport default Saudacao;',
         expectedOutput: "Olá, React!",
