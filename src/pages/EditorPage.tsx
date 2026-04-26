@@ -21,6 +21,7 @@ import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import { useProgress } from "@/hooks/useProgress";
+import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
 
@@ -31,6 +32,7 @@ const EditorPage = () => {
   const navigate = useNavigate();
   const data = getLessonById(courseId || "", lessonId || "");
   const { completeLesson, saveCode, isCompleted, getSavedCode } = useProgress();
+  const { registerFailure, resetLesson, getAttempts } = useAttemptTracker();
 
   const lesson = data?.lesson;
   const course = data?.course;
@@ -39,6 +41,7 @@ const EditorPage = () => {
   const savedCode = lesson ? getSavedCode(lesson.id) : undefined;
   const [code, setCode] = useState(savedCode ?? lesson?.starterCode ?? "");
   const [output, setOutput] = useState<string | null>(null);
+  const [reflectiveQ, setReflectiveQ] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hintIndex, setHintIndex] = useState(-1);
   const [showXP, setShowXP] = useState(false);
@@ -85,16 +88,32 @@ const EditorPage = () => {
       const result = validateCode(code, lesson.expectedOutput, lesson.solution);
       const correct = result.level === "exact" || result.level === "flexible";
       setIsCorrect(correct ? true : result.level === "close" ? null : false);
-      setOutput(correct ? lesson.expectedOutput : result.message);
-      setRunning(false);
+
       if (correct) {
+        setOutput(lesson.expectedOutput);
+        setReflectiveQ(null);
+        resetLesson(lesson.id);
         setShowXP(true);
         setTimeout(() => setShowXP(false), 1500);
         if (!alreadyCompleted) {
           completeLesson(lesson.id, lesson.xpReward, course.id);
           fireConfetti();
         }
+      } else {
+        registerFailure(lesson.id, result.errorKind);
+        const attempts = getAttempts(lesson.id) + 1;
+        let composed = result.message;
+
+        if (attempts >= 2 && lesson.hints.length > 0) {
+          const nextHintIdx = Math.min(hintIndex + 1, lesson.hints.length - 1);
+          if (nextHintIdx > hintIndex) setHintIndex(nextHintIdx);
+          composed += `\n\n💡 Dica direta: ${lesson.hints[nextHintIdx]}`;
+        }
+
+        setOutput(composed);
+        setReflectiveQ(result.reflectiveQuestion ?? null);
       }
+      setRunning(false);
     }, 800);
   };
 
@@ -105,10 +124,12 @@ const EditorPage = () => {
   const handleReset = () => {
     setCode(lesson.starterCode);
     setOutput(null);
+    setReflectiveQ(null);
     setIsCorrect(null);
     setHintIndex(-1);
     setShowSolution(false);
     setSolutionWarned(false);
+    resetLesson(lesson.id);
   };
 
   const handleRevealSolution = () => {
@@ -396,6 +417,16 @@ const EditorPage = () => {
                     </span>
                   </div>
                   <span className="whitespace-pre-wrap">{output}</span>
+                  {reflectiveQ && isCorrect !== true && (
+                    <div className="mt-3 rounded-lg border border-quest-blue/30 bg-quest-blue/5 px-3 py-2 text-xs text-quest-blue font-sans not-italic">
+                      <span className="font-bold">🤔 Pense:</span> {reflectiveQ}
+                    </div>
+                  )}
+                  {getAttempts(lesson.id) >= 2 && isCorrect !== true && (
+                    <div className="mt-2 text-[10px] text-muted-foreground font-sans">
+                      Tentativas nesta lição: {getAttempts(lesson.id)} — não desista, você está aprendendo!
+                    </div>
+                  )}
                 </div>
               )}
             </div>
