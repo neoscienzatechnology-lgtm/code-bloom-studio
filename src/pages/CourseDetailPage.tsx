@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, BookOpen, ChevronRight, Play, CheckCircle2, ShieldCheck, Hammer } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BookOpen, Clock, Code2, GraduationCap, Trophy, Users } from "lucide-react";
 import { getAugmentedCourseById } from "@/data/checkpoints";
 import { getProjectsByCourse } from "@/data/projects";
+import { getCourseMeta } from "@/data/learningPaths";
 import { useProgress } from "@/hooks/useProgress";
+import BloomMascot from "@/components/BloomMascot";
+import CourseRoutePath from "@/components/CourseRoutePath";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -15,187 +17,101 @@ const CourseDetailPage = () => {
 
   if (!course) return <Navigate to="/cursos" replace />;
 
-  const completedLessons = course.lessons.filter((l) => isCompleted(l.id)).length;
+  const completedLessons = course.lessons.filter((lesson) => isCompleted(lesson.id)).length;
   const progressPct = Math.round((completedLessons / course.lessons.length) * 100);
   const projects = getProjectsByCourse(course.id);
+  const meta = getCourseMeta(course);
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
-      <div className="mx-auto max-w-4xl">
-        {/* Header */}
+      <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-2xl border border-border/30 bg-card p-6 sm:p-8"
+          className="mb-6 rounded-2xl border border-border bg-card p-6 sm:p-8"
         >
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
             <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-5xl">
               {course.emoji}
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-black sm:text-3xl">{course.title}</h1>
-                {course.tags.map(tag => (
+                {course.tags.map((tag) => (
                   <Badge key={tag} variant="outline" className="text-[10px] font-bold">
                     {tag}
                   </Badge>
                 ))}
               </div>
-              <p className="mb-4 text-muted-foreground">{course.description}</p>
+              <p className="mb-4 max-w-2xl text-muted-foreground">{course.description}</p>
 
-              <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1"><Clock size={14} /> {course.duration}</span>
-                <span className="flex items-center gap-1"><Users size={14} /> {course.students.toLocaleString()} alunos</span>
-                <span className="flex items-center gap-1"><BookOpen size={14} /> {course.lessons.length} lições</span>
-                <Badge variant="outline" className="text-xs font-bold">{course.level}</Badge>
+              <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-xl bg-secondary/60 p-3">
+                  <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
+                    <Code2 size={13} /> Tipo
+                  </div>
+                  <div className="text-sm font-black">{meta.kind}</div>
+                </div>
+                <div className="rounded-xl bg-secondary/60 p-3">
+                  <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
+                    <GraduationCap size={13} /> Pre-requisito
+                  </div>
+                  <div className="text-sm font-black">{meta.prerequisite}</div>
+                </div>
+                <div className="rounded-xl bg-secondary/60 p-3">
+                  <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
+                    <Clock size={13} /> Duracao
+                  </div>
+                  <div className="text-sm font-black">{course.duration}</div>
+                </div>
+                <div className="rounded-xl bg-secondary/60 p-3">
+                  <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
+                    <Trophy size={13} /> Projeto
+                  </div>
+                  <div className="text-sm font-black">{meta.finalProject}</div>
+                </div>
               </div>
 
-              {progressPct > 0 && (
-                <div className="max-w-md">
-                  <div className="mb-1 flex justify-between text-xs">
-                    <span className="text-muted-foreground">Progresso</span>
-                    <span className="font-bold text-accent">{progressPct}%</span>
-                  </div>
-                  <Progress value={progressPct} className="h-2.5 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent" />
-                </div>
-              )}
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Users size={14} /> {course.students.toLocaleString()} alunos
+                </span>
+                <span className="flex items-center gap-1">
+                  <BookOpen size={14} /> {course.lessons.length} etapas
+                </span>
+                <Badge variant="outline" className="text-xs font-bold">
+                  {course.level}
+                </Badge>
+              </div>
+            </div>
+            <div className="w-full rounded-2xl border border-border bg-background p-4 lg:w-72">
+              <div className="mb-1 flex justify-between text-xs">
+                <span className="text-muted-foreground">Progresso do curso</span>
+                <span className="font-bold text-accent">{progressPct}%</span>
+              </div>
+              <Progress
+                value={progressPct}
+                className="h-2.5 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent"
+              />
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                A rota abre uma etapa por vez para reduzir distrações e manter a progressao clara.
+              </p>
             </div>
           </div>
         </motion.div>
 
-        {/* Lessons list */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <h2 className="mb-4 text-xl font-black">Lições do Curso 📚</h2>
-          <div className="space-y-3">
-            {(() => {
-              let firstUnfinished = false;
-              return course.lessons.map((lesson, i) => {
-                const done = isCompleted(lesson.id);
-                const current = !done && !firstUnfinished;
-                if (current) firstUnfinished = true;
-                const locked = !done && !current;
-                const isCheckpoint = lesson.kind === "checkpoint";
-                const href = isCheckpoint
-                  ? `/checkpoint/${course.id}/${lesson.id}`
-                  : `/editor/${course.id}/${lesson.id}`;
+        <div className="mb-6">
+          <BloomMascot
+            mood={progressPct > 0 ? "success" : "hello"}
+            message={
+              progressPct > 0
+                ? `Voce ja avancou ${progressPct}%. Continue pela proxima etapa liberada.`
+                : `Para estudar ${course.language}, vamos seguir a rota em ordem e revisar antes dos projetos.`
+            }
+          />
+        </div>
 
-                return (
-                  <motion.div
-                    key={lesson.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <Link
-                      to={locked ? "#" : href}
-                      className={`block ${locked ? "pointer-events-none" : ""}`}
-                    >
-                      <div className={`card-hover flex items-center gap-4 rounded-xl border p-4 transition-all ${
-                        done
-                          ? "border-accent/30 bg-accent/5"
-                          : current
-                          ? "border-primary/40 bg-primary/5 ring-1 ring-primary/20"
-                          : "border-border/20 bg-card opacity-50"
-                      } ${isCheckpoint ? "border-dashed" : ""}`}>
-                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black ${
-                          done
-                            ? "bg-accent/20 text-accent"
-                            : current
-                            ? "bg-primary/20 text-primary"
-                            : "bg-secondary text-muted-foreground"
-                        }`}>
-                          {done ? <CheckCircle2 size={20} /> : isCheckpoint ? <ShieldCheck size={18} /> : i + 1}
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold truncate">{lesson.title}</h3>
-                            {isCheckpoint && (
-                              <span className="shrink-0 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-                                Checkpoint
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate">{lesson.description.slice(0, 80)}...</p>
-                        </div>
-
-                        <div className="flex items-center gap-3 shrink-0">
-                          <span className="hidden text-xs font-bold text-accent sm:block">+{lesson.xpReward} XP</span>
-                          {current ? (
-                            <Button size="sm" className="gap-1 rounded-full bg-primary text-primary-foreground">
-                              <Play size={14} /> Iniciar
-                            </Button>
-                          ) : done ? (
-                            <ChevronRight size={18} className="text-accent" />
-                          ) : (
-                            <span className="text-xs text-muted-foreground">🔒</span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              });
-            })()}
-          </div>
-        </motion.div>
-
-        {/* Projects */}
-        {projects.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mt-10"
-          >
-            <h2 className="mb-1 text-xl font-black flex items-center gap-2">
-              <Hammer size={18} className="text-primary" /> Projetos guiados
-            </h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Pratique o que aprendeu construindo algo real, etapa por etapa.
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {projects.map((p) => {
-                const done = isCompleted(`project-${p.id}`);
-                return (
-                  <Link key={p.id} to={`/projeto/${p.id}`}>
-                    <div
-                      className={`card-hover flex h-full flex-col rounded-2xl border-2 p-5 transition-all ${
-                        done
-                          ? "border-accent/40 bg-accent/5"
-                          : "border-primary/30 bg-primary/5 hover:border-primary"
-                      }`}
-                    >
-                      <div className="mb-3 flex items-center gap-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-3xl">
-                          {p.emoji}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h3 className="truncate text-base font-extrabold text-foreground">
-                              {p.title}
-                            </h3>
-                            {done && (
-                              <CheckCircle2 size={14} className="shrink-0 text-accent" />
-                            )}
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {p.steps.length} etapas · +{p.xpReward} XP
-                          </p>
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{p.goal}</p>
-                      <div className="mt-3 flex items-center gap-1.5 text-xs font-bold text-primary">
-                        {done ? "Refazer projeto" : "Começar projeto"}
-                        <ChevronRight size={14} />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
+        <CourseRoutePath course={course} projects={projects} isCompleted={isCompleted} />
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ import { getProjectById } from "@/data/projects";
 import { validateCode } from "@/utils/codeValidator";
 import { useProgress } from "@/hooks/useProgress";
 
-const STORAGE_KEY_PREFIX = "codequest-project-";
+const STORAGE_KEY_PREFIX = "code-bloom-studio-project-";
 
 interface ProjectState {
   currentStep: number;
@@ -33,7 +33,9 @@ function loadState(projectId: string): ProjectState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_PREFIX + projectId);
     if (raw) return JSON.parse(raw);
-  } catch {}
+  } catch {
+    return { currentStep: 0, completedSteps: [], codeByStep: {} };
+  }
   return { currentStep: 0, completedSteps: [], codeByStep: {} };
 }
 
@@ -67,7 +69,7 @@ const ProjectPage = () => {
     setOutput(null);
     setStepStatus("idle");
     setHintIndex(-1);
-  }, [step?.id]);
+  }, [step, state.codeByStep]);
 
   // Persist state
   useEffect(() => {

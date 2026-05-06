@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
 import { EditorView, basicSetup } from "codemirror";
-import { EditorState } from "@codemirror/state";
+import { EditorState, type Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { python } from "@codemirror/lang-python";
 import { javascript } from "@codemirror/lang-javascript";
 import { css } from "@codemirror/lang-css";
 import { sql } from "@codemirror/lang-sql";
 
-const langMap: Record<string, () => any> = {
+const langMap: Record<string, () => Extension> = {
   python: () => python(),
   javascript: () => javascript(),
   js: () => javascript(),

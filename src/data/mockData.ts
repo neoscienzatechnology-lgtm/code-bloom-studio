@@ -3804,7 +3804,7 @@ Tipos de middleware:
 ## 🚀 Quando usar na prática
 **Autenticação JWT**, **CORS**, **rate-limiting** (proteção contra abuse), **logs estruturados**, **compressão gzip**, **parsing de body**, **i18n** (idioma a partir do header), **tracing**/observabilidade. Praticamente toda funcionalidade transversal vira middleware.`,
         starterCode: 'const express = require("express");\nconst app = express();\n// Crie o middleware\n',
-        solution: 'const express = require("express");\nconst app = express();\n\nfunction logger(req, res, next) {\n  console.log(`[\${new Date().toISOString()}] \${req.method} \${req.url}`);\n  next();\n}\n\napp.use(logger);\napp.get("/", (req, res) => res.send("OK"));\napp.listen(3000);',
+        solution: 'const express = require("express");\nconst app = express();\n\nfunction logger(req, res, next) {\n  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);\n  next();\n}\n\napp.use(logger);\napp.get("/", (req, res) => res.send("OK"));\napp.listen(3000);',
         expectedOutput: "logger",
         hints: ["Middleware recebe req, res, next", "next() passa para o próximo", "app.use() aplica globalmente"],
         xpReward: 20,
@@ -6250,13 +6250,13 @@ Meta tags essenciais:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Aprenda programação de forma gamificada">
     <meta name="keywords" content="programação, cursos, código">
-    <meta name="author" content="CodeQuest">
-    <title>CodeQuest — Aprenda Programação</title>
+    <meta name="author" content="Code Bloom Studio">
+    <title>Code Bloom Studio — Aprenda Programação</title>
     <link rel="icon" href="/favicon.ico">
   </head>
 
 Open Graph (como aparece no Facebook/LinkedIn):
-  <meta property="og:title" content="CodeQuest">
+  <meta property="og:title" content="Code Bloom Studio">
   <meta property="og:description" content="Plataforma gamificada de programação">
   <meta property="og:image" content="https://site.com/preview.jpg">
   <meta property="og:url" content="https://site.com">
@@ -6264,7 +6264,7 @@ Open Graph (como aparece no Facebook/LinkedIn):
 
 Twitter Card:
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CodeQuest">
+  <meta name="twitter:title" content="Code Bloom Studio">
   <meta name="twitter:image" content="https://site.com/preview.jpg">
 
 SEO on-page:
@@ -6281,7 +6281,7 @@ Viewport — essencial para mobile:
   width=device-width → largura = tela do dispositivo
   initial-scale=1.0 → zoom inicial 100%`,
         starterCode: '<!-- Crie o head com meta tags -->\n',
-        solution: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Aprenda programação de forma gamificada com CodeQuest">\n  <meta property="og:title" content="CodeQuest">\n  <meta property="og:description" content="Plataforma gamificada de programação">\n  <meta property="og:image" content="https://codequest.com/preview.jpg">\n  <title>CodeQuest — Aprenda Programação</title>\n  <link rel="icon" href="/favicon.ico">\n</head>',
+        solution: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Aprenda programação de forma gamificada com Code Bloom Studio">\n  <meta property="og:title" content="Code Bloom Studio">\n  <meta property="og:description" content="Plataforma gamificada de programação">\n  <meta property="og:image" content="https://code-bloom-studio.com/preview.jpg">\n  <title>Code Bloom Studio — Aprenda Programação</title>\n  <link rel="icon" href="/favicon.ico">\n</head>',
         expectedOutput: "<meta",
         hints: ["charset e viewport são obrigatórios", "description ajuda no Google", "Open Graph controla preview em redes sociais"],
         xpReward: 20,

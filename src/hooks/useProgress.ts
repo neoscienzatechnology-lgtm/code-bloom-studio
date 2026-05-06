@@ -8,13 +8,15 @@ interface ProgressData {
   totalXp: number;
 }
 
-const STORAGE_KEY = "codequest-progress";
+const STORAGE_KEY = "code-bloom-studio-progress";
 
 function loadLocalProgress(): ProgressData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
-  } catch {}
+  } catch {
+    return { completedLessons: [], savedCode: {}, totalXp: 0 };
+  }
   return { completedLessons: [], savedCode: {}, totalXp: 0 };
 }
 

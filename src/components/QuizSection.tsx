@@ -24,14 +24,16 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
     if (answered) return;
     setSelected(idx);
     setAnswered(true);
-    if (idx === q.correctIndex) setCorrectCount((p) => p + 1);
   };
 
   const handleNext = () => {
+    const finalCorrectCount = correctCount + (isCorrect ? 1 : 0);
     if (isLastQuestion) {
+      setCorrectCount(finalCorrectCount);
       setFinished(true);
-      onComplete(correctCount);
+      onComplete(finalCorrectCount);
     } else {
+      setCorrectCount(finalCorrectCount);
       setCurrentQ((p) => p + 1);
       setSelected(null);
       setAnswered(false);

@@ -73,7 +73,7 @@ const ResetPasswordPage = () => {
         <div className="mb-6 text-center">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <span className="text-2xl">🚀</span>
-            <span className="text-xl font-black">Code<span className="text-primary">Quest</span></span>
+            <span className="text-xl font-black">Code<span className="text-primary">Bloom</span></span>
           </Link>
           <h1 className="text-2xl font-black">Nova senha</h1>
         </div>

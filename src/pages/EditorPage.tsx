@@ -23,12 +23,15 @@ import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import PaceCoach from "@/components/PaceCoach";
 import AITutor from "@/components/AITutor";
+import LessonCoach from "@/components/LessonCoach";
+import GuidedPractice from "@/components/GuidedPractice";
+import BloomMascot from "@/components/BloomMascot";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
 
-const ONBOARDING_KEY = "codequest_editor_onboarding_seen";
+const ONBOARDING_KEY = "code-bloom-studio_editor_onboarding_seen";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -71,7 +74,7 @@ const EditorPage = () => {
     if (!lesson) return;
     const timer = setTimeout(() => saveCode(lesson.id, code, course?.id), 500);
     return () => clearTimeout(timer);
-  }, [code, lesson, saveCode]);
+  }, [code, course?.id, lesson, saveCode]);
 
   // Reset pace coach when changing lessons
   useEffect(() => {
@@ -268,6 +271,19 @@ const EditorPage = () => {
             </div>
             <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
 
+            <div className="mb-5">
+              <BloomMascot
+                mood={alreadyCompleted ? "success" : "hello"}
+                message={
+                  alreadyCompleted
+                    ? "Você já concluiu esta lição. Refaça tentando explicar cada linha em voz alta."
+                    : "Vamos em passos pequenos: entenda a meta, aqueça com as perguntas e só depois escreva no editor."
+                }
+              />
+            </div>
+
+            <LessonCoach course={course} lesson={lesson} />
+
             {/* Theory section */}
             {lesson.theory && (
               <div className="mb-6">
@@ -296,6 +312,8 @@ const EditorPage = () => {
                 </div>
               </div>
             )}
+
+            <GuidedPractice lesson={lesson} />
 
             {/* Exercise description */}
             <div className="mb-6">
@@ -503,8 +521,8 @@ const EditorPage = () => {
           </div>
 
           {/* Run bar */}
-          <div className="border-t border-border/20 bg-[#181825] p-4">
-            <div className="flex items-center justify-between">
+          <div className="sticky bottom-0 z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl lg:static lg:shadow-none">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="relative">
                 <Button
                   onClick={handleRun}

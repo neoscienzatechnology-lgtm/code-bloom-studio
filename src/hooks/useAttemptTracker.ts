@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ErrorKind } from "@/utils/codeValidator";
 
-const STORAGE_KEY = "codequest-attempts";
+const STORAGE_KEY = "code-bloom-studio-attempts";
 
 interface AttemptStats {
   /** failed attempts per lessonId in current session */
@@ -31,7 +31,9 @@ function load(): AttemptStats {
       const parsed = JSON.parse(raw);
       return { ...defaultStats, ...parsed, errorHistory: { ...defaultStats.errorHistory, ...parsed.errorHistory } };
     }
-  } catch {}
+  } catch {
+    return defaultStats;
+  }
   return defaultStats;
 }
 

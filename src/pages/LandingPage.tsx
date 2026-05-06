@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Code2, Gamepad2, Trophy, Users, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import BloomMascot from "@/components/BloomMascot";
 
 const stats = [
   { label: "Alunos ativos", value: 52000, suffix: "+", icon: Users },
@@ -133,13 +134,19 @@ const LandingPage = () => {
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-muted-foreground">
               Lições curtas, exercícios práticos e feedback instantâneo. Você escreve código real desde a primeira aula.
             </p>
+            <div className="mb-8 max-w-md">
+              <BloomMascot
+                mood="hello"
+                message="Eu sou o CapyCoder. Vou te guiar com explicações curtinhas, aquecimentos e revisões quando você precisar."
+              />
+            </div>
             <div className="flex flex-wrap gap-3">
               <Button
                 asChild
                 size="lg"
                 className="rounded-full bg-primary px-8 text-base font-extrabold text-white shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors"
               >
-                <Link to="/cursos">
+                <Link to="/onboarding">
                   Começar grátis <ArrowRight size={18} className="ml-1" />
                 </Link>
               </Button>
@@ -275,7 +282,7 @@ const LandingPage = () => {
             size="lg"
             className="rounded-full bg-white px-10 text-base font-extrabold text-primary hover:bg-white/90 transition-colors shadow-sm"
           >
-            <Link to="/cursos">
+            <Link to="/onboarding">
               Começar Agora <ArrowRight size={18} className="ml-1" />
             </Link>
           </Button>
@@ -288,10 +295,10 @@ const LandingPage = () => {
           <div className="flex items-center gap-2">
             <span className="text-xl">🚀</span>
             <span className="font-black text-foreground">
-              Code<span className="text-primary">Quest</span>
+              Code<span className="text-primary">Bloom</span>
             </span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2024 CodeQuest · Aprenda programação jogando</p>
+          <p className="text-sm text-muted-foreground">© 2024 Code Bloom Studio · Aprenda programação jogando</p>
           <div className="flex gap-5 text-sm text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
             <a href="#" className="hover:text-foreground transition-colors">GitHub</a>

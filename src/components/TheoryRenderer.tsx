@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 
 function parseInlineFormatting(text: string): React.ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/);
@@ -29,7 +29,19 @@ interface TheoryRendererProps {
 }
 
 const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
-  const lines = text.split("\n");
+  const [expanded, setExpanded] = useState(false);
+  const { introText, fullText, isLong } = useMemo(() => {
+    const blocks = text.split(/\n(?=## )/);
+    const compact = blocks.slice(0, 3).join("\n").trim();
+    return {
+      introText: compact || text,
+      fullText: text,
+      isLong: text.length > 1800 || blocks.length > 3,
+    };
+  }, [text]);
+
+  const visibleText = isLong && !expanded ? introText : fullText;
+  const lines = visibleText.split("\n");
   const elements: React.ReactNode[] = [];
   let i = 0;
   let isFirstParagraph = true;
@@ -168,8 +180,17 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
   }
 
   return (
-    <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5 space-y-0.5">
-      {elements}
+    <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
+      <div className="space-y-0.5">{elements}</div>
+      {isLong && (
+        <button
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          className="mt-4 rounded-full border border-primary/20 bg-background px-4 py-2 text-xs font-black text-primary transition-colors hover:bg-primary/10"
+        >
+          {expanded ? "Mostrar resumo" : "Ver teoria completa"}
+        </button>
+      )}
     </div>
   );
 };

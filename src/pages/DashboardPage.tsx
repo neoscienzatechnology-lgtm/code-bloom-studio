@@ -1,9 +1,15 @@
 import { motion } from "framer-motion";
 import { userProfile, badges, courses, leaderboard } from "@/data/mockData";
 import { Progress } from "@/components/ui/progress";
-import { Flame, Star, Trophy, TrendingUp } from "lucide-react";
+import { ArrowRight, Flame, Star, Trophy, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useProgress } from "@/hooks/useProgress";
+import { useAttemptTracker } from "@/hooks/useAttemptTracker";
+import AdaptiveReview from "@/components/AdaptiveReview";
+import BloomMascot from "@/components/BloomMascot";
+import { getPathById } from "@/data/learningPaths";
+import { useLearningProfile } from "@/hooks/useLearningProfile";
+import { Button } from "@/components/ui/button";
 
 const rarityColors: Record<string, string> = {
   "Comum": "border-muted-foreground/30 bg-muted/30",
@@ -14,8 +20,11 @@ const rarityColors: Record<string, string> = {
 
 const DashboardPage = () => {
   const { totalXp, completedLessons, getCourseProgress } = useProgress();
+  const { topErrors } = useAttemptTracker();
+  const { profile } = useLearningProfile();
   const displayXp = userProfile.xp + totalXp;
   const xpPercent = (displayXp / userProfile.xpToNext) * 100;
+  const currentPath = getPathById(profile?.goal);
 
   const coursesWithProgress = courses.map((c) => ({
     ...c,
@@ -24,10 +33,75 @@ const DashboardPage = () => {
   const inProgressCourses = coursesWithProgress.filter((c) => c.realProgress > 0 && c.realProgress < 100);
   const completedCoursesList = coursesWithProgress.filter((c) => c.realProgress === 100);
   const exercisesDone = userProfile.exercisesDone + completedLessons.length;
+  const fallbackCourse = coursesWithProgress.find((course) => course.id === currentPath.startCourseId) ?? coursesWithProgress[0];
+  const continueCourse = inProgressCourses[0] ?? fallbackCourse;
+  const currentLessonIdx = Math.floor((continueCourse.realProgress / 100) * continueCourse.lessons.length);
+  const currentLesson = continueCourse.lessons[Math.min(currentLessonIdx, continueCourse.lessons.length - 1)];
+  const recommendedCourses = currentPath.recommendedCourses
+    .map((id) => coursesWithProgress.find((course) => course.id === id))
+    .filter(Boolean);
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-7xl">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-card to-accent/10 p-6 sm:p-8"
+        >
+          <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+            <div>
+              <p className="mimo-section-title mb-1">Continue sua jornada</p>
+              <h1 className="text-3xl font-black text-foreground">
+                Ola, {userProfile.name}. Hoje vamos continuar em {currentPath.shortTitle}
+              </h1>
+              <div className="mt-5 rounded-2xl border border-border bg-card p-5">
+                <div className="mb-1 text-sm font-black text-primary">Proxima aula</div>
+                <h2 className="text-xl font-black text-foreground">{currentLesson.title}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{continueCourse.title}</p>
+                <div className="mt-4 max-w-md">
+                  <div className="mb-1 flex justify-between text-xs">
+                    <span className="text-muted-foreground">Progresso</span>
+                    <span className="font-bold text-accent">{continueCourse.realProgress}%</span>
+                  </div>
+                  <Progress value={continueCourse.realProgress} className="h-2 bg-secondary [&>div]:bg-primary" />
+                </div>
+                <Button asChild className="mt-5 rounded-full font-black">
+                  <Link to={`/editor/${continueCourse.id}/${currentLesson.id}`}>
+                    Continuar aula <ArrowRight size={16} />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <BloomMascot
+                mood="success"
+                message="Voce esta quase liberando o proximo projeto. Uma aula curta hoje ja mantem a trilha andando."
+              />
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <div className="mb-3 text-sm font-black text-foreground">Seu caminho atual</div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {currentPath.steps.map((step, index) => (
+                    <span key={`${step.label}-${index}`} className="rounded-full bg-secondary px-3 py-1 text-xs font-black text-muted-foreground">
+                      {step.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <div className="mb-3 text-sm font-black text-foreground">Cursos recomendados</div>
+                <div className="space-y-2">
+                  {recommendedCourses.slice(0, 3).map((course) => (
+                    <Link key={course!.id} to={`/cursos/${course!.id}`} className="block rounded-lg bg-secondary/70 px-3 py-2 text-sm font-bold text-foreground hover:text-primary">
+                      {course!.emoji} {course!.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
         {/* Profile header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -81,6 +155,8 @@ const DashboardPage = () => {
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Left col */}
           <div className="lg:col-span-2 space-y-8">
+            <AdaptiveReview topErrors={topErrors} />
+
             {/* In progress */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <h2 className="mb-4 text-xl font-black">Cursos em andamento 📖</h2>
