@@ -53,10 +53,10 @@ const DashboardPage = () => {
             <div>
               <p className="mimo-section-title mb-1">Continue sua jornada</p>
               <h1 className="text-3xl font-black text-foreground">
-                Ola, {userProfile.name}. Hoje vamos continuar em {currentPath.shortTitle}
+                Olá, {userProfile.name}. Hoje vamos continuar em {currentPath.shortTitle}
               </h1>
               <div className="mt-5 rounded-2xl border border-border bg-card p-5">
-                <div className="mb-1 text-sm font-black text-primary">Proxima aula</div>
+                <div className="mb-1 text-sm font-black text-primary">Próxima aula</div>
                 <h2 className="text-xl font-black text-foreground">{currentLesson.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{continueCourse.title}</p>
                 <div className="mt-4 max-w-md">
@@ -76,7 +76,7 @@ const DashboardPage = () => {
             <div className="space-y-4">
               <BloomMascot
                 mood="success"
-                message="Voce esta quase liberando o proximo projeto. Uma aula curta hoje ja mantem a trilha andando."
+                message="Você está quase liberando o próximo projeto. Uma aula curta hoje já mantém a trilha andando."
               />
               <div className="rounded-2xl border border-border bg-card p-4">
                 <div className="mb-3 text-sm font-black text-foreground">Seu caminho atual</div>

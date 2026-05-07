@@ -12,9 +12,9 @@ import { learningPaths } from "@/data/learningPaths";
 import BloomMascot from "@/components/BloomMascot";
 
 const experienceOptions: Array<{ value: ExperienceLevel; title: string; description: string }> = [
-  { value: "new", title: "Nunca programei", description: "Comecar devagar, com linguagem simples e muitos exemplos." },
-  { value: "basic", title: "Sei o basico", description: "Revisar fundamentos e avancar com pratica guiada." },
-  { value: "intermediate", title: "Ja construi algo", description: "Ir mais rapido para projetos e conceitos aplicados." },
+  { value: "new", title: "Nunca programei", description: "Começar devagar, com linguagem simples e muitos exemplos." },
+  { value: "basic", title: "Sei o básico", description: "Revisar fundamentos e avançar com prática guiada." },
+  { value: "intermediate", title: "Já construí algo", description: "Ir mais rápido para projetos e conceitos aplicados." },
 ];
 
 const dailyOptions: Array<{ value: DailyGoal; label: string }> = [
@@ -52,23 +52,23 @@ const OnboardingPage = () => {
         <div className="mb-8 max-w-3xl">
           <p className="mimo-section-title mb-1">Comece pelo objetivo</p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">
-            O que voce quer aprender a criar?
+            O que você quer aprender a criar?
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Em vez de escolher uma linguagem no escuro, escolha o resultado. O app monta a trilha certa para voce.
+            Em vez de escolher uma linguagem no escuro, escolha o resultado. O app monta a trilha certa para você.
           </p>
         </div>
 
         <div className="mb-8 max-w-2xl">
           <BloomMascot
             mood="thinking"
-            message="Boa escolha comeca pelo objetivo. Depois eu mostro quais tecnologias entram em cada etapa."
+            message="Boa escolha começa pelo objetivo. Depois eu mostro quais tecnologias entram em cada etapa."
           />
         </div>
 
         <section className="mb-8">
           <div className="mb-3 flex items-center gap-2 text-sm font-black text-primary">
-            <Target size={16} /> 1. Escolha o que voce quer construir
+            <Target size={16} /> 1. Escolha o que você quer construir
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {learningPaths.map((path) => (
@@ -98,7 +98,7 @@ const OnboardingPage = () => {
           <div className="space-y-8">
             <section>
               <div className="mb-3 flex items-center gap-2 text-sm font-black text-quest-blue">
-                <GraduationCap size={16} /> 2. Qual e sua experiencia?
+                <GraduationCap size={16} /> 2. Qual é sua experiência?
               </div>
               <div className="grid gap-3 md:grid-cols-3">
                 {experienceOptions.map((option) => (
@@ -161,7 +161,7 @@ const OnboardingPage = () => {
               ))}
             </div>
             <Button onClick={finish} className="w-full rounded-full font-black">
-              Comecar minha trilha <ArrowRight size={16} />
+              Começar minha trilha <ArrowRight size={16} />
             </Button>
           </aside>
         </div>

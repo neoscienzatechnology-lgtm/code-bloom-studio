@@ -16,14 +16,14 @@ const ProjectsPage = () => {
           <p className="mimo-section-title mb-1">Projetos finais</p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">Construa algo real para consolidar</h1>
           <p className="mt-2 text-muted-foreground">
-            Projetos ficam ligados aos cursos para evitar pular base importante. Quando a rota estiver pronta, eles viram portfolio.
+            Projetos ficam ligados aos cursos para evitar pular base importante. Quando a rota estiver pronta, eles viram portfólio.
           </p>
         </div>
 
         <div className="mb-8 max-w-2xl">
           <BloomMascot
             mood="focus"
-            message="Projeto bom nao e prova de memoria. E o momento de juntar varias ideias pequenas em uma construcao clara."
+            message="Projeto bom não é prova de memória. É o momento de juntar várias ideias pequenas em uma construção clara."
           />
         </div>
 
@@ -62,7 +62,7 @@ const ProjectsPage = () => {
                 {unlocked ? (
                   <Button asChild className="rounded-full font-black">
                     <Link to={`/projeto/${project.id}`}>
-                      {projectDone ? "Refazer projeto" : "Comecar projeto"} <ArrowRight size={16} />
+                      {projectDone ? "Refazer projeto" : "Começar projeto"} <ArrowRight size={16} />
                     </Link>
                   </Button>
                 ) : (

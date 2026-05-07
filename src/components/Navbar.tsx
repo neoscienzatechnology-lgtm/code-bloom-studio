@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
 
 const navLinks = [
-  { to: "/dashboard", label: "Inicio", icon: Home },
+  { to: "/dashboard", label: "Início", icon: Home },
   { to: "/cursos", label: "Trilhas", icon: Target },
   { to: "/editor/1/1-1", label: "Praticar", icon: Zap },
   { to: "/projetos", label: "Projetos", icon: FolderKanban },
@@ -14,7 +14,7 @@ const navLinks = [
 ];
 
 const desktopLinks = [
-  { to: "/dashboard", label: "Inicio" },
+  { to: "/dashboard", label: "Início" },
   { to: "/cursos", label: "Trilhas" },
   { to: "/revisao", label: "Praticar" },
   { to: "/projetos", label: "Projetos" },

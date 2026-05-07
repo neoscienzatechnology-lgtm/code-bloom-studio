@@ -54,13 +54,13 @@ const CourseDetailPage = () => {
                 </div>
                 <div className="rounded-xl bg-secondary/60 p-3">
                   <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
-                    <GraduationCap size={13} /> Pre-requisito
+                    <GraduationCap size={13} /> Pré-requisito
                   </div>
                   <div className="text-sm font-black">{meta.prerequisite}</div>
                 </div>
                 <div className="rounded-xl bg-secondary/60 p-3">
                   <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
-                    <Clock size={13} /> Duracao
+                    <Clock size={13} /> Duração
                   </div>
                   <div className="text-sm font-black">{course.duration}</div>
                 </div>
@@ -94,7 +94,7 @@ const CourseDetailPage = () => {
                 className="h-2.5 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent"
               />
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                A rota abre uma etapa por vez para reduzir distrações e manter a progressao clara.
+                A rota abre uma etapa por vez para reduzir distrações e manter a progressão clara.
               </p>
             </div>
           </div>
@@ -105,7 +105,7 @@ const CourseDetailPage = () => {
             mood={progressPct > 0 ? "success" : "hello"}
             message={
               progressPct > 0
-                ? `Voce ja avancou ${progressPct}%. Continue pela proxima etapa liberada.`
+                ? `Você já avançou ${progressPct}%. Continue pela próxima etapa liberada.`
                 : `Para estudar ${course.language}, vamos seguir a rota em ordem e revisar antes dos projetos.`
             }
           />

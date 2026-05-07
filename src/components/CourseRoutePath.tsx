@@ -20,17 +20,17 @@ function splitModules(lessons: AugmentedLesson[]): ModuleGroup[] {
   const third = Math.max(3, Math.ceil(lessons.length / 3));
   return [
     {
-      title: "Modulo 1: Fundamentos",
+      title: "Módulo 1: Fundamentos",
       description: "Conceitos essenciais em aulas curtas.",
       lessons: lessons.slice(0, third),
     },
     {
-      title: "Modulo 2: Projeto Guiado",
+      title: "Módulo 2: Projeto Guiado",
       description: "Aplique os conceitos com mais contexto.",
       lessons: lessons.slice(third, third * 2),
     },
     {
-      title: "Modulo 3: Desafio Final",
+      title: "Módulo 3: Desafio Final",
       description: "Revise, conecte ideias e prepare o projeto.",
       lessons: lessons.slice(third * 2),
     },
@@ -49,7 +49,7 @@ const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps
         <div>
           <h2 className="text-2xl font-black text-foreground">{course.title}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Siga o caminho em ordem. Cada etapa prepara a proxima e checkpoints seguram a revisao.
+            Siga o caminho em ordem. Cada etapa prepara a próxima e checkpoints seguram a revisão.
           </p>
         </div>
         <Button asChild className="rounded-full font-black">
@@ -149,7 +149,7 @@ const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps
             <Trophy size={16} /> Projeto final
           </div>
           <p className="mb-4 text-sm text-muted-foreground">
-            O projeto fecha a rota com algo real para portfolio. Ele fica bloqueado ate a base estar completa.
+            O projeto fecha a rota com algo real para portfólio. Ele fica bloqueado até a base estar completa.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             {projects.map((project) =>

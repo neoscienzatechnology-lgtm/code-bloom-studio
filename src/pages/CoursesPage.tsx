@@ -43,16 +43,16 @@ const CoursesPage = () => {
       <div className="mx-auto max-w-7xl">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <p className="mimo-section-title mb-1">Aprendizado guiado</p>
-          <h1 className="text-3xl font-black text-foreground sm:text-4xl">Escolha pelo que voce quer construir</h1>
+          <h1 className="text-3xl font-black text-foreground sm:text-4xl">Escolha pelo que você quer construir</h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Primeiro escolha uma trilha com objetivo claro. Quando souber exatamente o que procura, use o catalogo por tecnologia.
+            Primeiro escolha uma trilha com objetivo claro. Quando souber exatamente o que procura, use o catálogo por tecnologia.
           </p>
         </motion.div>
 
         <div className="mb-8 max-w-2xl">
           <BloomMascot
             mood="focus"
-            message="Minha sugestao: se voce esta comecando, siga uma trilha. O catalogo fica aqui para quando voce ja souber qual tecnologia quer estudar."
+            message="Minha sugestão: se você está começando, siga uma trilha. O catálogo fica aqui para quando você já souber qual tecnologia quer estudar."
           />
         </div>
 
@@ -132,7 +132,7 @@ const CoursesPage = () => {
 
                   <div className="mb-5 grid gap-3 sm:grid-cols-3">
                     <div className="rounded-xl bg-secondary/60 p-3">
-                      <div className="text-[11px] font-bold text-muted-foreground">Duracao</div>
+                      <div className="text-[11px] font-bold text-muted-foreground">Duração</div>
                       <div className="text-sm font-black">{path.duration}</div>
                     </div>
                     <div className="rounded-xl bg-secondary/60 p-3 sm:col-span-2">
@@ -143,7 +143,7 @@ const CoursesPage = () => {
 
                   <Button asChild className="rounded-full font-black">
                     <Link to={`/cursos/${path.startCourseId}`}>
-                      Comecar trilha <ArrowRight size={16} />
+                      Começar trilha <ArrowRight size={16} />
                     </Link>
                   </Button>
                 </motion.div>
@@ -166,7 +166,7 @@ const CoursesPage = () => {
                     </div>
                     <h2 className="text-xl font-black text-foreground">Projetos aparecem no final das trilhas</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Assim o aluno nao pula direto para um projeto sem ter a base necessaria.
+                      Assim o aluno não pula direto para um projeto sem ter a base necessária.
                     </p>
                   </section>
                 );
@@ -202,13 +202,13 @@ const CoursesPage = () => {
                             </div>
                             <div className="space-y-2 text-xs text-muted-foreground">
                               <div className="flex items-center gap-2">
-                                <Code2 size={13} /> Nivel: {course.level}
+                                <Code2 size={13} /> Nível: {course.level}
                               </div>
                               <div className="flex items-center gap-2">
-                                <BookOpen size={13} /> Pre-requisito: {meta.prerequisite}
+                                <BookOpen size={13} /> Pré-requisito: {meta.prerequisite}
                               </div>
                               <div className="flex items-center gap-2">
-                                <Clock size={13} /> Duracao: {course.duration}
+                                <Clock size={13} /> Duração: {course.duration}
                               </div>
                             </div>
                             <div className="mt-4 rounded-lg bg-secondary/70 p-3 text-xs">
@@ -217,7 +217,7 @@ const CoursesPage = () => {
                             </div>
                             {!unlocked && meta.lockedUntil && (
                               <div className="mt-3 text-xs font-black text-muted-foreground">
-                                Bloqueado ate concluir {meta.lockedUntil}
+                                Bloqueado até concluir {meta.lockedUntil}
                               </div>
                             )}
                             {progress > 0 && (
