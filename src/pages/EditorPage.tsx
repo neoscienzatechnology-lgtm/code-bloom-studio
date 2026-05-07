@@ -290,7 +290,12 @@ const EditorPage = () => {
                 <div className="mb-3 flex items-center gap-2 text-sm font-bold text-primary">
                   <span>📖</span> Aprenda
                 </div>
-                <TheoryRenderer text={lesson.theory} />
+                <TheoryRenderer
+                  text={lesson.theory}
+                  courseTitle={course.title}
+                  language={course.language}
+                  lessonTitle={lesson.title}
+                />
               </div>
             )}
 

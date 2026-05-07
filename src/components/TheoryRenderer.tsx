@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import LessonVisualAid from "@/components/LessonVisualAid";
 
 function parseInlineFormatting(text: string): React.ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/);
@@ -26,9 +27,12 @@ function parseInlineFormatting(text: string): React.ReactNode[] {
 
 interface TheoryRendererProps {
   text: string;
+  courseTitle?: string;
+  language?: string;
+  lessonTitle?: string;
 }
 
-const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
+const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text, courseTitle, language, lessonTitle }) => {
   const [expanded, setExpanded] = useState(false);
   const { introText, fullText, isLong } = useMemo(() => {
     const blocks = text.split(/\n(?=## )/);
@@ -181,6 +185,7 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text }) => {
 
   return (
     <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
+      <LessonVisualAid courseTitle={courseTitle} language={language} lessonTitle={lessonTitle} />
       <div className="space-y-0.5">{elements}</div>
       {isLong && (
         <button
