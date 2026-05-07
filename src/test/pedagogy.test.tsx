@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import QuizSection from "@/components/QuizSection";
 import { buildLessonBlueprint } from "@/utils/pedagogy";
+import { buildDailyReviewPlan } from "@/utils/dailyReview";
 import type { Course, Lesson } from "@/data/mockData";
 
 const lesson: Lesson = {
@@ -72,5 +73,31 @@ describe("QuizSection", () => {
     fireEvent.click(screen.getByText("Ver Resultado"));
 
     expect(onComplete).toHaveBeenCalledWith(2);
+  });
+});
+
+describe("daily review plan", () => {
+  it("prioritizes lessons with recent failed attempts", () => {
+    const secondLesson: Lesson = {
+      ...lesson,
+      id: "lesson-2",
+      title: "Variáveis",
+      expectedOutput: "Meu nome é Ana",
+      quiz: [],
+    };
+    const reviewCourse: Course = { ...course, lessons: [lesson, secondLesson] };
+
+    const plan = buildDailyReviewPlan({
+      courses: [reviewCourse],
+      completedLessons: ["lesson-1"],
+      savedCode: {},
+      attempts: { "lesson-2": 2 },
+      topErrors: ["output_mismatch"],
+    });
+
+    expect(plan.recommendedLesson.lesson.id).toBe("lesson-2");
+    expect(plan.recommendedLesson.reason).toBe("stuck");
+    expect(plan.questions.length).toBeGreaterThan(0);
+    expect(plan.focusErrors).toContain("output_mismatch");
   });
 });

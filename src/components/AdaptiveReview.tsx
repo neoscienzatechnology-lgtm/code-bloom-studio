@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 interface AdaptiveReviewProps {
   topErrors: ErrorKind[];
+  actionHref?: string;
 }
 
 const REVIEW_COPY: Record<ErrorKind, { title: string; drill: string; action: string }> = {
@@ -50,7 +51,7 @@ const REVIEW_COPY: Record<ErrorKind, { title: string; drill: string; action: str
   },
 };
 
-const AdaptiveReview = ({ topErrors }: AdaptiveReviewProps) => {
+const AdaptiveReview = ({ topErrors, actionHref = "/revisao" }: AdaptiveReviewProps) => {
   const errors = topErrors.length > 0 ? topErrors : (["no_print", "output_mismatch", "syntax"] as ErrorKind[]);
   const hasHistory = topErrors.length > 0;
 
@@ -85,7 +86,7 @@ const AdaptiveReview = ({ topErrors }: AdaptiveReviewProps) => {
               </div>
               <p className="mb-3 text-xs leading-relaxed text-muted-foreground">{item.drill}</p>
               <Button variant="outline" size="sm" className="h-8 rounded-full text-xs font-bold" asChild>
-                <Link to="/editor/1/1-1">{item.action}</Link>
+                <Link to={actionHref}>{item.action}</Link>
               </Button>
             </div>
           );

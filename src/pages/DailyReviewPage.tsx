@@ -1,128 +1,199 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Flame, RefreshCw } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Flame,
+  RefreshCw,
+  RotateCcw,
+  Target,
+} from "lucide-react";
 import { courses } from "@/data/mockData";
 import QuizSection from "@/components/QuizSection";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import BloomMascot from "@/components/BloomMascot";
+import {
+  buildDailyReviewPlan,
+  ERROR_REVIEW_COPY,
+  type ReviewReason,
+} from "@/utils/dailyReview";
+
+const reasonCopy: Record<ReviewReason, string> = {
+  stuck: "Você teve tentativa recente aqui. Vale revisar antes de avançar.",
+  in_progress: "Você já começou essa aula. Retomar agora reduz retrabalho.",
+  completed: "Aula concluída recentemente. Boa para fortalecer memória.",
+  starter: "Fundamento inicial recomendado para aquecer.",
+};
 
 const DailyReviewPage = () => {
-  const { completedLessons, completeLesson } = useProgress();
-  const { topErrors } = useAttemptTracker();
-  const [done, setDone] = useState(false);
+  const { completedLessons, savedCode, completeLesson } = useProgress();
+  const { topErrors, attempts } = useAttemptTracker();
+  const [result, setResult] = useState<{ correct: number; passed: boolean } | null>(null);
+  const [quizKey, setQuizKey] = useState(0);
 
-  const reviewLessons = useMemo(() => {
-    const allLessons = courses.flatMap((course) =>
-      course.lessons.map((lesson) => ({ course, lesson })),
-    );
-    const completed = allLessons.filter(({ lesson }) => completedLessons.includes(lesson.id));
-    const source = completed.length > 0 ? completed : allLessons.slice(0, 8);
-    return source.slice(-5).reverse();
-  }, [completedLessons]);
-
-  const questions = useMemo(
+  const reviewPlan = useMemo(
     () =>
-      reviewLessons.flatMap(({ lesson }) => lesson.quiz ?? []).slice(0, 5),
-    [reviewLessons],
+      buildDailyReviewPlan({
+        courses,
+        completedLessons,
+        savedCode,
+        attempts,
+        topErrors,
+      }),
+    [attempts, completedLessons, savedCode, topErrors],
   );
 
-  const fallbackQuestions = [
-    {
-      question: "Qual hábito ajuda mais quando você erra um exercício?",
-      options: ["Trocar tudo de uma vez", "Ler o erro e testar uma mudança pequena", "Pular sempre", "Copiar sem entender"],
-      correctIndex: 1,
-      explanation: "Uma mudança pequena por vez ajuda a descobrir a causa real do erro.",
-    },
-    {
-      question: "Antes de escrever código, o que você deve identificar?",
-      options: ["A cor do botão", "A saída esperada", "O ranking", "A quantidade de XP"],
-      correctIndex: 1,
-      explanation: "A saída esperada é o alvo. Sem alvo, fica difícil saber se o código está correto.",
-    },
-    {
-      question: "Por que revisar lições antigas?",
-      options: ["Para consolidar memória", "Para atrasar o curso", "Para apagar progresso", "Para evitar prática"],
-      correctIndex: 0,
-      explanation: "Revisão espaçada fortalece memória de longo prazo.",
-    },
-  ];
-
-  const activeQuestions = questions.length >= 3 ? questions : fallbackQuestions;
+  const recommendedHref = `/editor/${reviewPlan.recommendedLesson.course.id}/${reviewPlan.recommendedLesson.lesson.id}`;
+  const activeQuestions = reviewPlan.questions;
+  const focusItems = reviewPlan.focusErrors.map((error) => ERROR_REVIEW_COPY[error]);
 
   const finishReview = (correct: number) => {
-    setDone(true);
-    if (correct / activeQuestions.length >= 0.7) {
-      completeLesson(`daily-review-${new Date().toISOString().slice(0, 10)}`, 15);
+    const passed = correct / activeQuestions.length >= reviewPlan.passThreshold;
+    setResult({ correct, passed });
+    if (passed) {
+      completeLesson(`daily-review-${new Date().toISOString().slice(0, 10)}`, reviewPlan.xpReward);
     }
   };
 
-  return (
-    <main className="min-h-screen bg-background px-4 py-10 sm:px-6">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-6">
-          <p className="mimo-section-title mb-1">Sessão diária</p>
-          <h1 className="text-3xl font-black text-foreground">Revise por 5 minutos</h1>
-          <p className="mt-2 text-muted-foreground">
-            Uma rodada curta para manter conceitos vivos e recuperar pontos fracos.
-          </p>
-        </div>
+  const restartReview = () => {
+    setResult(null);
+    setQuizKey((key) => key + 1);
+  };
 
-        <div className="mb-6">
+  return (
+    <main className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:py-10">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-6 grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+          <div>
+            <p className="mimo-section-title mb-1">Sessão diária</p>
+            <h1 className="text-3xl font-black text-foreground sm:text-4xl">Revisão inteligente</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Uma rodada curta montada com base nas aulas concluídas, no código salvo e nos erros que
+              apareceram durante a prática.
+            </p>
+          </div>
+
           <BloomMascot
             mood="focus"
-            message="Revisão curta funciona melhor que maratona. Se errar, ótimo: achei exatamente o ponto que vale reforçar hoje."
+            message={
+              reviewPlan.recommendedLesson.reason === "stuck"
+                ? "Hoje vamos atacar o ponto que travou. Poucas perguntas, foco alto e retorno direto para a aula certa."
+                : "Revisão curta funciona melhor que maratona. Se errar, ótimo: achamos exatamente o que reforçar."
+            }
           />
         </div>
 
         <div className="mb-6 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl border border-border bg-card p-4">
             <Flame className="mb-2 text-quest-orange" size={18} />
-            <div className="text-sm font-black">Ritmo curto</div>
-            <p className="text-xs text-muted-foreground">Poucas perguntas, alta frequência.</p>
+            <div className="text-sm font-black">{activeQuestions.length} perguntas</div>
+            <p className="text-xs text-muted-foreground">Curto o bastante para virar hábito.</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <RefreshCw className="mb-2 text-primary" size={18} />
-            <div className="text-sm font-black">Revisão espaçada</div>
-            <p className="text-xs text-muted-foreground">Prioriza lições concluídas recentemente.</p>
+            <div className="text-sm font-black">Foco adaptativo</div>
+            <p className="text-xs text-muted-foreground">Prioriza erros, aulas iniciadas e revisão espaçada.</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <CheckCircle2 className="mb-2 text-accent" size={18} />
-            <div className="text-sm font-black">+15 XP</div>
+            <div className="text-sm font-black">+{reviewPlan.xpReward} XP</div>
             <p className="text-xs text-muted-foreground">Passe com 70% ou mais.</p>
           </div>
         </div>
 
-        {topErrors.length > 0 && (
-          <div className="mb-6 rounded-xl border border-quest-yellow/30 bg-quest-yellow/5 p-4 text-sm text-foreground">
-            <span className="font-black text-quest-yellow">Foco de hoje:</span>{" "}
-            revisar padrões ligados a {topErrors.slice(0, 2).join(" e ")}.
-          </div>
-        )}
+        <div className="mb-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <section className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
+            <div className="mb-3 flex items-center gap-2 text-sm font-black text-primary">
+              <Target size={16} /> Aula recomendada
+            </div>
+            <h2 className="text-xl font-black text-foreground">
+              {reviewPlan.recommendedLesson.course.emoji} {reviewPlan.recommendedLesson.lesson.title}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {reasonCopy[reviewPlan.recommendedLesson.reason]}
+            </p>
+            <Button asChild className="mt-4 rounded-full font-black">
+              <Link to={recommendedHref}>
+                Abrir aula <ArrowRight size={16} />
+              </Link>
+            </Button>
+          </section>
 
-        <div className="rounded-2xl border border-border bg-card p-5">
-          {!done ? (
-            <QuizSection questions={activeQuestions} onComplete={finishReview} />
-          ) : (
-            <div className="text-center">
-              <div className="mb-2 text-5xl">🎯</div>
-              <h2 className="text-2xl font-black text-foreground">Revisão concluída</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Agora siga para a próxima lição ou refaça uma aula que você sentiu difícil.
-              </p>
-              <div className="mt-5 flex flex-wrap justify-center gap-2">
-                <Button asChild className="rounded-full font-black">
-                  <Link to="/editor/1/1-1">
-                    Praticar agora <ArrowRight size={16} />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="rounded-full">
-                  <Link to="/cursos">Ver cursos</Link>
-                </Button>
+          <section className="rounded-2xl border border-border bg-card p-5">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-black text-foreground">Foco de hoje</h2>
+                <p className="text-sm text-muted-foreground">Três hábitos para corrigir o padrão mais provável.</p>
               </div>
             </div>
-          )}
+            <div className="grid gap-3 sm:grid-cols-3">
+              {focusItems.map((item) => (
+                <div key={item.label} className="rounded-xl border border-border bg-background p-4">
+                  <div className="mb-1 text-sm font-black text-foreground">{item.label}</div>
+                  <p className="text-xs leading-relaxed text-muted-foreground">{item.drill}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <section className="rounded-2xl border border-border bg-card p-5">
+            {!result ? (
+              <QuizSection key={quizKey} questions={activeQuestions} onComplete={finishReview} />
+            ) : (
+              <div className="text-center">
+                <div className="mb-2 text-5xl">{result.passed ? "🎯" : "📝"}</div>
+                <h2 className="text-2xl font-black text-foreground">
+                  {result.passed ? "Revisão concluída" : "Boa tentativa"}
+                </h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Você acertou {result.correct}/{activeQuestions.length}.{" "}
+                  {result.passed
+                    ? `XP liberado. Agora siga para a aula recomendada.`
+                    : "Revise o foco de hoje e tente outra rodada curta."}
+                </p>
+                <div className="mt-5 flex flex-wrap justify-center gap-2">
+                  <Button asChild className="rounded-full font-black">
+                    <Link to={recommendedHref}>
+                      Praticar aula <ArrowRight size={16} />
+                    </Link>
+                  </Button>
+                  <Button variant="outline" onClick={restartReview} className="gap-2 rounded-full">
+                    <RotateCcw size={15} /> Refazer revisão
+                  </Button>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <aside className="rounded-2xl border border-border bg-card p-5">
+            <h2 className="text-lg font-black text-foreground">Fila da revisão</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A ordem muda conforme você conclui aulas, salva código e registra erros.
+            </p>
+            <div className="mt-4 space-y-3">
+              {reviewPlan.lessons.map((item, index) => (
+                <Link
+                  key={item.lesson.id}
+                  to={`/editor/${item.course.id}/${item.lesson.id}`}
+                  className="block rounded-xl border border-border bg-background p-3 transition-colors hover:border-primary/40"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-muted-foreground">
+                      {index + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-black text-foreground">{item.lesson.title}</div>
+                      <div className="mt-1 text-xs text-muted-foreground">{reasonCopy[item.reason]}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </aside>
         </div>
       </div>
     </main>

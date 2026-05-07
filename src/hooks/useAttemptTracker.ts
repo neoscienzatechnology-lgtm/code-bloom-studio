@@ -71,5 +71,5 @@ export function useAttemptTracker() {
     .slice(0, 3)
     .map(([k]) => k as ErrorKind);
 
-  return { registerFailure, resetLesson, getAttempts, topErrors };
+  return { registerFailure, resetLesson, getAttempts, topErrors, attempts: stats.attempts };
 }

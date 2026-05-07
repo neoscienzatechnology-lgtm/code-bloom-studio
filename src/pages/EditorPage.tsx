@@ -46,6 +46,22 @@ const lessonMobileSteps = [
 
 type LessonMobileStep = (typeof lessonMobileSteps)[number]["id"];
 
+type CompletionCheckId = "readTheory" | "guidedPractice" | "ranCode" | "understood";
+
+const initialCompletionChecks: Record<CompletionCheckId, boolean> = {
+  readTheory: false,
+  guidedPractice: false,
+  ranCode: false,
+  understood: false,
+};
+
+const completionCheckLabels: Record<CompletionCheckId, string> = {
+  readTheory: "Li a teoria",
+  guidedPractice: "Completei a prática",
+  ranCode: "Executei o código",
+  understood: "Entendi o resultado",
+};
+
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
@@ -72,6 +88,8 @@ const EditorPage = () => {
   const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
   const [bonusActive, setBonusActive] = useState(false);
   const [mobileStep, setMobileStep] = useState<LessonMobileStep>("plan");
+  const [completionChecks, setCompletionChecks] =
+    useState<Record<CompletionCheckId, boolean>>({ ...initialCompletionChecks });
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
@@ -95,6 +113,7 @@ const EditorPage = () => {
     setPaceMode(null);
     setBonusActive(false);
     setMobileStep("plan");
+    setCompletionChecks({ ...initialCompletionChecks });
   }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
@@ -111,6 +130,17 @@ const EditorPage = () => {
   const alreadyCompleted = isCompleted(lesson.id);
   const mobileSectionClass = (step: LessonMobileStep) =>
     mobileStep === step ? "block" : "hidden lg:block";
+  const completionItems = (Object.keys(completionCheckLabels) as CompletionCheckId[]).map((id) => ({
+    id,
+    label: completionCheckLabels[id],
+    done: alreadyCompleted || completionChecks[id],
+  }));
+  const completionCount = completionItems.filter((item) => item.done).length;
+  const lessonReadyToAdvance = alreadyCompleted || (isCorrect === true && completionCount === completionItems.length);
+
+  const setCompletionCheck = (id: CompletionCheckId, value: boolean) => {
+    setCompletionChecks((prev) => ({ ...prev, [id]: value }));
+  };
 
   const fireConfetti = () => {
     confetti({
@@ -123,6 +153,7 @@ const EditorPage = () => {
 
   const handleRun = () => {
     setMobileStep("code");
+    setCompletionCheck("ranCode", true);
     setRunning(true);
     setTimeout(() => {
       const result = validateCode(code, lesson.expectedOutput, lesson.solution);
@@ -181,6 +212,7 @@ const EditorPage = () => {
     setHintIndex(-1);
     setShowSolution(false);
     setSolutionWarned(false);
+    setCompletionChecks({ ...initialCompletionChecks });
     resetLesson(lesson.id);
   };
 
@@ -385,7 +417,10 @@ const EditorPage = () => {
               )}
 
               <Button
-                onClick={() => setMobileStep("practice")}
+                onClick={() => {
+                  setCompletionCheck("readTheory", true);
+                  setMobileStep("practice");
+                }}
                 className="mt-2 w-full gap-2 rounded-full font-bold lg:hidden"
               >
                 Ir para a prática <ChevronRight size={16} />
@@ -522,7 +557,10 @@ const EditorPage = () => {
             )}
 
               <Button
-                onClick={() => setMobileStep("code")}
+                onClick={() => {
+                  setCompletionCheck("guidedPractice", true);
+                  setMobileStep("code");
+                }}
                 className="mt-5 w-full gap-2 rounded-full bg-accent font-bold text-accent-foreground hover:bg-accent/90 lg:hidden"
               >
                 Abrir editor <ChevronRight size={16} />
@@ -612,6 +650,36 @@ const EditorPage = () => {
 
           {/* Run bar */}
           <div className="sticky bottom-[70px] z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl md:bottom-0 lg:static lg:shadow-none">
+            <div className="mb-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <div className="text-xs font-black text-[#cdd6f4]">Checklist da aula</div>
+                <div className="text-[11px] font-bold text-[#a6adc8]">
+                  {completionCount}/{completionItems.length}
+                </div>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {completionItems.map((item) => (
+                  <label
+                    key={item.id}
+                    className="flex min-w-0 items-center gap-2 rounded-lg border border-white/10 bg-[#1e1e2e] px-3 py-2 text-xs font-semibold text-[#cdd6f4]"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={item.done}
+                      disabled={alreadyCompleted}
+                      onChange={(event) => setCompletionCheck(item.id, event.target.checked)}
+                      className="h-4 w-4 shrink-0 rounded border-white/20 bg-[#11111b] accent-[hsl(160,80%,45%)]"
+                    />
+                    <span className="truncate">{item.label}</span>
+                  </label>
+                ))}
+              </div>
+              {!lessonReadyToAdvance && (
+                <p className="mt-2 text-[11px] leading-relaxed text-[#a6adc8]">
+                  Para avançar, execute uma solução correta e marque os critérios que confirmam entendimento.
+                </p>
+              )}
+            </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
@@ -645,12 +713,13 @@ const EditorPage = () => {
                 </Button>
               </div>
               <Button
-                variant={isCorrect === true ? "default" : "ghost"}
+                variant={lessonReadyToAdvance ? "default" : "ghost"}
                 onClick={handleNext}
+                disabled={!lessonReadyToAdvance}
                 className={`gap-1 text-sm ${
-                  isCorrect === true
+                  lessonReadyToAdvance
                     ? "bg-accent/20 text-accent font-bold hover:bg-accent/30"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground opacity-60"
                 }`}
               >
                 {nextLesson ? "Próxima lição" : "Voltar ao curso"}{" "}
