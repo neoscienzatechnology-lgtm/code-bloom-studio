@@ -16,6 +16,10 @@ import {
   Eye,
   EyeOff,
   Info,
+  BookOpen,
+  Code2,
+  ListChecks,
+  Target,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import CodeEditor from "@/components/CodeEditor";
@@ -32,6 +36,15 @@ import { validateCode } from "@/utils/codeValidator";
 import confetti from "canvas-confetti";
 
 const ONBOARDING_KEY = "code-bloom-studio_editor_onboarding_seen";
+
+const lessonMobileSteps = [
+  { id: "plan", label: "Plano", icon: ListChecks },
+  { id: "theory", label: "Teoria", icon: BookOpen },
+  { id: "practice", label: "Prática", icon: Target },
+  { id: "code", label: "Código", icon: Code2 },
+] as const;
+
+type LessonMobileStep = (typeof lessonMobileSteps)[number]["id"];
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -58,6 +71,7 @@ const EditorPage = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
   const [bonusActive, setBonusActive] = useState(false);
+  const [mobileStep, setMobileStep] = useState<LessonMobileStep>("plan");
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
@@ -80,6 +94,7 @@ const EditorPage = () => {
   useEffect(() => {
     setPaceMode(null);
     setBonusActive(false);
+    setMobileStep("plan");
   }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
@@ -94,6 +109,8 @@ const EditorPage = () => {
   const nextLesson = augIdx >= 0 ? augCourse.lessons[augIdx + 1] : course.lessons[lessonIndex + 1];
   const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
   const alreadyCompleted = isCompleted(lesson.id);
+  const mobileSectionClass = (step: LessonMobileStep) =>
+    mobileStep === step ? "block" : "hidden lg:block";
 
   const fireConfetti = () => {
     confetti({
@@ -105,6 +122,7 @@ const EditorPage = () => {
   };
 
   const handleRun = () => {
+    setMobileStep("code");
     setRunning(true);
     setTimeout(() => {
       const result = validateCode(code, lesson.expectedOutput, lesson.solution);
@@ -199,21 +217,26 @@ const EditorPage = () => {
             exit={{ opacity: 0, y: -20 }}
             className="border-b border-primary/20 bg-primary/5 px-4 py-3"
           >
-            <div className="mx-auto flex max-w-7xl items-center gap-4 flex-wrap">
+            <div className="mx-auto flex max-w-7xl items-center gap-3 sm:gap-4">
               <Info size={18} className="shrink-0 text-primary" />
-              <div className="flex flex-1 flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground">
-                <span>
-                  <strong className="text-foreground">📖 Esquerda:</strong> leia a teoria e o exercício
-                </span>
-                <span>
-                  <strong className="text-foreground">💻 Direita:</strong> escreva seu código
-                </span>
-                <span>
-                  <strong className="text-foreground">▶ Executar:</strong> testa sua resposta
-                </span>
-                <span>
-                  <strong className="text-foreground">💡 Dicas:</strong> aparecem se você travar
-                </span>
+              <div className="flex-1 text-xs text-muted-foreground">
+                <div className="lg:hidden">
+                  Use as abas Plano, Teoria, Prática e Código para avançar sem se perder.
+                </div>
+                <div className="hidden flex-wrap gap-x-6 gap-y-1 lg:flex">
+                  <span>
+                    <strong className="text-foreground">Esquerda:</strong> leia a teoria e o exercício
+                  </span>
+                  <span>
+                    <strong className="text-foreground">Direita:</strong> escreva seu código
+                  </span>
+                  <span>
+                    <strong className="text-foreground">Executar:</strong> testa sua resposta
+                  </span>
+                  <span>
+                    <strong className="text-foreground">Dicas:</strong> aparecem se você travar
+                  </span>
+                </div>
               </div>
               <Button
                 variant="ghost"
@@ -221,7 +244,7 @@ const EditorPage = () => {
                 onClick={dismissOnboarding}
                 className="shrink-0 h-7 rounded-full text-xs"
               >
-                Entendi ✓
+                Entendi
               </Button>
             </div>
           </motion.div>
@@ -254,71 +277,123 @@ const EditorPage = () => {
         </div>
       </div>
 
+      <nav
+        aria-label="Etapas da aula"
+        className="sticky top-0 z-30 border-b border-border bg-background/95 px-3 py-2 backdrop-blur lg:hidden"
+      >
+        <div className="grid grid-cols-4 gap-1 rounded-xl bg-secondary/70 p-1">
+          {lessonMobileSteps.map((step) => {
+            const Icon = step.icon;
+            const active = mobileStep === step.id;
+
+            return (
+              <button
+                key={step.id}
+                type="button"
+                onClick={() => setMobileStep(step.id)}
+                aria-current={active ? "step" : undefined}
+                className={`flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 text-[11px] font-bold transition-colors ${
+                  active
+                    ? "bg-background text-primary shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon size={14} className="shrink-0" />
+                <span className="truncate">{step.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
       {/* Main split layout */}
-      <div className="flex-1 grid lg:grid-cols-2">
+      <div className="grid flex-1 min-h-0 lg:grid-cols-2">
         {/* Instructions (left panel) */}
-        <div className="border-b border-border bg-background p-6 lg:border-b-0 lg:border-r overflow-auto">
+        <div
+          className={`border-b border-border bg-background p-6 lg:block lg:border-b-0 lg:border-r lg:overflow-auto ${
+            mobileStep === "code" ? "hidden" : "block"
+          }`}
+        >
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
-                <span>✨</span> +{lesson.xpReward} XP
-              </span>
-              {alreadyCompleted && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
-                  <Check size={12} /> Concluída
+            <div className={mobileSectionClass("plan")}>
+              <div className="mb-2 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
+                  <span>✨</span> +{lesson.xpReward} XP
                 </span>
-              )}
-            </div>
-            <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
+                {alreadyCompleted && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
+                    <Check size={12} /> Concluída
+                  </span>
+                )}
+              </div>
+              <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
 
-            <div className="mb-5">
-              <BloomMascot
-                mood={alreadyCompleted ? "success" : "hello"}
-                message={
-                  alreadyCompleted
-                    ? "Você já concluiu esta lição. Refaça tentando explicar cada linha em voz alta."
-                    : "Vamos em passos pequenos: entenda a meta, aqueça com as perguntas e só depois escreva no editor."
-                }
-              />
-            </div>
-
-            <LessonCoach course={course} lesson={lesson} />
-
-            {/* Theory section */}
-            {lesson.theory && (
-              <div className="mb-6">
-                <div className="mb-3 flex items-center gap-2 text-sm font-bold text-primary">
-                  <span>📖</span> Aprenda
-                </div>
-                <TheoryRenderer
-                  text={lesson.theory}
-                  courseTitle={course.title}
-                  language={course.language}
-                  lessonTitle={lesson.title}
+              <div className="mb-5">
+                <BloomMascot
+                  mood={alreadyCompleted ? "success" : "hello"}
+                  message={
+                    alreadyCompleted
+                      ? "Você já concluiu esta lição. Refaça tentando explicar cada linha em voz alta."
+                      : "Vamos em passos pequenos: entenda a meta, aqueça com as perguntas e só depois escreva no editor."
+                  }
                 />
               </div>
-            )}
 
-            {/* Quiz section */}
-            {lesson.quiz && lesson.quiz.length > 0 && (
-              <div className="mb-6">
-                <div className="mb-3 flex items-center gap-2 text-sm font-bold text-quest-blue">
-                  <span>🧠</span> Teste seu conhecimento
-                </div>
-                <div className="rounded-xl border border-quest-blue/10 bg-quest-blue/5 p-4">
-                  <QuizSection
-                    questions={lesson.quiz}
-                    onComplete={(correct) => {
-                      if (correct === lesson.quiz!.length) {
-                        completeLesson(lesson.id + "-quiz", 5);
-                      }
-                    }}
+              <LessonCoach course={course} lesson={lesson} />
+
+              <Button
+                onClick={() => setMobileStep("theory")}
+                className="mt-5 w-full gap-2 rounded-full font-bold lg:hidden"
+              >
+                Ir para a teoria <ChevronRight size={16} />
+              </Button>
+            </div>
+
+            <div className={mobileSectionClass("theory")}>
+              {/* Theory section */}
+              {lesson.theory && (
+                <div className="mb-6">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-bold text-primary">
+                    <span>📖</span> Aprenda
+                  </div>
+                  <TheoryRenderer
+                    text={lesson.theory}
+                    courseTitle={course.title}
+                    language={course.language}
+                    lessonTitle={lesson.title}
                   />
                 </div>
-              </div>
-            )}
+              )}
 
-            <GuidedPractice lesson={lesson} />
+              {/* Quiz section */}
+              {lesson.quiz && lesson.quiz.length > 0 && (
+                <div className="mb-6">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-bold text-quest-blue">
+                    <span>🧠</span> Teste seu conhecimento
+                  </div>
+                  <div className="rounded-xl border border-quest-blue/10 bg-quest-blue/5 p-4">
+                    <QuizSection
+                      questions={lesson.quiz}
+                      onComplete={(correct) => {
+                        if (correct === lesson.quiz!.length) {
+                          completeLesson(lesson.id + "-quiz", 5);
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <Button
+                onClick={() => setMobileStep("practice")}
+                className="mt-2 w-full gap-2 rounded-full font-bold lg:hidden"
+              >
+                Ir para a prática <ChevronRight size={16} />
+              </Button>
+            </div>
+
+            <div className={mobileSectionClass("practice")}>
+              <GuidedPractice lesson={lesson} />
 
             {/* Exercise description */}
             <div className="mb-6">
@@ -445,12 +520,22 @@ const EditorPage = () => {
                 tente refazer este exercício de uma forma diferente antes de avançar.
               </div>
             )}
+
+              <Button
+                onClick={() => setMobileStep("code")}
+                className="mt-5 w-full gap-2 rounded-full bg-accent font-bold text-accent-foreground hover:bg-accent/90 lg:hidden"
+              >
+                Abrir editor <ChevronRight size={16} />
+              </Button>
+            </div>
           </motion.div>
         </div>
 
         {/* Editor (right panel) */}
-        <div className="flex flex-col">
-          <div className="flex-1 p-4">
+        <div
+          className={`min-h-0 flex-col ${mobileStep === "code" ? "flex" : "hidden lg:flex"}`}
+        >
+          <div className="min-h-[430px] flex-1 p-4 lg:min-h-0">
             <div className="h-full rounded-2xl border border-border bg-[#1e1e2e] overflow-hidden flex flex-col shadow-sm">
               {/* Editor header */}
               <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
@@ -528,26 +613,36 @@ const EditorPage = () => {
           {/* Run bar */}
           <div className="sticky bottom-[70px] z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl md:bottom-0 lg:static lg:shadow-none">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="relative">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="relative">
+                  <Button
+                    onClick={handleRun}
+                    disabled={running}
+                    className="gap-2 rounded-full bg-gradient-to-r from-accent to-[hsl(160,80%,45%)] font-extrabold text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-xl"
+                  >
+                    <Play size={16} /> {running ? "Executando..." : "Executar"}
+                  </Button>
+                  <AnimatePresence>
+                    {showXP && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5, y: 0 }}
+                        animate={{ opacity: 1, scale: 1.2, y: -20 }}
+                        exit={{ opacity: 0, y: -40 }}
+                        className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-accent text-lg pointer-events-none"
+                      >
+                        +{lesson.xpReward} XP! 🎉
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <Button
-                  onClick={handleRun}
-                  disabled={running}
-                  className="gap-2 rounded-full bg-gradient-to-r from-accent to-[hsl(160,80%,45%)] font-extrabold text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-xl"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMobileStep("practice")}
+                  className="gap-1.5 rounded-full text-xs text-muted-foreground lg:hidden"
                 >
-                  <Play size={16} /> {running ? "Executando..." : "Executar"}
+                  <ArrowLeft size={14} /> Ver prática
                 </Button>
-                <AnimatePresence>
-                  {showXP && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.5, y: 0 }}
-                      animate={{ opacity: 1, scale: 1.2, y: -20 }}
-                      exit={{ opacity: 0, y: -40 }}
-                      className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-accent text-lg pointer-events-none"
-                    >
-                      +{lesson.xpReward} XP! 🎉
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
               <Button
                 variant={isCorrect === true ? "default" : "ghost"}
