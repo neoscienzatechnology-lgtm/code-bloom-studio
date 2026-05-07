@@ -526,7 +526,7 @@ const EditorPage = () => {
           </div>
 
           {/* Run bar */}
-          <div className="sticky bottom-0 z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl lg:static lg:shadow-none">
+          <div className="sticky bottom-[70px] z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl md:bottom-0 lg:static lg:shadow-none">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="relative">
                 <Button
