@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import AdaptiveReview from "@/components/AdaptiveReview";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara from "@/components/MascoteCapivara";
 import { getPathById } from "@/data/learningPaths";
 import { useLearningProfile } from "@/hooks/useLearningProfile";
 import { Button } from "@/components/ui/button";
@@ -74,9 +74,15 @@ const DashboardPage = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <BloomMascot
-                mood="success"
-                message="Você está quase liberando o próximo projeto. Uma aula curta hoje já mantém a trilha andando."
+              <MascoteCapivara
+                state={completedCoursesList.length > 0 ? "celebrate" : inProgressCourses.length > 0 ? "success" : "idle"}
+                message={
+                  completedCoursesList.length > 0
+                    ? "Curso concluído! Agora vale reforçar com projeto e revisão."
+                    : inProgressCourses.length > 0
+                      ? "Você está quase liberando o próximo projeto. Uma aula curta hoje já mantém a trilha andando."
+                      : "Escolha uma trilha e eu acompanho seu progresso aula por aula."
+                }
               />
               <div className="rounded-2xl border border-border bg-card p-4">
                 <div className="mb-3 text-sm font-black text-foreground">Seu caminho atual</div>

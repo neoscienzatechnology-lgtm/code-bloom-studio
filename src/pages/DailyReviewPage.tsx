@@ -13,7 +13,7 @@ import QuizSection from "@/components/QuizSection";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara from "@/components/MascoteCapivara";
 import {
   buildDailyReviewPlan,
   ERROR_REVIEW_COPY,
@@ -75,10 +75,14 @@ const DailyReviewPage = () => {
             </p>
           </div>
 
-          <BloomMascot
-            mood="focus"
+          <MascoteCapivara
+            state={result ? (result.passed ? "celebrate" : "error") : "thinking"}
             message={
-              reviewPlan.recommendedLesson.reason === "stuck"
+              result
+                ? result.passed
+                  ? "Revisão concluída! Agora siga para a aula recomendada."
+                  : "Quase! Revise o foco de hoje e tente uma rodada curta de novo."
+                : reviewPlan.recommendedLesson.reason === "stuck"
                 ? "Hoje vamos atacar o ponto que travou. Poucas perguntas, foco alto e retorno direto para a aula certa."
                 : "Revisão curta funciona melhor que maratona. Se errar, ótimo: achamos exatamente o que reforçar."
             }

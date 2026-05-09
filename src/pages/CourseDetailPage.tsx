@@ -7,7 +7,7 @@ import { getAugmentedCourseById } from "@/data/checkpoints";
 import { getProjectsByCourse } from "@/data/projects";
 import { getCourseMeta } from "@/data/learningPaths";
 import { useProgress } from "@/hooks/useProgress";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
 import CourseRoutePath from "@/components/CourseRoutePath";
 
 const CourseDetailPage = () => {
@@ -21,6 +21,7 @@ const CourseDetailPage = () => {
   const progressPct = Math.round((completedLessons / course.lessons.length) * 100);
   const projects = getProjectsByCourse(course.id);
   const meta = getCourseMeta(course);
+  const mascotState: MascoteCapivaraState = progressPct === 100 ? "celebrate" : progressPct > 0 ? "success" : "idle";
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
@@ -101,11 +102,13 @@ const CourseDetailPage = () => {
         </motion.div>
 
         <div className="mb-6">
-          <BloomMascot
-            mood={progressPct > 0 ? "success" : "hello"}
+          <MascoteCapivara
+            state={mascotState}
             message={
-              progressPct > 0
-                ? `Você já avançou ${progressPct}%. Continue pela próxima etapa liberada.`
+              progressPct === 100
+                ? "Curso concluído! Você já pode partir para o projeto final ou revisar pontos-chave."
+                : progressPct > 0
+                  ? `Você já avançou ${progressPct}%. Continue pela próxima etapa liberada.`
                 : `Para estudar ${course.language}, vamos seguir a rota em ordem e revisar antes dos projetos.`
             }
           />

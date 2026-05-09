@@ -4,10 +4,23 @@ import { projects } from "@/data/projects";
 import { courses } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara from "@/components/MascoteCapivara";
 
 const ProjectsPage = () => {
   const { isCompleted, getCourseProgress } = useProgress();
+  const projectStats = projects.map((project) => {
+    const course = courses.find((item) => item.id === project.courseId);
+    const courseProgress = course ? getCourseProgress(course.lessons.map((lesson) => lesson.id)) : 0;
+    return {
+      project,
+      course,
+      courseProgress,
+      projectDone: isCompleted(`project-${project.id}`),
+      unlocked: courseProgress === 100,
+    };
+  });
+  const hasDoneProject = projectStats.some((item) => item.projectDone);
+  const hasUnlockedProject = projectStats.some((item) => item.unlocked);
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
@@ -21,19 +34,20 @@ const ProjectsPage = () => {
         </div>
 
         <div className="mb-8 max-w-2xl">
-          <BloomMascot
-            mood="focus"
-            message="Projeto bom não é prova de memória. É o momento de juntar várias ideias pequenas em uma construção clara."
+          <MascoteCapivara
+            state={hasDoneProject ? "celebrate" : hasUnlockedProject ? "success" : "thinking"}
+            message={
+              hasDoneProject
+                ? "Projeto concluído! Esse é material real para mostrar no portfólio."
+                : hasUnlockedProject
+                  ? "Projeto liberado! Agora é hora de juntar as ideias em algo real."
+                  : "Projeto bom não é prova de memória. É o momento de juntar várias ideias pequenas em uma construção clara."
+            }
           />
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
-          {projects.map((project) => {
-            const course = courses.find((item) => item.id === project.courseId);
-            const courseProgress = course ? getCourseProgress(course.lessons.map((lesson) => lesson.id)) : 0;
-            const projectDone = isCompleted(`project-${project.id}`);
-            const unlocked = courseProgress === 100;
-
+          {projectStats.map(({ project, course, projectDone, unlocked }) => {
             return (
               <div key={project.id} className={`rounded-2xl border bg-card p-5 ${unlocked ? "border-border" : "border-border opacity-75"}`}>
                 <div className="mb-4 flex items-start justify-between gap-3">

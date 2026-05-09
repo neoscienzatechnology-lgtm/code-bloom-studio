@@ -9,7 +9,7 @@ import {
   useLearningProfile,
 } from "@/hooks/useLearningProfile";
 import { learningPaths } from "@/data/learningPaths";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara from "@/components/MascoteCapivara";
 
 const experienceOptions: Array<{ value: ExperienceLevel; title: string; description: string }> = [
   { value: "new", title: "Nunca programei", description: "Começar devagar, com linguagem simples e muitos exemplos." },
@@ -60,8 +60,8 @@ const OnboardingPage = () => {
         </div>
 
         <div className="mb-8 max-w-2xl">
-          <BloomMascot
-            mood="thinking"
+          <MascoteCapivara
+            state="thinking"
             message="Boa escolha começa pelo objetivo. Depois eu mostro quais tecnologias entram em cada etapa."
           />
         </div>

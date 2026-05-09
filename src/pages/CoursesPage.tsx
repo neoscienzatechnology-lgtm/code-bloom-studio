@@ -7,7 +7,7 @@ import { getCourseMeta, learningPaths } from "@/data/learningPaths";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara from "@/components/MascoteCapivara";
 
 const tabs = ["Trilhas", "Explorar"] as const;
 const exploreGroups = [
@@ -50,8 +50,8 @@ const CoursesPage = () => {
         </motion.div>
 
         <div className="mb-8 max-w-2xl">
-          <BloomMascot
-            mood="focus"
+          <MascoteCapivara
+            state={activeTab === "Trilhas" ? "thinking" : "idle"}
             message="Minha sugestão: se você está começando, siga uma trilha. O catálogo fica aqui para quando você já souber qual tecnologia quer estudar."
           />
         </div>

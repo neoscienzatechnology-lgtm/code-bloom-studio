@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Code2, Gamepad2, Trophy, Users, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara from "@/components/MascoteCapivara";
 
 const stats = [
   { label: "Alunos ativos", value: 52000, suffix: "+", icon: Users },
@@ -135,8 +135,8 @@ const LandingPage = () => {
               Lições curtas, exercícios práticos e feedback instantâneo. Você escreve código real desde a primeira aula.
             </p>
             <div className="mb-8 max-w-md">
-              <BloomMascot
-                mood="hello"
+              <MascoteCapivara
+                state="idle"
                 message="Eu sou o CapyCoder. Vou te guiar com explicações curtinhas, aquecimentos e revisões quando você precisar."
               />
             </div>

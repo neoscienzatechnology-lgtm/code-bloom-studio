@@ -168,7 +168,7 @@ const MascoteCapivara = ({ state, className, message, variant = "card" }: Mascot
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(255,255,255,0.95),transparent_62%)]" />
         <motion.div
-          className="relative z-10 aspect-[1/0.78] w-16 shrink-0 overflow-hidden"
+          className="relative z-10 aspect-[1/0.7] w-16 shrink-0 overflow-hidden"
           {...mascotMotion}
         >
           <img
@@ -281,7 +281,7 @@ const MascoteCapivara = ({ state, className, message, variant = "card" }: Mascot
       )}
 
       <div className="relative z-20 mx-auto max-w-xs">
-        <motion.div className="relative mx-auto aspect-[1/0.78] w-52 overflow-hidden sm:w-60" {...mascotMotion}>
+        <motion.div className="relative mx-auto aspect-[1/0.7] w-52 overflow-hidden sm:w-60" {...mascotMotion}>
           <img
             src="/mascote-capivara.png"
             alt="Mascote CapyCoder, uma capivara estudante de programação"
