@@ -23,6 +23,7 @@ const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage.tsx"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage.tsx"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage.tsx"));
 const DailyReviewPage = lazy(() => import("./pages/DailyReviewPage.tsx"));
+const MascoteDemoPage = lazy(() => import("./pages/MascoteDemoPage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
               <Route path="/trilha" element={<PageWithNav><RoadmapPage /></PageWithNav>} />
               <Route path="/revisao" element={<PageWithNav><DailyReviewPage /></PageWithNav>} />
+              <Route path="/mascote" element={<PageWithNav><MascoteDemoPage /></PageWithNav>} />
               <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
               <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
               <Route path="/checkpoint/:courseId/:lessonId" element={<PageWithNav><CheckpointPage /></PageWithNav>} />

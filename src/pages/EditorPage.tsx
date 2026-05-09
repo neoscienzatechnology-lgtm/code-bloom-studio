@@ -29,7 +29,7 @@ import PaceCoach from "@/components/PaceCoach";
 import AITutor from "@/components/AITutor";
 import LessonCoach from "@/components/LessonCoach";
 import GuidedPractice from "@/components/GuidedPractice";
-import BloomMascot from "@/components/BloomMascot";
+import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
@@ -184,6 +184,17 @@ const EditorPage = () => {
       : currentStage.kind === "plan"
       ? "Começar aula"
       : "Continuar";
+  const lessonMascotState: MascoteCapivaraState = running
+    ? "loading"
+    : alreadyCompleted
+    ? "celebrate"
+    : isCorrect === true
+    ? "success"
+    : isCorrect === false
+    ? "error"
+    : isCorrect === null && output
+    ? "thinking"
+    : "idle";
 
   const setCompletionCheck = (id: CompletionCheckId, value: boolean) => {
     setCompletionChecks((prev) => ({ ...prev, [id]: value }));
@@ -438,16 +449,7 @@ const EditorPage = () => {
               </div>
               <h2 className="mb-4 text-2xl font-black">{lesson.title}</h2>
 
-              <div className="mb-5">
-                <BloomMascot
-                  mood={alreadyCompleted ? "success" : "hello"}
-                  message={
-                    alreadyCompleted
-                      ? "Você já concluiu esta lição. Refaça tentando explicar cada linha em voz alta."
-                      : "Vamos em passos pequenos: entenda a meta, aqueça com as perguntas e só depois escreva no editor."
-                  }
-                />
-              </div>
+              <MascoteCapivara state={lessonMascotState} className="mb-5" />
 
               <LessonCoach course={course} lesson={lesson} />
             </div>
@@ -645,6 +647,7 @@ const EditorPage = () => {
                   <ArrowLeft size={16} /> Ver desafio
                 </Button>
               </div>
+              <MascoteCapivara state={lessonMascotState} className="mt-5 hidden lg:block" />
             </div>
 
             {!isCodeStage && (
@@ -745,6 +748,13 @@ const EditorPage = () => {
 
           {/* Run bar */}
           <div className="sticky bottom-[70px] z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl md:bottom-0 lg:static lg:shadow-none">
+            {(running || output || isCorrect !== null || alreadyCompleted) && (
+              <MascoteCapivara
+                state={lessonMascotState}
+                variant="compact"
+                className="mb-3 border-white/10 font-sans shadow-none lg:hidden"
+              />
+            )}
             <div className="mb-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="text-xs font-black text-[#cdd6f4]">Checklist da aula</div>
