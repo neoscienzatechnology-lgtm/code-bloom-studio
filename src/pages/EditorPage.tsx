@@ -37,14 +37,25 @@ import confetti from "canvas-confetti";
 
 const ONBOARDING_KEY = "code-bloom-studio_editor_onboarding_seen";
 
-const lessonMobileSteps = [
-  { id: "plan", label: "Plano", icon: ListChecks },
-  { id: "theory", label: "Teoria", icon: BookOpen },
-  { id: "practice", label: "Prática", icon: Target },
-  { id: "code", label: "Código", icon: Code2 },
-] as const;
+type LessonStageKind = "plan" | "theory" | "quiz" | "practice" | "challenge" | "code";
+type LessonStageId = "plan" | `theory-${number}` | "quiz" | "practice" | "challenge" | "code";
 
-type LessonMobileStep = (typeof lessonMobileSteps)[number]["id"];
+interface LessonStage {
+  id: LessonStageId;
+  kind: LessonStageKind;
+  label: string;
+  icon: typeof ListChecks;
+  theoryIndex?: number;
+}
+
+function splitTheorySlides(theory: string): string[] {
+  const blocks = theory
+    .split(/\n(?=##\s+)/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  return blocks.length > 0 ? blocks : [theory];
+}
 
 type CompletionCheckId = "readTheory" | "guidedPractice" | "ranCode" | "understood";
 
@@ -87,7 +98,7 @@ const EditorPage = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
   const [bonusActive, setBonusActive] = useState(false);
-  const [mobileStep, setMobileStep] = useState<LessonMobileStep>("plan");
+  const [activeStage, setActiveStage] = useState<LessonStageId>("plan");
   const [completionChecks, setCompletionChecks] =
     useState<Record<CompletionCheckId, boolean>>({ ...initialCompletionChecks });
 
@@ -112,7 +123,7 @@ const EditorPage = () => {
   useEffect(() => {
     setPaceMode(null);
     setBonusActive(false);
-    setMobileStep("plan");
+    setActiveStage("plan");
     setCompletionChecks({ ...initialCompletionChecks });
   }, [lessonId]);
 
@@ -128,8 +139,29 @@ const EditorPage = () => {
   const nextLesson = augIdx >= 0 ? augCourse.lessons[augIdx + 1] : course.lessons[lessonIndex + 1];
   const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
   const alreadyCompleted = isCompleted(lesson.id);
-  const mobileSectionClass = (step: LessonMobileStep) =>
-    mobileStep === step ? "block" : "hidden lg:block";
+  const theorySlides = splitTheorySlides(lesson.theory);
+  const availableStages: LessonStage[] = [
+    { id: "plan", kind: "plan", label: "Plano", icon: ListChecks },
+    ...theorySlides.map((_, index) => ({
+      id: `theory-${index}` as LessonStageId,
+      kind: "theory" as const,
+      label: theorySlides.length === 1 ? "Teoria" : `Teoria ${index + 1}`,
+      icon: BookOpen,
+      theoryIndex: index,
+    })),
+    ...(lesson.quiz?.length ? [{ id: "quiz", kind: "quiz", label: "Quiz", icon: Lightbulb } as LessonStage] : []),
+    { id: "practice", kind: "practice", label: "Prática", icon: Target },
+    { id: "challenge", kind: "challenge", label: "Desafio", icon: Check },
+    { id: "code", kind: "code", label: "Código", icon: Code2 },
+  ];
+  const activeStageIndex = Math.max(
+    availableStages.findIndex((stage) => stage.id === activeStage),
+    0,
+  );
+  const currentStage = availableStages[activeStageIndex] ?? availableStages[0];
+  const stageProgress = ((activeStageIndex + 1) / availableStages.length) * 100;
+  const stageSectionClass = (stage: LessonStageKind) =>
+    currentStage.kind === stage ? "block" : "hidden";
   const completionItems = (Object.keys(completionCheckLabels) as CompletionCheckId[]).map((id) => ({
     id,
     label: completionCheckLabels[id],
@@ -137,9 +169,46 @@ const EditorPage = () => {
   }));
   const completionCount = completionItems.filter((item) => item.done).length;
   const lessonReadyToAdvance = alreadyCompleted || (isCorrect === true && completionCount === completionItems.length);
+  const isFirstStage = activeStageIndex === 0;
+  const isCodeStage = currentStage.kind === "code";
+  const nextStageKind = availableStages[activeStageIndex + 1]?.kind;
+  const nextStageCta =
+    nextStageKind === "quiz"
+      ? "Responder quiz"
+      : nextStageKind === "practice"
+      ? "Ir para a prática"
+      : nextStageKind === "challenge"
+      ? "Ver desafio"
+      : nextStageKind === "code"
+      ? "Abrir editor"
+      : currentStage.kind === "plan"
+      ? "Começar aula"
+      : "Continuar";
 
   const setCompletionCheck = (id: CompletionCheckId, value: boolean) => {
     setCompletionChecks((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const goToStage = (stage: LessonStageId) => {
+    if (!availableStages.some((item) => item.id === stage)) return;
+    setActiveStage(stage);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const goToStageIndex = (index: number) => {
+    const nextStage = availableStages[Math.min(Math.max(index, 0), availableStages.length - 1)];
+    if (!nextStage) return;
+    goToStage(nextStage.id);
+  };
+
+  const goToNextStage = () => {
+    if (currentStage.kind === "theory") setCompletionCheck("readTheory", true);
+    if (currentStage.kind === "practice") setCompletionCheck("guidedPractice", true);
+    goToStageIndex(activeStageIndex + 1);
+  };
+
+  const goToPreviousStage = () => {
+    goToStageIndex(activeStageIndex - 1);
   };
 
   const fireConfetti = () => {
@@ -152,7 +221,7 @@ const EditorPage = () => {
   };
 
   const handleRun = () => {
-    setMobileStep("code");
+    setActiveStage("code");
     setCompletionCheck("ranCode", true);
     setRunning(true);
     setTimeout(() => {
@@ -253,7 +322,7 @@ const EditorPage = () => {
               <Info size={18} className="shrink-0 text-primary" />
               <div className="flex-1 text-xs text-muted-foreground">
                 <div className="lg:hidden">
-                  Use as abas Plano, Teoria, Prática e Código para avançar sem se perder.
+                  Avance pelas mini-etapas da aula: uma ideia, uma ação e um teste por vez.
                 </div>
                 <div className="hidden flex-wrap gap-x-6 gap-y-1 lg:flex">
                   <span>
@@ -311,30 +380,39 @@ const EditorPage = () => {
 
       <nav
         aria-label="Etapas da aula"
-        className="sticky top-0 z-30 border-b border-border bg-background/95 px-3 py-2 backdrop-blur lg:hidden"
+        className="sticky top-0 z-30 border-b border-border bg-background/95 px-4 py-3 backdrop-blur"
       >
-        <div className="grid grid-cols-4 gap-1 rounded-xl bg-secondary/70 p-1">
-          {lessonMobileSteps.map((step) => {
-            const Icon = step.icon;
-            const active = mobileStep === step.id;
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-2 flex items-center justify-between gap-3 text-xs">
+            <span className="font-black text-primary">
+              Etapa {activeStageIndex + 1}/{availableStages.length}: {currentStage.label}
+            </span>
+            <span className="text-muted-foreground">Uma ideia por vez</span>
+          </div>
+          <Progress value={stageProgress} className="mb-3 h-1.5 bg-secondary" />
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {availableStages.map((step) => {
+              const Icon = step.icon;
+              const active = currentStage.id === step.id;
 
-            return (
-              <button
-                key={step.id}
-                type="button"
-                onClick={() => setMobileStep(step.id)}
-                aria-current={active ? "step" : undefined}
-                className={`flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 text-[11px] font-bold transition-colors ${
-                  active
-                    ? "bg-background text-primary shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon size={14} className="shrink-0" />
-                <span className="truncate">{step.label}</span>
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  onClick={() => goToStage(step.id)}
+                  aria-current={active ? "step" : undefined}
+                  className={`flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full border px-3 text-xs font-bold transition-colors ${
+                    active
+                      ? "border-primary/30 bg-primary/10 text-primary"
+                      : "border-border bg-card text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon size={14} className="shrink-0" />
+                  <span>{step.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </nav>
 
@@ -343,11 +421,11 @@ const EditorPage = () => {
         {/* Instructions (left panel) */}
         <div
           className={`border-b border-border bg-background p-6 lg:block lg:border-b-0 lg:border-r lg:overflow-auto ${
-            mobileStep === "code" ? "hidden" : "block"
+            currentStage.kind === "code" ? "hidden lg:block" : "block"
           }`}
         >
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <div className={mobileSectionClass("plan")}>
+            <div className={stageSectionClass("plan")}>
               <div className="mb-2 flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
                   <span>✨</span> +{lesson.xpReward} XP
@@ -372,16 +450,9 @@ const EditorPage = () => {
               </div>
 
               <LessonCoach course={course} lesson={lesson} />
-
-              <Button
-                onClick={() => setMobileStep("theory")}
-                className="mt-5 w-full gap-2 rounded-full font-bold lg:hidden"
-              >
-                Ir para a teoria <ChevronRight size={16} />
-              </Button>
             </div>
 
-            <div className={mobileSectionClass("theory")}>
+            <div className={stageSectionClass("theory")}>
               {/* Theory section */}
               {lesson.theory && (
                 <div className="mb-6">
@@ -389,14 +460,16 @@ const EditorPage = () => {
                     <span>📖</span> Aprenda
                   </div>
                   <TheoryRenderer
-                    text={lesson.theory}
+                    text={theorySlides[currentStage.theoryIndex ?? 0] ?? lesson.theory}
                     courseTitle={course.title}
                     language={course.language}
                     lessonTitle={lesson.title}
                   />
                 </div>
               )}
+            </div>
 
+            <div className={stageSectionClass("quiz")}>
               {/* Quiz section */}
               {lesson.quiz && lesson.quiz.length > 0 && (
                 <div className="mb-6">
@@ -415,21 +488,13 @@ const EditorPage = () => {
                   </div>
                 </div>
               )}
-
-              <Button
-                onClick={() => {
-                  setCompletionCheck("readTheory", true);
-                  setMobileStep("practice");
-                }}
-                className="mt-2 w-full gap-2 rounded-full font-bold lg:hidden"
-              >
-                Ir para a prática <ChevronRight size={16} />
-              </Button>
             </div>
 
-            <div className={mobileSectionClass("practice")}>
+            <div className={stageSectionClass("practice")}>
               <GuidedPractice lesson={lesson} />
+            </div>
 
+            <div className={stageSectionClass("challenge")}>
             {/* Exercise description */}
             <div className="mb-6">
               <div className="mb-3 flex items-center gap-2 text-sm font-bold text-accent">
@@ -556,22 +621,53 @@ const EditorPage = () => {
               </div>
             )}
 
-              <Button
-                onClick={() => {
-                  setCompletionCheck("guidedPractice", true);
-                  setMobileStep("code");
-                }}
-                className="mt-5 w-full gap-2 rounded-full bg-accent font-bold text-accent-foreground hover:bg-accent/90 lg:hidden"
-              >
-                Abrir editor <ChevronRight size={16} />
-              </Button>
             </div>
+
+            <div className={stageSectionClass("code")}>
+              <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
+                <div className="mb-3 flex items-center gap-2 text-sm font-black text-accent">
+                  <Code2 size={16} /> Agora é código
+                </div>
+                <h2 className="text-2xl font-black text-foreground">{lesson.title}</h2>
+                <p className="mt-2 leading-relaxed text-muted-foreground">
+                  Escreva a solução no editor ao lado, execute e compare com a saída esperada. Se travar,
+                  volte ao desafio ou peça uma dica.
+                </p>
+                <div className="mt-4 rounded-xl border border-border bg-card p-4 text-sm">
+                  <div className="mb-1 font-black text-muted-foreground">Saída esperada</div>
+                  <code className="font-mono text-accent">{lesson.expectedOutput}</code>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => goToStage("challenge")}
+                  className="mt-4 gap-2 rounded-full font-bold"
+                >
+                  <ArrowLeft size={16} /> Ver desafio
+                </Button>
+              </div>
+            </div>
+
+            {!isCodeStage && (
+              <div className="sticky bottom-[70px] z-20 -mx-6 mt-6 flex flex-col gap-2 border-t border-border bg-background/95 px-6 py-4 shadow-2xl backdrop-blur sm:flex-row sm:items-center sm:justify-between lg:bottom-0 lg:shadow-none">
+                <Button
+                  variant="outline"
+                  onClick={goToPreviousStage}
+                  disabled={isFirstStage}
+                  className="gap-2 rounded-full font-bold"
+                >
+                  <ArrowLeft size={16} /> Voltar
+                </Button>
+                <Button onClick={goToNextStage} className="gap-2 rounded-full font-bold">
+                  {nextStageCta} <ChevronRight size={16} />
+                </Button>
+              </div>
+            )}
           </motion.div>
         </div>
 
         {/* Editor (right panel) */}
         <div
-          className={`min-h-0 flex-col ${mobileStep === "code" ? "flex" : "hidden lg:flex"}`}
+          className={`min-h-0 flex-col ${currentStage.kind === "code" ? "flex" : "hidden lg:flex"}`}
         >
           <div className="min-h-[430px] flex-1 p-4 lg:min-h-0">
             <div className="h-full rounded-2xl border border-border bg-[#1e1e2e] overflow-hidden flex flex-col shadow-sm">
@@ -706,10 +802,10 @@ const EditorPage = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setMobileStep("practice")}
+                  onClick={() => goToStage("challenge")}
                   className="gap-1.5 rounded-full text-xs text-muted-foreground lg:hidden"
                 >
-                  <ArrowLeft size={14} /> Ver prática
+                  <ArrowLeft size={14} /> Ver desafio
                 </Button>
               </div>
               <Button
