@@ -417,11 +417,11 @@ const EditorPage = () => {
       </nav>
 
       {/* Main split layout */}
-      <div className="grid flex-1 min-h-0 lg:grid-cols-2">
+      <div className={`grid flex-1 min-h-0 ${isCodeStage ? "lg:grid-cols-2" : ""}`}>
         {/* Instructions (left panel) */}
         <div
-          className={`border-b border-border bg-background p-6 lg:block lg:border-b-0 lg:border-r lg:overflow-auto ${
-            currentStage.kind === "code" ? "hidden lg:block" : "block"
+          className={`border-b border-border bg-background p-6 lg:block lg:border-b-0 lg:overflow-auto ${
+            isCodeStage ? "hidden lg:block lg:border-r" : "block mx-auto w-full max-w-4xl"
           }`}
         >
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
@@ -630,7 +630,7 @@ const EditorPage = () => {
                 </div>
                 <h2 className="text-2xl font-black text-foreground">{lesson.title}</h2>
                 <p className="mt-2 leading-relaxed text-muted-foreground">
-                  Escreva a solução no editor ao lado, execute e compare com a saída esperada. Se travar,
+                  Escreva a solução no editor, execute e compare com a saída esperada. Se travar,
                   volte ao desafio ou peça uma dica.
                 </p>
                 <div className="mt-4 rounded-xl border border-border bg-card p-4 text-sm">
@@ -666,9 +666,8 @@ const EditorPage = () => {
         </div>
 
         {/* Editor (right panel) */}
-        <div
-          className={`min-h-0 flex-col ${currentStage.kind === "code" ? "flex" : "hidden lg:flex"}`}
-        >
+        {isCodeStage && (
+        <div className="flex min-h-0 flex-col">
           <div className="min-h-[430px] flex-1 p-4 lg:min-h-0">
             <div className="h-full rounded-2xl border border-border bg-[#1e1e2e] overflow-hidden flex flex-col shadow-sm">
               {/* Editor header */}
@@ -824,6 +823,7 @@ const EditorPage = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       <AITutor
