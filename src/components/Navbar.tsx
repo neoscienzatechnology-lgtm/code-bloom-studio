@@ -10,7 +10,7 @@ const navLinks = [
   { to: "/cursos", label: "Trilhas", icon: Target },
   { to: "/editor/1/1-1", label: "Praticar", icon: Zap },
   { to: "/projetos", label: "Projetos", icon: FolderKanban },
-  { to: "/dashboard", label: "Perfil", icon: User },
+  { to: "/perfil", label: "Perfil", icon: User },
 ];
 
 const desktopLinks = [
@@ -18,7 +18,7 @@ const desktopLinks = [
   { to: "/cursos", label: "Trilhas" },
   { to: "/revisao", label: "Praticar" },
   { to: "/projetos", label: "Projetos" },
-  { to: "/dashboard", label: "Perfil" },
+  { to: "/perfil", label: "Perfil" },
 ];
 
 const Navbar = () => {

@@ -17,6 +17,7 @@ const CheckpointPage = lazy(() => import("./pages/CheckpointPage.tsx"));
 const ProjectPage = lazy(() => import("./pages/ProjectPage.tsx"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage.tsx"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage.tsx"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage.tsx"));
 const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage.tsx"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage.tsx"));
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/projetos" element={<PageWithNav><ProjectsPage /></PageWithNav>} />
               <Route path="/projeto/:projectId" element={<PageWithNav><ProjectPage /></PageWithNav>} />
               <Route path="/dashboard" element={<PageWithNav><DashboardPage /></PageWithNav>} />
+              <Route path="/perfil" element={<PageWithNav><ProfilePage /></PageWithNav>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

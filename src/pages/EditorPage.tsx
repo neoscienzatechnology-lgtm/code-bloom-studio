@@ -57,22 +57,6 @@ function splitTheorySlides(theory: string): string[] {
   return blocks.length > 0 ? blocks : [theory];
 }
 
-type CompletionCheckId = "readTheory" | "guidedPractice" | "ranCode" | "understood";
-
-const initialCompletionChecks: Record<CompletionCheckId, boolean> = {
-  readTheory: false,
-  guidedPractice: false,
-  ranCode: false,
-  understood: false,
-};
-
-const completionCheckLabels: Record<CompletionCheckId, string> = {
-  readTheory: "Li a teoria",
-  guidedPractice: "Completei a prática",
-  ranCode: "Executei o código",
-  understood: "Entendi o resultado",
-};
-
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
@@ -99,8 +83,6 @@ const EditorPage = () => {
   const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
   const [bonusActive, setBonusActive] = useState(false);
   const [activeStage, setActiveStage] = useState<LessonStageId>("plan");
-  const [completionChecks, setCompletionChecks] =
-    useState<Record<CompletionCheckId, boolean>>({ ...initialCompletionChecks });
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
@@ -124,7 +106,6 @@ const EditorPage = () => {
     setPaceMode(null);
     setBonusActive(false);
     setActiveStage("plan");
-    setCompletionChecks({ ...initialCompletionChecks });
   }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
@@ -162,13 +143,7 @@ const EditorPage = () => {
   const stageProgress = ((activeStageIndex + 1) / availableStages.length) * 100;
   const stageSectionClass = (stage: LessonStageKind) =>
     currentStage.kind === stage ? "block" : "hidden";
-  const completionItems = (Object.keys(completionCheckLabels) as CompletionCheckId[]).map((id) => ({
-    id,
-    label: completionCheckLabels[id],
-    done: alreadyCompleted || completionChecks[id],
-  }));
-  const completionCount = completionItems.filter((item) => item.done).length;
-  const lessonReadyToAdvance = alreadyCompleted || (isCorrect === true && completionCount === completionItems.length);
+  const lessonReadyToAdvance = alreadyCompleted || isCorrect === true;
   const isFirstStage = activeStageIndex === 0;
   const isCodeStage = currentStage.kind === "code";
   const nextStageKind = availableStages[activeStageIndex + 1]?.kind;
@@ -196,10 +171,6 @@ const EditorPage = () => {
     ? "thinking"
     : "idle";
 
-  const setCompletionCheck = (id: CompletionCheckId, value: boolean) => {
-    setCompletionChecks((prev) => ({ ...prev, [id]: value }));
-  };
-
   const goToStage = (stage: LessonStageId) => {
     if (!availableStages.some((item) => item.id === stage)) return;
     setActiveStage(stage);
@@ -213,8 +184,6 @@ const EditorPage = () => {
   };
 
   const goToNextStage = () => {
-    if (currentStage.kind === "theory") setCompletionCheck("readTheory", true);
-    if (currentStage.kind === "practice") setCompletionCheck("guidedPractice", true);
     goToStageIndex(activeStageIndex + 1);
   };
 
@@ -233,7 +202,6 @@ const EditorPage = () => {
 
   const handleRun = () => {
     setActiveStage("code");
-    setCompletionCheck("ranCode", true);
     setRunning(true);
     setTimeout(() => {
       const result = validateCode(code, lesson.expectedOutput, lesson.solution);
@@ -292,7 +260,6 @@ const EditorPage = () => {
     setHintIndex(-1);
     setShowSolution(false);
     setSolutionWarned(false);
-    setCompletionChecks({ ...initialCompletionChecks });
     resetLesson(lesson.id);
   };
 
@@ -755,36 +722,6 @@ const EditorPage = () => {
                 className="mb-3 border-white/10 font-sans shadow-none lg:hidden"
               />
             )}
-            <div className="mb-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-              <div className="mb-2 flex items-center justify-between gap-3">
-                <div className="text-xs font-black text-[#cdd6f4]">Checklist da aula</div>
-                <div className="text-[11px] font-bold text-[#a6adc8]">
-                  {completionCount}/{completionItems.length}
-                </div>
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {completionItems.map((item) => (
-                  <label
-                    key={item.id}
-                    className="flex min-w-0 items-center gap-2 rounded-lg border border-white/10 bg-[#1e1e2e] px-3 py-2 text-xs font-semibold text-[#cdd6f4]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={item.done}
-                      disabled={alreadyCompleted}
-                      onChange={(event) => setCompletionCheck(item.id, event.target.checked)}
-                      className="h-4 w-4 shrink-0 rounded border-white/20 bg-[#11111b] accent-[hsl(160,80%,45%)]"
-                    />
-                    <span className="truncate">{item.label}</span>
-                  </label>
-                ))}
-              </div>
-              {!lessonReadyToAdvance && (
-                <p className="mt-2 text-[11px] leading-relaxed text-[#a6adc8]">
-                  Para avançar, execute uma solução correta e marque os critérios que confirmam entendimento.
-                </p>
-              )}
-            </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
