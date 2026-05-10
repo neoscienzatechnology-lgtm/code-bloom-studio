@@ -1,4 +1,4 @@
-# Code Bloom Studio
+# CapyCode
 
 Aplicativo web de ensino de programação com trilhas em mapa por curso, lições práticas, checkpoints de revisão, projetos guiados, validação de código, mascote CapyCoder e progresso persistente.
 
@@ -35,6 +35,28 @@ npm run preview   # preview do build
 npm run lint      # ESLint
 npm test          # testes unitários
 ```
+
+## Android
+
+A versao web continua separada e usa o fluxo normal do Vite/Vercel. A versao Android fica isolada em `android/` e usa Capacitor para empacotar o build web de `dist/`.
+
+```bash
+npm run android:sync    # gera dist e sincroniza com android/
+npm run android:open    # abre o projeto no Android Studio
+npm run android:debug   # gera APK debug local
+npm run android:bundle  # gera AAB release para a Play Store
+```
+
+Configuracao inicial:
+
+- App name: `CapyCode`
+- Package name: `com.capycode.app`
+- Web dir: `dist`
+- Android target: definido em `android/variables.gradle`
+
+Para gerar o `.aab`, a maquina precisa ter Android Studio ou Android SDK instalado e JDK compativel com o Android Gradle Plugin.
+
+Para assinar release, copie `android/key.properties.example` para `android/key.properties` e preencha com a chave de upload da Play Store. O arquivo real de chave e `key.properties` ficam fora do Git.
 
 ## Modelo Pedagógico
 

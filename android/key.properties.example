@@ -1,0 +1,4 @@
+storeFile=../capycode-upload-key.jks
+storePassword=CHANGE_ME
+keyAlias=capycode-upload
+keyPassword=CHANGE_ME

@@ -26,3 +26,9 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Android release signing secrets
+*.jks
+*.keystore
+*.p12
+key.properties
