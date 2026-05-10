@@ -50,7 +50,936 @@ export interface LeaderboardEntry {
   level: number;
 }
 
+type LessonDraft = Omit<Lesson, "quiz"> & { quiz?: QuizQuestion[] };
+
+function createLesson(draft: LessonDraft): Lesson {
+  return draft;
+}
+
+function makeQuiz(
+  question: string,
+  options: string[],
+  correctIndex: number,
+  explanation: string
+): QuizQuestion {
+  return { question, options, correctIndex, explanation };
+}
+
+function createJavaScriptFoundationBridge(): Lesson[] {
+  return [
+    createLesson({
+      id: "2-foundation-types",
+      title: "Tipos, Operadores e Conversão",
+      description: "Entenda números, textos, booleanos e conversão antes de avançar para recursos modernos do JavaScript.",
+      theory: `# Tipos, operadores e conversão
+
+Antes de usar arrow functions, promises ou frameworks, você precisa dominar os valores básicos da linguagem. JavaScript trabalha com tipos como string, number, boolean, null, undefined, array e object.
+
+Operadores transformam esses valores: soma, comparação, concatenação e lógica. O ponto delicado é que JavaScript também converte valores automaticamente em alguns casos. Por isso, "2" + 3 vira "23", enquanto Number("2") + 3 vira 5.
+
+Na prática, sempre pergunte: qual é o tipo do valor? Ele representa texto, número ou verdadeiro/falso? Se precisar calcular, converta explicitamente com Number(). Se precisar montar texto, use template literals.`,
+      starterCode: 'const precoTexto = "20";\nconst taxa = 5;\n// Converta precoTexto e some com taxa\n',
+      solution: 'const precoTexto = "20";\nconst taxa = 5;\nconst total = Number(precoTexto) + taxa;\nconsole.log(total);',
+      expectedOutput: "25",
+      hints: ["Use Number(precoTexto).", "Some o número convertido com taxa.", "Mostre o total com console.log()."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("O que Number('2') + 3 retorna?", ["23", "5", "NaN", "2 + 3"], 1, "Number('2') converte o texto para número antes da soma."),
+        makeQuiz("Por que é melhor converter explicitamente?", ["Para deixar a intenção clara", "Para deixar o código maior", "Para remover variáveis", "Para evitar funções"], 0, "Conversão explícita reduz bugs causados por coerção automática."),
+      ],
+    }),
+    createLesson({
+      id: "2-foundation-conditionals",
+      title: "Condicionais com if/else",
+      description: "Use decisões simples para escolher mensagens e caminhos no programa.",
+      theory: `# Condicionais
+
+Condicionais fazem o programa escolher um caminho. A pergunta central é: esta condição é verdadeira?
+
+Use if para o primeiro teste, else if para alternativas e else para o caso final. Antes de criar uma condição, escreva em português a regra que o código precisa seguir. Exemplo: se a idade for maior ou igual a 18, liberar; caso contrário, bloquear.
+
+Essa habilidade aparece em formulários, jogos, APIs, dashboards e praticamente qualquer app real.`,
+      starterCode: "const idade = 18;\n// Mostre 'Liberado' se idade for 18 ou mais\n",
+      solution: 'const idade = 18;\nif (idade >= 18) {\n  console.log("Liberado");\n} else {\n  console.log("Bloqueado");\n}',
+      expectedOutput: "Liberado",
+      hints: ["Use if (idade >= 18).", "Dentro do bloco, use console.log('Liberado').", "Crie um else para o caso contrário."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual operador significa maior ou igual?", [">", "=>", ">=", "=<"], 2, ">= compara se o valor da esquerda é maior ou igual ao da direita."),
+      ],
+    }),
+    createLesson({
+      id: "2-foundation-loops",
+      title: "Loops com for",
+      description: "Repita uma ação para percorrer valores sem copiar a mesma linha várias vezes.",
+      theory: `# Loops
+
+Loops resolvem tarefas repetitivas. Em vez de escrever cinco console.log(), você descreve uma regra de repetição.
+
+O for clássico tem três partes: início, condição de continuação e incremento. Leia assim: comece em 1; enquanto for menor ou igual a 3; some 1 a cada volta.
+
+Depois que isso estiver claro, métodos como map, filter e reduce fazem muito mais sentido.`,
+      starterCode: "// Mostre os números de 1 a 3\n",
+      solution: "for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}",
+      expectedOutput: "3",
+      hints: ["Comece com let i = 1.", "Use i <= 3.", "Use i++ para avançar."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual parte do for faz o contador avançar?", ["let i = 1", "i <= 3", "i++", "console.log"], 2, "i++ incrementa o contador no fim de cada repetição."),
+      ],
+    }),
+    createLesson({
+      id: "2-foundation-arrays",
+      title: "Arrays Básicos",
+      description: "Guarde vários itens em uma lista antes de usar métodos avançados como map e filter.",
+      theory: `# Arrays básicos
+
+Array é uma lista ordenada. Você usa arrays para tarefas, produtos, usuários, mensagens e muitos outros conjuntos.
+
+Antes de map e filter, domine três ideias: criar a lista, acessar um item por índice e contar com length. Índices começam em 0, então o primeiro item está em lista[0].
+
+Quando você entende array como coleção, os métodos modernos viram atalhos para transformar, buscar e filtrar dados.`,
+      starterCode: 'const tarefas = ["estudar", "praticar", "revisar"];\n// Mostre quantas tarefas existem\n',
+      solution: 'const tarefas = ["estudar", "praticar", "revisar"];\nconsole.log(tarefas.length);',
+      expectedOutput: "3",
+      hints: ["Use a propriedade length.", "A lista tem três itens.", "Mostre com console.log()."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual índice acessa o primeiro item de um array?", ["1", "0", "-1", "first"], 1, "Arrays em JavaScript começam no índice 0."),
+      ],
+    }),
+    createLesson({
+      id: "2-foundation-objects",
+      title: "Objetos Básicos",
+      description: "Agrupe informações relacionadas usando propriedades e valores.",
+      theory: `# Objetos
+
+Objetos representam coisas com características. Um usuário pode ter nome, email e ativo. Um produto pode ter título, preço e estoque.
+
+A estrutura usa chaves: const produto = { nome: "Mouse", preco: 80 }. Para acessar uma propriedade, use produto.nome.
+
+Objetos são essenciais em React, APIs, banco de dados, formulários e praticamente todo código JavaScript moderno.`,
+      starterCode: "// Crie um objeto usuario com nome e ativo\n",
+      solution: 'const usuario = { nome: "Ana", ativo: true };\nconsole.log(usuario.nome);',
+      expectedOutput: "Ana",
+      hints: ["Use chaves para criar o objeto.", "Crie a propriedade nome.", "Acesse com usuario.nome."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Como acessar a propriedade nome?", ["usuario[nome]", "usuario.nome", "usuario->nome", "nome.usuario"], 1, "A notação de ponto acessa propriedades pelo nome."),
+      ],
+    }),
+    createLesson({
+      id: "2-foundation-functions",
+      title: "Funções Tradicionais",
+      description: "Crie funções comuns antes de comparar com arrow functions.",
+      theory: `# Funções
+
+Funções empacotam uma ação com nome. Elas recebem entradas, processam e podem devolver uma saída com return.
+
+Antes de arrow functions, pratique a forma tradicional: function dobrar(numero) { return numero * 2; }. Essa sintaxe deixa bem visível nome, parâmetro e retorno.
+
+Depois, arrow functions serão apenas uma forma mais curta para escrever a mesma ideia.`,
+      starterCode: "// Crie uma função dobrar que retorna o dobro de um número\n",
+      solution: "function dobrar(numero) {\n  return numero * 2;\n}\nconsole.log(dobrar(4));",
+      expectedOutput: "8",
+      hints: ["Comece com function dobrar(numero).", "Use return numero * 2.", "Chame dobrar(4)."],
+      xpReward: 20,
+      quiz: [
+        makeQuiz("Para que serve return?", ["Mostrar texto", "Devolver um resultado", "Criar variável global", "Apagar uma função"], 1, "return devolve o resultado para quem chamou a função."),
+      ],
+    }),
+  ];
+}
+
+function createCssFoundationBridge(): Lesson[] {
+  return [
+    createLesson({
+      id: "4-foundation-cascade",
+      title: "Cascata e Especificidade",
+      description: "Entenda por que uma regra CSS vence outra antes de avançar para layouts complexos.",
+      theory: `# Cascata e especificidade
+
+CSS significa folhas de estilo em cascata. Quando duas regras tentam estilizar o mesmo elemento, o navegador decide qual vence usando ordem, especificidade e importância.
+
+Seletores de elemento são mais fracos, classes são mais específicas e ids são ainda mais fortes. Na prática, prefira classes para manter o CSS previsível.
+
+Antes de usar Grid, Flexbox e animações, você precisa saber responder: qual regra está sendo aplicada e por quê?`,
+      starterCode: ".titulo {\n  color: blue;\n}\n/* Crie uma regra mais específica para destaque */\n",
+      solution: ".titulo {\n  color: blue;\n}\n.titulo.destaque {\n  color: orange;\n}",
+      expectedOutput: ".titulo.destaque",
+      hints: ["Combine duas classes no mesmo seletor.", "Use .titulo.destaque.", "Altere a cor na regra mais específica."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual seletor costuma ser mais específico?", [".card", "p", "*", "body"], 0, "Uma classe tem mais especificidade que um seletor de elemento."),
+      ],
+    }),
+    createLesson({
+      id: "4-foundation-box-model",
+      title: "Box Model na Prática",
+      description: "Aprenda conteúdo, padding, border e margin antes de montar telas responsivas.",
+      theory: `# Box Model
+
+Todo elemento visual no CSS é uma caixa. A caixa tem conteúdo, padding, border e margin.
+
+Padding aumenta o espaço interno. Border desenha a borda. Margin cria espaço externo entre elementos. Com box-sizing: border-box, largura e altura ficam mais previsíveis porque padding e border entram na conta.
+
+Dominar o Box Model evita layouts quebrados e espaçamentos estranhos.`,
+      starterCode: ".card {\n  width: 240px;\n  /* complete o box model */\n}\n",
+      solution: ".card {\n  width: 240px;\n  padding: 16px;\n  border: 1px solid #ddd;\n  margin: 12px;\n  box-sizing: border-box;\n}",
+      expectedOutput: "box-sizing",
+      hints: ["Use padding para espaço interno.", "Use margin para espaço externo.", "Adicione box-sizing: border-box."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual propriedade cria espaço interno?", ["margin", "padding", "border", "display"], 1, "padding cria espaço entre conteúdo e borda."),
+      ],
+    }),
+    createLesson({
+      id: "4-foundation-typography",
+      title: "Cores e Tipografia",
+      description: "Organize leitura, contraste e hierarquia visual antes de criar componentes avançados.",
+      theory: `# Cores e tipografia
+
+Interface boa começa com leitura. Tamanho, peso, altura de linha e contraste ajudam o usuário a entender o que importa.
+
+Use font-size para tamanho, font-weight para peso, line-height para respiro e color/background para contraste. Evite depender só de cor para comunicar estado.
+
+Esse fundamento prepara cards, dashboards, formulários e landing pages mais profissionais.`,
+      starterCode: ".titulo {\n  /* configure a leitura */\n}\n",
+      solution: ".titulo {\n  font-size: 24px;\n  font-weight: 700;\n  line-height: 1.2;\n  color: #1f2937;\n}",
+      expectedOutput: "font-size",
+      hints: ["Defina font-size.", "Use font-weight para hierarquia.", "line-height melhora leitura."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("O que line-height controla?", ["Altura entre linhas", "Largura do elemento", "Cor do texto", "Tipo de display"], 0, "line-height controla o espaçamento vertical entre linhas."),
+      ],
+    }),
+    createLesson({
+      id: "4-foundation-display",
+      title: "Display e Espaçamento",
+      description: "Compare block, inline e flex para entender como elementos ocupam espaço.",
+      theory: `# Display
+
+display define como o elemento participa do layout. Elementos block ocupam a linha inteira. Elementos inline ocupam só o conteúdo. Flex organiza filhos em linha ou coluna.
+
+Antes de usar Flexbox para tudo, entenda o comportamento padrão. Isso evita soluções exageradas e deixa o CSS mais limpo.
+
+Espaçamento consistente vem de gap, margin e padding usados com intenção.`,
+      starterCode: ".menu {\n  /* organize os links em linha */\n}\n",
+      solution: ".menu {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}",
+      expectedOutput: "display: flex",
+      hints: ["Use display: flex.", "gap cria espaço entre filhos.", "align-items alinha no eixo cruzado."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual propriedade cria espaço entre itens flex?", ["margin-only", "gap", "padding-left", "border-spacing"], 1, "gap cria espaço entre os filhos em layouts flex e grid."),
+      ],
+    }),
+  ];
+}
+
+function createReactFoundationBridge(): Lesson[] {
+  return [
+    createLesson({
+      id: "3-foundation-events",
+      title: "Eventos e Renderização Condicional",
+      description: "Faça a interface reagir a cliques e escolha o que aparece na tela.",
+      theory: `# Eventos e renderização condicional
+
+React brilha quando a interface reage ao usuário. Eventos como onClick chamam funções. Estado guarda o que mudou. Renderização condicional decide o que mostrar.
+
+O fluxo mental é: usuário faz algo, o estado muda, o componente renderiza novamente com a nova informação.
+
+Antes de context, reducer ou rotas, esse ciclo precisa estar claro.`,
+      starterCode: 'import { useState } from "react";\n\nfunction Aviso() {\n  const [aberto, setAberto] = useState(false);\n  // renderize o aviso quando aberto for true\n}\n',
+      solution: 'import { useState } from "react";\n\nfunction Aviso() {\n  const [aberto, setAberto] = useState(false);\n  return <button onClick={() => setAberto(true)}>{aberto ? "Aberto" : "Abrir"}</button>;\n}',
+      expectedOutput: "onClick",
+      hints: ["Use onClick no botão.", "Atualize o estado com setAberto(true).", "Use operador ternário para trocar o texto."],
+      xpReward: 20,
+      quiz: [
+        makeQuiz("O que acontece quando o estado muda?", ["React renderiza de novo", "O navegador fecha", "O CSS é apagado", "A prop vira estado"], 0, "Mudanças de estado fazem o componente renderizar com novos dados."),
+      ],
+    }),
+    createLesson({
+      id: "3-foundation-forms",
+      title: "Formulários Controlados",
+      description: "Conecte input e estado para preparar formulários reais.",
+      theory: `# Formulários controlados
+
+Um formulário controlado tem o valor do input guardado no estado. O input mostra value={nome} e atualiza com onChange.
+
+Essa abordagem permite validar, limpar, enviar e reutilizar dados com previsibilidade. É uma ponte essencial antes de autenticação, filtros e dashboards.
+
+Se o usuário digita, o estado acompanha. Se o estado muda, o input mostra o novo valor.`,
+      starterCode: 'import { useState } from "react";\n\nfunction Formulario() {\n  const [nome, setNome] = useState("");\n  // crie o input controlado\n}\n',
+      solution: 'import { useState } from "react";\n\nfunction Formulario() {\n  const [nome, setNome] = useState("");\n  return <input value={nome} onChange={(event) => setNome(event.target.value)} />;\n}',
+      expectedOutput: "onChange",
+      hints: ["Use value={nome}.", "Use onChange para atualizar.", "event.target.value contém o texto digitado."],
+      xpReward: 20,
+      quiz: [
+        makeQuiz("Qual evento acompanha a digitação no input?", ["onClick", "onSubmit", "onChange", "onLoad"], 2, "onChange dispara quando o valor do campo muda."),
+      ],
+    }),
+    createLesson({
+      id: "3-foundation-typed-props",
+      title: "Props Tipadas",
+      description: "Use TypeScript para deixar entradas de componentes mais claras.",
+      theory: `# Props tipadas
+
+Props são entradas de componentes. TypeScript ajuda a documentar e validar essas entradas antes do app rodar.
+
+Crie um type ou interface para dizer quais props existem e seus tipos. Isso melhora autocomplete, evita erros e torna componentes reutilizáveis.
+
+Em apps maiores, props tipadas são parte da qualidade da interface.`,
+      starterCode: "type CardProps = {\n  titulo: string;\n};\n\n// Crie um componente que recebe titulo\n",
+      solution: "type CardProps = {\n  titulo: string;\n};\n\nfunction Card({ titulo }: CardProps) {\n  return <h2>{titulo}</h2>;\n}",
+      expectedOutput: "CardProps",
+      hints: ["Use CardProps no parâmetro.", "Desestruture { titulo }.", "Retorne o título no JSX."],
+      xpReward: 20,
+      quiz: [
+        makeQuiz("Por que tipar props?", ["Para evitar clareza", "Para documentar entradas", "Para remover JSX", "Para trocar CSS"], 1, "Tipos deixam explícito o contrato do componente."),
+      ],
+    }),
+  ];
+}
+
+function createNodeFoundationBridge(): Lesson[] {
+  return [
+    createLesson({
+      id: "5-foundation-npm",
+      title: "npm, Scripts e Pacotes",
+      description: "Entenda como projetos Node organizam dependências antes de criar APIs.",
+      theory: `# npm e scripts
+
+Node usa npm para instalar pacotes e rodar scripts. O arquivo package.json descreve o projeto, dependências e comandos.
+
+Scripts como npm run dev e npm test padronizam tarefas do time. Antes de Express, é importante saber onde ficam comandos e bibliotecas.
+
+Essa base deixa o backend mais previsível e profissional.`,
+      starterCode: '{\n  "scripts": {\n    // adicione um script dev\n  }\n}\n',
+      solution: '{\n  "scripts": {\n    "dev": "node server.js"\n  }\n}',
+      expectedOutput: '"dev"',
+      hints: ["Scripts ficam dentro de scripts.", "Crie a chave dev.", "O comando pode ser node server.js."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Onde ficam scripts de npm?", ["README.md", "package.json", "server.js", ".env"], 1, "package.json guarda scripts, dependências e metadados."),
+      ],
+    }),
+    createLesson({
+      id: "5-foundation-http",
+      title: "HTTP: Request e Response",
+      description: "Leia o ciclo de uma API antes de escrever rotas com Express.",
+      theory: `# HTTP
+
+Uma API recebe uma request e devolve uma response. A request contém método, rota, headers e, às vezes, body. A response devolve status e dados.
+
+Express facilita esse ciclo, mas a ideia base continua a mesma: alguém pede algo, o servidor processa e responde.
+
+Quando essa lógica está clara, rotas, middlewares e controllers deixam de parecer mágica.`,
+      starterCode: 'const rota = "/tarefas";\nconst metodo = "GET";\n// Mostre a combinação método + rota\n',
+      solution: 'const rota = "/tarefas";\nconst metodo = "GET";\nconsole.log(`${metodo} ${rota}`);',
+      expectedOutput: "GET /tarefas",
+      hints: ["Use template literal.", "Combine método e rota.", "Mostre com console.log()."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("O que uma response devolve?", ["Status e dados", "Apenas CSS", "Um commit", "Um branch"], 0, "A resposta HTTP devolve status, headers e corpo de dados."),
+      ],
+    }),
+  ];
+}
+
+function createSqlFoundationBridge(): Lesson[] {
+  return [
+    createLesson({
+      id: "6-foundation-modeling",
+      title: "Tabelas, Linhas e Chaves",
+      description: "Entenda como dados são organizados antes de consultar e alterar registros.",
+      theory: `# Modelagem básica
+
+Banco relacional organiza dados em tabelas. Cada linha é um registro e cada coluna é uma informação. Chave primária identifica uma linha. Chave estrangeira conecta tabelas.
+
+Antes de escrever JOIN, vale entender qual dado pertence a qual tabela e como uma tabela se relaciona com outra.
+
+Essa visão evita consultas decoradas e ajuda a modelar sistemas reais.`,
+      starterCode: "-- Crie uma tabela simples de alunos com id e nome\n",
+      solution: "CREATE TABLE alunos (\n  id INTEGER PRIMARY KEY,\n  nome TEXT NOT NULL\n);",
+      expectedOutput: "PRIMARY KEY",
+      hints: ["Use CREATE TABLE.", "id deve ser PRIMARY KEY.", "nome pode ser TEXT NOT NULL."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Para que serve uma chave primária?", ["Identificar uma linha", "Apagar tabela", "Ordenar CSS", "Criar branch"], 0, "A chave primária identifica cada registro de forma única."),
+      ],
+    }),
+    createLesson({
+      id: "6-foundation-constraints",
+      title: "Constraints e Integridade",
+      description: "Use regras como NOT NULL e UNIQUE para proteger os dados.",
+      theory: `# Constraints
+
+Constraints são regras do banco. NOT NULL impede valor vazio. UNIQUE impede duplicidade. PRIMARY KEY identifica registros. FOREIGN KEY preserva relações.
+
+Aplicar regras no banco evita dados inválidos mesmo quando a aplicação falha.
+
+Em sistemas reais, integridade de dados é tão importante quanto escrever a consulta certa.`,
+      starterCode: "-- Crie uma tabela usuarios com email único\n",
+      solution: "CREATE TABLE usuarios (\n  id INTEGER PRIMARY KEY,\n  email TEXT UNIQUE NOT NULL\n);",
+      expectedOutput: "UNIQUE",
+      hints: ["Use UNIQUE no email.", "Use NOT NULL para campo obrigatório.", "Use PRIMARY KEY no id."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("Qual constraint evita duplicidade?", ["NOT NULL", "UNIQUE", "WHERE", "ORDER BY"], 1, "UNIQUE impede que dois registros tenham o mesmo valor naquela coluna."),
+      ],
+    }),
+  ];
+}
+
+function createGitFoundationBridge(): Lesson[] {
+  return [
+    createLesson({
+      id: "7-foundation-status-add",
+      title: "status, add e diff",
+      description: "Veja, prepare e compare mudanças antes de entrar em branches.",
+      theory: `# Status, add e diff
+
+git status mostra o estado do repositório. git diff mostra o que mudou. git add prepara arquivos para o próximo commit.
+
+Esse trio é o painel de controle do Git. Antes de branch, merge e rebase, o aluno precisa saber enxergar o que está prestes a registrar.
+
+Um bom fluxo é: status, diff, add, commit.`,
+      starterCode: "# Escreva o comando que mostra arquivos alterados\n",
+      solution: "git status",
+      expectedOutput: "git status",
+      hints: ["O comando começa com git.", "status mostra o estado atual.", "Use git status."],
+      xpReward: 10,
+      quiz: [
+        makeQuiz("Qual comando mostra o estado do repositório?", ["git add", "git status", "git merge", "git push"], 1, "git status mostra arquivos alterados, staged e branch atual."),
+      ],
+    }),
+    createLesson({
+      id: "7-foundation-remote",
+      title: "Remotos, push e pull",
+      description: "Conecte o repositório local ao GitHub antes de abrir pull requests.",
+      theory: `# Remotos
+
+Um remoto é uma cópia do repositório em outro lugar, normalmente no GitHub. origin costuma ser o nome padrão.
+
+git push envia commits locais. git pull busca commits remotos e integra ao seu trabalho. Pull request é uma conversa sobre mudanças, mas depende desse fluxo básico.
+
+Sem entender remoto, PR vira ritual decorado.`,
+      starterCode: "# Escreva o comando para enviar commits da branch main\n",
+      solution: "git push origin main",
+      expectedOutput: "git push origin main",
+      hints: ["Use git push.", "Informe o remoto origin.", "Informe a branch main."],
+      xpReward: 15,
+      quiz: [
+        makeQuiz("O que git push faz?", ["Envia commits", "Apaga branch", "Cria CSS", "Roda testes"], 0, "git push envia commits locais para o remoto."),
+      ],
+    }),
+  ];
+}
+
+function createLogicFoundationsCourse(): Course {
+  return {
+    id: "10",
+    title: "Lógica de Programação",
+    language: "Lógica",
+    emoji: "🧠",
+    level: "Iniciante",
+    duration: "18h",
+    students: 8900,
+    progress: 0,
+    color: "quest-green",
+    tags: ["Base", "Recomendado"],
+    description: "Aprenda a pensar em passos, entradas, decisões, repetições e decomposição antes de escolher uma linguagem.",
+    lessons: [
+      createLesson({
+        id: "10-1",
+        title: "O que é um Algoritmo",
+        description: "Transforme uma tarefa do mundo real em uma sequência clara de passos.",
+        theory: `# Algoritmo
+
+Um algoritmo é uma sequência de passos para resolver um problema. Não precisa começar com código. Antes de programar, você pode descrever o caminho em linguagem natural.
+
+Exemplo: para fazer café, você separa água, aquece, coloca pó, filtra e serve. Em programação acontece o mesmo: você organiza a tarefa em etapas pequenas e verificáveis.
+
+Pensar em algoritmo evita sair digitando sem saber o objetivo.`,
+        starterCode: '# Complete a ideia com print\n# Passo 1: entender o problema\n',
+        solution: 'print("entender o problema")',
+        expectedOutput: "entender o problema",
+        hints: ["Use print().", "Mostre o primeiro passo.", "O texto esperado é entender o problema."],
+        xpReward: 10,
+        quiz: [
+          makeQuiz("O que é um algoritmo?", ["Uma sequência de passos", "Uma cor de tela", "Um banco de dados", "Um erro"], 0, "Algoritmo é um conjunto de passos para resolver um problema."),
+        ],
+      }),
+      createLesson({
+        id: "10-2",
+        title: "Entrada, Processamento e Saída",
+        description: "Separe o que entra, o que o programa faz e o que ele devolve.",
+        theory: `# Entrada, processamento e saída
+
+Quase todo programa pode ser lido em três partes. Entrada são os dados recebidos. Processamento é a transformação. Saída é o resultado.
+
+Em um app de notas, a entrada são as notas, o processamento calcula a média, e a saída informa se o aluno passou.
+
+Esse modelo ajuda a entender qualquer exercício sem travar na sintaxe.`,
+        starterCode: "nota1 = 7\nnota2 = 9\n# calcule a média\n",
+        solution: 'nota1 = 7\nnota2 = 9\nmedia = (nota1 + nota2) / 2\nprint(media)',
+        expectedOutput: "8",
+        hints: ["Some as duas notas.", "Divida por 2.", "Mostre a média."],
+        xpReward: 10,
+        quiz: [
+          makeQuiz("No cálculo de média, as notas são o quê?", ["Entrada", "Saída", "Erro", "Layout"], 0, "As notas entram no programa para serem processadas."),
+        ],
+      }),
+      createLesson({
+        id: "10-3",
+        title: "Variáveis como Caixinhas",
+        description: "Guarde valores com nomes claros para reutilizar depois.",
+        theory: `# Variáveis
+
+Variável é um nome para um valor. Ela deixa o raciocínio mais claro porque você passa a falar de nome, idade, total ou status em vez de repetir valores soltos.
+
+O nome da variável deve explicar o papel daquele dado. total é melhor que x quando o valor representa um total.
+
+Boa lógica começa com nomes bons.`,
+        starterCode: "# Crie uma variável chamada objetivo\n",
+        solution: 'objetivo = "aprender lógica"\nprint(objetivo)',
+        expectedOutput: "aprender lógica",
+        hints: ["Use objetivo = ...", "Texto precisa estar entre aspas.", "Mostre com print()."],
+        xpReward: 10,
+        quiz: [
+          makeQuiz("Por que nomes claros ajudam?", ["Facilitam leitura", "Diminuem a tela", "Mudam a linguagem", "Criam internet"], 0, "Nomes claros revelam a intenção do dado."),
+        ],
+      }),
+      createLesson({
+        id: "10-4",
+        title: "Decisões com Se/Senão",
+        description: "Escolha caminhos diferentes usando condições.",
+        theory: `# Decisões
+
+Programas precisam decidir. Se a senha está correta, entra. Senão, mostra erro. Se o carrinho está vazio, bloqueia a compra. Senão, continua.
+
+Ao montar uma condição, escreva primeiro a regra em português. Depois traduza para comparação.
+
+Esse padrão aparece em todos os apps reais.`,
+        starterCode: 'idade = 16\n# se idade for 16 ou mais, mostre "pode começar"\n',
+        solution: 'idade = 16\nif idade >= 16:\n    print("pode começar")\nelse:\n    print("aguarde")',
+        expectedOutput: "pode começar",
+        hints: ["Use if idade >= 16.", "Não esqueça dos dois pontos.", "Use else para o caso contrário."],
+        xpReward: 15,
+        quiz: [
+          makeQuiz("Quando usamos uma condição?", ["Quando há decisão", "Quando só existe texto", "Para escolher cor aleatória", "Para apagar dados"], 0, "Condições são usadas quando o programa precisa escolher um caminho."),
+        ],
+      }),
+      createLesson({
+        id: "10-5",
+        title: "Repetição sem Copiar Código",
+        description: "Use repetição quando uma ação precisa acontecer várias vezes.",
+        theory: `# Repetição
+
+Se você precisa fazer a mesma ação muitas vezes, use repetição. Copiar e colar linhas torna o código frágil.
+
+O segredo é identificar o padrão: o que muda em cada repetição e o que permanece igual?
+
+Loops aparecem em listas de produtos, placares, formulários, arquivos e jogos.`,
+        starterCode: "# Mostre os números de 1 a 3\n",
+        solution: "for numero in range(1, 4):\n    print(numero)",
+        expectedOutput: "3",
+        hints: ["Use range(1, 4).", "O final do range fica de fora.", "Mostre numero dentro do loop."],
+        xpReward: 15,
+        quiz: [
+          makeQuiz("Qual problema loops resolvem?", ["Repetição", "Cor de fundo", "Login automático", "Instalação"], 0, "Loops evitam repetir manualmente a mesma ação."),
+        ],
+      }),
+      createLesson({
+        id: "10-6",
+        title: "Listas de Coisas",
+        description: "Agrupe vários valores para percorrer, contar e transformar.",
+        theory: `# Listas
+
+Lista é uma coleção de valores. Em vez de criar fruta1, fruta2 e fruta3, você cria uma lista chamada frutas.
+
+Depois você pode contar itens, acessar posições e repetir uma ação para cada item.
+
+Listas são a ponte entre exercícios pequenos e apps com muitos dados.`,
+        starterCode: "# Crie uma lista com três tarefas e mostre a quantidade\n",
+        solution: 'tarefas = ["ler", "praticar", "revisar"]\nprint(len(tarefas))',
+        expectedOutput: "3",
+        hints: ["Use colchetes para a lista.", "Coloque três textos.", "Use len(tarefas)."],
+        xpReward: 15,
+        quiz: [
+          makeQuiz("Para que serve uma lista?", ["Guardar vários valores", "Criar uma cor", "Apagar arquivos", "Abrir navegador"], 0, "Listas agrupam vários valores relacionados."),
+        ],
+      }),
+      createLesson({
+        id: "10-7",
+        title: "Funções e Decomposição",
+        description: "Quebre um problema em partes menores com nomes claros.",
+        theory: `# Funções e decomposição
+
+Decompor é dividir um problema grande em partes pequenas. Funções dão nome a essas partes.
+
+Em vez de resolver tudo em uma linha enorme, crie funções como calcular_total, validar_email ou mostrar_resultado.
+
+Isso deixa o raciocínio mais fácil de testar, corrigir e explicar.`,
+        starterCode: "# Crie uma função dobro\n",
+        solution: "def dobro(numero):\n    return numero * 2\n\nprint(dobro(5))",
+        expectedOutput: "10",
+        hints: ["Comece com def dobro(numero):", "Use return numero * 2.", "Chame dobro(5)."],
+        xpReward: 20,
+        quiz: [
+          makeQuiz("O que é decompor um problema?", ["Dividir em partes menores", "Misturar tudo", "Remover nomes", "Pular teste"], 0, "Decomposição transforma um problema grande em passos menores."),
+        ],
+      }),
+      createLesson({
+        id: "10-8",
+        title: "Depuração: Encontrando o Erro",
+        description: "Aprenda a investigar valores e corrigir raciocínio passo a passo.",
+        theory: `# Depuração
+
+Depurar é investigar o que o programa está fazendo. O erro nem sempre está onde parece. Por isso, você testa hipóteses e observa valores.
+
+Uma técnica simples é imprimir valores intermediários. Outra é ler o código em voz alta, linha por linha.
+
+Bons programadores não acertam sempre de primeira. Eles sabem investigar.`,
+        starterCode: 'preco = 10\nquantidade = 3\n# mostre o total correto\n',
+        solution: 'preco = 10\nquantidade = 3\ntotal = preco * quantidade\nprint(total)',
+        expectedOutput: "30",
+        hints: ["Multiplique preço por quantidade.", "Guarde em total.", "Mostre total."],
+        xpReward: 20,
+        quiz: [
+          makeQuiz("O que é depurar?", ["Investigar e corrigir erros", "Decorar respostas", "Ignorar saídas", "Apagar o projeto"], 0, "Depuração é o processo de entender e corrigir problemas."),
+        ],
+      }),
+    ],
+  };
+}
+
+function createReactNativeCourse(): Course {
+  return {
+    id: "11",
+    title: "React Native Essencial",
+    language: "React Native",
+    emoji: "📱",
+    level: "Intermediário",
+    duration: "24h",
+    students: 4200,
+    progress: 0,
+    color: "quest-blue",
+    tags: ["Mobile", "Novo"],
+    description: "Leve a base de React para interfaces mobile com componentes nativos, estado, listas e navegação.",
+    lessons: [
+      createLesson({
+        id: "11-1",
+        title: "View, Text e StyleSheet",
+        description: "Entenda os componentes base de tela no React Native.",
+        theory: `# Componentes nativos
+
+React Native não usa div e p. Ele usa View para containers, Text para textos e StyleSheet para estilos.
+
+A lógica de componentes continua parecida com React, mas os elementos renderizados são nativos do celular.
+
+Comece simples: uma View contendo um Text.`,
+        starterCode: 'import { View, Text } from "react-native";\n\nexport default function App() {\n  // retorne uma View com um Text\n}\n',
+        solution: 'import { View, Text } from "react-native";\n\nexport default function App() {\n  return <View><Text>Olá, mobile!</Text></View>;\n}',
+        expectedOutput: "Text",
+        hints: ["Use View como container.", "Use Text para texto.", "Retorne JSX."],
+        xpReward: 15,
+        quiz: [makeQuiz("Qual componente exibe texto?", ["View", "Text", "Image", "Button"], 1, "Text é o componente de texto no React Native.")],
+      }),
+      createLesson({
+        id: "11-2",
+        title: "Estilos no Mobile",
+        description: "Use StyleSheet para criar estilos previsíveis.",
+        theory: `# StyleSheet
+
+No React Native, estilos são objetos JavaScript. StyleSheet.create ajuda a organizar esses objetos.
+
+Muitas propriedades lembram CSS, mas os nomes usam camelCase, como backgroundColor e fontSize.
+
+Essa base prepara telas mais consistentes.`,
+        starterCode: 'import { StyleSheet } from "react-native";\n\n// Crie styles.container\n',
+        solution: 'import { StyleSheet } from "react-native";\n\nconst styles = StyleSheet.create({\n  container: {\n    padding: 16,\n    backgroundColor: "#fff"\n  }\n});',
+        expectedOutput: "StyleSheet.create",
+        hints: ["Use StyleSheet.create().", "Crie a chave container.", "Use backgroundColor em camelCase."],
+        xpReward: 15,
+        quiz: [makeQuiz("Como escrevemos background-color em React Native?", ["background-color", "backgroundColor", "bgColor", "background"], 1, "Estilos em objetos usam camelCase.")],
+      }),
+      createLesson({
+        id: "11-3",
+        title: "Estado e Botões",
+        description: "Controle uma interação simples com useState e Button.",
+        theory: `# Estado no mobile
+
+useState funciona no React Native como funciona no React. O usuário toca, o estado muda e a tela atualiza.
+
+Botões simples podem usar o componente Button com a prop onPress.
+
+Esse padrão aparece em contadores, favoritos, checklists e formulários.`,
+        starterCode: 'import { useState } from "react";\nimport { Button, Text } from "react-native";\n\n// Crie contador com onPress\n',
+        solution: 'import { useState } from "react";\nimport { Button, Text } from "react-native";\n\nfunction Contador() {\n  const [total, setTotal] = useState(0);\n  return <><Text>{total}</Text><Button title="Somar" onPress={() => setTotal(total + 1)} /></>;\n}',
+        expectedOutput: "onPress",
+        hints: ["Use useState(0).", "Button usa onPress.", "Atualize com setTotal(total + 1)."],
+        xpReward: 20,
+        quiz: [makeQuiz("Qual evento de toque é comum no React Native?", ["onClick", "onPress", "onHover", "onRoute"], 1, "onPress é usado em botões e componentes tocáveis.")],
+      }),
+      createLesson({
+        id: "11-4",
+        title: "Listas com FlatList",
+        description: "Renderize coleções de dados de forma eficiente.",
+        theory: `# FlatList
+
+FlatList renderiza listas no React Native com melhor performance que map em telas grandes.
+
+Você passa data e renderItem. Cada item precisa de uma chave, geralmente via keyExtractor.
+
+Listas são essenciais em apps de tarefas, chats, feeds e catálogos.`,
+        starterCode: 'import { FlatList, Text } from "react-native";\nconst tarefas = ["Estudar", "Praticar"];\n// Renderize a lista\n',
+        solution: 'import { FlatList, Text } from "react-native";\nconst tarefas = ["Estudar", "Praticar"];\n<FlatList data={tarefas} renderItem={({ item }) => <Text>{item}</Text>} />;',
+        expectedOutput: "FlatList",
+        hints: ["Use data={tarefas}.", "Use renderItem.", "Mostre item dentro de Text."],
+        xpReward: 20,
+        quiz: [makeQuiz("Qual componente é indicado para listas?", ["FlatList", "Paragraph", "Table", "Canvas"], 0, "FlatList é o componente de lista do React Native.")],
+      }),
+      createLesson({
+        id: "11-5",
+        title: "Navegação entre Telas",
+        description: "Entenda a ideia de separar o app em telas conectadas.",
+        theory: `# Navegação
+
+Apps mobile são compostos por telas. A navegação controla para onde o usuário vai: Home, Detalhes, Perfil, Configurações.
+
+Bibliotecas como React Navigation organizam stacks, tabs e drawers. A ideia base é simples: uma ação muda a tela atual.
+
+Antes de configurar uma biblioteca, entenda nomes de telas e fluxo de usuário.`,
+        starterCode: 'const telas = ["Home", "Detalhes"];\n// Mostre a primeira tela\n',
+        solution: 'const telas = ["Home", "Detalhes"];\nconsole.log(telas[0]);',
+        expectedOutput: "Home",
+        hints: ["A primeira posição é 0.", "Use telas[0].", "Mostre com console.log()."],
+        xpReward: 20,
+        quiz: [makeQuiz("Para que serve navegação?", ["Trocar telas", "Criar banco", "Estilizar fonte", "Instalar Git"], 0, "Navegação controla o fluxo entre telas.")],
+      }),
+    ],
+  };
+}
+
+function createDataAiCourse(): Course {
+  return {
+    id: "12",
+    title: "Dados e IA com Python",
+    language: "Dados e IA",
+    emoji: "📊",
+    level: "Intermediário",
+    duration: "28h",
+    students: 5100,
+    progress: 0,
+    color: "quest-purple",
+    tags: ["Dados", "IA"],
+    description: "Use Python para limpar dados, calcular métricas, ler arquivos e entender como preparar prompts e automações com IA.",
+    lessons: [
+      createLesson({
+        id: "12-1",
+        title: "Dados como Tabelas",
+        description: "Pense em linhas, colunas e registros antes de automatizar análises.",
+        theory: `# Dados tabulares
+
+Muitos problemas de dados começam como uma tabela: cada linha é um registro e cada coluna é uma característica.
+
+Antes de IA, dashboard ou automação, você precisa entender qual dado existe, o que cada coluna significa e qual pergunta quer responder.
+
+Boas perguntas geram boas análises.`,
+        starterCode: 'vendas = [100, 80, 120]\n# calcule o total\n',
+        solution: 'vendas = [100, 80, 120]\nprint(sum(vendas))',
+        expectedOutput: "300",
+        hints: ["Use sum(vendas).", "Mostre o total.", "A soma é 300."],
+        xpReward: 15,
+        quiz: [makeQuiz("Em uma tabela, uma linha representa geralmente o quê?", ["Um registro", "Uma cor", "Uma função", "Uma branch"], 0, "Cada linha costuma representar um registro ou evento.")],
+      }),
+      createLesson({
+        id: "12-2",
+        title: "Limpeza de Dados",
+        description: "Remova espaços e normalize textos antes de analisar.",
+        theory: `# Limpeza de dados
+
+Dados reais vêm bagunçados: espaços extras, letras maiúsculas misturadas, campos vazios e formatos diferentes.
+
+Limpar dados é preparar entradas para que cálculos e automações sejam confiáveis.
+
+Em Python, métodos como strip() e lower() resolvem muitos casos simples.`,
+        starterCode: 'nome = "  ANA  "\n# limpe e deixe minúsculo\n',
+        solution: 'nome = "  ANA  "\nprint(nome.strip().lower())',
+        expectedOutput: "ana",
+        hints: ["Use strip() para espaços.", "Use lower() para minúsculas.", "Encadeie os métodos."],
+        xpReward: 15,
+        quiz: [makeQuiz("O que strip() remove?", ["Espaços das pontas", "Números", "Arquivos", "Linhas da tabela"], 0, "strip() remove espaços no início e fim do texto.")],
+      }),
+      createLesson({
+        id: "12-3",
+        title: "Métricas Simples",
+        description: "Calcule total, média, maior e menor valor.",
+        theory: `# Métricas
+
+Métricas resumem dados. Total mostra volume, média mostra tendência, máximo e mínimo mostram extremos.
+
+Antes de criar modelos ou gráficos, confirme se as métricas básicas fazem sentido.
+
+Análise boa começa simples e verificável.`,
+        starterCode: 'notas = [8, 7, 10]\n# calcule a média\n',
+        solution: 'notas = [8, 7, 10]\nmedia = sum(notas) / len(notas)\nprint(media)',
+        expectedOutput: "8.333",
+        hints: ["Some com sum().", "Divida por len().", "Guarde em media."],
+        xpReward: 20,
+        quiz: [makeQuiz("Qual função conta itens em uma lista?", ["sum", "len", "max", "min"], 1, "len(lista) retorna a quantidade de itens.")],
+      }),
+      createLesson({
+        id: "12-4",
+        title: "Prompt como Especificação",
+        description: "Aprenda a pedir respostas melhores para ferramentas de IA.",
+        theory: `# Prompt
+
+Um prompt bom é uma especificação clara. Ele diz objetivo, contexto, formato esperado e restrições.
+
+Em vez de pedir "analise isso", diga qual dado será analisado, que tipo de insight procura e como a resposta deve ser estruturada.
+
+IA funciona melhor quando você dá direção, exemplos e critérios de qualidade.`,
+        starterCode: 'objetivo = "resumir vendas"\nformato = "3 tópicos"\n# monte o prompt\n',
+        solution: 'objetivo = "resumir vendas"\nformato = "3 tópicos"\nprint(f"Objetivo: {objetivo}. Formato: {formato}.")',
+        expectedOutput: "Objetivo:",
+        hints: ["Use f-string.", "Inclua objetivo e formato.", "Mostre o prompt."],
+        xpReward: 20,
+        quiz: [makeQuiz("O que melhora um prompt?", ["Objetivo e formato claros", "Menos contexto sempre", "Texto aleatório", "Remover restrições"], 0, "Objetivo, contexto e formato esperado ajudam a IA a responder melhor.")],
+      }),
+      createLesson({
+        id: "12-5",
+        title: "Automação de Relatórios",
+        description: "Monte uma saída clara a partir de dados calculados.",
+        theory: `# Relatórios automáticos
+
+Automação transforma dados em uma saída repetível. O programa calcula, formata e entrega sempre do mesmo jeito.
+
+Um relatório simples pode mostrar total, média e alerta. Depois você pode salvar em arquivo, enviar email ou conectar com uma API.
+
+O importante é deixar cada etapa verificável.`,
+        starterCode: 'total = 300\nmedia = 100\n# gere uma mensagem de relatório\n',
+        solution: 'total = 300\nmedia = 100\nprint(f"Relatório: total {total}, média {media}")',
+        expectedOutput: "Relatório:",
+        hints: ["Use f-string.", "Inclua total e média.", "Comece com Relatório:"],
+        xpReward: 20,
+        quiz: [makeQuiz("Por que automatizar relatórios?", ["Para repetir com consistência", "Para evitar dados", "Para esconder cálculos", "Para remover contexto"], 0, "Automação torna tarefas repetíveis e consistentes.")],
+      }),
+    ],
+  };
+}
+
+function createGameDevCourse(): Course {
+  return {
+    id: "13",
+    title: "Jogos com JavaScript",
+    language: "Jogos",
+    emoji: "🎮",
+    level: "Iniciante",
+    duration: "20h",
+    students: 4700,
+    progress: 0,
+    color: "quest-pink",
+    tags: ["Jogos", "Criativo"],
+    description: "Crie a lógica de jogos simples com estado, regras, eventos, pontuação e loop de atualização.",
+    lessons: [
+      createLesson({
+        id: "13-1",
+        title: "Estado do Jogo",
+        description: "Modele pontuação, vidas e fase atual.",
+        theory: `# Estado do jogo
+
+Todo jogo tem estado: pontuação, vidas, posição, fase, tempo e inventário. O estado descreve como o jogo está agora.
+
+Cada ação muda o estado. Quando o jogador acerta, a pontuação sobe. Quando erra, perde vida.
+
+Modelar estado é o primeiro passo para criar regras claras.`,
+        starterCode: "// Crie um objeto jogo com pontos e vidas\n",
+        solution: "const jogo = { pontos: 0, vidas: 3 };\nconsole.log(jogo.vidas);",
+        expectedOutput: "3",
+        hints: ["Use um objeto.", "Crie pontos e vidas.", "Mostre jogo.vidas."],
+        xpReward: 15,
+        quiz: [makeQuiz("O que o estado representa?", ["Como o jogo está agora", "A fonte do texto", "Um commit", "Uma tabela SQL"], 0, "Estado é o conjunto de valores atuais do jogo.")],
+      }),
+      createLesson({
+        id: "13-2",
+        title: "Regras de Pontuação",
+        description: "Transforme eventos do jogo em mudança de pontos.",
+        theory: `# Regras
+
+Regras conectam ações a consequências. Se acertar, soma pontos. Se errar, perde vida. Se chegar a zero vidas, acaba.
+
+Regras pequenas são mais fáceis de testar que uma regra gigante.
+
+Essa lógica aparece em quizzes, plataformas gamificadas e jogos reais.`,
+        starterCode: "let pontos = 0;\nconst acertou = true;\n// some 10 pontos se acertou\n",
+        solution: "let pontos = 0;\nconst acertou = true;\nif (acertou) {\n  pontos += 10;\n}\nconsole.log(pontos);",
+        expectedOutput: "10",
+        hints: ["Use if (acertou).", "Some com pontos += 10.", "Mostre pontos."],
+        xpReward: 15,
+        quiz: [makeQuiz("Qual estrutura escolhe uma consequência?", ["if", "font-size", "SELECT", "git push"], 0, "if permite executar uma ação se a condição for verdadeira.")],
+      }),
+      createLesson({
+        id: "13-3",
+        title: "Loop de Atualização",
+        description: "Entenda a ideia de atualizar o jogo em ciclos.",
+        theory: `# Loop de jogo
+
+Jogos atualizam muitas vezes: ler entrada, atualizar estado, desenhar resultado. Esse ciclo é o game loop.
+
+Em jogos simples, você pode simular rodadas com um loop comum. Em canvas, esse ciclo costuma usar requestAnimationFrame.
+
+O conceito central é repetir atualização com controle.`,
+        starterCode: "// Simule 3 rodadas e mostre 'rodada'\n",
+        solution: 'for (let rodada = 1; rodada <= 3; rodada++) {\n  console.log("rodada");\n}',
+        expectedOutput: "rodada",
+        hints: ["Use for.", "Comece em 1 e vá até 3.", "Mostre a palavra rodada."],
+        xpReward: 20,
+        quiz: [makeQuiz("O que o game loop faz?", ["Atualiza o jogo em ciclos", "Cria banco", "Remove HTML", "Publica branch"], 0, "O loop mantém o jogo respondendo e atualizando.")],
+      }),
+      createLesson({
+        id: "13-4",
+        title: "Eventos do Jogador",
+        description: "Reaja a comandos como clique, toque ou tecla.",
+        theory: `# Eventos
+
+Jogos respondem ao jogador. Clique, toque e teclado são entradas. O código transforma essa entrada em mudança de estado.
+
+Na web, addEventListener conecta uma ação a uma função.
+
+Sem eventos, o jogo não reage.`,
+        starterCode: '// Crie uma função pular que mostra "pulou"\n',
+        solution: 'function pular() {\n  console.log("pulou");\n}\npular();',
+        expectedOutput: "pulou",
+        hints: ["Crie function pular().", "Use console.log.", "Chame pular()."],
+        xpReward: 20,
+        quiz: [makeQuiz("O que um evento representa?", ["Uma ação do usuário ou sistema", "Uma cor fixa", "Um banco", "Uma branch"], 0, "Eventos são sinais que disparam comportamento.")],
+      }),
+      createLesson({
+        id: "13-5",
+        title: "Condição de Vitória",
+        description: "Defina quando o jogo termina com sucesso.",
+        theory: `# Vitória e fim de jogo
+
+Um jogo precisa saber quando termina. Pode ser por pontuação, tempo, vidas ou objetivo concluído.
+
+Condição de vitória é uma regra clara que transforma estado em resultado.
+
+Sem fim, o jogador não entende o objetivo.`,
+        starterCode: "const pontos = 100;\n// mostre venceu se pontos for 100 ou mais\n",
+        solution: 'const pontos = 100;\nif (pontos >= 100) {\n  console.log("venceu");\n}',
+        expectedOutput: "venceu",
+        hints: ["Use if (pontos >= 100).", "Mostre venceu.", "A condição precisa ser verdadeira."],
+        xpReward: 20,
+        quiz: [makeQuiz("Para que serve condição de vitória?", ["Definir objetivo concluído", "Mudar fonte", "Criar SQL", "Instalar pacote"], 0, "Ela define quando o jogador alcançou o objetivo.")],
+      }),
+    ],
+  };
+}
+
 export const courses: Course[] = [
+  createLogicFoundationsCourse(),
   {
     id: "1",
     title: "Python do Zero ao Herói",
@@ -1173,6 +2102,7 @@ Em código real, **~90% das declarações são \`const\`**: importações, confi
         hints: ["Use const para valores fixos e let para variáveis", "Área = PI * raio * raio", "console.log(PI * raio * raio)"],
         xpReward: 15,
       },
+      ...createJavaScriptFoundationBridge(),
       {
         id: "2-3",
         title: "Arrow Functions",
@@ -2380,6 +3310,7 @@ Em **qualquer dado que muda dentro de um componente** e precisa refletir na tela
         hints: ["const [valor, setValor] = useState(0)", "onClick={() => setCount(count + 1)}", "Exiba {count} no botão"],
         xpReward: 20,
       },
+      ...createReactFoundationBridge(),
       {
         id: "3-4",
         title: "useEffect",
@@ -2975,6 +3906,7 @@ Toda página estilizada usa seletores. Em projetos reais, **classes são o padr�
         hints: ["Use o seletor de tag: h1 { ... }", "font-size define o tamanho", "Não esqueça do ponto e vírgula"],
         xpReward: 10,
       },
+      ...createCssFoundationBridge(),
       {
         id: "4-2",
         title: "Flexbox — Centralizando",
@@ -3688,6 +4620,7 @@ Conceitos-chave:
           { question: "O que é Node.js?", options: ["Um framework CSS", "Runtime JS no servidor", "Um banco de dados", "Um navegador"], correctIndex: 1, explanation: "Node.js permite executar JavaScript fora do navegador, no servidor. Usa o motor V8 do Chrome. É a base para Express, NestJS, ferramentas como npm e Vite." },
         ],
       },
+      ...createNodeFoundationBridge(),
       {
         id: "5-2",
         title: "Express — Rotas",
@@ -4409,6 +5342,7 @@ O ponto e vírgula (;) no final é obrigatório em SQL!`,
         hints: ["SELECT seleciona dados", "* significa todos os campos", "FROM indica a tabela"],
         xpReward: 10,
       },
+      ...createSqlFoundationBridge(),
       {
         id: "6-2",
         title: "WHERE — Filtrando",
@@ -4917,6 +5851,7 @@ Use o presente do indicativo: "Adiciona" em vez de "Adicionado".`,
         hints: ["git init cria o repositório", "git add . adiciona todos os arquivos", 'git commit -m "mensagem"'],
         xpReward: 10,
       },
+      ...createGitFoundationBridge(),
       {
         id: "7-2",
         title: "Branches",
@@ -6349,6 +7284,9 @@ Dica: Forneça múltiplos formatos com <source> para máxima compatibilidade!`,
     
     ],
   },
+  createReactNativeCourse(),
+  createDataAiCourse(),
+  createGameDevCourse(),
 ];
 
 export const badges: Badge[] = [

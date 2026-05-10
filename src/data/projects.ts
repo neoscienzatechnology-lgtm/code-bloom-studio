@@ -326,6 +326,76 @@ function buildProjectSteps(language: string, theme: string): ProjectStep[] {
     ];
   }
 
+  if (language === "Lógica básica") {
+    return [
+      {
+        id: "step-1",
+        title: "Etapa 1 — Defina o problema",
+        description: "Escreva uma saída que descreve o problema do projeto.",
+        starterCode: "# Descreva o problema\n",
+        solution: `print("${theme}")`,
+        expectedOutput: theme,
+        hints: ["Comece entendendo o objetivo.", "Use print() para mostrar o tema."],
+        concepts: ["problema", "objetivo"],
+      },
+      {
+        id: "step-2",
+        title: "Etapa 2 — Separe entrada e saída",
+        description: "Crie variáveis `entrada` e `saida`, depois mostre a saída.",
+        starterCode: "# Crie entrada e saída\n",
+        solution: 'entrada = "dados"\nsaida = "resultado"\nprint(saida)',
+        expectedOutput: "resultado",
+        hints: ["Entrada é o que chega ao programa.", "Saída é o que ele devolve."],
+        concepts: ["entrada", "saída"],
+      },
+      {
+        id: "step-3",
+        title: "Etapa 3 — Organize passos",
+        description: "Crie uma lista com três passos e mostre a quantidade.",
+        starterCode: "# Liste os passos\n",
+        solution: 'passos = ["entender", "resolver", "testar"]\nprint(len(passos))',
+        expectedOutput: "3",
+        hints: ["Use uma lista com três itens.", "Use len(passos)."],
+        concepts: ["passos", "lista", "decomposição"],
+      },
+    ];
+  }
+
+  if (language === "React Native") {
+    return [
+      {
+        id: "step-1",
+        title: "Etapa 1 — Componente mobile",
+        description: "Crie uma `View` com um `Text` para o projeto.",
+        starterCode: 'import { View, Text } from "react-native";\n\n',
+        solution: `function Projeto() {\n  return <View><Text>${theme}</Text></View>;\n}`,
+        expectedOutput: "Text",
+        hints: ["Use View como container.", "Use Text para texto."],
+        concepts: ["View", "Text", "JSX"],
+      },
+      {
+        id: "step-2",
+        title: "Etapa 2 — Estilo base",
+        description: "Crie um StyleSheet para organizar o container.",
+        starterCode: 'import { StyleSheet } from "react-native";\n\n',
+        solution: "const styles = StyleSheet.create({\n  container: {\n    padding: 16,\n  },\n});",
+        expectedOutput: "StyleSheet.create",
+        hints: ["Use StyleSheet.create().", "Crie a chave container."],
+        concepts: ["StyleSheet", "estilos"],
+      },
+      {
+        id: "step-3",
+        title: "Etapa 3 — Interação",
+        description: "Use `onPress` para representar uma ação do usuário.",
+        starterCode: 'import { Button } from "react-native";\n\n',
+        solution: '<Button title="Continuar" onPress={() => console.log("ok")} />',
+        expectedOutput: "onPress",
+        hints: ["Button usa onPress.", "A ação pode chamar uma função."],
+        concepts: ["eventos", "onPress"],
+      },
+    ];
+  }
+
   return [
     {
       id: "step-1",
@@ -408,6 +478,22 @@ const projectBlueprints: ProjectBlueprint[] = [
   { id: "proj-logic-queue-simulator", courseId: "8", title: "Simulador de Fila", emoji: "🚶", language: "Lógica", theme: "Simulador de Fila", goal: "Representar uma fila e pensar em operações básicas.", description: "Transforme uma situação real em dados e passos.", summary: ["Filas", "Entrada", "Transformação", "Big O"] },
   { id: "proj-logic-path-finder", courseId: "8", title: "Planejador de Caminho", emoji: "🗺️", language: "Lógica", theme: "Planejador de Caminho", goal: "Modelar a lógica inicial de um caminho entre pontos.", description: "Pratique representação de dados e resolução em etapas.", summary: ["Modelagem", "Funções", "Algoritmo", "Complexidade"] },
   { id: "proj-logic-cache", courseId: "8", title: "Cache Mental", emoji: "🧩", language: "Lógica", theme: "Cache Mental", goal: "Entender quando guardar resultados evita retrabalho.", description: "Modele entrada e análise de custo para uma ideia de cache.", summary: ["Entrada", "Memoização", "Funções", "Big O"] },
+
+  { id: "proj-logic-beginner-flow", courseId: "10", title: "Mapa de Solução", emoji: "🧠", language: "Lógica básica", theme: "Mapa de Solução", goal: "Transformar um problema em entrada, passos e saída.", description: "Pratique raciocínio antes de escrever código complexo.", summary: ["Problema", "Entrada", "Passos", "Saída"] },
+  { id: "proj-logic-decision-rules", courseId: "10", title: "Regras de Decisão", emoji: "🚦", language: "Lógica básica", theme: "Regras de Decisão", goal: "Descrever decisões simples usando se/senão.", description: "Modele regras de negócio de forma clara e testável.", summary: ["Condição", "Regra", "Saída", "Teste"] },
+  { id: "proj-logic-study-plan", courseId: "10", title: "Plano de Estudos", emoji: "🗓️", language: "Lógica básica", theme: "Plano de Estudos", goal: "Organizar passos de estudo em uma sequência verificável.", description: "Aplique decomposição em um problema cotidiano.", summary: ["Sequência", "Lista", "Decomposição", "Revisão"] },
+
+  { id: "proj-mobile-task-list", courseId: "11", title: "Lista de Tarefas Mobile", emoji: "📱", language: "React Native", theme: "Lista de Tarefas Mobile", goal: "Criar a base de uma tela mobile com lista e ação.", description: "Use View, Text, StyleSheet e onPress em uma experiência mobile simples.", summary: ["View", "Text", "StyleSheet", "onPress"] },
+  { id: "proj-mobile-habit-card", courseId: "11", title: "Card de Hábito Mobile", emoji: "✅", language: "React Native", theme: "Card de Hábito Mobile", goal: "Montar um card mobile para acompanhar hábitos.", description: "Pratique estrutura visual e interação de toque.", summary: ["Componentes", "Estilo", "Estado", "Mobile"] },
+  { id: "proj-mobile-profile-screen", courseId: "11", title: "Tela de Perfil Mobile", emoji: "👤", language: "React Native", theme: "Tela de Perfil Mobile", goal: "Estruturar uma tela de perfil com dados e botão.", description: "Conecte layout, texto e ação em uma tela mobile.", summary: ["Layout", "Text", "Button", "UI"] },
+
+  { id: "proj-data-sales-summary", courseId: "12", title: "Resumo de Vendas", emoji: "📊", language: "Python", theme: "Resumo de Vendas", goal: "Calcular totais e gerar uma mensagem de relatório.", description: "Use listas, funções e saída formatada para transformar dados em insight.", summary: ["Listas", "sum", "Média", "Relatório"] },
+  { id: "proj-data-clean-names", courseId: "12", title: "Limpeza de Cadastros", emoji: "🧼", language: "Python", theme: "Limpeza de Cadastros", goal: "Normalizar textos simples antes de gerar análises.", description: "Pratique limpeza de strings e preparação de dados.", summary: ["Strings", "strip", "lower", "Dados"] },
+  { id: "proj-data-prompt-brief", courseId: "12", title: "Briefing de Prompt", emoji: "✨", language: "Python", theme: "Briefing de Prompt", goal: "Montar uma estrutura clara de prompt com objetivo e formato.", description: "Traduza necessidade de negócio em especificação para IA.", summary: ["Prompt", "Contexto", "Formato", "Automação"] },
+
+  { id: "proj-game-score-loop", courseId: "13", title: "Loop de Pontuação", emoji: "🎮", language: "JavaScript", theme: "Loop de Pontuação", goal: "Simular rodadas de jogo e atualizar pontuação.", description: "Use estado simples, loops e condições para criar regras de jogo.", summary: ["Estado", "Loop", "Pontuação", "Condição"] },
+  { id: "proj-game-quiz-rules", courseId: "13", title: "Quiz com Vidas", emoji: "❤️", language: "JavaScript", theme: "Quiz com Vidas", goal: "Criar regras de acerto, erro e fim de jogo.", description: "Pratique decisões e atualização de estado em jogos simples.", summary: ["if/else", "Estado", "Vidas", "Vitória"] },
+  { id: "proj-game-adventure-state", courseId: "13", title: "Aventura de Texto", emoji: "🧭", language: "JavaScript", theme: "Aventura de Texto", goal: "Representar cenas e escolhas de uma aventura simples.", description: "Modele dados de jogo e decisões do jogador.", summary: ["Objetos", "Escolhas", "Estado", "Narrativa"] },
 
   { id: "proj-html-portfolio-section", courseId: "9", title: "Seção de Portfólio", emoji: "💼", language: "HTML", theme: "Seção de Portfólio", goal: "Criar a estrutura semântica de uma seção de portfólio.", description: "Use tags HTML para organizar conteúdo com título e ação.", summary: ["section", "h1", "links", "semântica"] },
   { id: "proj-html-product-card", courseId: "9", title: "Card de Produto", emoji: "🛍️", language: "HTML", theme: "Card de Produto", goal: "Montar a estrutura de um cartão de produto.", description: "Pratique seção, título e link de ação em HTML.", summary: ["Tags", "Semântica", "Atributos", "Links"] },

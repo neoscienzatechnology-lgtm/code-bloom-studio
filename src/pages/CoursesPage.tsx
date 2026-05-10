@@ -12,7 +12,8 @@ import MascoteCapivara from "@/components/MascoteCapivara";
 const tabs = ["Trilhas", "Explorar"] as const;
 const exploreGroups = [
   { title: "Linguagens", match: ["HTML", "CSS", "JavaScript", "Python", "Lógica"] },
-  { title: "Frameworks", match: ["React", "Node.js"] },
+  { title: "Frameworks", match: ["React", "React Native", "Node.js"] },
+  { title: "Especializações", match: ["Dados e IA", "Jogos"] },
   { title: "Ferramentas", match: ["Git", "SQL"] },
   { title: "Projetos", match: [] },
 ];
@@ -21,6 +22,10 @@ const isCourseUnlocked = (courseId: string, completedCourseIds: string[]) => {
   if (courseId === "3") return completedCourseIds.includes("2");
   if (courseId === "5") return completedCourseIds.includes("2");
   if (courseId === "4") return completedCourseIds.includes("9");
+  if (courseId === "8") return completedCourseIds.includes("10");
+  if (courseId === "11") return completedCourseIds.includes("3");
+  if (courseId === "12") return completedCourseIds.includes("1");
+  if (courseId === "13") return completedCourseIds.includes("2") && completedCourseIds.includes("10");
   return true;
 };
 

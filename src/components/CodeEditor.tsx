@@ -12,11 +12,15 @@ const langMap: Record<string, () => Extension> = {
   javascript: () => javascript(),
   js: () => javascript(),
   react: () => javascript({ jsx: true, typescript: true }),
+  "react native": () => javascript({ jsx: true, typescript: true }),
   typescript: () => javascript({ typescript: true }),
   css: () => css(),
   sql: () => sql(),
   node: () => javascript(),
   "node.js": () => javascript(),
+  "dados e ia": () => python(),
+  "lógica": () => python(),
+  jogos: () => javascript(),
 };
 
 interface CodeEditorProps {

@@ -60,6 +60,51 @@ const FALLBACK_QUESTIONS: QuizQuestion[] = [
   },
 ];
 
+function buildLessonFallbackQuestion(lesson: Lesson, index: number): QuizQuestion {
+  const concept = lesson.title.replace(/^[0-9.\s-]+/, "");
+  const expected = lesson.expectedOutput || "resultado esperado";
+
+  if (index % 3 === 0) {
+    return {
+      question: `Qual é a ideia principal da lição "${concept}"?`,
+      options: [
+        lesson.description,
+        "Pular a prática e decorar a resposta",
+        "Ignorar a saída esperada",
+        "Usar qualquer comando sem pensar no objetivo",
+      ],
+      correctIndex: 0,
+      explanation: "A descrição da lição resume o objetivo prático que precisa ser dominado antes de avançar.",
+    };
+  }
+
+  if (index % 3 === 1) {
+    return {
+      question: `O que a saída esperada ajuda a verificar em "${concept}"?`,
+      options: [
+        "Se o código chegou ao comportamento pedido",
+        "Se o aluno escreveu a maior quantidade de linhas",
+        "Se a tela ficou colorida",
+        "Se o projeto foi publicado automaticamente",
+      ],
+      correctIndex: 0,
+      explanation: `A saída esperada funciona como evidência mínima de que o exercício produziu "${expected}".`,
+    };
+  }
+
+  return {
+    question: `Ao travar em "${concept}", qual é o melhor próximo passo?`,
+    options: [
+      "Ler a dica, comparar com a saída esperada e tentar novamente",
+      "Copiar a solução sem testar",
+      "Pular todos os checkpoints",
+      "Trocar de curso imediatamente",
+    ],
+    correctIndex: 0,
+    explanation: "Revisar a dica e testar de novo fortalece a aprendizagem ativa.",
+  };
+}
+
 /**
  * Build a checkpoint lesson out of the previous group of lessons.
  * Pulls existing quiz questions when available, otherwise falls back.
@@ -80,10 +125,11 @@ function buildCheckpoint(
     seen.add(q.question);
     picked.push(q);
   }
-  // Ensure at least 3 questions
+  // Ensure at least 3 questions, preferring lesson-specific review over generic fallback.
   let i = 0;
   while (picked.length < 3) {
-    picked.push(FALLBACK_QUESTIONS[i % FALLBACK_QUESTIONS.length]);
+    const lesson = groupLessons[i % groupLessons.length];
+    picked.push(lesson ? buildLessonFallbackQuestion(lesson, i) : FALLBACK_QUESTIONS[i % FALLBACK_QUESTIONS.length]);
     i++;
   }
 

@@ -66,6 +66,11 @@ function classifyError(userCode: string, expectedOutput: string, solution: strin
   const code = userCode.toLowerCase();
   const expected = expectedOutput.toLowerCase();
   const sol = solution.toLowerCase();
+  const solutionShowsOutput =
+    sol.includes("print") ||
+    sol.includes("console.log") ||
+    sol.includes("echo") ||
+    sol.includes("return");
 
   if (!userCode.trim()) {
     return {
@@ -75,7 +80,7 @@ function classifyError(userCode: string, expectedOutput: string, solution: strin
     };
   }
 
-  if (!code.includes("print") && !code.includes("console.log") && !code.includes("echo") && !code.includes("return")) {
+  if (solutionShowsOutput && !code.includes("print") && !code.includes("console.log") && !code.includes("echo") && !code.includes("return")) {
     return {
       kind: "no_print",
       hint: "Parece que você não está exibindo nada na tela.",

@@ -33,10 +33,10 @@ export const learningPaths: LearningPath[] = [
     description: "Comece pela base visual da web e avance até interfaces modernas.",
     technologies: ["HTML", "CSS", "JavaScript", "React", "Tailwind"],
     level: "Iniciante",
-    duration: "8 a 10 semanas",
+    duration: "10 a 12 semanas",
     finalProject: "Landing page responsiva para portfólio",
     startCourseId: "9",
-    recommendedCourses: ["7", "8"],
+    recommendedCourses: ["10", "7"],
     steps: [
       { label: "HTML", courseId: "9", note: "estrutura da página" },
       { label: "CSS", courseId: "4", note: "layout e responsividade" },
@@ -52,13 +52,14 @@ export const learningPaths: LearningPath[] = [
     shortTitle: "Apps Web",
     objective: "Quero criar dashboards e apps de navegador",
     description: "Uma trilha para sair de JavaScript até componentes e rotas.",
-    technologies: ["JavaScript", "React", "TypeScript"],
+    technologies: ["Lógica", "JavaScript", "React", "TypeScript"],
     level: "Intermediário",
-    duration: "10 a 12 semanas",
+    duration: "12 a 14 semanas",
     finalProject: "Dashboard interativo com componentes reutilizáveis",
-    startCourseId: "2",
+    startCourseId: "10",
     recommendedCourses: ["7", "4"],
     steps: [
+      { label: "Lógica", courseId: "10", note: "base para raciocínio" },
       { label: "JavaScript", courseId: "2", note: "fundamentos da linguagem" },
       { label: "CSS", courseId: "4", note: "interface organizada" },
       { label: "React", courseId: "3", note: "estado e componentes" },
@@ -72,17 +73,18 @@ export const learningPaths: LearningPath[] = [
     shortTitle: "Backend",
     objective: "Quero criar APIs e sistemas com banco de dados",
     description: "Aprenda lógica, Node, rotas, dados e fundamentos de banco.",
-    technologies: ["Lógica", "JavaScript", "Node.js", "SQL"],
+    technologies: ["Lógica", "JavaScript", "Node.js", "SQL", "Git"],
     level: "Intermediário",
-    duration: "10 a 12 semanas",
+    duration: "12 a 14 semanas",
     finalProject: "API de tarefas com CRUD e dados",
-    startCourseId: "8",
-    recommendedCourses: ["7", "6"],
+    startCourseId: "10",
+    recommendedCourses: ["7", "8"],
     steps: [
-      { label: "Lógica", courseId: "8", note: "raciocínio e estruturas" },
+      { label: "Lógica", courseId: "10", note: "entrada, decisão e repetição" },
       { label: "JavaScript", courseId: "2", note: "base da linguagem" },
       { label: "Node.js", courseId: "5", note: "servidor e rotas" },
       { label: "SQL", courseId: "6", note: "consultas e dados" },
+      { label: "Git", courseId: "7", note: "versionamento profissional" },
       { label: "Projeto Final", note: "API completa" },
     ],
     mentorTip: "Backend fica mais simples quando você entende entrada, processamento, saída e persistência.",
@@ -95,14 +97,15 @@ export const learningPaths: LearningPath[] = [
     description: "Comece com Python e evolua para automações, dados e IA.",
     technologies: ["Lógica", "Python", "Dados", "IA"],
     level: "Iniciante",
-    duration: "10 a 14 semanas",
+    duration: "12 a 16 semanas",
     finalProject: "Automação que organiza dados e gera insights",
-    startCourseId: "1",
-    recommendedCourses: ["8", "6"],
+    startCourseId: "10",
+    recommendedCourses: ["8"],
     steps: [
-      { label: "Lógica", courseId: "8", note: "pensar em passos" },
+      { label: "Lógica", courseId: "10", note: "pensar em passos" },
       { label: "Python", courseId: "1", note: "sintaxe e automação" },
       { label: "SQL", courseId: "6", note: "buscar dados" },
+      { label: "Dados e IA", courseId: "12", note: "relatórios, limpeza e prompts" },
       { label: "Projeto Final", note: "automação com relatório" },
     ],
     mentorTip: "Python é uma boa primeira linguagem porque permite focar na ideia antes da sintaxe pesada.",
@@ -115,14 +118,15 @@ export const learningPaths: LearningPath[] = [
     description: "Prepare a base web antes de entrar em interfaces mobile.",
     technologies: ["JavaScript", "React", "React Native"],
     level: "Intermediário",
-    duration: "12 semanas",
+    duration: "14 semanas",
     finalProject: "App de tarefas com telas e estado",
     startCourseId: "2",
     recommendedCourses: ["3", "7"],
     steps: [
       { label: "JavaScript", courseId: "2", note: "base da linguagem" },
       { label: "React", courseId: "3", note: "componentes e estado" },
-      { label: "Publicação", note: "preparação para mobile" },
+      { label: "React Native", courseId: "11", note: "componentes mobile" },
+      { label: "Git", courseId: "7", note: "versão e publicação" },
       { label: "Projeto Final", note: "app de tarefas" },
     ],
     mentorTip: "Antes do mobile, vale garantir que componentes e estado em React estão claros.",
@@ -133,16 +137,16 @@ export const learningPaths: LearningPath[] = [
     shortTitle: "Jogos",
     objective: "Quero criar jogos simples",
     description: "Use lógica, eventos e pequenos desafios para pensar em sistemas.",
-    technologies: ["Lógica", "JavaScript", "Python"],
+    technologies: ["Lógica", "JavaScript", "Jogos"],
     level: "Iniciante",
-    duration: "8 semanas",
-    finalProject: "Mini jogo de perguntas ou aventura de texto",
-    startCourseId: "8",
-    recommendedCourses: ["1", "2"],
+    duration: "10 semanas",
+    finalProject: "Mini jogo com estado, pontuação e condição de vitória",
+    startCourseId: "10",
+    recommendedCourses: ["1", "8"],
     steps: [
-      { label: "Lógica", courseId: "8", note: "regras do jogo" },
+      { label: "Lógica", courseId: "10", note: "regras do jogo" },
       { label: "JavaScript", courseId: "2", note: "eventos e interação" },
-      { label: "Python", courseId: "1", note: "simulações simples" },
+      { label: "Jogos", courseId: "13", note: "estado e loop de jogo" },
       { label: "Projeto Final", note: "mini jogo jogável" },
     ],
     mentorTip: "Jogos ensinam lógica rápido porque cada regra precisa virar comportamento visível.",
@@ -159,6 +163,39 @@ export function getCourseByPathStep(step: PathStep): Course | undefined {
 
 export function getCourseMeta(course: Course) {
   const language = course.language.toLowerCase();
+  const title = course.title.toLowerCase();
+  if (language.includes("react native")) {
+    return {
+      kind: "Framework mobile",
+      prerequisite: "React bÃ¡sico",
+      finalProject: "App mobile com lista e estado",
+      lockedUntil: "React",
+    };
+  }
+  if (language.includes("dados") || title.includes("dados e ia")) {
+    return {
+      kind: "Dados e automaÃ§Ã£o",
+      prerequisite: "Python bÃ¡sico",
+      finalProject: "RelatÃ³rio automatizado",
+      lockedUntil: "Python",
+    };
+  }
+  if (language.includes("jogos")) {
+    return {
+      kind: "Jogos e interaÃ§Ã£o",
+      prerequisite: "LÃ³gica + JavaScript",
+      finalProject: "Mini jogo jogÃ¡vel",
+      lockedUntil: "JavaScript",
+    };
+  }
+  if (title.includes("algoritmos")) {
+    return {
+      kind: "Algoritmos avanÃ§ados",
+      prerequisite: "LÃ³gica + uma linguagem",
+      finalProject: "Desafio de estruturas de dados",
+      lockedUntil: "LÃ³gica",
+    };
+  }
   if (language.includes("react")) {
     return {
       kind: "Framework front-end",
