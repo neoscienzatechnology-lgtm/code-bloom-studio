@@ -196,7 +196,7 @@ const EditorPage = () => {
       particleCount: 120,
       spread: 80,
       origin: { y: 0.7 },
-      colors: ["#8B5CF6", "#10B981", "#F59E0B", "#EC4899"],
+      colors: ["#0A7C78", "#7AD7A7", "#FF9F2F", "#169C93"],
     });
   };
 

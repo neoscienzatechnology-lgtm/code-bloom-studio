@@ -6,52 +6,50 @@
 
 @layer base {
   :root {
-    /* Mimo-inspired light theme */
-    /* Background: very light warm gray */
-    --background: 240 20% 97%;
-    --foreground: 233 32% 21%;       /* Mimo navy #242746 */
+    /* CapyCode brand theme */
+    --background: 38 45% 97%;
+    --foreground: 186 46% 18%;
 
-    --card: 0 0% 100%;               /* pure white cards */
-    --card-foreground: 233 32% 21%;
+    --card: 0 0% 100%;
+    --card-foreground: 186 46% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 233 32% 21%;
+    --popover-foreground: 186 46% 18%;
 
-    --primary: 265 64% 58%;          /* Mimo purple #7E4BDE */
+    --primary: 178 72% 28%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 15% 93%;        /* light gray for tags / chips */
-    --secondary-foreground: 233 32% 21%;
+    --secondary: 158 36% 92%;
+    --secondary-foreground: 186 46% 18%;
 
-    --muted: 240 15% 93%;
-    --muted-foreground: 233 20% 50%;
+    --muted: 38 28% 92%;
+    --muted-foreground: 184 18% 42%;
 
-    --accent: 145 70% 42%;           /* green – correct answers, success */
-    --accent-foreground: 0 0% 100%;
+    --accent: 151 48% 60%;
+    --accent-foreground: 186 46% 18%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 233 20% 88%;
-    --input: 233 20% 88%;
-    --ring: 265 64% 58%;
+    --border: 38 22% 86%;
+    --input: 38 22% 86%;
+    --ring: 178 72% 28%;
 
     --radius: 0.75rem;
 
-    /* Gamification palette */
-    --quest-yellow: 45 95% 52%;
-    --quest-blue: 210 90% 55%;
-    --quest-pink: 330 85% 60%;
-    --quest-orange: 25 95% 58%;
+    --quest-yellow: 42 96% 56%;
+    --quest-blue: 183 58% 34%;
+    --quest-pink: 24 95% 58%;
+    --quest-orange: 32 95% 55%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 233 32% 21%;
-    --sidebar-primary: 265 64% 58%;
+    --sidebar-foreground: 186 46% 18%;
+    --sidebar-primary: 178 72% 28%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 15% 93%;
-    --sidebar-accent-foreground: 233 32% 21%;
-    --sidebar-border: 233 20% 88%;
-    --sidebar-ring: 265 64% 58%;
+    --sidebar-accent: 158 36% 92%;
+    --sidebar-accent-foreground: 186 46% 18%;
+    --sidebar-border: 38 22% 86%;
+    --sidebar-ring: 178 72% 28%;
   }
 }
 
@@ -66,7 +64,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-[hsl(var(--quest-pink))];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-[hsl(var(--quest-orange))];
   }
   .card-hover {
     @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md;

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
+import BrandLogo from "@/components/BrandLogo";
 
 const SignUpPage = () => {
   const { user, signUp, loading } = useAuth();
@@ -42,9 +43,9 @@ const SignUpPage = () => {
         className="w-full max-w-md rounded-2xl border border-border/30 bg-card p-8"
       >
         <div className="mb-6 text-center">
-          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4 [&>span]:hidden">
             <span className="text-2xl">🚀</span>
-            <span className="text-xl font-black">Code<span className="text-primary">Bloom</span></span>
+            <BrandLogo className="h-14 max-w-[220px]" />
           </Link>
           <h1 className="text-2xl font-black">Criar conta grátis</h1>
           <p className="text-sm text-muted-foreground mt-1">Comece sua aventura no mundo da programação!</p>
@@ -88,9 +89,9 @@ const SignUpPage = () => {
           <Button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-full bg-gradient-to-r from-primary to-quest-pink font-extrabold shadow-lg shadow-primary/25"
+            className="w-full rounded-full bg-gradient-to-r from-primary via-accent to-quest-orange font-extrabold shadow-lg shadow-primary/25"
           >
-            {submitting ? "Criando conta..." : "Começar Grátis 🎮"}
+            {submitting ? "Criando conta..." : "Começar grátis"}
           </Button>
         </form>
 

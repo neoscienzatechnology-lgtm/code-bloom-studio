@@ -37,7 +37,7 @@ const CheckpointPage = () => {
         particleCount: 140,
         spread: 90,
         origin: { y: 0.6 },
-        colors: ["#8B5CF6", "#10B981", "#F59E0B"],
+        colors: ["#0A7C78", "#7AD7A7", "#FF9F2F"],
       });
     }
   };

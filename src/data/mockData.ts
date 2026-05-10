@@ -772,7 +772,7 @@ function createDataAiCourse(): Course {
     duration: "28h",
     students: 5100,
     progress: 0,
-    color: "quest-purple",
+    color: "quest-blue",
     tags: ["Dados", "IA"],
     description: "Use Python para limpar dados, calcular métricas, ler arquivos e entender como preparar prompts e automações com IA.",
     lessons: [
@@ -880,7 +880,7 @@ function createGameDevCourse(): Course {
     duration: "20h",
     students: 4700,
     progress: 0,
-    color: "quest-pink",
+    color: "quest-orange",
     tags: ["Jogos", "Criativo"],
     description: "Crie a lógica de jogos simples com estado, regras, eventos, pontuação e loop de atualização.",
     lessons: [
@@ -3844,7 +3844,7 @@ O padrão clássico para **carregar dados externos** em um componente React: dis
     duration: "22h",
     students: 5600,
     progress: 100,
-    color: "quest-pink",
+    color: "quest-orange",
     tags: [],
     description: "Domine CSS moderno: Flexbox, Grid, animações, variáveis e design responsivo.",
     lessons: [
@@ -7185,13 +7185,13 @@ Meta tags essenciais:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Aprenda programação de forma gamificada">
     <meta name="keywords" content="programação, cursos, código">
-    <meta name="author" content="Code Bloom Studio">
-    <title>Code Bloom Studio — Aprenda Programação</title>
+    <meta name="author" content="CapyCode">
+    <title>CapyCode — Aprenda Programação</title>
     <link rel="icon" href="/favicon.ico">
   </head>
 
 Open Graph (como aparece no Facebook/LinkedIn):
-  <meta property="og:title" content="Code Bloom Studio">
+  <meta property="og:title" content="CapyCode">
   <meta property="og:description" content="Plataforma gamificada de programação">
   <meta property="og:image" content="https://site.com/preview.jpg">
   <meta property="og:url" content="https://site.com">
@@ -7199,7 +7199,7 @@ Open Graph (como aparece no Facebook/LinkedIn):
 
 Twitter Card:
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Code Bloom Studio">
+  <meta name="twitter:title" content="CapyCode">
   <meta name="twitter:image" content="https://site.com/preview.jpg">
 
 SEO on-page:
@@ -7216,7 +7216,7 @@ Viewport — essencial para mobile:
   width=device-width → largura = tela do dispositivo
   initial-scale=1.0 → zoom inicial 100%`,
         starterCode: '<!-- Crie o head com meta tags -->\n',
-        solution: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Aprenda programação de forma gamificada com Code Bloom Studio">\n  <meta property="og:title" content="Code Bloom Studio">\n  <meta property="og:description" content="Plataforma gamificada de programação">\n  <meta property="og:image" content="https://code-bloom-studio.com/preview.jpg">\n  <title>Code Bloom Studio — Aprenda Programação</title>\n  <link rel="icon" href="/favicon.ico">\n</head>',
+        solution: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Aprenda programação de forma gamificada com CapyCode">\n  <meta property="og:title" content="CapyCode">\n  <meta property="og:description" content="Plataforma gamificada de programação">\n  <meta property="og:image" content="https://capycode.com/preview.jpg">\n  <title>CapyCode — Aprenda Programação</title>\n  <link rel="icon" href="/favicon.ico">\n</head>',
         expectedOutput: "<meta",
         hints: ["charset e viewport são obrigatórios", "description ajuda no Google", "Open Graph controla preview em redes sociais"],
         xpReward: 20,

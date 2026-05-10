@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
+import BrandLogo from "@/components/BrandLogo";
 
 const LoginPage = () => {
   const { user, signIn, loading } = useAuth();
@@ -30,7 +31,7 @@ const LoginPage = () => {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-72 w-72 rounded-full bg-primary/10 blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-quest-pink/10 blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-quest-orange/10 blur-[100px]" />
       </div>
 
       <motion.div
@@ -40,8 +41,7 @@ const LoginPage = () => {
       >
         <div className="mb-6 text-center">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="text-2xl">🚀</span>
-            <span className="text-xl font-black">Code<span className="text-primary">Bloom</span></span>
+            <BrandLogo className="h-14 max-w-[220px]" />
           </Link>
           <h1 className="text-2xl font-black">Entrar na sua conta</h1>
           <p className="text-sm text-muted-foreground mt-1">Continue sua jornada de programação!</p>
@@ -78,9 +78,9 @@ const LoginPage = () => {
           </div>
           <Button
             disabled={submitting}
-            className="w-full rounded-full bg-gradient-to-r from-primary to-quest-pink font-extrabold shadow-lg shadow-primary/25"
+            className="w-full rounded-full bg-gradient-to-r from-primary via-accent to-quest-orange font-extrabold shadow-lg shadow-primary/25"
           >
-            {submitting ? "Entrando..." : "Entrar 🚀"}
+            {submitting ? "Entrando..." : "Entrar"}
           </Button>
         </form>
 

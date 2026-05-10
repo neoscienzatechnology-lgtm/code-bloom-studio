@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Bell, BookOpen, FolderKanban, Home, LogIn, LogOut, Menu, Target, User, X, Zap } from "lucide-react";
+import { Bell, FolderKanban, Home, LogIn, LogOut, Menu, Target, User, X, Zap } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
+import BrandLogo from "@/components/BrandLogo";
 
 const navLinks = [
   { to: "/dashboard", label: "Início", icon: Home },
@@ -38,11 +39,8 @@ const Navbar = () => {
     <>
       <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <BookOpen className="text-primary" size={24} />
-            <span className="text-xl font-black tracking-tight">
-              Code<span className="text-primary">Bloom</span>
-            </span>
+          <Link to="/dashboard" className="flex items-center">
+            <BrandLogo className="h-12 max-w-[190px]" />
           </Link>
 
           <div className="hidden items-center gap-1 md:flex">
@@ -70,7 +68,7 @@ const Navbar = () => {
               <>
                 <button className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
                   <Bell size={18} />
-                  <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-quest-pink" />
+                  <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-quest-orange" />
                 </button>
                 <button
                   onClick={signOut}

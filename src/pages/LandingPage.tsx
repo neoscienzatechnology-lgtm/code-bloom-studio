@@ -4,11 +4,12 @@ import { ArrowRight, Code2, Gamepad2, Trophy, Users, Check } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import MascoteCapivara from "@/components/MascoteCapivara";
+import BrandLogo from "@/components/BrandLogo";
 
 const stats = [
   { label: "Alunos ativos", value: 52000, suffix: "+", icon: Users },
   { label: "Exercícios", value: 3200, suffix: "+", icon: Code2 },
-  { label: "Cursos", value: 45, suffix: "", icon: Gamepad2 },
+  { label: "Cursos", value: 13, suffix: "", icon: Gamepad2 },
   { label: "Badges", value: 120, suffix: "+", icon: Trophy },
 ];
 
@@ -68,9 +69,9 @@ const CodePreview = () => {
   ];
 
   const colorMap: Record<string, string> = {
-    keyword: "text-[#cba6f7]",
-    fn: "text-[#89b4fa]",
-    string: "text-[#a6e3a1]",
+    keyword: "text-[#7ad7a7]",
+    fn: "text-[#30c6bd]",
+    string: "text-[#ff9f2f]",
     plain: "text-[#cdd6f4]",
   };
 
@@ -270,7 +271,7 @@ const LandingPage = () => {
           viewport={{ once: true }}
           className="mx-auto max-w-2xl rounded-3xl bg-primary px-10 py-14 text-center text-white shadow-xl shadow-primary/30"
         >
-          <div className="mb-4 text-5xl">🚀</div>
+          <BrandLogo compact className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
           <h2 className="mb-3 text-3xl font-black sm:text-4xl">
             Pronto para começar?
           </h2>
@@ -293,12 +294,9 @@ const LandingPage = () => {
       <footer className="border-t border-border px-4 py-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🚀</span>
-            <span className="font-black text-foreground">
-              Code<span className="text-primary">Bloom</span>
-            </span>
+            <BrandLogo className="h-10 max-w-[170px]" />
           </div>
-          <p className="text-sm text-muted-foreground">© 2024 Code Bloom Studio · Aprenda programação jogando</p>
+          <p className="text-sm text-muted-foreground">© 2026 CapyCode · Aprenda programação com uma trilha mais leve</p>
           <div className="flex gap-5 text-sm text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
             <a href="#" className="hover:text-foreground transition-colors">GitHub</a>

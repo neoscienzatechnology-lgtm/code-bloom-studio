@@ -36,7 +36,7 @@ const ProfilePage = () => {
           className="mb-8 grid gap-6 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8 lg:grid-cols-[1fr_360px] lg:items-start"
         >
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-primary to-quest-pink text-5xl shadow-lg shadow-primary/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-primary via-accent to-quest-orange text-5xl shadow-lg shadow-primary/20">
               {userProfile.avatar}
             </div>
             <div className="min-w-0 flex-1">

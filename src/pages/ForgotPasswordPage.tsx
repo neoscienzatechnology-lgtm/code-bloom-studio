@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, Mail } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ const ForgotPasswordPage = () => {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-72 w-72 rounded-full bg-primary/10 blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-quest-pink/10 blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-quest-orange/10 blur-[100px]" />
       </div>
 
       <motion.div
@@ -39,9 +40,9 @@ const ForgotPasswordPage = () => {
         className="w-full max-w-md rounded-2xl border border-border/30 bg-card p-8"
       >
         <div className="mb-6 text-center">
-          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4 [&>span]:hidden">
             <span className="text-2xl">🚀</span>
-            <span className="text-xl font-black">Code<span className="text-primary">Bloom</span></span>
+            <BrandLogo className="h-14 max-w-[220px]" />
           </Link>
           <h1 className="text-2xl font-black">Recuperar senha</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -81,7 +82,7 @@ const ForgotPasswordPage = () => {
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-full bg-gradient-to-r from-primary to-quest-pink font-extrabold shadow-lg shadow-primary/25"
+              className="w-full rounded-full bg-gradient-to-r from-primary via-accent to-quest-orange font-extrabold shadow-lg shadow-primary/25"
             >
               {submitting ? "Enviando..." : "Enviar link de recuperação"}
             </Button>
