@@ -8,8 +8,18 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
 import MascoteCapivara from "@/components/MascoteCapivara";
+import CourseCoverArt from "@/components/CourseCoverArt";
 
 const tabs = ["Trilhas", "Explorar"] as const;
+const pathCoverCourseIds: Record<string, string> = {
+  frontend: "9",
+  "modern-web": "2",
+  backend: "5",
+  "python-ai": "12",
+  mobile: "11",
+  games: "13",
+};
+
 const exploreGroups = [
   { title: "Linguagens", match: ["HTML", "CSS", "JavaScript", "Python", "Lógica"] },
   { title: "Frameworks", match: ["React", "React Native", "Node.js"] },
@@ -87,6 +97,8 @@ const CoursesPage = () => {
               const pathProgress = progressValues.length
                 ? Math.round(progressValues.reduce((sum, value) => sum + value, 0) / progressValues.length)
                 : 0;
+              const coverCourseId = pathCoverCourseIds[path.id] ?? path.startCourseId;
+              const startCourse = courses.find((course) => course.id === coverCourseId) ?? pathCourses[0];
 
               return (
                 <motion.div
@@ -96,6 +108,7 @@ const CoursesPage = () => {
                   transition={{ delay: index * 0.04 }}
                   className="rounded-2xl border border-border bg-card p-5 shadow-sm"
                 >
+                  {startCourse && <CourseCoverArt course={startCourse} className="-m-5 mb-5 rounded-b-none border-0" />}
                   <div className="mb-4 flex items-start justify-between gap-4">
                     <div>
                       <div className="mb-1 flex items-center gap-2 text-sm font-black text-primary">
@@ -193,10 +206,10 @@ const CoursesPage = () => {
                           className={unlocked ? "block" : "pointer-events-none block"}
                         >
                           <div className={`card-hover h-full rounded-2xl border bg-card p-5 ${unlocked ? "border-border" : "border-border opacity-60"}`}>
+                            <CourseCoverArt course={course} className="-m-5 mb-5 rounded-b-none border-0" />
                             <div className="mb-4 flex items-start justify-between gap-3">
                               <div>
-                                <div className="text-3xl">{course.emoji}</div>
-                                <h3 className="mt-2 font-black text-foreground">{course.title}</h3>
+                                <h3 className="font-black text-foreground">{course.title}</h3>
                                 <p className="text-xs font-bold text-primary">{meta.kind}</p>
                               </div>
                               {progress === 100 ? (

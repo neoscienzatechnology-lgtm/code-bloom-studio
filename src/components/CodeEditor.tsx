@@ -19,7 +19,7 @@ const langMap: Record<string, () => Extension> = {
   node: () => javascript(),
   "node.js": () => javascript(),
   "dados e ia": () => python(),
-  "lógica": () => python(),
+  "lógica": () => javascript(),
   jogos: () => javascript(),
 };
 
@@ -36,7 +36,8 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const langExt = langMap[language.toLowerCase()]?.() ?? python();
+    const normalizedLanguage = language.toLowerCase().normalize("NFC");
+    const langExt = langMap[normalizedLanguage]?.() ?? python();
 
     const state = EditorState.create({
       doc: value,

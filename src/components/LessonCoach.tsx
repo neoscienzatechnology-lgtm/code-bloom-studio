@@ -1,5 +1,16 @@
 import { useMemo, useState } from "react";
-import { CheckCircle2, ChevronRight, RotateCcw, Target, Lightbulb, ListChecks } from "lucide-react";
+import {
+  AlertTriangle,
+  BookOpenCheck,
+  CheckCircle2,
+  ChevronRight,
+  Clock3,
+  Code2,
+  RotateCcw,
+  Target,
+  Lightbulb,
+  ListChecks,
+} from "lucide-react";
 import type { Course, Lesson } from "@/data/mockData";
 import { buildLessonBlueprint } from "@/utils/pedagogy";
 import { Button } from "@/components/ui/button";
@@ -44,8 +55,64 @@ const LessonCoach = ({ course, lesson }: LessonCoachProps) => {
           <p className="text-xs font-black uppercase tracking-wide text-primary">Plano da lição</p>
           <h3 className="text-base font-black text-foreground">{blueprint.objective}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{blueprint.whyItMatters}</p>
+          {(lesson.module || lesson.estimatedMinutes) && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {lesson.module && (
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-black text-primary">
+                  {lesson.module}
+                </span>
+              )}
+              {lesson.estimatedMinutes && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-[11px] font-black text-muted-foreground">
+                  <Clock3 size={12} /> {lesson.estimatedMinutes} min
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      <div className="mb-4 rounded-xl border border-quest-yellow/20 bg-quest-yellow/5 p-3 text-sm leading-relaxed text-muted-foreground">
+        <span className="font-black text-quest-yellow">Pense nisso como: </span>
+        {blueprint.mentalModel}
+      </div>
+
+      {(lesson.tryItPrompt || lesson.commonMistake || lesson.reference?.length) && (
+        <div className="mb-4 grid gap-3 lg:grid-cols-3">
+          {lesson.tryItPrompt && (
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-3">
+              <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-wide text-primary">
+                <Code2 size={14} /> Tente agora
+              </div>
+              <p className="text-xs leading-relaxed text-muted-foreground">{lesson.tryItPrompt}</p>
+            </div>
+          )}
+
+          {lesson.commonMistake && (
+            <div className="rounded-xl border border-quest-orange/25 bg-quest-orange/5 p-3">
+              <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-wide text-quest-orange">
+                <AlertTriangle size={14} /> Erro comum
+              </div>
+              <p className="text-xs leading-relaxed text-muted-foreground">{lesson.commonMistake}</p>
+            </div>
+          )}
+
+          {lesson.reference?.length ? (
+            <div className="rounded-xl border border-accent/20 bg-accent/5 p-3">
+              <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-wide text-accent">
+                <BookOpenCheck size={14} /> Referência rápida
+              </div>
+              <ul className="space-y-1">
+                {lesson.reference.slice(0, 5).map((item) => (
+                  <li key={item} className="text-xs leading-relaxed text-muted-foreground">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      )}
 
       <div className="grid gap-3 md:grid-cols-3">
         {blueprint.steps.map((step, index) => (
@@ -152,4 +219,3 @@ const LessonCoach = ({ course, lesson }: LessonCoachProps) => {
 };
 
 export default LessonCoach;
-

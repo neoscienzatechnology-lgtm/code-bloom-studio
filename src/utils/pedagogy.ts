@@ -125,6 +125,23 @@ function detectTerms(lesson: Lesson): PedagogyTerm[] {
 
 function buildSteps(course: Course, lesson: Lesson): PedagogyStep[] {
   const outputTool = LANGUAGE_OUTPUT[course.language] ?? "o recurso principal da linguagem";
+  if (lesson.example || lesson.codeExample) {
+    return [
+      {
+        title: "Entenda a meta",
+        detail: lesson.learningObjective ?? firstSentence(lesson.description),
+      },
+      {
+        title: "Compare com o exemplo",
+        detail: lesson.example ?? `Observe como ${outputTool} aparece no exemplo antes de escrever sua solução.`,
+      },
+      {
+        title: "Teste e explique",
+        detail: `Execute, compare com "${lesson.expectedOutput}" e tente explicar por que cada linha existe.`,
+      },
+    ];
+  }
+
   return [
     {
       title: "Leia a meta",
@@ -185,11 +202,15 @@ export function buildLessonBlueprint(course: Course, lesson: Lesson): LessonBlue
   const quizChecks = fromQuiz(lesson.quiz);
   const generated = generatedChecks(course, lesson, terms);
   const microChecks = [...quizChecks, ...generated].slice(0, 3);
+  const objective = lesson.learningObjective ?? firstSentence(lesson.description);
+  const summary =
+    lesson.summary ??
+    `Esse padrão aparece de novo em ${course.language}. Dominar agora deixa as próximas lições mais leves.`;
 
   return {
-    objective: firstSentence(lesson.description),
-    whyItMatters: `Esse padrão aparece de novo em ${course.language}. Dominar agora deixa as próximas lições mais leves.`,
-    mentalModel: "Pense em cada exercício como uma receita curta: entrada, transformação e resultado visível.",
+    objective,
+    whyItMatters: summary,
+    mentalModel: lesson.analogy ?? "Pense em cada exercício como uma receita curta: entrada, transformação e resultado visível.",
     steps: buildSteps(course, lesson),
     terms,
     microChecks,
@@ -200,4 +221,3 @@ export function buildLessonBlueprint(course: Course, lesson: Lesson): LessonBlue
     ],
   };
 }
-

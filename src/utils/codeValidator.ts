@@ -69,6 +69,7 @@ function classifyError(userCode: string, expectedOutput: string, solution: strin
   const solutionShowsOutput =
     sol.includes("print") ||
     sol.includes("console.log") ||
+    sol.includes("mostrar") ||
     sol.includes("echo") ||
     sol.includes("return");
 
@@ -80,7 +81,14 @@ function classifyError(userCode: string, expectedOutput: string, solution: strin
     };
   }
 
-  if (solutionShowsOutput && !code.includes("print") && !code.includes("console.log") && !code.includes("echo") && !code.includes("return")) {
+  if (
+    solutionShowsOutput &&
+    !code.includes("print") &&
+    !code.includes("console.log") &&
+    !code.includes("mostrar") &&
+    !code.includes("echo") &&
+    !code.includes("return")
+  ) {
     return {
       kind: "no_print",
       hint: "Parece que você não está exibindo nada na tela.",

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Bell, FolderKanban, Home, LogIn, LogOut, Menu, Target, User, X, Zap } from "lucide-react";
+import { Bell, Brain, Flame, FolderKanban, Home, LogIn, LogOut, Menu, Target, User, X, Zap } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +9,7 @@ import BrandLogo from "@/components/BrandLogo";
 const navLinks = [
   { to: "/dashboard", label: "Início", icon: Home },
   { to: "/cursos", label: "Trilhas", icon: Target },
-  { to: "/editor/1/1-1", label: "Praticar", icon: Zap },
+  { to: "/pontos-fracos", label: "Praticar", icon: Brain },
   { to: "/projetos", label: "Projetos", icon: FolderKanban },
   { to: "/perfil", label: "Perfil", icon: User },
 ];
@@ -17,7 +17,8 @@ const navLinks = [
 const desktopLinks = [
   { to: "/dashboard", label: "Início" },
   { to: "/cursos", label: "Trilhas" },
-  { to: "/revisao", label: "Praticar" },
+  { to: "/pontos-fracos", label: "Praticar" },
+  { to: "/referencia", label: "Referência" },
   { to: "/projetos", label: "Projetos" },
   { to: "/perfil", label: "Perfil" },
 ];
@@ -26,12 +27,22 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
-  const { totalXp } = useProgress();
+  const { totalXp, studyStats } = useProgress();
+  const immersiveRoutes = ["/editor", "/checkpoint", "/projeto"];
+  const showMobileBottomNav =
+    location.pathname !== "/" && !immersiveRoutes.some((route) => location.pathname.startsWith(route));
 
   const isActive = (to: string, label: string) => {
     if (label === "Trilhas") return location.pathname.startsWith("/cursos");
-    if (label === "Praticar") return location.pathname.startsWith("/editor") || location.pathname.startsWith("/revisao");
+    if (label === "Praticar") {
+      return (
+        location.pathname.startsWith("/editor") ||
+        location.pathname.startsWith("/revisao") ||
+        location.pathname.startsWith("/pontos-fracos")
+      );
+    }
     if (label === "Projetos") return location.pathname.startsWith("/projeto");
+    if (label === "Referência") return location.pathname.startsWith("/referencia");
     return location.pathname === to;
   };
 
@@ -60,6 +71,10 @@ const Navbar = () => {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
+            <div className="flex items-center gap-1.5 rounded-full bg-quest-orange/10 px-3 py-1.5 text-sm font-bold text-quest-orange">
+              <Flame size={15} />
+              <span>{studyStats.currentStreak}</span>
+            </div>
             <div className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm font-bold">
               <Zap size={15} className="text-accent" />
               <span>{totalXp.toLocaleString()} XP</span>
@@ -135,6 +150,7 @@ const Navbar = () => {
         </AnimatePresence>
       </nav>
 
+      {showMobileBottomNav && (
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 px-2 py-2 backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
           {navLinks.map((link) => {
@@ -154,6 +170,7 @@ const Navbar = () => {
           })}
         </div>
       </nav>
+      )}
     </>
   );
 };

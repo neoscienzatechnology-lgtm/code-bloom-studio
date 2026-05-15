@@ -1,7 +1,8 @@
 import type { Course, Lesson, QuizQuestion } from "@/data/mockData";
 import type { ErrorKind } from "@/utils/codeValidator";
+import { getLessonConcepts } from "@/utils/conceptMastery";
 
-export type ReviewReason = "stuck" | "in_progress" | "completed" | "starter";
+export type ReviewReason = "stuck" | "weak_concept" | "in_progress" | "completed" | "starter";
 
 export interface ReviewLesson {
   course: Course;
@@ -27,6 +28,7 @@ interface BuildDailyReviewPlanInput {
   savedCode: Record<string, string>;
   attempts: Record<string, number>;
   topErrors: ErrorKind[];
+  weakConceptIds?: string[];
   maxLessons?: number;
   maxQuestions?: number;
 }
@@ -80,6 +82,7 @@ export function buildDailyReviewPlan({
   savedCode,
   attempts,
   topErrors,
+  weakConceptIds = [],
   maxLessons = 5,
   maxQuestions = 5,
 }: BuildDailyReviewPlanInput): DailyReviewPlan {
@@ -90,6 +93,7 @@ export function buildDailyReviewPlan({
       .filter(([, code]) => code.trim().length > 0)
       .map(([lessonId]) => lessonId),
   );
+  const weakConceptSet = new Set(weakConceptIds);
 
   const allLessons = courses.flatMap((course) =>
     course.lessons.map((lesson, lessonIndex) => {
@@ -97,6 +101,7 @@ export function buildDailyReviewPlan({
       const isCompleted = completedSet.has(lesson.id);
       const isInProgress = savedWithWork.has(lesson.id) && !isCompleted;
       const completedRank = completionOrder.get(lesson.id) ?? -1;
+      const conceptMatch = getLessonConcepts(lesson).some((concept) => weakConceptSet.has(concept));
 
       let reason: ReviewReason = "starter";
       let score = Math.max(0, 12 - lessonIndex);
@@ -104,6 +109,10 @@ export function buildDailyReviewPlan({
       if (isCompleted) {
         reason = "completed";
         score += 35 + completedRank;
+      }
+      if (conceptMatch) {
+        reason = "weak_concept";
+        score += 95;
       }
       if (isInProgress) {
         reason = "in_progress";
@@ -171,6 +180,9 @@ function buildExpectedOutputQuestion(item: ReviewLesson, allLessons: ReviewLesso
     options: optionSet.options,
     correctIndex: optionSet.correctIndex,
     explanation: `A saída esperada é o alvo da aula. Antes de editar o código, compare tudo com "${item.lesson.expectedOutput}".`,
+    successFeedback: "Boa. Você reconheceu a evidência que prova que o exercício funcionou.",
+    errorFeedback: `Quase. Nesta aula, a saída que confirma a solução é "${item.lesson.expectedOutput}".`,
+    hint: "Volte ao enunciado da aula e procure o campo de saída esperada.",
   };
 }
 
@@ -192,6 +204,9 @@ function buildFirstStepQuestion(item: ReviewLesson): QuizQuestion {
     options: optionSet.options,
     correctIndex: optionSet.correctIndex,
     explanation: "Uma revisão curta funciona melhor quando começa por uma ação pequena e verificável.",
+    successFeedback: "Isso. Revisão boa começa com uma ação pequena, não com tentativa aleatória.",
+    errorFeedback: "Ainda não é o melhor começo. Primeiro ataque a menor parte verificável do exercício.",
+    hint: firstHint,
   };
 }
 

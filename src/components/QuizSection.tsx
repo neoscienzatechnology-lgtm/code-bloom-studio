@@ -19,6 +19,7 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
   const q = questions[currentQ];
   const isLastQuestion = currentQ === questions.length - 1;
   const isCorrect = selected === q?.correctIndex;
+  const correctOption = q?.options[q.correctIndex];
 
   const handleSelect = (idx: number) => {
     if (answered) return;
@@ -66,8 +67,8 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
           {allCorrect
-            ? "Você dominou o conceito! Continue para o exercício."
-            : "Revise a teoria acima e tente novamente."}
+            ? "Você dominou o conceito. Agora aplique isso no exercício."
+            : "Revise a explicação, observe o feedback dos erros e tente novamente."}
         </p>
         {!allCorrect && (
           <Button
@@ -171,14 +172,20 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
                   }`}
                 >
                   {isCorrect
-                    ? "✅ Correto!"
-                    : `❌ A resposta correta é: "${q.options[q.correctIndex]}"`}
+                    ? q.successFeedback ?? "Correto. Você escolheu a ideia que resolve o problema."
+                    : q.errorFeedback ?? `Quase. A melhor resposta é: "${correctOption}"`}
                 </div>
 
                 {/* Explanation */}
                 {q.explanation && (
                   <div className="rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-xs text-muted-foreground leading-relaxed">
-                    💡 {q.explanation}
+                    Dica da Capy: {q.explanation}
+                  </div>
+                )}
+
+                {!isCorrect && q.hint && (
+                  <div className="rounded-xl border border-quest-yellow/30 bg-quest-yellow/5 px-4 py-2.5 text-xs font-semibold text-quest-yellow leading-relaxed">
+                    Antes de tentar de novo: {q.hint}
                   </div>
                 )}
 

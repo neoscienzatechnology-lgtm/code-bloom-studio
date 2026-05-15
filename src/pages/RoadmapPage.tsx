@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Lock, CheckCircle2, PlayCircle, ChevronRight, ShieldCheck } from "lucide-react";
 import { getAugmentedCourses } from "@/data/checkpoints";
 import { useProgress } from "@/hooks/useProgress";
+import CourseCoverArt from "@/components/CourseCoverArt";
 
 type LessonStatus = "completed" | "available" | "locked";
 
@@ -84,9 +85,7 @@ const RoadmapPage = () => {
               >
                 {/* Course header */}
                 <div className="mb-5 flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-3xl">
-                    {course.emoji}
-                  </div>
+                  <CourseCoverArt course={course} variant="thumb" className="h-16 w-24 shrink-0 rounded-2xl" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h2 className="truncate text-xl font-extrabold text-foreground">

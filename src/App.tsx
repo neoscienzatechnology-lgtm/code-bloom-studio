@@ -24,7 +24,12 @@ const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage.tsx"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage.tsx"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage.tsx"));
 const DailyReviewPage = lazy(() => import("./pages/DailyReviewPage.tsx"));
+const WeakConceptsPage = lazy(() => import("./pages/WeakConceptsPage.tsx"));
+const ReferencePage = lazy(() => import("./pages/ReferencePage.tsx"));
 const MascoteDemoPage = lazy(() => import("./pages/MascoteDemoPage.tsx"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
+const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
+const AccountDeletionPage = lazy(() => import("./pages/AccountDeletionPage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -59,7 +64,12 @@ const App = () => (
               <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
               <Route path="/trilha" element={<PageWithNav><RoadmapPage /></PageWithNav>} />
               <Route path="/revisao" element={<PageWithNav><DailyReviewPage /></PageWithNav>} />
+              <Route path="/pontos-fracos" element={<PageWithNav><WeakConceptsPage /></PageWithNav>} />
+              <Route path="/referencia" element={<PageWithNav><ReferencePage /></PageWithNav>} />
               <Route path="/mascote" element={<PageWithNav><MascoteDemoPage /></PageWithNav>} />
+              <Route path="/privacidade" element={<PageWithNav><PrivacyPolicyPage /></PageWithNav>} />
+              <Route path="/termos" element={<PageWithNav><TermsPage /></PageWithNav>} />
+              <Route path="/excluir-conta" element={<PageWithNav><AccountDeletionPage /></PageWithNav>} />
               <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
               <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
               <Route path="/checkpoint/:courseId/:lessonId" element={<PageWithNav><CheckpointPage /></PageWithNav>} />

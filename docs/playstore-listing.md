@@ -1,60 +1,79 @@
-# CapyCode - Play Store Listing
+# CapyCode - ficha da Play Store
 
-## Nome do App
+## Nome do app
 
 CapyCode
 
+## Nome do desenvolvedor
+
+Code Bloom Studio
+
 ## Categoria
 
-Education
+Educação
 
-## Descricao Curta
+## Descrição curta
 
-Aprenda programacao com trilhas gamificadas e desafios praticos.
+Aprenda programação com trilhas, missões e prática guiada.
 
-## Descricao Completa
+## Descrição completa
 
-CapyCode e um app de ensino de programacao criado para transformar estudo em pratica guiada.
+CapyCode é um app educacional para aprender programação de forma guiada, prática e progressiva.
 
-Aprenda com trilhas progressivas, aulas curtas, missoes, desafios de codigo, revisoes e projetos praticos. O app ajuda iniciantes a entenderem o proximo passo e manterem constancia sem depender de conteudos soltos.
+O app organiza o estudo em trilhas curtas, missões, quizzes, exercícios com feedback, prática de código, revisão de pontos fracos e projetos simples para fixar o conteúdo. A primeira trilha, Fundamentos da Programação, começa do zero e apresenta conceitos como algoritmos, variáveis, tipos de dados, condições, loops, funções e um mini projeto guiado.
 
-Com o CapyCode, voce pode:
+Com o CapyCode, você pode:
 
-- estudar logica de programacao;
-- praticar conceitos de codigo em exercicios guiados;
-- acompanhar seu progresso;
-- revisar conteudos importantes;
-- concluir projetos para fixar o aprendizado;
-- evoluir por trilhas organizadas por nivel.
+- estudar uma ideia por vez;
+- praticar com exercícios curtos e feedback imediato;
+- acompanhar XP, sequência de estudos e progresso real;
+- revisar conceitos em que teve dificuldade;
+- construir projetos para aplicar o que aprendeu;
+- seguir uma progressão pensada para iniciantes.
 
-O CapyCoder acompanha sua jornada com mensagens, feedbacks e orientacoes durante as aulas.
+O mascote CapyCoder aparece como tutor durante a jornada, com dicas e mensagens para ajudar o aluno a entender o próximo passo sem sobrecarregar a aula.
 
-Ideal para quem esta comecando em tecnologia e quer aprender de forma mais leve, visual e pratica.
+O CapyCode é indicado para iniciantes que querem aprender programação com uma experiência mais visual, leve e prática.
 
-## Release Notes - v1.0
+## Novidades da versão 1.0
 
-Primeira versao beta do CapyCode para Android.
+Primeira versão beta do CapyCode para Android.
 
-- Trilhas de aprendizado.
-- Aulas com pratica guiada.
-- Editor de codigo integrado.
-- Projetos praticos.
-- Revisao diaria.
-- Mascote CapyCoder.
-- Progresso do aluno.
+- Trilha Fundamentos da Programação.
+- Aulas divididas em mini etapas.
+- Quizzes com feedback de acerto e erro.
+- Prática guiada e editor de código.
+- Revisão diária e treino de pontos fracos.
+- Projetos práticos.
+- Mascote CapyCoder animado.
+- Progresso, XP, sequência e conquistas.
 
-## Dados Para App Content
+## Classificação e conteúdo
 
-- Publico-alvo: estudantes e iniciantes em tecnologia.
-- Conteudo educacional: programacao e habilidades digitais.
-- Login: o app possui fluxo de autenticacao.
-- Dados sensiveis: nao declarar dados sensiveis sem confirmacao da configuracao real de producao.
-- Politica de privacidade: obrigatoria antes de producao.
+- Público principal: iniciantes em programação.
+- Conteúdo: educação, programação e habilidades digitais.
+- Login: o app possui cadastro e autenticação.
+- Compras no app: não implementadas.
+- Anúncios: não implementados.
+- Conteúdo gerado por usuários: código digitado pelo aluno pode ser salvo como progresso de estudo.
+- Permissões Android: internet.
 
-## Checklist Antes de Enviar
+## URLs públicas
 
-- Revisar screenshots finais.
-- Confirmar politica de privacidade publica.
-- Confirmar dados coletados pelo Supabase/Auth.
-- Preencher Data Safety no Play Console com base na coleta real.
-- Subir primeiro em teste interno.
+- Política de privacidade: `https://code-bloom-studio.vercel.app/privacidade`
+- Termos de uso: `https://code-bloom-studio.vercel.app/termos`
+- Exclusão de conta: `https://code-bloom-studio.vercel.app/excluir-conta`
+
+Se o domínio final mudar, atualize essas URLs na Play Console antes do envio. Antes de publicar,
+configure `VITE_SUPPORT_EMAIL` com o e-mail oficial de suporte para ativar o botão real de solicitação
+na página de exclusão de conta.
+
+## Assets gerados
+
+- Ícone 512x512: `docs/playstore/assets/icon-512.png`
+- Feature graphic 1024x500: `docs/playstore/assets/feature-graphic-1024x500.png`
+- Screenshots de telefone: `docs/playstore/assets/screenshots/phone/`
+
+## Observação de honestidade
+
+Não usar números de alunos, avaliações, clientes, certificados, promessas de emprego ou métricas de sucesso até existirem dados reais.

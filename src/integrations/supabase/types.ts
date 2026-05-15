@@ -47,6 +47,63 @@ export type Database = {
         }
         Relationships: []
       }
+      user_concept_mastery: {
+        Row: {
+          completed_lessons: number
+          concept_id: string
+          created_at: string
+          failed_attempts: number
+          id: string
+          in_progress_lessons: number
+          label: string
+          mastery: number
+          reason: string | null
+          review_course_id: string | null
+          review_lesson_id: string | null
+          review_lesson_title: string | null
+          status: string
+          total_lessons: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_lessons?: number
+          concept_id: string
+          created_at?: string
+          failed_attempts?: number
+          id?: string
+          in_progress_lessons?: number
+          label: string
+          mastery?: number
+          reason?: string | null
+          review_course_id?: string | null
+          review_lesson_id?: string | null
+          review_lesson_title?: string | null
+          status: string
+          total_lessons?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_lessons?: number
+          concept_id?: string
+          created_at?: string
+          failed_attempts?: number
+          id?: string
+          in_progress_lessons?: number
+          label?: string
+          mastery?: number
+          reason?: string | null
+          review_course_id?: string | null
+          review_lesson_id?: string | null
+          review_lesson_title?: string | null
+          status?: string
+          total_lessons?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           code: string | null

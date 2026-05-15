@@ -17,6 +17,25 @@ interface ModuleGroup {
 }
 
 function splitModules(lessons: AugmentedLesson[]): ModuleGroup[] {
+  if (lessons.some((lesson) => lesson.module)) {
+    return lessons.reduce<ModuleGroup[]>((groups, lesson) => {
+      const lastGroup = groups[groups.length - 1];
+      const title = lesson.module ?? lastGroup?.title ?? "Revisão";
+      const current =
+        lastGroup?.title === title
+          ? lastGroup
+          : {
+              title,
+              description: "Aulas curtas com uma ideia principal, prática e feedback imediato.",
+              lessons: [],
+            };
+
+      if (current !== lastGroup) groups.push(current);
+      current.lessons.push(lesson);
+      return groups;
+    }, []);
+  }
+
   const third = Math.max(3, Math.ceil(lessons.length / 3));
   return [
     {
@@ -122,6 +141,11 @@ const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps
                       <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                         {lesson.description}
                       </p>
+                      {lesson.estimatedMinutes && (
+                        <div className="mt-2 text-[11px] font-bold text-muted-foreground">
+                          {lesson.estimatedMinutes} min • {lesson.level ?? course.level}
+                        </div>
+                      )}
                     </div>
                     <div className="hidden items-center gap-3 sm:flex">
                       <span className="text-xs font-black text-accent">+{lesson.xpReward} XP</span>

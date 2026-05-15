@@ -1,23 +1,68 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { buildStudyStats, toLocalDateKey } from "@/utils/studyStats";
 
 interface ProgressData {
   completedLessons: string[];
   savedCode: Record<string, string>;
   totalXp: number;
+  activityDates: string[];
+  lessonCompletedAt: Record<string, string>;
+  lessonXpEarned: Record<string, number>;
 }
 
 const STORAGE_KEY = "code-bloom-studio-progress";
+export const ACTIVITY_COURSE_IDS = {
+  dailyReview: "__daily_review__",
+  conceptTraining: "__concept_training__",
+  quiz: "__quiz__",
+  generic: "__activity__",
+} as const;
+const EMPTY_PROGRESS: ProgressData = {
+  completedLessons: [],
+  savedCode: {},
+  totalXp: 0,
+  activityDates: [],
+  lessonCompletedAt: {},
+  lessonXpEarned: {},
+};
+
+function normalizeProgress(data: Partial<ProgressData> | null | undefined): ProgressData {
+  return {
+    completedLessons: Array.isArray(data?.completedLessons) ? data.completedLessons : [],
+    savedCode: data?.savedCode && typeof data.savedCode === "object" ? data.savedCode : {},
+    totalXp: typeof data?.totalXp === "number" ? data.totalXp : 0,
+    activityDates: Array.isArray(data?.activityDates) ? data.activityDates : [],
+    lessonCompletedAt:
+      data?.lessonCompletedAt && typeof data.lessonCompletedAt === "object" ? data.lessonCompletedAt : {},
+    lessonXpEarned:
+      data?.lessonXpEarned && typeof data.lessonXpEarned === "object" ? data.lessonXpEarned : {},
+  };
+}
+
+function uniqueSortedDates(dates: string[]): string[] {
+  return Array.from(new Set(dates.filter(Boolean))).sort();
+}
+
+export function resolveProgressCourseId(lessonId: string, courseId?: string): string {
+  if (courseId) return courseId;
+  if (lessonId.startsWith("daily-review-")) return ACTIVITY_COURSE_IDS.dailyReview;
+  if (lessonId.startsWith("concept-training-")) return ACTIVITY_COURSE_IDS.conceptTraining;
+  const coursePrefix = lessonId.match(/^(\d+)-/);
+  if (coursePrefix) return coursePrefix[1];
+  if (lessonId.endsWith("-quiz")) return ACTIVITY_COURSE_IDS.quiz;
+  return ACTIVITY_COURSE_IDS.generic;
+}
 
 function loadLocalProgress(): ProgressData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return normalizeProgress(JSON.parse(raw));
   } catch {
-    return { completedLessons: [], savedCode: {}, totalXp: 0 };
+    return EMPTY_PROGRESS;
   }
-  return { completedLessons: [], savedCode: {}, totalXp: 0 };
+  return EMPTY_PROGRESS;
 }
 
 function saveLocalProgress(data: ProgressData) {
@@ -39,27 +84,65 @@ export function useProgress() {
     const loadCloud = async () => {
       const { data } = await supabase
         .from("user_progress")
-        .select("lesson_id, code, completed, xp_earned")
+        .select("lesson_id, course_id, code, completed, xp_earned, updated_at")
         .eq("user_id", user.id);
 
-      if (data && data.length > 0) {
-        const cloudLessons = data.filter((d) => d.completed).map((d) => d.lesson_id);
-        const cloudCode: Record<string, string> = {};
-        let cloudXp = 0;
-        data.forEach((d) => {
-          if (d.code) cloudCode[d.lesson_id] = d.code;
-          if (d.completed) cloudXp += d.xp_earned || 0;
-        });
+      const cloudRows = data ?? [];
+      const cloudLessons = cloudRows.filter((d) => d.completed).map((d) => d.lesson_id);
+      const cloudCode: Record<string, string> = {};
+      const cloudCourseIds: Record<string, string> = {};
+      const cloudCompletedAt: Record<string, string> = {};
+      const cloudXpEarned: Record<string, number> = {};
+      const cloudActivityDates: string[] = [];
+      let cloudXp = 0;
+      cloudRows.forEach((d) => {
+        cloudCourseIds[d.lesson_id] = d.course_id;
+        if (d.code) cloudCode[d.lesson_id] = d.code;
+        if (d.completed) {
+          const completedAt = d.updated_at ? toLocalDateKey(new Date(d.updated_at)) : toLocalDateKey(new Date());
+          const earned = d.xp_earned || 0;
+          cloudCompletedAt[d.lesson_id] = completedAt;
+          cloudXpEarned[d.lesson_id] = earned;
+          cloudActivityDates.push(completedAt);
+          cloudXp += earned;
+        }
+      });
 
-        // Merge local + cloud
-        const local = loadLocalProgress();
-        const mergedLessons = [...new Set([...local.completedLessons, ...cloudLessons])];
-        const mergedCode = { ...cloudCode, ...local.savedCode };
-        const mergedXp = Math.max(local.totalXp, cloudXp);
+      // Merge local + cloud, then upload any local-only completions for continuity after login.
+      const local = loadLocalProgress();
+      const mergedLessons = [...new Set([...local.completedLessons, ...cloudLessons])];
+      const mergedCode = { ...cloudCode, ...local.savedCode };
+      const mergedXp = Math.max(local.totalXp, cloudXp);
+      const mergedCompletedAt = { ...cloudCompletedAt, ...local.lessonCompletedAt };
+      const mergedXpEarned = { ...cloudXpEarned, ...local.lessonXpEarned };
+      const mergedDates = uniqueSortedDates([
+        ...local.activityDates,
+        ...cloudActivityDates,
+        ...Object.values(mergedCompletedAt),
+      ]);
 
-        const merged = { completedLessons: mergedLessons, savedCode: mergedCode, totalXp: mergedXp };
-        setProgress(merged);
-        saveLocalProgress(merged);
+      const merged = {
+        completedLessons: mergedLessons,
+        savedCode: mergedCode,
+        totalXp: mergedXp,
+        activityDates: mergedDates,
+        lessonCompletedAt: mergedCompletedAt,
+        lessonXpEarned: mergedXpEarned,
+      };
+      setProgress(merged);
+      saveLocalProgress(merged);
+
+      const localCompletions = local.completedLessons.map((lessonId) => ({
+        user_id: user.id,
+        lesson_id: lessonId,
+        course_id: cloudCourseIds[lessonId] ?? resolveProgressCourseId(lessonId),
+        code: mergedCode[lessonId] ?? "",
+        completed: true,
+        xp_earned: mergedXpEarned[lessonId] ?? 0,
+      }));
+
+      if (localCompletions.length > 0) {
+        await supabase.from("user_progress").upsert(localCompletions, { onConflict: "user_id,lesson_id" });
       }
       setSynced(true);
     };
@@ -94,14 +177,22 @@ export function useProgress() {
     (lessonId: string, xp: number, courseId?: string) => {
       setProgress((prev) => {
         if (prev.completedLessons.includes(lessonId)) return prev;
+        const completedAt = toLocalDateKey(new Date());
         const updated = {
           ...prev,
           completedLessons: [...prev.completedLessons, lessonId],
           totalXp: prev.totalXp + xp,
+          activityDates: uniqueSortedDates([...prev.activityDates, completedAt]),
+          lessonCompletedAt: {
+            ...prev.lessonCompletedAt,
+            [lessonId]: completedAt,
+          },
+          lessonXpEarned: {
+            ...prev.lessonXpEarned,
+            [lessonId]: xp,
+          },
         };
-        if (courseId) {
-          syncToCloud(lessonId, courseId, prev.savedCode[lessonId] || "", true, xp);
-        }
+        syncToCloud(lessonId, resolveProgressCourseId(lessonId, courseId), prev.savedCode[lessonId] || "", true, xp);
         return updated;
       });
     },
@@ -142,6 +233,7 @@ export function useProgress() {
 
   return {
     ...progress,
+    studyStats: buildStudyStats(progress),
     completeLesson,
     saveCode,
     isCompleted,

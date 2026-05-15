@@ -30,6 +30,7 @@ import AITutor from "@/components/AITutor";
 import LessonCoach from "@/components/LessonCoach";
 import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import CourseCoverArt from "@/components/CourseCoverArt";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
@@ -83,6 +84,9 @@ const EditorPage = () => {
   const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
   const [bonusActive, setBonusActive] = useState(false);
   const [activeStage, setActiveStage] = useState<LessonStageId>("plan");
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [practiceCompleted, setPracticeCompleted] = useState(false);
+  const [stageNotice, setStageNotice] = useState<string | null>(null);
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
@@ -106,6 +110,9 @@ const EditorPage = () => {
     setPaceMode(null);
     setBonusActive(false);
     setActiveStage("plan");
+    setQuizCompleted(false);
+    setPracticeCompleted(false);
+    setStageNotice(null);
   }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
@@ -146,6 +153,9 @@ const EditorPage = () => {
   const lessonReadyToAdvance = alreadyCompleted || isCorrect === true;
   const isFirstStage = activeStageIndex === 0;
   const isCodeStage = currentStage.kind === "code";
+  const quizRequired = Boolean(lesson.quiz?.length);
+  const quizGatePassed = !quizRequired || quizCompleted || alreadyCompleted;
+  const practiceGatePassed = practiceCompleted || alreadyCompleted;
   const nextStageKind = availableStages[activeStageIndex + 1]?.kind;
   const nextStageCta =
     nextStageKind === "quiz"
@@ -171,8 +181,46 @@ const EditorPage = () => {
     ? "thinking"
     : "idle";
 
+  const stageRequirement =
+    currentStage.kind === "quiz" && !quizGatePassed
+      ? "Acerte o quiz para liberar a prática."
+      : currentStage.kind === "practice" && !practiceGatePassed
+      ? "Complete a prática guiada para liberar o desafio."
+      : null;
+  const currentStageCanAdvance = !stageRequirement;
+
+  const canEnterStageIndex = (index: number) => {
+    const targetStage = availableStages[index];
+    if (!targetStage) return false;
+    if (index <= activeStageIndex) return true;
+    if ((targetStage.kind === "practice" || targetStage.kind === "challenge" || targetStage.kind === "code") && !quizGatePassed) {
+      return false;
+    }
+    if ((targetStage.kind === "challenge" || targetStage.kind === "code") && !practiceGatePassed) {
+      return false;
+    }
+    return true;
+  };
+
+  const blockedStageMessage = (stage: LessonStage) => {
+    if ((stage.kind === "practice" || stage.kind === "challenge" || stage.kind === "code") && !quizGatePassed) {
+      return "Antes disso, acerte o quiz da aula.";
+    }
+    if ((stage.kind === "challenge" || stage.kind === "code") && !practiceGatePassed) {
+      return "Antes disso, complete a prática guiada.";
+    }
+    return "Siga a ordem da aula para liberar esta etapa.";
+  };
+
   const goToStage = (stage: LessonStageId) => {
-    if (!availableStages.some((item) => item.id === stage)) return;
+    const stageIndex = availableStages.findIndex((item) => item.id === stage);
+    const targetStage = availableStages[stageIndex];
+    if (!targetStage) return;
+    if (!canEnterStageIndex(stageIndex)) {
+      setStageNotice(blockedStageMessage(targetStage));
+      return;
+    }
+    setStageNotice(null);
     setActiveStage(stage);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
@@ -184,6 +232,10 @@ const EditorPage = () => {
   };
 
   const goToNextStage = () => {
+    if (!currentStageCanAdvance) {
+      setStageNotice(stageRequirement);
+      return;
+    }
     goToStageIndex(activeStageIndex + 1);
   };
 
@@ -341,8 +393,9 @@ const EditorPage = () => {
           </Link>
           <div className="flex-1">
             <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="font-bold text-primary">
-                {course.emoji} {course.title}
+              <span className="flex min-w-0 items-center gap-2 font-bold text-primary">
+                <CourseCoverArt course={course} variant="thumb" className="h-8 w-12 shrink-0 rounded-lg" />
+                <span className="truncate">{course.title}</span>
               </span>
               <span className="text-muted-foreground">
                 Lição {lessonIndex + 1}/{course.lessons.length}
@@ -372,16 +425,22 @@ const EditorPage = () => {
             {availableStages.map((step) => {
               const Icon = step.icon;
               const active = currentStage.id === step.id;
+              const stepIndex = availableStages.findIndex((item) => item.id === step.id);
+              const unlocked = canEnterStageIndex(stepIndex);
 
               return (
                 <button
                   key={step.id}
                   type="button"
                   onClick={() => goToStage(step.id)}
+                  disabled={!unlocked}
                   aria-current={active ? "step" : undefined}
+                  aria-disabled={!unlocked}
                   className={`flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full border px-3 text-xs font-bold transition-colors ${
                     active
                       ? "border-primary/30 bg-primary/10 text-primary"
+                      : !unlocked
+                      ? "cursor-not-allowed border-border bg-muted/40 text-muted-foreground/50"
                       : "border-border bg-card text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -391,6 +450,11 @@ const EditorPage = () => {
               );
             })}
           </div>
+          {stageNotice && (
+            <div className="mt-3 rounded-xl border border-quest-yellow/30 bg-quest-yellow/5 px-3 py-2 text-xs font-bold text-quest-yellow">
+              {stageNotice}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -449,8 +513,15 @@ const EditorPage = () => {
                     <QuizSection
                       questions={lesson.quiz}
                       onComplete={(correct) => {
-                        if (correct === lesson.quiz!.length) {
-                          completeLesson(lesson.id + "-quiz", 5);
+                        const passed = correct === lesson.quiz!.length;
+                        setQuizCompleted(passed);
+                        setStageNotice(
+                          passed
+                            ? null
+                            : "Revise o feedback da Capy e tente o quiz novamente para liberar a prática."
+                        );
+                        if (passed) {
+                          completeLesson(lesson.id + "-quiz", 5, course.id);
                         }
                       }}
                     />
@@ -460,7 +531,13 @@ const EditorPage = () => {
             </div>
 
             <div className={stageSectionClass("practice")}>
-              <GuidedPractice lesson={lesson} />
+              <GuidedPractice
+                lesson={lesson}
+                onCompletionChange={(completed) => {
+                  setPracticeCompleted(completed);
+                  if (completed) setStageNotice(null);
+                }}
+              />
             </div>
 
             <div className={stageSectionClass("challenge")}>
@@ -618,7 +695,7 @@ const EditorPage = () => {
             </div>
 
             {!isCodeStage && (
-              <div className="sticky bottom-[70px] z-20 -mx-6 mt-6 flex flex-col gap-2 border-t border-border bg-background/95 px-6 py-4 shadow-2xl backdrop-blur sm:flex-row sm:items-center sm:justify-between lg:bottom-0 lg:shadow-none">
+              <div className="z-20 -mx-6 mt-6 flex flex-col gap-2 border-t border-border bg-background/95 px-6 py-4 shadow-2xl backdrop-blur sm:flex-row sm:items-center sm:justify-between md:sticky md:bottom-0 lg:shadow-none">
                 <Button
                   variant="outline"
                   onClick={goToPreviousStage}
@@ -627,9 +704,18 @@ const EditorPage = () => {
                 >
                   <ArrowLeft size={16} /> Voltar
                 </Button>
-                <Button onClick={goToNextStage} className="gap-2 rounded-full font-bold">
-                  {nextStageCta} <ChevronRight size={16} />
-                </Button>
+                <div className="flex flex-col items-stretch gap-2 sm:items-end">
+                  {stageRequirement && (
+                    <div className="text-xs font-bold text-muted-foreground">{stageRequirement}</div>
+                  )}
+                  <Button
+                    onClick={goToNextStage}
+                    disabled={!currentStageCanAdvance}
+                    className="gap-2 rounded-full font-bold"
+                  >
+                    {nextStageCta} <ChevronRight size={16} />
+                  </Button>
+                </div>
               </div>
             )}
           </motion.div>

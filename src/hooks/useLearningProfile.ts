@@ -30,6 +30,7 @@ function readProfile(): LearningProfile | null {
 }
 
 function firstLessonFor(profile: LearningProfile): string {
+  if (profile.experience === "new") return "/editor/10/10-1";
   if (profile.goal === "frontend") return "/editor/9/9-1";
   if (profile.goal === "modern-web") return "/editor/2/2-1";
   if (profile.goal === "backend") return "/editor/5/5-1";

@@ -14,14 +14,18 @@ import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import MascoteCapivara from "@/components/MascoteCapivara";
+import CourseCoverArt from "@/components/CourseCoverArt";
 import {
   buildDailyReviewPlan,
   ERROR_REVIEW_COPY,
   type ReviewReason,
 } from "@/utils/dailyReview";
+import { buildConceptMasteryPlan, getWeakConceptIds } from "@/utils/conceptMastery";
+import { toLocalDateKey } from "@/utils/studyStats";
 
 const reasonCopy: Record<ReviewReason, string> = {
   stuck: "Você teve tentativa recente aqui. Vale revisar antes de avançar.",
+  weak_concept: "Esse conceito apareceu como ponto fraco no seu mapa de domínio.",
   in_progress: "Você já começou essa aula. Retomar agora reduz retrabalho.",
   completed: "Aula concluída recentemente. Boa para fortalecer memória.",
   starter: "Fundamento inicial recomendado para aquecer.",
@@ -32,6 +36,18 @@ const DailyReviewPage = () => {
   const { topErrors, attempts } = useAttemptTracker();
   const [result, setResult] = useState<{ correct: number; passed: boolean } | null>(null);
   const [quizKey, setQuizKey] = useState(0);
+  const weakConceptIds = useMemo(
+    () =>
+      getWeakConceptIds(
+        buildConceptMasteryPlan({
+          courses,
+          completedLessons,
+          savedCode,
+          attempts,
+        }),
+      ),
+    [attempts, completedLessons, savedCode],
+  );
 
   const reviewPlan = useMemo(
     () =>
@@ -41,8 +57,9 @@ const DailyReviewPage = () => {
         savedCode,
         attempts,
         topErrors,
+        weakConceptIds,
       }),
-    [attempts, completedLessons, savedCode, topErrors],
+    [attempts, completedLessons, savedCode, topErrors, weakConceptIds],
   );
 
   const recommendedHref = `/editor/${reviewPlan.recommendedLesson.course.id}/${reviewPlan.recommendedLesson.lesson.id}`;
@@ -53,7 +70,7 @@ const DailyReviewPage = () => {
     const passed = correct / activeQuestions.length >= reviewPlan.passThreshold;
     setResult({ correct, passed });
     if (passed) {
-      completeLesson(`daily-review-${new Date().toISOString().slice(0, 10)}`, reviewPlan.xpReward);
+      completeLesson(`daily-review-${toLocalDateKey(new Date())}`, reviewPlan.xpReward);
     }
   };
 
@@ -112,8 +129,9 @@ const DailyReviewPage = () => {
             <div className="mb-3 flex items-center gap-2 text-sm font-black text-primary">
               <Target size={16} /> Aula recomendada
             </div>
+            <CourseCoverArt course={reviewPlan.recommendedLesson.course} className="mb-4 h-36 w-full" />
             <h2 className="text-xl font-black text-foreground">
-              {reviewPlan.recommendedLesson.course.emoji} {reviewPlan.recommendedLesson.lesson.title}
+              {reviewPlan.recommendedLesson.lesson.title}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {reasonCopy[reviewPlan.recommendedLesson.reason]}

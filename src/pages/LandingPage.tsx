@@ -1,16 +1,20 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Code2, Gamepad2, Trophy, Users, Check } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Code2, Gamepad2, Trophy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import MascoteCapivara from "@/components/MascoteCapivara";
 import BrandLogo from "@/components/BrandLogo";
+import { appCatalogSummary, landingTracks } from "@/data/courseCatalog";
+import CourseCoverArt from "@/components/CourseCoverArt";
+
+const statIcons = [Gamepad2, BookOpenCheck, Code2, Trophy] as const;
 
 const stats = [
-  { label: "Alunos ativos", value: 52000, suffix: "+", icon: Users },
-  { label: "Exercícios", value: 3200, suffix: "+", icon: Code2 },
-  { label: "Cursos", value: 13, suffix: "", icon: Gamepad2 },
-  { label: "Badges", value: 120, suffix: "+", icon: Trophy },
+  { label: "Cursos", value: appCatalogSummary.courseCount, suffix: "", icon: statIcons[0] },
+  { label: "Lições", value: appCatalogSummary.lessonCount, suffix: "", icon: statIcons[1] },
+  { label: "Projetos", value: appCatalogSummary.projectCount, suffix: "", icon: statIcons[2] },
+  { label: "Tipos de prática", value: appCatalogSummary.practiceTypeCount, suffix: "", icon: statIcons[3] },
 ];
 
 const features = [
@@ -26,18 +30,12 @@ const features = [
   },
   {
     emoji: "🏆",
-    title: "Ganhe XP e badges",
+    title: "Ganhe XP e conquistas",
     desc: "Cada lição concluída te deixa mais perto do próximo nível.",
   },
 ];
 
-const tracks = [
-  { emoji: "🐍", name: "Python", level: "Iniciante", lessons: 14 },
-  { emoji: "⚡", name: "JavaScript", level: "Intermediário", lessons: 14 },
-  { emoji: "⚛️", name: "React", level: "Intermediário", lessons: 11 },
-  { emoji: "🎨", name: "CSS", level: "Iniciante", lessons: 11 },
-  { emoji: "🟢", name: "Node.js", level: "Intermediário", lessons: 12 },
-];
+const tracks = landingTracks;
 
 const AnimatedCounter = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -62,10 +60,10 @@ const AnimatedCounter = ({ target, suffix }: { target: number; suffix: string })
 /* Mini code preview card – Mimo style */
 const CodePreview = () => {
   const lines = [
-    { indent: 0, parts: [{ t: "keyword", v: "def " }, { t: "fn", v: "saudacao" }, { t: "plain", v: "(nome):" }] },
-    { indent: 1, parts: [{ t: "keyword", v: "return " }, { t: "string", v: 'f"Olá, {nome}!"' }] },
+    { indent: 0, parts: [{ t: "keyword", v: "mostrar" }, { t: "plain", v: "(" }, { t: "string", v: '"entender o problema"' }, { t: "plain", v: ")" }] },
+    { indent: 0, parts: [{ t: "keyword", v: "mostrar" }, { t: "plain", v: "(" }, { t: "string", v: '"criar os passos"' }, { t: "plain", v: ")" }] },
     { indent: 0, parts: [] },
-    { indent: 0, parts: [{ t: "fn", v: "print" }, { t: "plain", v: "(" }, { t: "fn", v: "saudacao" }, { t: "plain", v: '("Mundo"))' }] },
+    { indent: 0, parts: [{ t: "keyword", v: "mostrar" }, { t: "plain", v: "(" }, { t: "string", v: '"testar o resultado"' }, { t: "plain", v: ")" }] },
   ];
 
   const colorMap: Record<string, string> = {
@@ -82,7 +80,7 @@ const CodePreview = () => {
         <div className="h-3 w-3 rounded-full bg-[#f38ba8]" />
         <div className="h-3 w-3 rounded-full bg-[#f9e2af]" />
         <div className="h-3 w-3 rounded-full bg-[#a6e3a1]" />
-        <span className="ml-3 text-xs text-[#585b70] font-mono">main.py</span>
+        <span className="ml-3 text-xs text-[#585b70] font-mono">primeira-aula.logic</span>
       </div>
       {/* Code */}
       <div className="bg-[#1e1e2e] px-5 pb-5 pt-2 font-mono text-sm">
@@ -102,7 +100,7 @@ const CodePreview = () => {
       {/* Output bar */}
       <div className="flex items-center gap-2 bg-[#181825] px-5 py-3 text-xs font-mono">
         <span className="rounded-full bg-[#a6e3a1]/20 px-2 py-0.5 text-[#a6e3a1] font-bold">▶ Saída</span>
-        <span className="text-[#a6e3a1]">Olá, Mundo!</span>
+        <span className="text-[#a6e3a1]">testar o resultado</span>
         <span className="ml-auto flex items-center gap-1 text-[#a6e3a1]">
           <Check size={12} /> +10 XP
         </span>
@@ -135,13 +133,7 @@ const LandingPage = () => {
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-muted-foreground">
               Lições curtas, exercícios práticos e feedback instantâneo. Você escreve código real desde a primeira aula.
             </p>
-            <div className="mb-8 max-w-md">
-              <MascoteCapivara
-                state="idle"
-                message="Eu sou o CapyCoder. Vou te guiar com explicações curtinhas, aquecimentos e revisões quando você precisar."
-              />
-            </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="mb-8 flex flex-wrap gap-3">
               <Button
                 asChild
                 size="lg"
@@ -159,6 +151,12 @@ const LandingPage = () => {
               >
                 <Link to="/cursos">Ver cursos</Link>
               </Button>
+            </div>
+            <div className="mb-8 max-w-md">
+              <MascoteCapivara
+                state="idle"
+                message="Eu sou o CapyCoder. Vou te guiar com explicações curtinhas, aquecimentos e revisões quando você precisar."
+              />
             </div>
           </motion.div>
 
@@ -213,10 +211,12 @@ const LandingPage = () => {
                 viewport={{ once: true }}
               >
                 <Link to="/cursos" className="block">
-                  <div className="card-hover mimo-card flex items-center gap-4 p-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
-                      {t.emoji}
-                    </div>
+                  <div className="card-hover mimo-card flex items-center gap-4 p-4">
+                    <CourseCoverArt
+                      course={{ id: t.id, title: t.name, language: t.language, emoji: t.emoji }}
+                      variant="thumb"
+                      className="h-16 w-24 shrink-0 rounded-xl"
+                    />
                     <div>
                       <div className="font-extrabold text-foreground">{t.name}</div>
                       <div className="text-xs text-muted-foreground">{t.level} · {t.lessons} lições</div>
@@ -276,7 +276,7 @@ const LandingPage = () => {
             Pronto para começar?
           </h2>
           <p className="mb-8 text-base text-white/75">
-            Junte-se a mais de 52.000 alunos. É grátis!
+            Comece pela trilha Fundamentos da Programação e avance no seu ritmo.
           </p>
           <Button
             asChild
@@ -296,11 +296,12 @@ const LandingPage = () => {
           <div className="flex items-center gap-2">
             <BrandLogo className="h-10 max-w-[170px]" />
           </div>
-          <p className="text-sm text-muted-foreground">© 2026 CapyCode · Aprenda programação com uma trilha mais leve</p>
-          <div className="flex gap-5 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
-            <a href="#" className="hover:text-foreground transition-colors">GitHub</a>
-            <a href="#" className="hover:text-foreground transition-colors">Discord</a>
+          <p className="text-sm text-muted-foreground">2026 CapyCode · Uma plataforma da Code Bloom Studio</p>
+          <div className="flex flex-wrap justify-center gap-5 text-sm text-muted-foreground">
+            <Link to="/cursos" className="hover:text-foreground transition-colors">Cursos</Link>
+            <Link to="/privacidade" className="hover:text-foreground transition-colors">Privacidade</Link>
+            <Link to="/termos" className="hover:text-foreground transition-colors">Termos</Link>
+            <Link to="/excluir-conta" className="hover:text-foreground transition-colors">Excluir conta</Link>
           </div>
         </div>
       </footer>

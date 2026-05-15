@@ -510,6 +510,66 @@ const generatedProjects: Project[] = projectBlueprints.map((project) => ({
 
 export const projects: Project[] = [
   {
+    id: "proj-foundation-calculator",
+    courseId: "10",
+    title: "Calculadora da Capy",
+    emoji: "🧮",
+    language: "JavaScript",
+    goal: "Construir uma calculadora simples usando variáveis, condição e função.",
+    description:
+      "Um projeto final curto para provar que você entendeu entrada, processamento, decisão e saída.",
+    xpReward: 70,
+    summary: [
+      "Variáveis com nomes claros",
+      "Operadores aritméticos",
+      "Condições com if/else",
+      "Funções com parâmetros e return",
+    ],
+    steps: [
+      {
+        id: "step-1",
+        title: "Etapa 1 - Dados da conta",
+        description: "Crie `numeroA`, `numeroB` e `operacao`, depois mostre a operação escolhida.",
+        starterCode: "// Crie os dados da calculadora\n",
+        solution: 'const numeroA = 10;\nconst numeroB = 5;\nconst operacao = "soma";\nconsole.log(operacao);',
+        expectedOutput: "soma",
+        hints: [
+          "Use números sem aspas para numeroA e numeroB.",
+          "Use aspas em operacao porque soma é texto.",
+        ],
+        concepts: ["variáveis", "tipos"],
+      },
+      {
+        id: "step-2",
+        title: "Etapa 2 - Regra de soma",
+        description: "Use uma condição para somar apenas quando `operacao` for igual a `soma`.",
+        starterCode: 'const numeroA = 10;\nconst numeroB = 5;\nconst operacao = "soma";\n// Crie a condição\n',
+        solution:
+          'const numeroA = 10;\nconst numeroB = 5;\nconst operacao = "soma";\nif (operacao === "soma") {\n  console.log(numeroA + numeroB);\n}',
+        expectedOutput: "15",
+        hints: [
+          "Compare texto com ===.",
+          "A soma deve acontecer dentro do if.",
+        ],
+        concepts: ["comparação", "if"],
+      },
+      {
+        id: "step-3",
+        title: "Etapa 3 - Função calcular",
+        description: "Transforme a regra em uma função `calcular(a, b, operacao)` e mostre o resultado.",
+        starterCode: "// Crie a função calcular\n",
+        solution:
+          'function calcular(a, b, operacao) {\n  if (operacao === "soma") {\n    return a + b;\n  }\n  return 0;\n}\n\nconsole.log(calcular(10, 5, "soma"));',
+        expectedOutput: "15",
+        hints: [
+          "A função recebe três parâmetros.",
+          "Use return para devolver o resultado.",
+        ],
+        concepts: ["funções", "parâmetros", "return"],
+      },
+    ],
+  },
+  {
     id: "proj-py-greeter",
     courseId: "1",
     title: "Saudador Personalizado",

@@ -3,11 +3,13 @@ import { useParams, Navigate, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, ShieldCheck, Trophy } from "lucide-react";
 import { getAugmentedLessonById } from "@/data/checkpoints";
 import QuizSection from "@/components/QuizSection";
+import GuidedPractice from "@/components/GuidedPractice";
 import AITutor from "@/components/AITutor";
 import { useProgress } from "@/hooks/useProgress";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import confetti from "canvas-confetti";
+import CourseCoverArt from "@/components/CourseCoverArt";
 
 const PASS_RATIO = 0.7; // 70% to pass
 
@@ -46,7 +48,7 @@ const CheckpointPage = () => {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-background px-4 py-8 sm:px-6">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-4xl">
         {/* Top bar */}
         <div className="mb-6 flex items-center gap-3">
           <Link
@@ -55,9 +57,8 @@ const CheckpointPage = () => {
           >
             <ArrowLeft size={18} />
           </Link>
-          <span className="text-xs font-bold text-muted-foreground">
-            {course.emoji} {course.title} · Checkpoint
-          </span>
+          <CourseCoverArt course={course} variant="thumb" className="h-10 w-14 rounded-lg" />
+          <span className="text-xs font-bold text-muted-foreground">{course.title} · Checkpoint</span>
         </div>
 
         <motion.div
@@ -85,7 +86,7 @@ const CheckpointPage = () => {
               <Trophy size={14} /> +{lesson.xpReward} XP
             </span>
             <span className="text-muted-foreground">
-              · {questions.length} perguntas · acerte {Math.ceil(questions.length * PASS_RATIO)} para passar
+              · {lesson.practiceActivities?.length ?? 0} missões práticas · {questions.length} perguntas · acerte {Math.ceil(questions.length * PASS_RATIO)} para passar
             </span>
             {alreadyDone && (
               <span className="rounded-full bg-accent/15 px-2 py-0.5 font-bold text-accent">
@@ -94,8 +95,18 @@ const CheckpointPage = () => {
             )}
           </div>
 
+          {!result && lesson.practiceActivities && lesson.practiceActivities.length > 0 && (
+            <div className="mb-6">
+              <div className="mb-3 text-sm font-black text-primary">Missão prática de revisão</div>
+              <GuidedPractice lesson={lesson} />
+            </div>
+          )}
+
           {!result && (
-            <QuizSection questions={questions} onComplete={handleComplete} />
+            <div>
+              <div className="mb-3 text-sm font-black text-primary">Quiz de passagem</div>
+              <QuizSection questions={questions} onComplete={handleComplete} />
+            </div>
           )}
 
           {result && (

@@ -1,4 +1,5 @@
-import { courses, type Course } from "@/data/mockData";
+import type { Course } from "@/data/mockData";
+import { getCourseCatalogItem } from "@/data/courseCatalog";
 
 export type PathId = "frontend" | "modern-web" | "backend" | "python-ai" | "mobile" | "games";
 
@@ -35,9 +36,10 @@ export const learningPaths: LearningPath[] = [
     level: "Iniciante",
     duration: "10 a 12 semanas",
     finalProject: "Landing page responsiva para portfólio",
-    startCourseId: "9",
-    recommendedCourses: ["10", "7"],
+    startCourseId: "10",
+    recommendedCourses: ["9", "4", "2"],
     steps: [
+      { label: "Fundamentos", courseId: "10", note: "lógica antes da web" },
       { label: "HTML", courseId: "9", note: "estrutura da página" },
       { label: "CSS", courseId: "4", note: "layout e responsividade" },
       { label: "JavaScript", courseId: "2", note: "interação" },
@@ -120,9 +122,10 @@ export const learningPaths: LearningPath[] = [
     level: "Intermediário",
     duration: "14 semanas",
     finalProject: "App de tarefas com telas e estado",
-    startCourseId: "2",
-    recommendedCourses: ["3", "7"],
+    startCourseId: "10",
+    recommendedCourses: ["2", "3", "7"],
     steps: [
+      { label: "Fundamentos", courseId: "10", note: "lógica para apps" },
       { label: "JavaScript", courseId: "2", note: "base da linguagem" },
       { label: "React", courseId: "3", note: "componentes e estado" },
       { label: "React Native", courseId: "11", note: "componentes mobile" },
@@ -157,43 +160,57 @@ export function getPathById(id: string | null | undefined): LearningPath {
   return learningPaths.find((path) => path.id === id) ?? learningPaths[0];
 }
 
-export function getCourseByPathStep(step: PathStep): Course | undefined {
-  return step.courseId ? courses.find((course) => course.id === step.courseId) : undefined;
-}
-
 export function getCourseMeta(course: Course) {
+  const catalogItem = getCourseCatalogItem(course.id);
+  if (catalogItem) {
+    return {
+      kind: catalogItem.kind,
+      prerequisite: catalogItem.prerequisite,
+      finalProject: catalogItem.finalProject,
+      lockedUntil: catalogItem.lockedUntil,
+    };
+  }
+
   const language = course.language.toLowerCase();
   const title = course.title.toLowerCase();
+  if (course.id === "10" || title.includes("fundamentos da programação")) {
+    return {
+      kind: "Base de programação",
+      prerequisite: "Nenhum",
+      finalProject: "Calculadora simples guiada",
+      lockedUntil: null,
+    };
+  }
   if (language.includes("react native")) {
     return {
       kind: "Framework mobile",
-      prerequisite: "React bÃ¡sico",
+      prerequisite: "React básico",
       finalProject: "App mobile com lista e estado",
       lockedUntil: "React",
     };
   }
   if (language.includes("dados") || title.includes("dados e ia")) {
     return {
-      kind: "Dados e automaÃ§Ã£o",
-      prerequisite: "Python bÃ¡sico",
-      finalProject: "RelatÃ³rio automatizado",
+      kind: "Dados e automação",
+      prerequisite: "Python básico",
+      finalProject: "Relatório automatizado",
       lockedUntil: "Python",
     };
   }
   if (language.includes("jogos")) {
     return {
-      kind: "Jogos e interaÃ§Ã£o",
-      prerequisite: "LÃ³gica + JavaScript",
-      finalProject: "Mini jogo jogÃ¡vel",
+      kind: "Jogos e interação",
+      prerequisite: "Lógica + JavaScript",
+      finalProject: "Mini jogo jogável",
       lockedUntil: "JavaScript",
     };
   }
   if (title.includes("algoritmos")) {
     return {
-      kind: "Algoritmos avanÃ§ados",
-      prerequisite: "LÃ³gica + uma linguagem",
+      kind: "Algoritmos avançados",
+      prerequisite: "Lógica + uma linguagem",
       finalProject: "Desafio de estruturas de dados",
-      lockedUntil: "LÃ³gica",
+      lockedUntil: "Lógica",
     };
   }
   if (language.includes("react")) {
