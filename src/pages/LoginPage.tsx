@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,15 +7,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import BrandLogo from "@/components/BrandLogo";
+import { getAuthRedirect } from "@/utils/authRedirect";
 
 const LoginPage = () => {
   const { user, signIn, loading } = useAuth();
+  const location = useLocation();
+  const redirectTo = getAuthRedirect(location);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to={redirectTo} replace />;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +98,7 @@ const LoginPage = () => {
           className="w-full rounded-full font-bold"
           onClick={async () => {
             const result = await lovable.auth.signInWithOAuth("google", {
-              redirect_uri: window.location.origin,
+              redirect_uri: new URL(redirectTo, window.location.origin).toString(),
             });
             if (result.error) {
               toast.error("Erro ao entrar com Google: " + result.error.message);
@@ -108,7 +111,7 @@ const LoginPage = () => {
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Não tem conta?{" "}
-          <Link to="/cadastro" className="font-bold text-primary hover:underline">
+          <Link to={`/cadastro?redirect=${encodeURIComponent(redirectTo)}`} className="font-bold text-primary hover:underline">
             Cadastre-se grátis
           </Link>
         </p>

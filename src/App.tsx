@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "./components/Navbar.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
@@ -40,6 +41,16 @@ const PageWithNav = ({ children }: { children: ReactNode }) => (
   </>
 );
 
+const ProtectedPageWithNav = ({ children }: { children: ReactNode }) => (
+  <ProtectedRoute>
+    <PageWithNav>{children}</PageWithNav>
+  </ProtectedRoute>
+);
+
+const ProtectedPage = ({ children }: { children: ReactNode }) => (
+  <ProtectedRoute>{children}</ProtectedRoute>
+);
+
 const PageFallback = () => (
   <div className="flex min-h-screen items-center justify-center bg-background px-4 text-sm font-bold text-muted-foreground">
     Carregando trilha...
@@ -60,23 +71,23 @@ const App = () => (
               <Route path="/cadastro" element={<SignUpPage />} />
               <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
-              <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
-              <Route path="/trilha" element={<PageWithNav><RoadmapPage /></PageWithNav>} />
-              <Route path="/revisao" element={<PageWithNav><DailyReviewPage /></PageWithNav>} />
-              <Route path="/pontos-fracos" element={<PageWithNav><WeakConceptsPage /></PageWithNav>} />
-              <Route path="/referencia" element={<PageWithNav><ReferencePage /></PageWithNav>} />
-              <Route path="/mascote" element={<PageWithNav><MascoteDemoPage /></PageWithNav>} />
+              <Route path="/onboarding" element={<ProtectedPage><OnboardingPage /></ProtectedPage>} />
+              <Route path="/cursos" element={<ProtectedPageWithNav><CoursesPage /></ProtectedPageWithNav>} />
+              <Route path="/trilha" element={<ProtectedPageWithNav><RoadmapPage /></ProtectedPageWithNav>} />
+              <Route path="/revisao" element={<ProtectedPageWithNav><DailyReviewPage /></ProtectedPageWithNav>} />
+              <Route path="/pontos-fracos" element={<ProtectedPageWithNav><WeakConceptsPage /></ProtectedPageWithNav>} />
+              <Route path="/referencia" element={<ProtectedPageWithNav><ReferencePage /></ProtectedPageWithNav>} />
+              <Route path="/mascote" element={<ProtectedPageWithNav><MascoteDemoPage /></ProtectedPageWithNav>} />
               <Route path="/privacidade" element={<PageWithNav><PrivacyPolicyPage /></PageWithNav>} />
               <Route path="/termos" element={<PageWithNav><TermsPage /></PageWithNav>} />
               <Route path="/excluir-conta" element={<PageWithNav><AccountDeletionPage /></PageWithNav>} />
-              <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
-              <Route path="/editor/:courseId/:lessonId" element={<PageWithNav><EditorPage /></PageWithNav>} />
-              <Route path="/checkpoint/:courseId/:lessonId" element={<PageWithNav><CheckpointPage /></PageWithNav>} />
-              <Route path="/projetos" element={<PageWithNav><ProjectsPage /></PageWithNav>} />
-              <Route path="/projeto/:projectId" element={<PageWithNav><ProjectPage /></PageWithNav>} />
-              <Route path="/dashboard" element={<PageWithNav><DashboardPage /></PageWithNav>} />
-              <Route path="/perfil" element={<PageWithNav><ProfilePage /></PageWithNav>} />
+              <Route path="/cursos/:courseId" element={<ProtectedPageWithNav><CourseDetailPage /></ProtectedPageWithNav>} />
+              <Route path="/editor/:courseId/:lessonId" element={<ProtectedPageWithNav><EditorPage /></ProtectedPageWithNav>} />
+              <Route path="/checkpoint/:courseId/:lessonId" element={<ProtectedPageWithNav><CheckpointPage /></ProtectedPageWithNav>} />
+              <Route path="/projetos" element={<ProtectedPageWithNav><ProjectsPage /></ProtectedPageWithNav>} />
+              <Route path="/projeto/:projectId" element={<ProtectedPageWithNav><ProjectPage /></ProtectedPageWithNav>} />
+              <Route path="/dashboard" element={<ProtectedPageWithNav><DashboardPage /></ProtectedPageWithNav>} />
+              <Route path="/perfil" element={<ProtectedPageWithNav><ProfilePage /></ProtectedPageWithNav>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
