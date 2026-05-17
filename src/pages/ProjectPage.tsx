@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Navigate, Link, useNavigate } from "react-router-dom";
 import {
@@ -6,7 +6,6 @@ import {
   Check,
   CheckCircle2,
   Hammer,
-  Lightbulb,
   Play,
   RotateCcw,
   Trophy,
@@ -16,7 +15,7 @@ import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import CodeEditor from "@/components/CodeEditor";
-import AITutor from "@/components/AITutor";
+import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import { getProjectById } from "@/data/projects";
 import { validateCode } from "@/utils/codeValidator";
 import { useProgress } from "@/hooks/useProgress";
@@ -160,6 +159,15 @@ const ProjectPage = () => {
   const handleNextHint = () => {
     if (!step) return;
     setHintIndex((i) => Math.min(i + 1, step.hints.length - 1));
+  };
+
+  const useGuidedProjectStarter = () => {
+    if (!step) return;
+    setCode(
+      `// Guia da Capy\n// Projeto: ${project.title}\n// Etapa: ${step.title}\n// Saída esperada: ${step.expectedOutput}\n// Resolva só esta etapa antes de avançar.\n\n${step.starterCode}`,
+    );
+    setOutput(null);
+    setStepStatus("idle");
   };
 
   /* ── Final summary ─────────────────────────────────────────────── */
@@ -326,32 +334,22 @@ const ProjectPage = () => {
                 </code>
               </div>
 
-              {/* Hints */}
-              <div className="mt-4 space-y-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleNextHint}
-                  disabled={hintIndex >= step!.hints.length - 1}
-                  className="gap-2 rounded-full text-xs"
-                >
-                  <Lightbulb size={13} /> Pedir dica (
-                  {Math.max(hintIndex + 1, 0)}/{step!.hints.length})
-                </Button>
-                <AnimatePresence>
-                  {hintIndex >= 0 &&
-                    step!.hints.slice(0, hintIndex + 1).map((h, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="rounded-lg border border-quest-yellow/20 bg-quest-yellow/5 px-3 py-2 text-xs text-quest-yellow"
-                      >
-                        💡 {h}
-                      </motion.div>
-                    ))}
-                </AnimatePresence>
-              </div>
+              <CapyLessonAssistant
+                mode="project"
+                title={step!.title}
+                state={running ? "loading" : stepStatus === "ok" ? "success" : stepStatus === "err" ? "error" : "thinking"}
+                stageLabel={`Etapa ${state.currentStep + 1}`}
+                objective={step!.description}
+                expectedOutput={step!.expectedOutput}
+                hints={step!.hints}
+                revealedHintCount={hintIndex + 1}
+                lastFeedback={output}
+                compact
+                onRevealHint={handleNextHint}
+                onUseGuidedStarter={useGuidedProjectStarter}
+                className="mt-4"
+              />
+
             </div>
           </motion.div>
         </div>
@@ -429,23 +427,6 @@ const ProjectPage = () => {
           </div>
         </div>
       </div>
-
-      {step && (
-        <AITutor
-          contextId={`${project.id}-${step.id}`}
-          lessonContext={{
-            courseTitle: project.title,
-            language: project.language,
-            lessonTitle: `Projeto · Etapa ${state.currentStep + 1}: ${step.title}`,
-            description: step.description,
-            // Projetos não têm campo "theory" separado — a description já é detalhada
-            expectedOutput: step.expectedOutput,
-            starterCode: step.starterCode,
-            currentCode: code,
-            lastError: stepStatus === "err" ? output ?? undefined : undefined,
-          }}
-        />
-      )}
     </div>
   );
 };

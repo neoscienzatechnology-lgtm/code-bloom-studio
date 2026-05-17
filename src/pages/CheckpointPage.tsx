@@ -4,7 +4,7 @@ import { ArrowLeft, ShieldCheck, Trophy } from "lucide-react";
 import { getAugmentedLessonById } from "@/data/checkpoints";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
-import AITutor from "@/components/AITutor";
+import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import { useProgress } from "@/hooks/useProgress";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
@@ -29,6 +29,12 @@ const CheckpointPage = () => {
   const questions = lesson.quiz ?? [];
   const alreadyDone = isCompleted(lesson.id);
   const nextLesson = course.lessons[lessonIndex + 1];
+  const checkpointHints = [
+    `Acerte pelo menos ${Math.ceil(questions.length * PASS_RATIO)} perguntas para avançar.`,
+    lesson.practiceActivities?.[0]?.hint,
+    questions[0]?.hint,
+    "Depois de errar, leia o feedback antes de tentar outra resposta.",
+  ].filter((hint): hint is string => Boolean(hint));
 
   const handleComplete = (correct: number) => {
     if (completionHandledRef.current) return;
@@ -100,6 +106,25 @@ const CheckpointPage = () => {
               </span>
             )}
           </div>
+
+          <CapyLessonAssistant
+            mode="checkpoint"
+            title={lesson.title}
+            state={result ? (passed ? "success" : "error") : "thinking"}
+            stageLabel="Checkpoint"
+            objective={`Revise as últimas lições e acerte ${Math.ceil(questions.length * PASS_RATIO)} de ${questions.length} perguntas.`}
+            description={lesson.description}
+            hints={checkpointHints}
+            revealedHintCount={checkpointHints.length}
+            lastFeedback={
+              result
+                ? passed
+                  ? "Você passou no checkpoint. O próximo bloco está liberado."
+                  : "Ainda faltou consolidar alguns pontos. Refaça com calma."
+                : null
+            }
+            className="mb-6"
+          />
 
           {!result && lesson.practiceActivities && lesson.practiceActivities.length > 0 && (
             <div className="mb-6">
@@ -179,16 +204,6 @@ const CheckpointPage = () => {
           )}
         </motion.div>
       </div>
-
-      <AITutor
-        contextId={lesson.id}
-        lessonContext={{
-          courseTitle: course.title,
-          language: course.language,
-          lessonTitle: `Checkpoint: ${lesson.title}`,
-          description: `Revisão das últimas lições. Responda às ${questions.length} perguntas e acerte ao menos 70% para avançar.`,
-        }}
-      />
     </div>
   );
 };

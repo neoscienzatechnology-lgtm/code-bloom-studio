@@ -13,8 +13,6 @@ import {
   X,
   RotateCcw,
   ArrowLeft,
-  Eye,
-  EyeOff,
   Info,
   BookOpen,
   Code2,
@@ -26,10 +24,10 @@ import CodeEditor from "@/components/CodeEditor";
 import TheoryRenderer from "@/components/TheoryRenderer";
 import QuizSection from "@/components/QuizSection";
 import PaceCoach from "@/components/PaceCoach";
-import AITutor from "@/components/AITutor";
 import LessonCoach from "@/components/LessonCoach";
 import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import CourseCoverArt from "@/components/CourseCoverArt";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
@@ -331,6 +329,16 @@ const EditorPage = () => {
     setCode(lesson.solution);
   };
 
+  const useGuidedStarter = () => {
+    const guide = `// Guia da Capy\n// 1. Releia o objetivo: ${lesson.learningObjective ?? lesson.description}\n// 2. Compare cada linha com a saída esperada: ${lesson.expectedOutput}\n// 3. Use uma dica por vez antes de testar de novo.\n\n${lesson.starterCode}`;
+    setCode(guide);
+    setOutput(null);
+    setReflectiveQ(null);
+    setIsCorrect(null);
+    setPaceMode(null);
+    goToStage("code");
+  };
+
   const handleNext = () => {
     if (nextLesson) {
       const nextHref =
@@ -562,82 +570,45 @@ const EditorPage = () => {
               </div>
             </div>
 
-            {/* Hints */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 flex-wrap">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleHint}
-                  className="gap-2 rounded-full text-xs"
-                  disabled={hintIndex >= lesson.hints.length - 1}
+            <CapyLessonAssistant
+              title={lesson.title}
+              state={lessonMascotState}
+              stageLabel="Desafio"
+              objective={lesson.learningObjective ?? lesson.description}
+              description={lesson.description}
+              expectedOutput={lesson.expectedOutput}
+              hints={lesson.hints}
+              revealedHintCount={hintIndex + 1}
+              commonMistake={lesson.commonMistake}
+              reference={lesson.reference}
+              lastFeedback={output}
+              attempts={getAttempts(lesson.id)}
+              onRevealHint={handleHint}
+              onUseGuidedStarter={useGuidedStarter}
+              onRevealSolution={handleRevealSolution}
+              canRevealSolution={hintIndex >= 1 && !showSolution}
+              className="mb-5"
+            />
+
+            <AnimatePresence>
+              {solutionWarned && !showSolution && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mb-5 rounded-lg border border-quest-yellow/30 bg-quest-yellow/5 px-4 py-3 text-xs text-quest-yellow"
                 >
-                  <Lightbulb size={14} /> Pedir dica ({Math.max(hintIndex + 1, 0)}/{lesson.hints.length})
-                </Button>
-
-                {/* Ver Solução button */}
-                {hintIndex >= 1 && !showSolution && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  Ver a solução vai carregar o código no editor. Tente mais um pouco primeiro: você aprende mais corrigindo o erro.{" "}
+                  <button
+                    type="button"
                     onClick={handleRevealSolution}
-                    className="gap-1.5 rounded-full text-xs text-muted-foreground hover:text-destructive"
+                    className="ml-1 font-bold underline hover:opacity-80"
                   >
-                    <Eye size={13} /> Ver Solução
-                  </Button>
-                )}
-                {showSolution && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowSolution(false)}
-                    className="gap-1.5 rounded-full text-xs text-muted-foreground"
-                  >
-                    <EyeOff size={13} /> Ocultar Solução
-                  </Button>
-                )}
-              </div>
-
-              {/* Solution warning */}
-              <AnimatePresence>
-                {solutionWarned && !showSolution && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="rounded-lg border border-quest-yellow/30 bg-quest-yellow/5 px-4 py-3 text-xs text-quest-yellow"
-                  >
-                    ⚠️ Ver a solução vai carregar o código no editor. Tente mais um pouco primeiro — você aprende muito mais errando!{" "}
-                    <button
-                      onClick={handleRevealSolution}
-                      className="ml-1 underline font-bold hover:opacity-80"
-                    >
-                      Mostrar mesmo assim
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <AnimatePresence>
-                {hintIndex >= 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="space-y-2"
-                  >
-                    {lesson.hints.slice(0, hintIndex + 1).map((hint, i) => (
-                      <div
-                        key={i}
-                        className="rounded-lg border border-quest-yellow/20 bg-quest-yellow/5 px-4 py-2.5 text-sm text-quest-yellow"
-                      >
-                        💡 {hint}
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
+                    Mostrar mesmo assim
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
             {/* Personalização de ritmo: apoio extra ou desafio */}
             <PaceCoach
               mode={paceMode}
@@ -698,6 +669,24 @@ const EditorPage = () => {
                 </Button>
               </div>
               <MascoteCapivara state={lessonMascotState} className="mt-5 hidden lg:block" />
+              <CapyLessonAssistant
+                title={lesson.title}
+                state={lessonMascotState}
+                stageLabel="Código"
+                objective={lesson.learningObjective ?? lesson.description}
+                description={lesson.description}
+                expectedOutput={lesson.expectedOutput}
+                hints={lesson.hints}
+                revealedHintCount={hintIndex + 1}
+                commonMistake={lesson.commonMistake}
+                reference={lesson.reference}
+                lastFeedback={output}
+                attempts={getAttempts(lesson.id)}
+                compact
+                onRevealHint={handleHint}
+                onUseGuidedStarter={useGuidedStarter}
+                className="mt-4 hidden lg:block"
+              />
             </div>
 
             {!isCodeStage && (
@@ -730,6 +719,21 @@ const EditorPage = () => {
         {/* Editor (right panel) */}
         {isCodeStage && (
         <div className="flex min-h-0 flex-col">
+          <CapyLessonAssistant
+            title={lesson.title}
+            state={lessonMascotState}
+            stageLabel="Código"
+            objective={lesson.learningObjective ?? lesson.description}
+            expectedOutput={lesson.expectedOutput}
+            hints={lesson.hints}
+            revealedHintCount={hintIndex + 1}
+            lastFeedback={output}
+            attempts={getAttempts(lesson.id)}
+            compact
+            onRevealHint={handleHint}
+            onUseGuidedStarter={useGuidedStarter}
+            className="m-4 mb-0 lg:hidden"
+          />
           <div className="min-h-[430px] flex-1 p-4 lg:min-h-0">
             <div className="h-full rounded-2xl border border-border bg-[#1e1e2e] overflow-hidden flex flex-col shadow-sm">
               {/* Editor header */}
@@ -864,21 +868,6 @@ const EditorPage = () => {
         </div>
         )}
       </div>
-
-      <AITutor
-        contextId={lesson.id}
-        lessonContext={{
-          courseTitle: course.title,
-          language: course.language,
-          lessonTitle: lesson.title,
-          description: lesson.description,
-          theory: lesson.theory,
-          expectedOutput: lesson.expectedOutput,
-          starterCode: lesson.starterCode,
-          currentCode: code,
-          lastError: isCorrect === false ? output ?? undefined : undefined,
-        }}
-      />
     </div>
   );
 };
