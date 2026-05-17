@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, RefreshCw, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
   const [answered, setAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
+  const advanceLockedRef = useRef(false);
+  const completionReportedRef = useRef(false);
 
   const q = questions[currentQ];
   const isLastQuestion = currentQ === questions.length - 1;
@@ -23,13 +25,19 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
 
   const handleSelect = (idx: number) => {
     if (answered) return;
+    advanceLockedRef.current = false;
     setSelected(idx);
     setAnswered(true);
   };
 
   const handleNext = () => {
+    if (!answered || finished || advanceLockedRef.current) return;
+    advanceLockedRef.current = true;
+
     const finalCorrectCount = correctCount + (isCorrect ? 1 : 0);
     if (isLastQuestion) {
+      if (completionReportedRef.current) return;
+      completionReportedRef.current = true;
       setCorrectCount(finalCorrectCount);
       setFinished(true);
       onComplete(finalCorrectCount);
@@ -47,6 +55,8 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
     setAnswered(false);
     setCorrectCount(0);
     setFinished(false);
+    advanceLockedRef.current = false;
+    completionReportedRef.current = false;
   };
 
   /* ── Resultado final ─────────────────────────────────────────── */
@@ -192,6 +202,7 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
                 {/* Continue button */}
                 <Button
                   onClick={handleNext}
+                  disabled={finished}
                   className="w-full gap-2 rounded-xl bg-primary font-bold text-white hover:bg-primary/90"
                 >
                   {isLastQuestion ? "Ver Resultado" : "Próxima"}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -32,10 +32,11 @@ const reasonCopy: Record<ReviewReason, string> = {
 };
 
 const DailyReviewPage = () => {
-  const { completedLessons, savedCode, completeLesson } = useProgress();
+  const { completedLessons, savedCode, completeLesson, isCompleted } = useProgress();
   const { topErrors, attempts } = useAttemptTracker();
-  const [result, setResult] = useState<{ correct: number; passed: boolean } | null>(null);
+  const [result, setResult] = useState<{ correct: number; passed: boolean; awardedXp: boolean } | null>(null);
   const [quizKey, setQuizKey] = useState(0);
+  const completionHandledRef = useRef(false);
   const weakConceptIds = useMemo(
     () =>
       getWeakConceptIds(
@@ -65,17 +66,21 @@ const DailyReviewPage = () => {
   const recommendedHref = `/editor/${reviewPlan.recommendedLesson.course.id}/${reviewPlan.recommendedLesson.lesson.id}`;
   const activeQuestions = reviewPlan.questions;
   const focusItems = reviewPlan.focusErrors.map((error) => ERROR_REVIEW_COPY[error]);
+  const reviewRewardId = `daily-review-${toLocalDateKey(new Date())}`;
+  const reviewRewardClaimed = isCompleted(reviewRewardId);
 
   const finishReview = (correct: number) => {
+    if (completionHandledRef.current) return;
+    completionHandledRef.current = true;
+
     const passed = correct / activeQuestions.length >= reviewPlan.passThreshold;
-    setResult({ correct, passed });
-    if (passed) {
-      completeLesson(`daily-review-${toLocalDateKey(new Date())}`, reviewPlan.xpReward);
-    }
+    const awardedXp = passed && !reviewRewardClaimed ? completeLesson(reviewRewardId, reviewPlan.xpReward) : false;
+    setResult({ correct, passed, awardedXp });
   };
 
   const restartReview = () => {
     setResult(null);
+    completionHandledRef.current = false;
     setQuizKey((key) => key + 1);
   };
 
@@ -119,8 +124,10 @@ const DailyReviewPage = () => {
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <CheckCircle2 className="mb-2 text-accent" size={18} />
-            <div className="text-sm font-black">+{reviewPlan.xpReward} XP</div>
-            <p className="text-xs text-muted-foreground">Passe com 70% ou mais.</p>
+            <div className="text-sm font-black">
+              {reviewRewardClaimed ? "XP de hoje já coletado" : `+${reviewPlan.xpReward} XP`}
+            </div>
+            <p className="text-xs text-muted-foreground">Passe com 70% ou mais. A recompensa vale uma vez por dia.</p>
           </div>
         </div>
 
@@ -174,7 +181,9 @@ const DailyReviewPage = () => {
                 <p className="mt-2 text-sm text-muted-foreground">
                   Você acertou {result.correct}/{activeQuestions.length}.{" "}
                   {result.passed
-                    ? `XP liberado. Agora siga para a aula recomendada.`
+                    ? result.awardedXp
+                      ? "XP liberado. Agora siga para a aula recomendada."
+                      : "Revisão registrada. O XP de hoje já tinha sido coletado."
                     : "Revise o foco de hoje e tente outra rodada curta."}
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { getLessonById } from "@/data/mockData";
 import { getAugmentedLessonById } from "@/data/checkpoints";
@@ -87,6 +87,7 @@ const EditorPage = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [practiceCompleted, setPracticeCompleted] = useState(false);
   const [stageNotice, setStageNotice] = useState<string | null>(null);
+  const runLockedRef = useRef(false);
 
   useEffect(() => {
     const seen = localStorage.getItem(ONBOARDING_KEY);
@@ -113,6 +114,7 @@ const EditorPage = () => {
     setQuizCompleted(false);
     setPracticeCompleted(false);
     setStageNotice(null);
+    runLockedRef.current = false;
   }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
@@ -253,6 +255,8 @@ const EditorPage = () => {
   };
 
   const handleRun = () => {
+    if (running || runLockedRef.current) return;
+    runLockedRef.current = true;
     setActiveStage("code");
     setRunning(true);
     setTimeout(() => {
@@ -267,10 +271,10 @@ const EditorPage = () => {
         setOutput(lesson.expectedOutput);
         setReflectiveQ(null);
         resetLesson(lesson.id);
-        setShowXP(true);
-        setTimeout(() => setShowXP(false), 1500);
-        if (!alreadyCompleted) {
-          completeLesson(lesson.id, lesson.xpReward, course.id);
+        const awardedXp = !alreadyCompleted && completeLesson(lesson.id, lesson.xpReward, course.id);
+        if (awardedXp) {
+          setShowXP(true);
+          setTimeout(() => setShowXP(false), 1500);
           fireConfetti();
         }
         // Personalização: acertou de primeira → oferece desafio extra
@@ -299,6 +303,7 @@ const EditorPage = () => {
         }
       }
       setRunning(false);
+      runLockedRef.current = false;
     }, 800);
   };
 

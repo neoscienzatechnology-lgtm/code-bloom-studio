@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildStudyStats, toLocalDateKey } from "@/utils/studyStats";
 
-interface ProgressData {
+export interface ProgressData {
   completedLessons: string[];
   savedCode: Record<string, string>;
   totalXp: number;
@@ -28,21 +28,84 @@ const EMPTY_PROGRESS: ProgressData = {
   lessonXpEarned: {},
 };
 
-function normalizeProgress(data: Partial<ProgressData> | null | undefined): ProgressData {
+const completedLessonLocks = new Set<string>();
+const progressListeners = new Set<(progress: ProgressData) => void>();
+let progressSnapshot: ProgressData | null = null;
+
+function uniqueStrings(items: string[]): string[] {
+  return Array.from(new Set(items.filter(Boolean)));
+}
+
+function sanitizeXp(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
+}
+
+function normalizeNumberRecord(value: unknown): Record<string, number> {
+  if (!value || typeof value !== "object") return {};
+
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>)
+      .filter(([key]) => Boolean(key))
+      .map(([key, item]) => [key, sanitizeXp(item)])
+  );
+}
+
+function hydrateCompletionLocks(progress: ProgressData) {
+  progress.completedLessons.forEach((lessonId) => completedLessonLocks.add(lessonId));
+}
+
+export function normalizeProgress(data: Partial<ProgressData> | null | undefined): ProgressData {
+  const completedLessons = uniqueStrings(Array.isArray(data?.completedLessons) ? data.completedLessons : []);
+  const lessonXpEarned = normalizeNumberRecord(data?.lessonXpEarned);
+  const earnedTotal = completedLessons.reduce((total, lessonId) => total + (lessonXpEarned[lessonId] ?? 0), 0);
+  const hasXpForEveryCompletedLesson =
+    completedLessons.length > 0 &&
+    completedLessons.every((lessonId) => Object.prototype.hasOwnProperty.call(lessonXpEarned, lessonId));
+
   return {
-    completedLessons: Array.isArray(data?.completedLessons) ? data.completedLessons : [],
+    completedLessons,
     savedCode: data?.savedCode && typeof data.savedCode === "object" ? data.savedCode : {},
-    totalXp: typeof data?.totalXp === "number" ? data.totalXp : 0,
-    activityDates: Array.isArray(data?.activityDates) ? data.activityDates : [],
+    totalXp: hasXpForEveryCompletedLesson ? earnedTotal : Math.max(sanitizeXp(data?.totalXp), earnedTotal),
+    activityDates: uniqueSortedDates(Array.isArray(data?.activityDates) ? data.activityDates : []),
     lessonCompletedAt:
       data?.lessonCompletedAt && typeof data.lessonCompletedAt === "object" ? data.lessonCompletedAt : {},
-    lessonXpEarned:
-      data?.lessonXpEarned && typeof data.lessonXpEarned === "object" ? data.lessonXpEarned : {},
+    lessonXpEarned,
   };
 }
 
 function uniqueSortedDates(dates: string[]): string[] {
   return Array.from(new Set(dates.filter(Boolean))).sort();
+}
+
+export function awardProgressOnce(
+  currentProgress: Partial<ProgressData> | null | undefined,
+  lessonId: string,
+  xp: number,
+  completedAt = toLocalDateKey(new Date())
+): { progress: ProgressData; awarded: boolean } {
+  const normalizedLessonId = lessonId.trim();
+  const progress = normalizeProgress(currentProgress);
+
+  if (!normalizedLessonId || progress.completedLessons.includes(normalizedLessonId)) {
+    return { progress, awarded: false };
+  }
+
+  return {
+    awarded: true,
+    progress: normalizeProgress({
+      ...progress,
+      completedLessons: [...progress.completedLessons, normalizedLessonId],
+      activityDates: uniqueSortedDates([...progress.activityDates, completedAt]),
+      lessonCompletedAt: {
+        ...progress.lessonCompletedAt,
+        [normalizedLessonId]: completedAt,
+      },
+      lessonXpEarned: {
+        ...progress.lessonXpEarned,
+        [normalizedLessonId]: sanitizeXp(xp),
+      },
+    }),
+  };
 }
 
 export function resolveProgressCourseId(lessonId: string, courseId?: string): string {
@@ -69,10 +132,40 @@ function saveLocalProgress(data: ProgressData) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+function getProgressSnapshot(): ProgressData {
+  if (!progressSnapshot) {
+    progressSnapshot = loadLocalProgress();
+    hydrateCompletionLocks(progressSnapshot);
+  }
+
+  return progressSnapshot;
+}
+
+function replaceProgressSnapshot(nextProgress: Partial<ProgressData>): ProgressData {
+  const normalized = normalizeProgress(nextProgress);
+  progressSnapshot = normalized;
+  hydrateCompletionLocks(normalized);
+  saveLocalProgress(normalized);
+  progressListeners.forEach((listener) => listener(normalized));
+  return normalized;
+}
+
+function updateProgressSnapshot(updater: (progress: ProgressData) => Partial<ProgressData>): ProgressData {
+  return replaceProgressSnapshot(updater(getProgressSnapshot()));
+}
+
 export function useProgress() {
   const { user } = useAuth();
-  const [progress, setProgress] = useState<ProgressData>(loadLocalProgress);
+  const [progress, setProgress] = useState<ProgressData>(getProgressSnapshot);
   const [synced, setSynced] = useState(false);
+
+  useEffect(() => {
+    progressListeners.add(setProgress);
+    setProgress(getProgressSnapshot());
+    return () => {
+      progressListeners.delete(setProgress);
+    };
+  }, []);
 
   // Load from cloud when user logs in
   useEffect(() => {
@@ -109,10 +202,9 @@ export function useProgress() {
       });
 
       // Merge local + cloud, then upload any local-only completions for continuity after login.
-      const local = loadLocalProgress();
+      const local = getProgressSnapshot();
       const mergedLessons = [...new Set([...local.completedLessons, ...cloudLessons])];
       const mergedCode = { ...cloudCode, ...local.savedCode };
-      const mergedXp = Math.max(local.totalXp, cloudXp);
       const mergedCompletedAt = { ...cloudCompletedAt, ...local.lessonCompletedAt };
       const mergedXpEarned = { ...cloudXpEarned, ...local.lessonXpEarned };
       const mergedDates = uniqueSortedDates([
@@ -121,16 +213,15 @@ export function useProgress() {
         ...Object.values(mergedCompletedAt),
       ]);
 
-      const merged = {
+      const merged = normalizeProgress({
         completedLessons: mergedLessons,
         savedCode: mergedCode,
-        totalXp: mergedXp,
+        totalXp: Math.max(local.totalXp, cloudXp),
         activityDates: mergedDates,
         lessonCompletedAt: mergedCompletedAt,
         lessonXpEarned: mergedXpEarned,
-      };
-      setProgress(merged);
-      saveLocalProgress(merged);
+      });
+      replaceProgressSnapshot(merged);
 
       const localCompletions = local.completedLessons.map((lessonId) => ({
         user_id: user.id,
@@ -149,11 +240,6 @@ export function useProgress() {
 
     loadCloud();
   }, [user]);
-
-  // Save to localStorage on every change
-  useEffect(() => {
-    saveLocalProgress(progress);
-  }, [progress]);
 
   const syncToCloud = useCallback(
     async (lessonId: string, courseId: string, code: string, completed: boolean, xp: number) => {
@@ -175,38 +261,39 @@ export function useProgress() {
 
   const completeLesson = useCallback(
     (lessonId: string, xp: number, courseId?: string) => {
-      setProgress((prev) => {
-        if (prev.completedLessons.includes(lessonId)) return prev;
-        const completedAt = toLocalDateKey(new Date());
-        const updated = {
-          ...prev,
-          completedLessons: [...prev.completedLessons, lessonId],
-          totalXp: prev.totalXp + xp,
-          activityDates: uniqueSortedDates([...prev.activityDates, completedAt]),
-          lessonCompletedAt: {
-            ...prev.lessonCompletedAt,
-            [lessonId]: completedAt,
-          },
-          lessonXpEarned: {
-            ...prev.lessonXpEarned,
-            [lessonId]: xp,
-          },
-        };
-        syncToCloud(lessonId, resolveProgressCourseId(lessonId, courseId), prev.savedCode[lessonId] || "", true, xp);
-        return updated;
-      });
+      const normalizedLessonId = lessonId.trim();
+      if (!normalizedLessonId || completedLessonLocks.has(normalizedLessonId)) return false;
+
+      completedLessonLocks.add(normalizedLessonId);
+      const { progress: updated, awarded } = awardProgressOnce(getProgressSnapshot(), normalizedLessonId, xp);
+
+      if (!awarded) return false;
+
+      replaceProgressSnapshot(updated);
+      syncToCloud(
+        normalizedLessonId,
+        resolveProgressCourseId(normalizedLessonId, courseId),
+        updated.savedCode[normalizedLessonId] || "",
+        true,
+        updated.lessonXpEarned[normalizedLessonId] ?? 0
+      );
+      return true;
     },
     [syncToCloud]
   );
 
   const saveCode = useCallback(
     (lessonId: string, code: string, courseId?: string) => {
-      setProgress((prev) => ({
+      const normalizedLessonId = lessonId.trim();
+      if (!normalizedLessonId) return;
+
+      const updated = updateProgressSnapshot((prev) => ({
         ...prev,
-        savedCode: { ...prev.savedCode, [lessonId]: code },
+        savedCode: { ...prev.savedCode, [normalizedLessonId]: code },
       }));
       if (courseId) {
-        syncToCloud(lessonId, courseId, code, false, 0);
+        const completed = updated.completedLessons.includes(normalizedLessonId);
+        syncToCloud(normalizedLessonId, courseId, code, completed, updated.lessonXpEarned[normalizedLessonId] ?? 0);
       }
     },
     [syncToCloud]

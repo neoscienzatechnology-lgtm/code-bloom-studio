@@ -7,7 +7,7 @@ import GuidedPractice from "@/components/GuidedPractice";
 import AITutor from "@/components/AITutor";
 import { useProgress } from "@/hooks/useProgress";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import CourseCoverArt from "@/components/CourseCoverArt";
 
@@ -19,6 +19,7 @@ const CheckpointPage = () => {
   const data = getAugmentedLessonById(courseId || "", lessonId || "");
   const { completeLesson, isCompleted } = useProgress();
   const [result, setResult] = useState<{ correct: number; total: number } | null>(null);
+  const completionHandledRef = useRef(false);
 
   if (!data || !data.lesson || data.lesson.kind !== "checkpoint") {
     return <Navigate to="/cursos" replace />;
@@ -30,17 +31,22 @@ const CheckpointPage = () => {
   const nextLesson = course.lessons[lessonIndex + 1];
 
   const handleComplete = (correct: number) => {
+    if (completionHandledRef.current) return;
+    completionHandledRef.current = true;
+
     const total = questions.length;
     setResult({ correct, total });
     const passed = correct / total >= PASS_RATIO;
     if (passed && !alreadyDone) {
-      completeLesson(lesson.id, lesson.xpReward, course.id);
-      confetti({
-        particleCount: 140,
-        spread: 90,
-        origin: { y: 0.6 },
-        colors: ["#0A7C78", "#7AD7A7", "#FF9F2F"],
-      });
+      const awardedXp = completeLesson(lesson.id, lesson.xpReward, course.id);
+      if (awardedXp) {
+        confetti({
+          particleCount: 140,
+          spread: 90,
+          origin: { y: 0.6 },
+          colors: ["#0A7C78", "#7AD7A7", "#FF9F2F"],
+        });
+      }
     }
   };
 
@@ -151,7 +157,10 @@ const CheckpointPage = () => {
                   <>
                     <Button
                       variant="outline"
-                      onClick={() => setResult(null)}
+                      onClick={() => {
+                        completionHandledRef.current = false;
+                        setResult(null);
+                      }}
                       className="rounded-full"
                     >
                       Tentar novamente

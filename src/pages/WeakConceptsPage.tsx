@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   ArrowRight,
@@ -41,12 +41,13 @@ function chooseDefaultConcept(concepts: ConceptMastery[], selectedId: string | n
 }
 
 const WeakConceptsPage = () => {
-  const { completedLessons, savedCode, completeLesson } = useProgress();
+  const { completedLessons, savedCode, completeLesson, isCompleted } = useProgress();
   const { attempts } = useAttemptTracker();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedId, setSelectedId] = useState<string | null>(() => searchParams.get("concept"));
   const [quizKey, setQuizKey] = useState(0);
-  const [result, setResult] = useState<{ correct: number; passed: boolean; conceptId: string } | null>(null);
+  const [result, setResult] = useState<{ correct: number; passed: boolean; conceptId: string; awardedXp: boolean } | null>(null);
+  const completionHandledRef = useRef(false);
 
   const localConcepts = useMemo(
     () =>
@@ -72,6 +73,8 @@ const WeakConceptsPage = () => {
     .slice(0, 8);
   const conceptList = visibleConcepts.length > 0 ? visibleConcepts : concepts.slice(0, 8);
   const passed = result?.conceptId === activeConcept?.id && result.passed;
+  const trainingRewardId = activeConcept ? `concept-training-${activeConcept.id}-${toLocalDateKey(new Date())}` : "";
+  const trainingRewardClaimed = Boolean(trainingRewardId && isCompleted(trainingRewardId));
   const recommendedHref = trainingSession?.recommendedLesson
     ? `/editor/${trainingSession.recommendedLesson.courseId}/${trainingSession.recommendedLesson.lessonId}`
     : "/revisao";
@@ -80,20 +83,23 @@ const WeakConceptsPage = () => {
     setSelectedId(conceptId);
     setSearchParams({ concept: conceptId });
     setResult(null);
+    completionHandledRef.current = false;
     setQuizKey((key) => key + 1);
   };
 
   const finishTraining = (correct: number) => {
     if (!activeConcept || !trainingSession) return;
+    if (completionHandledRef.current) return;
+    completionHandledRef.current = true;
+
     const isPassed = correct / trainingSession.questions.length >= 0.7;
-    setResult({ correct, passed: isPassed, conceptId: activeConcept.id });
-    if (isPassed) {
-      completeLesson(`concept-training-${activeConcept.id}-${toLocalDateKey(new Date())}`, 18);
-    }
+    const awardedXp = isPassed && !trainingRewardClaimed ? completeLesson(trainingRewardId, 18) : false;
+    setResult({ correct, passed: isPassed, conceptId: activeConcept.id, awardedXp });
   };
 
   const restartTraining = () => {
     setResult(null);
+    completionHandledRef.current = false;
     setQuizKey((key) => key + 1);
   };
 
@@ -237,7 +243,9 @@ const WeakConceptsPage = () => {
                     <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
                       Você acertou {result.correct}/{trainingSession.questions.length}.{" "}
                       {result.passed
-                        ? "Agora aplique isso na aula recomendada para consolidar."
+                        ? result.awardedXp
+                          ? "XP liberado. Agora aplique isso na aula recomendada para consolidar."
+                          : "Treino registrado. O XP deste conceito hoje já tinha sido coletado."
                         : "Refaça a rodada ou abra a aula recomendada para rever a explicação com calma."}
                     </p>
                     <div className="mt-5 flex flex-wrap justify-center gap-2">

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Navigate, Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -57,6 +57,8 @@ const ProjectPage = () => {
   const [stepStatus, setStepStatus] = useState<"idle" | "ok" | "err">("idle");
   const [hintIndex, setHintIndex] = useState(-1);
   const [running, setRunning] = useState(false);
+  const runLockedRef = useRef(false);
+  const advanceLockedRef = useRef(false);
 
   const step = project?.steps[state.currentStep];
   const allDone =
@@ -69,6 +71,8 @@ const ProjectPage = () => {
     setOutput(null);
     setStepStatus("idle");
     setHintIndex(-1);
+    runLockedRef.current = false;
+    advanceLockedRef.current = false;
   }, [step, state.codeByStep]);
 
   // Persist state
@@ -91,7 +95,8 @@ const ProjectPage = () => {
   const alreadyClaimed = isCompleted(projectXpKey);
 
   const handleRun = () => {
-    if (!step) return;
+    if (!step || running || runLockedRef.current) return;
+    runLockedRef.current = true;
     setRunning(true);
     setTimeout(() => {
       const result = validateCode(code, step.expectedOutput, step.solution, {
@@ -112,11 +117,14 @@ const ProjectPage = () => {
         setStepStatus("err");
       }
       setRunning(false);
+      runLockedRef.current = false;
     }, 500);
   };
 
   const handleAdvance = () => {
-    if (!step) return;
+    if (!step || stepStatus !== "ok" || advanceLockedRef.current) return;
+    advanceLockedRef.current = true;
+
     const nextCompleted = state.completedSteps.includes(step.id)
       ? state.completedSteps
       : [...state.completedSteps, step.id];
@@ -129,11 +137,10 @@ const ProjectPage = () => {
     setState(updated);
 
     // Final step → award XP
-    if (
-      nextCompleted.length === project.steps.length &&
-      !alreadyClaimed
-    ) {
-      completeLesson(projectXpKey, project.xpReward, project.courseId);
+    if (nextCompleted.length === project.steps.length && !alreadyClaimed) {
+      const awardedXp = completeLesson(projectXpKey, project.xpReward, project.courseId);
+      if (!awardedXp) return;
+
       confetti({
         particleCount: 160,
         spread: 100,
@@ -193,7 +200,7 @@ const ProjectPage = () => {
             </div>
 
             <div className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
-              ✨ +{project.xpReward} XP
+              {alreadyClaimed ? "XP deste projeto já registrado" : `+${project.xpReward} XP disponível`}
             </div>
 
             <div className="mt-6 flex flex-wrap justify-center gap-2">

@@ -11,7 +11,7 @@ import { buildConceptMasteryPlan, getWeakConceptIds } from "@/utils/conceptMaste
 import { buildConceptTrainingSession } from "@/utils/weakConceptTraining";
 import { buildAchievements } from "@/utils/achievements";
 import { buildStudyStats } from "@/utils/studyStats";
-import { ACTIVITY_COURSE_IDS, resolveProgressCourseId } from "@/hooks/useProgress";
+import { ACTIVITY_COURSE_IDS, awardProgressOnce, normalizeProgress, resolveProgressCourseId } from "@/hooks/useProgress";
 import { courses, type Course, type Lesson } from "@/data/mockData";
 import { appCatalogSummary, courseCatalog } from "@/data/courseCatalog";
 import { learningPaths } from "@/data/learningPaths";
@@ -116,6 +116,43 @@ describe("study stats and achievements", () => {
     expect(resolveProgressCourseId("10-1-quiz")).toBe("10");
     expect(resolveProgressCourseId("loose-quiz")).toBe(ACTIVITY_COURSE_IDS.quiz);
     expect(resolveProgressCourseId("10-1", "10")).toBe("10");
+  });
+
+  it("awards XP only once for the same progress key", () => {
+    const first = awardProgressOnce(
+      {
+        completedLessons: [],
+        savedCode: {},
+        totalXp: 0,
+        activityDates: [],
+        lessonCompletedAt: {},
+        lessonXpEarned: {},
+      },
+      "10-1",
+      15,
+      "2026-05-17",
+    );
+    const second = awardProgressOnce(first.progress, "10-1", 15, "2026-05-17");
+
+    expect(first.awarded).toBe(true);
+    expect(second.awarded).toBe(false);
+    expect(second.progress.completedLessons).toEqual(["10-1"]);
+    expect(second.progress.totalXp).toBe(15);
+  });
+
+  it("normalizes duplicated completed lessons without multiplying XP", () => {
+    const progress = normalizeProgress({
+      completedLessons: ["10-1", "10-1"],
+      savedCode: {},
+      totalXp: 999,
+      activityDates: ["2026-05-17", "2026-05-17"],
+      lessonCompletedAt: { "10-1": "2026-05-17" },
+      lessonXpEarned: { "10-1": 15 },
+    });
+
+    expect(progress.completedLessons).toEqual(["10-1"]);
+    expect(progress.activityDates).toEqual(["2026-05-17"]);
+    expect(progress.totalXp).toBe(15);
   });
 });
 
