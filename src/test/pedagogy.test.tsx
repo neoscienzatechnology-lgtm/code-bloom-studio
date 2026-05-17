@@ -18,6 +18,7 @@ import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
 import { selectNextLesson, selectNextPathCourse } from "@/utils/learningPathProgress";
+import { validateCode } from "@/utils/codeValidator";
 
 const lesson: Lesson = {
   id: "lesson-1",
@@ -331,6 +332,117 @@ describe("GuidedPractice", () => {
     fireEvent.click(screen.getByRole("button", { name: "Verificar" }));
 
     await waitFor(() => expect(onCompletionChange).toHaveBeenLastCalledWith(true));
+  });
+});
+
+describe("code validation", () => {
+  it("accepts official solutions and rejects unchanged starters across lessons and projects", () => {
+    const rejectedSolutions: string[] = [];
+    const acceptedStarters: string[] = [];
+
+    courses.forEach((courseItem) => {
+      courseItem.lessons.forEach((courseLesson) => {
+        const solution = validateCode(courseLesson.solution, courseLesson.expectedOutput, courseLesson.solution, {
+          starterCode: courseLesson.starterCode,
+        });
+        const starter = validateCode(courseLesson.starterCode, courseLesson.expectedOutput, courseLesson.solution, {
+          starterCode: courseLesson.starterCode,
+        });
+
+        if (solution.level !== "exact" && solution.level !== "flexible") {
+          rejectedSolutions.push(`${courseItem.id}/${courseLesson.id}`);
+        }
+        if (starter.level === "exact" || starter.level === "flexible") {
+          acceptedStarters.push(`${courseItem.id}/${courseLesson.id}`);
+        }
+      });
+    });
+
+    projects.forEach((project) => {
+      project.steps.forEach((step) => {
+        const solution = validateCode(step.solution, step.expectedOutput, step.solution, {
+          starterCode: step.starterCode,
+        });
+        const starter = validateCode(step.starterCode, step.expectedOutput, step.solution, {
+          starterCode: step.starterCode,
+        });
+
+        if (solution.level !== "exact" && solution.level !== "flexible") {
+          rejectedSolutions.push(`${project.id}/${step.id}`);
+        }
+        if (starter.level === "exact" || starter.level === "flexible") {
+          acceptedStarters.push(`${project.id}/${step.id}`);
+        }
+      });
+    });
+
+    expect(rejectedSolutions).toEqual([]);
+    expect(acceptedStarters).toEqual([]);
+  });
+
+  it("does not accept unchanged starter code just because it contains the expected text", () => {
+    const result = validateCode(
+      'mostrar("corrigi o erro"',
+      "corrigi o erro",
+      'mostrar("corrigi o erro");',
+      { starterCode: 'mostrar("corrigi o erro"' },
+    );
+
+    expect(result.level).toBe("wrong");
+    expect(result.errorKind).toBe("unknown");
+  });
+
+  it("ignores comments when checking structural answers", () => {
+    const result = validateCode(
+      '<!-- Crie um parágrafo com class="dica" -->',
+      'class="dica"',
+      '<p class="dica">HTML usa tags.</p>',
+    );
+
+    expect(result.level).toBe("wrong");
+    expect(result.errorKind).toBe("empty");
+  });
+
+  it("accepts computed output instead of requiring the literal expected string", () => {
+    const result = validateCode(
+      'const nome = "Ana";\nconsole.log("Olá, " + nome);',
+      "Olá, Ana",
+      'console.log("Olá, Ana");',
+    );
+
+    expect(["exact", "flexible"]).toContain(result.level);
+  });
+
+  it("accepts simple string transformations inside output calls", () => {
+    const result = validateCode(
+      'nome = "  ANA  "\nprint(nome.strip().lower())',
+      "ana",
+      'nome = "  ANA  "\nprint(nome.strip().lower())',
+    );
+
+    expect(["exact", "flexible"]).toContain(result.level);
+  });
+
+  it("requires a real output command when the official solution outputs a value", () => {
+    const result = validateCode(
+      'const nome = "Ana";',
+      "Ana",
+      "console.log(nome);",
+    );
+
+    expect(result.level).not.toBe("exact");
+    expect(result.level).not.toBe("flexible");
+  });
+
+  it("does not treat imports as completed structural work", () => {
+    const result = validateCode(
+      'import { View, Text } from "react-native";\n\nexport default function App() {}',
+      "Text",
+      'import { View, Text } from "react-native";\nexport default function App() {\n  return <View><Text>Olá</Text></View>;\n}',
+    );
+
+    expect(result.level).not.toBe("exact");
+    expect(result.level).not.toBe("flexible");
   });
 });
 

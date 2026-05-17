@@ -65,7 +65,7 @@ const GuidedPractice = ({ lesson, onCompletionChange }: GuidedPracticeProps) => 
   const [activityChecked, setActivityChecked] = useState<Record<string, boolean>>({});
 
   const shuffled = useMemo(() => [...lines].sort((a, b) => b.localeCompare(a)), [lines]);
-  const fillOk = answer.trim() === fill.target;
+  const fillOk = normalizeAnswer(answer) === normalizeAnswer(fill.target);
   const orderOk = selectedLines.join("\n") === lines.join("\n");
   const hasFallbackPractice = Boolean(fill.target || lines.length >= 2);
   const correctActivityCount = customActivities.filter((activity) =>

@@ -94,7 +94,9 @@ const ProjectPage = () => {
     if (!step) return;
     setRunning(true);
     setTimeout(() => {
-      const result = validateCode(code, step.expectedOutput, step.solution);
+      const result = validateCode(code, step.expectedOutput, step.solution, {
+        starterCode: step.starterCode,
+      });
       const correct = result.level === "exact" || result.level === "flexible";
       if (correct) {
         setOutput(`✅ ${step.expectedOutput}`);

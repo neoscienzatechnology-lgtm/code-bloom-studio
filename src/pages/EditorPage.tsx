@@ -256,7 +256,9 @@ const EditorPage = () => {
     setActiveStage("code");
     setRunning(true);
     setTimeout(() => {
-      const result = validateCode(code, lesson.expectedOutput, lesson.solution);
+      const result = validateCode(code, lesson.expectedOutput, lesson.solution, {
+        starterCode: lesson.starterCode,
+      });
       const correct = result.level === "exact" || result.level === "flexible";
       setIsCorrect(correct ? true : result.level === "close" ? null : false);
 
