@@ -10,7 +10,7 @@ import { useProgress } from "@/hooks/useProgress";
 import MascoteCapivara from "@/components/MascoteCapivara";
 import CourseCoverArt from "@/components/CourseCoverArt";
 import { useLearningProfile } from "@/hooks/useLearningProfile";
-import { selectPathStartCourse } from "@/utils/learningPathProgress";
+import { calculatePathProgress, selectPathStartCourse } from "@/utils/learningPathProgress";
 
 const tabs = ["Trilhas", "Explorar"] as const;
 const pathCoverCourseIds: Record<string, string> = {
@@ -110,12 +110,7 @@ const CoursesPage = () => {
               const pathCourses = path.steps
                 .map((step) => courses.find((course) => course.id === step.courseId))
                 .filter(Boolean);
-              const progressValues = pathCourses.map((course) =>
-                getCourseProgress(course!.lessons.map((lesson) => lesson.id))
-              );
-              const pathProgress = progressValues.length
-                ? Math.round(progressValues.reduce((sum, value) => sum + value, 0) / progressValues.length)
-                : 0;
+              const pathProgress = calculatePathProgress(coursesWithProgress, path, learningPaths, profile?.goal);
               const coverCourseId = pathCoverCourseIds[path.id] ?? path.startCourseId;
               const startCourse = courses.find((course) => course.id === coverCourseId) ?? pathCourses[0];
 

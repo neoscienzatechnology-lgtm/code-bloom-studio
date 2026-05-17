@@ -16,6 +16,42 @@ export function getPathCourses(
     .filter((course): course is CourseWithProgress => Boolean(course));
 }
 
+function getPathCourseIds(path: LearningPath): string[] {
+  return path.steps
+    .map((step) => step.courseId)
+    .filter((courseId): courseId is string => Boolean(courseId));
+}
+
+export function getSharedPathCourseIds(paths: LearningPath[]): Set<string> {
+  const occurrences = paths.reduce<Record<string, number>>((acc, path) => {
+    getPathCourseIds(path).forEach((courseId) => {
+      acc[courseId] = (acc[courseId] ?? 0) + 1;
+    });
+    return acc;
+  }, {});
+
+  return new Set(Object.entries(occurrences).filter(([, count]) => count > 1).map(([courseId]) => courseId));
+}
+
+export function calculatePathProgress(
+  coursesWithProgress: CourseWithProgress[],
+  path: LearningPath,
+  allPaths: LearningPath[],
+  activePathId?: string | null,
+): number {
+  const pathCourses = getPathCourses(coursesWithProgress, path);
+  if (pathCourses.length === 0) return 0;
+
+  const sharedCourseIds = getSharedPathCourseIds(allPaths);
+  const isActivePath = activePathId === path.id;
+
+  const progressValues = pathCourses.map((course) =>
+    isActivePath || !sharedCourseIds.has(course.id) ? course.realProgress : 0,
+  );
+
+  return Math.round(progressValues.reduce((sum, value) => sum + value, 0) / pathCourses.length);
+}
+
 export function selectNextPathCourse(
   coursesWithProgress: CourseWithProgress[],
   path: LearningPath,

@@ -17,7 +17,12 @@ import { appCatalogSummary, courseCatalog } from "@/data/courseCatalog";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
-import { selectNextLesson, selectNextPathCourse, selectPathStartCourse } from "@/utils/learningPathProgress";
+import {
+  calculatePathProgress,
+  selectNextLesson,
+  selectNextPathCourse,
+  selectPathStartCourse,
+} from "@/utils/learningPathProgress";
 import { validateCode } from "@/utils/codeValidator";
 
 const lesson: Lesson = {
@@ -188,6 +193,28 @@ describe("pedagogy blueprint", () => {
     const targetCourse = selectPathStartCourse(coursesWithProgress, backendPath, "frontend");
 
     expect(targetCourse.id).toBe("2");
+  });
+
+  it("does not mark every path as started from shared fundamentals progress", () => {
+    const frontendPath = learningPaths.find((path) => path.id === "frontend")!;
+    const backendPath = learningPaths.find((path) => path.id === "backend")!;
+    const coursesWithProgress = courses.map((item) => ({
+      ...item,
+      realProgress: item.id === "10" ? 40 : 0,
+    }));
+
+    expect(calculatePathProgress(coursesWithProgress, frontendPath, learningPaths, "frontend")).toBeGreaterThan(0);
+    expect(calculatePathProgress(coursesWithProgress, backendPath, learningPaths, "frontend")).toBe(0);
+  });
+
+  it("still shows progress on another path when a path-specific course was started", () => {
+    const backendPath = learningPaths.find((path) => path.id === "backend")!;
+    const coursesWithProgress = courses.map((item) => ({
+      ...item,
+      realProgress: item.id === "5" ? 50 : 0,
+    }));
+
+    expect(calculatePathProgress(coursesWithProgress, backendPath, learningPaths, "frontend")).toBeGreaterThan(0);
   });
 
   it("ships fundamentals as a logic-first W3-style course before JavaScript", () => {
