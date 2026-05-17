@@ -41,12 +41,50 @@ type VisualTone = {
   soft: string;
 };
 
+export const LESSON_INFOGRAPHIC_SLUGS = [
+  "programming-flow",
+  "variables-memory",
+  "data-types",
+  "operators-transform",
+  "condition-branch",
+  "loops-cycle",
+  "functions-block",
+  "arrays-collections",
+  "objects-state",
+  "html-structure",
+  "css-layout",
+  "box-model",
+  "dom-events",
+  "api-request",
+  "sql-data-flow",
+  "git-versioning",
+  "algorithms-strategy",
+  "mobile-layers",
+  "games-loop",
+  "ai-prompt",
+  "data-pipeline",
+  "automation-workflow",
+] as const;
+
+export type LessonInfographicSlug = (typeof LESSON_INFOGRAPHIC_SLUGS)[number];
+
+const LESSON_INFOGRAPHIC_BASE_PATH = "/lesson-infographics";
+
+export const LESSON_INFOGRAPHIC_ASSET_PATHS = Object.fromEntries(
+  LESSON_INFOGRAPHIC_SLUGS.map((slug) => [slug, `${LESSON_INFOGRAPHIC_BASE_PATH}/${slug}.jpg`]),
+) as Record<LessonInfographicSlug, string>;
+
+export function getLessonInfographicSrc(slug: LessonInfographicSlug) {
+  return LESSON_INFOGRAPHIC_ASSET_PATHS[slug];
+}
+
 type ConceptVisual = {
   title: string;
   subtitle: string;
   steps: string[];
   checkpoints: string[];
   icon: typeof Code2;
+  assetSlug?: LessonInfographicSlug;
   pattern:
     | "flow"
     | "layers"
@@ -514,6 +552,63 @@ function buildConcept(lessonTitle = "", language = ""): ConceptVisual {
   };
 }
 
+function resolveConceptAssetSlug(
+  courseTitle = "",
+  language = "",
+  lessonTitle = "",
+  concept: ConceptVisual,
+): LessonInfographicSlug {
+  const key = normalize(`${courseTitle} ${language} ${lessonTitle} ${concept.title} ${concept.subtitle}`);
+  const conceptKey = normalize(`${concept.title} ${lessonTitle}`);
+
+  if (/tipo de dado|tipos de dado|string|texto|numero|number|boolean|verdadeiro|falso/.test(key)) return "data-types";
+  if (/memoria com nome|estado e pontuacao/.test(conceptKey)) return "variables-memory";
+  if (/react native|mobile|view|stylesheet|touch|flatlist|navegacao|celular/.test(key)) return "mobile-layers";
+  if (/jogo|game|pontuacao|vitoria|derrota|jogador|canvas|sprite|colisao/.test(key)) return "games-loop";
+  if (/automacao|automatizar|workflow|gatilho/.test(key)) return "automation-workflow";
+  if (/limpeza|metrica|metricas|relatorio|relatorios|pipeline de dados|dados como tabelas|insight/.test(key)) return "data-pipeline";
+  if (/prompt|inteligencia artificial/.test(key) || /\bia\b/.test(conceptKey)) return "ai-prompt";
+  if (/git|branch|branches|commit|merge|pull request|remoto|push|pull|diff|version/.test(key)) return "git-versioning";
+  if (/big o|complexidade|sort|ordenacao|busca|recurs|hash|arvore|grafo|fila|pilha|algoritmo/.test(key)) return "algorithms-strategy";
+  if (/sql|select|insert|update|delete|join|group|table|tabela|database|banco|where|having|consulta/.test(key)) return "sql-data-flow";
+  if (/backend|request|response|requisicao|resposta|async|await|promise|fetch|express|rota|crud|jwt|api|server|servidor/.test(key)) return "api-request";
+  if (/box model|padding|margin|border|espacamento|largura|altura/.test(key)) return "box-model";
+  if (/css|flex|grid|responsiv|media|position|layout|seletores/.test(key)) return "css-layout";
+  if (/html|semantico|semantica|meta|seo|\bform\b|formulario|links|imagem|tag|heading|section/.test(key)) return "html-structure";
+  if (/dom|evento|click|botao|button|alterando texto|tela|usuario/.test(key)) return "dom-events";
+  if (/array|arrays|lista|listas|colecao|colecoes|map|filter/.test(key)) return "arrays-collections";
+  if (/objeto|objetos|object|objects|estado estruturado|propriedade/.test(key)) return "objects-state";
+  if (/operador|expressao|expressoes|calculo|calcular|aritmetica|resultado|transformacao de valores/.test(key)) return "operators-transform";
+  if (/condicao|condicional|decisao|\bif\b|\belse\b|validacao|validation|comparac|filtro/.test(key)) return "condition-branch";
+  if (/loop|\bfor\b|\bwhile\b|repeti|ciclo/.test(key)) return "loops-cycle";
+  if (/func|arrow|lambda|custom hook|modulos|imports|component|props|middleware|mvc|reutiliz/.test(key)) return "functions-block";
+  if (/variavel|variaveis|const|let|input|print|memoria|estado/.test(key)) return "variables-memory";
+
+  if (concept.pattern === "variable") return "variables-memory";
+  if (concept.pattern === "branch") return "condition-branch";
+  if (concept.pattern === "data") return "sql-data-flow";
+  if (concept.pattern === "request") return "api-request";
+  if (concept.pattern === "box") return "box-model";
+  if (concept.pattern === "layout") return "css-layout";
+  if (concept.pattern === "dom") return "dom-events";
+  if (concept.pattern === "mobile") return "mobile-layers";
+  if (concept.pattern === "game") return "games-loop";
+  if (concept.pattern === "algorithm") return "algorithms-strategy";
+  if (concept.pattern === "layers") return "functions-block";
+
+  return "programming-flow";
+}
+
+export function getLessonVisualConcept(courseTitle = "", language = "", lessonTitle = ""): ConceptVisual & {
+  assetSlug: LessonInfographicSlug;
+} {
+  const concept = buildConcept(lessonTitle, language);
+  return {
+    ...concept,
+    assetSlug: resolveConceptAssetSlug(courseTitle, language, lessonTitle, concept),
+  };
+}
+
 const PatternArtwork = ({ concept, tone }: { concept: ConceptVisual; tone: VisualTone }) => {
   const Icon = concept.icon;
 
@@ -760,13 +855,27 @@ const PatternArtwork = ({ concept, tone }: { concept: ConceptVisual; tone: Visua
 const LessonVisualAid = ({ courseTitle, language, lessonTitle }: LessonVisualAidProps) => {
   const tone = getTone(language);
   const CourseIcon = getCourseIcon(language);
-  const concept = buildConcept(lessonTitle, language);
+  const concept = getLessonVisualConcept(courseTitle, language, lessonTitle);
+  const infographicSrc = getLessonInfographicSrc(concept.assetSlug);
+  const infographicAlt = `Arte didática da aula ${lessonTitle || concept.title}: ${concept.subtitle}`;
 
   return (
     <figure className="mb-5 overflow-hidden rounded-xl border border-border bg-background shadow-sm sm:rounded-2xl">
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(260px,0.9fr)]">
-        <div className="relative min-h-[150px] bg-secondary/30 p-2 sm:min-h-[220px] sm:p-3">
-          <PatternArtwork concept={concept} tone={tone} />
+        <div className="relative min-h-[190px] overflow-hidden bg-secondary/30 p-2 sm:min-h-[250px] sm:p-3">
+          <div className="absolute inset-2 overflow-hidden rounded-2xl opacity-70 sm:inset-3">
+            <PatternArtwork concept={concept} tone={tone} />
+          </div>
+          <img
+            src={infographicSrc}
+            alt={infographicAlt}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+            onError={(event) => {
+              event.currentTarget.style.opacity = "0";
+              event.currentTarget.setAttribute("aria-hidden", "true");
+            }}
+          />
           <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-black text-slate-900 shadow-sm sm:left-5 sm:top-5 sm:text-xs">
             <CourseIcon size={15} />
             {language || courseTitle || "Aula"}
@@ -775,7 +884,7 @@ const LessonVisualAid = ({ courseTitle, language, lessonTitle }: LessonVisualAid
 
         <figcaption className="flex flex-col justify-center p-4 sm:p-5">
           <div className="mb-3 flex items-center gap-2 text-xs font-black uppercase text-primary">
-            <Sparkles size={14} /> Infográfico autoral
+            <Sparkles size={14} /> Infográfico premium
           </div>
           <h3 className="text-lg font-black text-foreground">{concept.title}</h3>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{concept.subtitle}</p>

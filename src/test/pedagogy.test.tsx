@@ -4,6 +4,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
+import { getLessonVisualConcept, LESSON_INFOGRAPHIC_SLUGS } from "@/components/LessonVisualAid";
 import { buildLessonBlueprint } from "@/utils/pedagogy";
 import { buildDailyReviewPlan } from "@/utils/dailyReview";
 import { augmentCourse } from "@/data/checkpoints";
@@ -167,6 +168,41 @@ describe("pedagogy blueprint", () => {
     expect(appCatalogSummary.courseCount).toBe(courses.length);
     expect(appCatalogSummary.lessonCount).toBe(courses.reduce((total, item) => total + item.lessons.length, 0));
     expect(appCatalogSummary.projectCount).toBe(projects.length);
+  });
+
+  it("maps every lesson to a generated infographic asset", () => {
+    const allowedSlugs = new Set<string>(LESSON_INFOGRAPHIC_SLUGS);
+    const missingAssets: string[] = [];
+    const smallAssets: string[] = [];
+
+    LESSON_INFOGRAPHIC_SLUGS.forEach((slug) => {
+      const assetPath = join(process.cwd(), "public", "lesson-infographics", `${slug}.jpg`);
+
+      if (!existsSync(assetPath)) {
+        missingAssets.push(`catalog:${slug}`);
+        return;
+      }
+
+      if (statSync(assetPath).size < 50_000) {
+        smallAssets.push(slug);
+      }
+    });
+
+    courses.forEach((courseItem) => {
+      courseItem.lessons.forEach((courseLesson) => {
+        const concept = getLessonVisualConcept(courseItem.title, courseItem.language, courseLesson.title);
+        const assetPath = join(process.cwd(), "public", "lesson-infographics", `${concept.assetSlug}.jpg`);
+
+        expect(allowedSlugs.has(concept.assetSlug)).toBe(true);
+
+        if (!existsSync(assetPath)) {
+          missingAssets.push(`${courseItem.id}/${courseLesson.id}:${concept.assetSlug}`);
+        }
+      });
+    });
+
+    expect(missingAssets).toEqual([]);
+    expect(smallAssets).toEqual([]);
   });
 
   it("starts the first path with fundamentals even when stale JavaScript progress exists", () => {
