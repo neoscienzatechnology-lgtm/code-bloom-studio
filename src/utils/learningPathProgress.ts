@@ -26,6 +26,29 @@ export function selectNextPathCourse(
   return nextNotCompletedPathCourse ?? pathCourses[pathCourses.length - 1] ?? coursesWithProgress[0];
 }
 
+export function selectPathStartCourse(
+  coursesWithProgress: CourseWithProgress[],
+  path: LearningPath,
+  currentPathId?: string | null,
+): CourseWithProgress {
+  const pathCourses = getPathCourses(coursesWithProgress, path);
+  const firstIncomplete = pathCourses.find((course) => course.realProgress < 100);
+
+  if (!firstIncomplete) return pathCourses[pathCourses.length - 1] ?? coursesWithProgress[0];
+
+  const firstCourse = pathCourses[0];
+  const switchingPath = Boolean(currentPathId && currentPathId !== path.id);
+  const continuingSharedBase =
+    switchingPath &&
+    firstCourse?.id === firstIncomplete.id &&
+    firstIncomplete.realProgress > 0 &&
+    firstIncomplete.realProgress < 100;
+
+  if (!continuingSharedBase) return firstIncomplete;
+
+  return pathCourses.find((course, index) => index > 0 && course.realProgress < 100) ?? firstIncomplete;
+}
+
 export function selectNextLesson(course: CourseWithProgress, completedLessons: string[]): Lesson {
   return (
     course.lessons.find((lesson) => !completedLessons.includes(lesson.id)) ??

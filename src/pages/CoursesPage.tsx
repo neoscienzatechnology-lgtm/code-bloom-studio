@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, BookOpen, CheckCircle2, Clock, Code2, Compass, Lock, Route, Sparkles } from "lucide-react";
 import { courses } from "@/data/mockData";
-import { getCourseMeta, learningPaths } from "@/data/learningPaths";
+import { getCourseMeta, learningPaths, type LearningPath } from "@/data/learningPaths";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
 import MascoteCapivara from "@/components/MascoteCapivara";
 import CourseCoverArt from "@/components/CourseCoverArt";
+import { useLearningProfile } from "@/hooks/useLearningProfile";
+import { selectPathStartCourse } from "@/utils/learningPathProgress";
 
 const tabs = ["Trilhas", "Explorar"] as const;
 const pathCoverCourseIds: Record<string, string> = {
@@ -41,7 +43,9 @@ const isCourseUnlocked = (courseId: string, completedCourseIds: string[]) => {
 
 const CoursesPage = () => {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Trilhas");
+  const navigate = useNavigate();
   const { getCourseProgress } = useProgress();
+  const { profile, setProfile } = useLearningProfile();
 
   const courseProgress = useMemo(
     () =>
@@ -52,6 +56,21 @@ const CoursesPage = () => {
     [getCourseProgress]
   );
   const completedCourseIds = courseProgress.filter((item) => item.progress === 100).map((item) => item.course.id);
+  const coursesWithProgress = courseProgress.map(({ course, progress }) => ({
+    ...course,
+    realProgress: progress,
+  }));
+
+  const startPath = (path: LearningPath) => {
+    const targetCourse = selectPathStartCourse(coursesWithProgress, path, profile?.goal);
+    setProfile({
+      experience: profile?.experience ?? "new",
+      goal: path.id,
+      dailyGoal: profile?.dailyGoal ?? 10,
+      createdAt: profile?.createdAt ?? new Date().toISOString(),
+    });
+    navigate(`/cursos/${targetCourse.id}`);
+  };
 
   return (
     <div className="min-h-screen bg-background px-4 py-10 sm:px-6">
@@ -159,10 +178,12 @@ const CoursesPage = () => {
                     </div>
                   </div>
 
-                  <Button asChild className="rounded-full font-black">
-                    <Link to={`/cursos/${path.startCourseId}`}>
-                      Começar trilha <ArrowRight size={16} />
-                    </Link>
+                  <Button
+                    type="button"
+                    onClick={() => startPath(path)}
+                    className="rounded-full font-black"
+                  >
+                    {profile?.goal === path.id ? "Continuar trilha" : "Começar trilha"} <ArrowRight size={16} />
                   </Button>
                 </motion.div>
               );

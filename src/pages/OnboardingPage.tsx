@@ -9,6 +9,8 @@ import {
   useLearningProfile,
 } from "@/hooks/useLearningProfile";
 import { learningPaths } from "@/data/learningPaths";
+import { courses } from "@/data/mockData";
+import { selectPathStartCourse } from "@/utils/learningPathProgress";
 import MascoteCapivara from "@/components/MascoteCapivara";
 
 const experienceOptions: Array<{ value: ExperienceLevel; title: string; description: string }> = [
@@ -37,13 +39,18 @@ const OnboardingPage = () => {
   );
 
   const finish = () => {
+    const targetCourse = selectPathStartCourse(
+      courses.map((course) => ({ ...course, realProgress: 0 })),
+      selectedPath,
+      null,
+    );
     setProfile({
       experience,
       goal,
       dailyGoal,
       createdAt: new Date().toISOString(),
     });
-    navigate(`/cursos/${selectedPath.startCourseId}`);
+    navigate(`/cursos/${targetCourse.id}`);
   };
 
   return (

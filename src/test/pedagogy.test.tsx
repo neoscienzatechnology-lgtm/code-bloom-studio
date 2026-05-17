@@ -17,7 +17,7 @@ import { appCatalogSummary, courseCatalog } from "@/data/courseCatalog";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
-import { selectNextLesson, selectNextPathCourse } from "@/utils/learningPathProgress";
+import { selectNextLesson, selectNextPathCourse, selectPathStartCourse } from "@/utils/learningPathProgress";
 import { validateCode } from "@/utils/codeValidator";
 
 const lesson: Lesson = {
@@ -139,6 +139,18 @@ describe("pedagogy blueprint", () => {
 
     expect(nextCourse.id).toBe("10");
     expect(nextLesson.id).toBe("10-1");
+  });
+
+  it("switches a new path away from partially completed shared fundamentals", () => {
+    const backendPath = learningPaths.find((path) => path.id === "backend")!;
+    const coursesWithProgress = courses.map((item) => ({
+      ...item,
+      realProgress: item.id === "10" ? 35 : 0,
+    }));
+
+    const targetCourse = selectPathStartCourse(coursesWithProgress, backendPath, "frontend");
+
+    expect(targetCourse.id).toBe("2");
   });
 
   it("ships fundamentals as a logic-first W3-style course before JavaScript", () => {

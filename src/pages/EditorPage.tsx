@@ -333,7 +333,6 @@ const EditorPage = () => {
           ? `/checkpoint/${course.id}/${nextLesson.id}`
           : `/editor/${course.id}/${nextLesson.id}`;
       navigate(nextHref);
-      window.location.href = nextHref;
     } else {
       navigate(`/cursos/${course.id}`);
     }

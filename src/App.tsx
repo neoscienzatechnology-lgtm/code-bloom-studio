@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import AuthReturnHandler from "@/components/AuthReturnHandler";
+import ScrollToTop from "@/components/ScrollToTop";
 import Navbar from "./components/Navbar.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
@@ -64,6 +65,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <AuthReturnHandler />
           <Suspense fallback={<PageFallback />}>
