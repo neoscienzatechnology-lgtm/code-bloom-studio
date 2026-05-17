@@ -1,15 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, RefreshCw, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { QuizQuestion } from "@/data/mockData";
 
 interface QuizSectionProps {
+  quizId?: string;
   questions: QuizQuestion[];
   onComplete: (correctCount: number) => void;
 }
 
-const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
+const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
@@ -17,6 +18,21 @@ const QuizSection = ({ questions, onComplete }: QuizSectionProps) => {
   const [finished, setFinished] = useState(false);
   const advanceLockedRef = useRef(false);
   const completionReportedRef = useRef(false);
+  const quizIdentity =
+    quizId ??
+    questions
+      .map((question) => `${question.question}:${question.correctIndex}:${question.options.join("|")}`)
+      .join("||");
+
+  useEffect(() => {
+    setCurrentQ(0);
+    setSelected(null);
+    setAnswered(false);
+    setCorrectCount(0);
+    setFinished(false);
+    advanceLockedRef.current = false;
+    completionReportedRef.current = false;
+  }, [quizIdentity]);
 
   const q = questions[currentQ];
   const isLastQuestion = currentQ === questions.length - 1;

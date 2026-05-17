@@ -376,6 +376,33 @@ describe("QuizSection", () => {
 
     expect(onComplete).toHaveBeenCalledWith(2);
   });
+
+  it("resets answered and finished state when the quiz changes", async () => {
+    const onComplete = vi.fn();
+    const { rerender } = render(
+      <QuizSection
+        quizId="lesson-a"
+        questions={[{ question: "Primeiro quiz?", options: ["Resposta certa", "Outra resposta"], correctIndex: 0 }]}
+        onComplete={onComplete}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Resposta certa"));
+    fireEvent.click(screen.getByText("Ver Resultado"));
+    expect(onComplete).toHaveBeenCalledWith(1);
+
+    rerender(
+      <QuizSection
+        quizId="lesson-b"
+        questions={[{ question: "Novo quiz?", options: ["Alternativa nova", "Resposta do novo quiz"], correctIndex: 1 }]}
+        onComplete={onComplete}
+      />,
+    );
+
+    await waitFor(() => expect(screen.getByText("Novo quiz?")).toBeInTheDocument());
+    expect(screen.getByRole("button", { name: /Alternativa nova/ })).not.toBeDisabled();
+    expect(screen.queryByText("Quiz concluído!")).not.toBeInTheDocument();
+  });
 });
 
 describe("GuidedPractice", () => {

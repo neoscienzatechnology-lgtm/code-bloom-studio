@@ -136,7 +136,7 @@ const CheckpointPage = () => {
           {!result && (
             <div>
               <div className="mb-3 text-sm font-black text-primary">Quiz de passagem</div>
-              <QuizSection questions={questions} onComplete={handleComplete} />
+              <QuizSection key={lesson.id} quizId={lesson.id} questions={questions} onComplete={handleComplete} />
             </div>
           )}
 

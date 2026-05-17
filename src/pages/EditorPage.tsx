@@ -525,6 +525,8 @@ const EditorPage = () => {
                   </div>
                   <div className="rounded-xl border border-quest-blue/10 bg-quest-blue/5 p-4">
                     <QuizSection
+                      key={lesson.id}
+                      quizId={lesson.id}
                       questions={lesson.quiz}
                       onComplete={(correct) => {
                         const passed = correct === lesson.quiz!.length;
