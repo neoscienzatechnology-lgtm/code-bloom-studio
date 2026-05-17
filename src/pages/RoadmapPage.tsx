@@ -37,7 +37,7 @@ const RoadmapPage = () => {
 
   return (
     <div className="min-h-screen bg-background px-4 py-10 sm:px-6">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

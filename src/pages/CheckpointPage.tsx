@@ -60,7 +60,7 @@ const CheckpointPage = () => {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-background px-4 py-8 sm:px-6">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-screen-xl">
         {/* Top bar */}
         <div className="mb-6 flex items-center gap-3">
           <Link

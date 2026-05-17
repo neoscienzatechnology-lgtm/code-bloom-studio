@@ -86,7 +86,7 @@ const DailyReviewPage = () => {
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:py-10">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-6 grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <p className="mimo-section-title mb-1">Sessão diária</p>

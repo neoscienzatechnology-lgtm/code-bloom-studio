@@ -33,7 +33,7 @@ const CourseDetailPage = () => {
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

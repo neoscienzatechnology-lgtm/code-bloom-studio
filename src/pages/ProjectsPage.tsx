@@ -24,7 +24,7 @@ const ProjectsPage = () => {
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-8 max-w-3xl">
           <p className="mimo-section-title mb-1">Projetos finais</p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">Construa algo real para consolidar</h1>
