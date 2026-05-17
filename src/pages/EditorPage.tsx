@@ -362,7 +362,7 @@ const EditorPage = () => {
             exit={{ opacity: 0, y: -20 }}
             className="border-b border-primary/20 bg-primary/5 px-4 py-3"
           >
-            <div className="mx-auto flex max-w-7xl items-center gap-3 sm:gap-4">
+            <div className="mx-auto flex max-w-screen-2xl items-center gap-3 sm:gap-4">
               <Info size={18} className="shrink-0 text-primary" />
               <div className="flex-1 text-xs text-muted-foreground">
                 <div className="lg:hidden">
@@ -398,7 +398,7 @@ const EditorPage = () => {
 
       {/* Top bar */}
       <div className="border-b border-border bg-card px-4 py-3">
-        <div className="mx-auto flex max-w-7xl items-center gap-4">
+        <div className="mx-auto flex max-w-screen-2xl items-center gap-4">
           <Link
             to={`/cursos/${course.id}`}
             className="text-muted-foreground hover:text-foreground transition-colors"
@@ -427,7 +427,7 @@ const EditorPage = () => {
         aria-label="Etapas da aula"
         className="sticky top-0 z-30 border-b border-border bg-background/95 px-4 py-3 backdrop-blur"
       >
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-screen-2xl">
           <div className="mb-2 flex items-center justify-between gap-3 text-xs">
             <span className="font-black text-primary">
               Etapa {activeStageIndex + 1}/{availableStages.length}: {currentStage.label}
@@ -477,7 +477,7 @@ const EditorPage = () => {
         {/* Instructions (left panel) */}
         <div
           className={`border-b border-border bg-background p-6 lg:block lg:border-b-0 lg:overflow-auto ${
-            isCodeStage ? "hidden lg:block lg:border-r" : "block mx-auto w-full max-w-4xl"
+            isCodeStage ? "hidden lg:block lg:border-r" : "block mx-auto w-full max-w-screen-2xl"
           }`}
         >
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
