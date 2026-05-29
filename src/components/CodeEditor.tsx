@@ -45,6 +45,7 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
         basicSetup,
         langExt,
         oneDark,
+        EditorView.contentAttributes.of({ "aria-label": `Editor de código (${language})` }),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString());
@@ -79,7 +80,7 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
     }
   }, [value]);
 
-  return <div ref={containerRef} className="flex-1 min-h-0" />;
+  return <div ref={containerRef} role="group" aria-label="Editor de código" className="flex-1 min-h-0" />;
 };
 
 export default CodeEditor;

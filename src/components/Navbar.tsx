@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import { Bell, Brain, Flame, FolderKanban, Home, LogIn, LogOut, Menu, Target, User, X, Zap } from "lucide-react";
-import { useState } from "react";
+import { Bell, Brain, Flame, FolderKanban, Home, LogIn, LogOut, Menu, Moon, Sun, Target, User, X, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
@@ -28,6 +29,11 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { totalXp, studyStats } = useProgress();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
+  const toggleTheme = () => setTheme(isDark ? "light" : "dark");
   const immersiveRoutes = ["/editor", "/checkpoint", "/projeto"];
   const showMobileBottomNav =
     location.pathname !== "/" && !immersiveRoutes.some((route) => location.pathname.startsWith(route));
@@ -48,7 +54,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link to="/dashboard" className="flex items-center">
             <BrandLogo className="h-12 max-w-[190px]" />
@@ -79,9 +85,19 @@ const Navbar = () => {
               <Zap size={15} className="text-accent" />
               <span>{totalXp.toLocaleString()} XP</span>
             </div>
+            <button
+              onClick={toggleTheme}
+              aria-label={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
+              className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             {user ? (
               <>
-                <button className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+                <button
+                  aria-label="Notificações"
+                  className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                >
                   <Bell size={18} />
                   <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-quest-orange" />
                 </button>
@@ -102,7 +118,12 @@ const Navbar = () => {
             )}
           </div>
 
-          <button className="rounded-lg p-2 text-foreground md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+          <button
+            className="rounded-lg p-2 text-foreground md:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={mobileOpen}
+          >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
@@ -128,6 +149,14 @@ const Navbar = () => {
                     {link.label}
                   </Link>
                 ))}
+                <button
+                  onClick={toggleTheme}
+                  aria-label={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
+                  className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-bold text-muted-foreground"
+                >
+                  {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                  {isDark ? "Tema claro" : "Tema escuro"}
+                </button>
                 {user ? (
                   <button
                     onClick={signOut}
@@ -151,7 +180,7 @@ const Navbar = () => {
       </nav>
 
       {showMobileBottomNav && (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 px-2 py-2 backdrop-blur md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -159,11 +188,11 @@ const Navbar = () => {
               <Link
                 key={`${link.to}-${link.label}`}
                 to={link.to}
-                className={`flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[10px] font-black ${
+                className={`flex min-h-[48px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-black ${
                   isActive(link.to, link.label) ? "bg-primary/15 text-primary" : "text-muted-foreground"
                 }`}
               >
-                <Icon size={18} />
+                <Icon size={20} />
                 {link.label}
               </Link>
             );

@@ -93,12 +93,12 @@ const floatingItems = [
 ];
 
 const confettiItems = [
-  "left-[16%] top-[16%] bg-emerald-400",
-  "left-[26%] top-[9%] bg-orange-400",
+  "left-[16%] top-[12%] bg-emerald-400",
   "right-[18%] top-[15%] bg-sky-400",
-  "right-[28%] top-[8%] bg-fuchsia-400",
-  "left-[18%] bottom-[30%] bg-amber-400",
-  "right-[16%] bottom-[34%] bg-emerald-400",
+  "left-[28%] top-[8%] bg-orange-400",
+  "right-[16%] bottom-[14%] bg-fuchsia-400",
+  "left-[20%] bottom-[18%] bg-amber-400",
+  "right-[28%] bottom-[10%] bg-emerald-400",
 ];
 
 function getMascotAnimation(state: MascoteCapivaraState, reducedMotion: boolean) {

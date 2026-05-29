@@ -1,10 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, lazy, type ReactNode } from "react";
+import { ThemeProvider } from "next-themes";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import AuthReturnHandler from "@/components/AuthReturnHandler";
 import ScrollToTop from "@/components/ScrollToTop";
 import Navbar from "./components/Navbar.tsx";
@@ -34,12 +36,28 @@ const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
 const AccountDeletionPage = lazy(() => import("./pages/AccountDeletionPage.tsx"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const PageWithNav = ({ children }: { children: ReactNode }) => (
   <>
+    <a
+      href="#conteudo"
+      className="sr-only rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]"
+    >
+      Pular para o conteúdo
+    </a>
     <Navbar />
-    {children}
+    <div id="conteudo" tabIndex={-1} className="outline-none">
+      {children}
+    </div>
   </>
 );
 
@@ -54,13 +72,27 @@ const ProtectedPage = ({ children }: { children: ReactNode }) => (
 );
 
 const PageFallback = () => (
-  <div className="flex min-h-screen items-center justify-center bg-background px-4 text-sm font-bold text-muted-foreground">
-    Carregando trilha...
+  <div className="min-h-screen bg-background px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-7xl animate-pulse">
+      <div className="mb-3 h-8 w-48 rounded-lg bg-muted" />
+      <div className="mb-8 h-4 w-72 max-w-full rounded bg-muted/70" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div key={index} className="rounded-2xl border border-border bg-card p-5">
+            <div className="mb-3 h-24 w-full rounded-xl bg-muted" />
+            <div className="mb-2 h-4 w-3/4 rounded bg-muted/80" />
+            <div className="h-3 w-1/2 rounded bg-muted/60" />
+          </div>
+        ))}
+      </div>
+      <span className="sr-only">Carregando…</span>
+    </div>
   </div>
 );
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -68,6 +100,7 @@ const App = () => (
         <ScrollToTop />
         <AuthProvider>
           <AuthReturnHandler />
+          <ErrorBoundary>
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -95,9 +128,11 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </ErrorBoundary>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
