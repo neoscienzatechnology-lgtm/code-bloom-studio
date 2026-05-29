@@ -8,6 +8,8 @@ interface AttemptStats {
   attempts: Record<string, number>;
   /** lifetime count of each error kind across lessons */
   errorHistory: Record<ErrorKind, number>;
+  /** per-concept error-kind histogram, for personalized weakness signals */
+  conceptErrorHistory: Record<string, Partial<Record<ErrorKind, number>>>;
 }
 
 const defaultStats: AttemptStats = {
@@ -22,6 +24,7 @@ const defaultStats: AttemptStats = {
     syntax: 0,
     unknown: 0,
   },
+  conceptErrorHistory: {},
 };
 
 function load(): AttemptStats {
@@ -29,7 +32,12 @@ function load(): AttemptStats {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      return { ...defaultStats, ...parsed, errorHistory: { ...defaultStats.errorHistory, ...parsed.errorHistory } };
+      return {
+        ...defaultStats,
+        ...parsed,
+        errorHistory: { ...defaultStats.errorHistory, ...parsed.errorHistory },
+        conceptErrorHistory: { ...defaultStats.conceptErrorHistory, ...(parsed.conceptErrorHistory ?? {}) },
+      };
     }
   } catch {
     return defaultStats;
@@ -48,12 +56,23 @@ export function useAttemptTracker() {
     save(stats);
   }, [stats]);
 
-  const registerFailure = useCallback((lessonId: string, kind: ErrorKind = "unknown") => {
-    setStats((prev) => ({
-      attempts: { ...prev.attempts, [lessonId]: (prev.attempts[lessonId] || 0) + 1 },
-      errorHistory: { ...prev.errorHistory, [kind]: prev.errorHistory[kind] + 1 },
-    }));
-  }, []);
+  const registerFailure = useCallback(
+    (lessonId: string, kind: ErrorKind = "unknown", conceptIds: string[] = []) => {
+      setStats((prev) => {
+        const nextConceptErrors = { ...prev.conceptErrorHistory };
+        for (const conceptId of conceptIds) {
+          const previous = nextConceptErrors[conceptId] ?? {};
+          nextConceptErrors[conceptId] = { ...previous, [kind]: (previous[kind] ?? 0) + 1 };
+        }
+        return {
+          attempts: { ...prev.attempts, [lessonId]: (prev.attempts[lessonId] || 0) + 1 },
+          errorHistory: { ...prev.errorHistory, [kind]: prev.errorHistory[kind] + 1 },
+          conceptErrorHistory: nextConceptErrors,
+        };
+      });
+    },
+    [],
+  );
 
   const resetLesson = useCallback((lessonId: string) => {
     setStats((prev) => {
@@ -71,5 +90,26 @@ export function useAttemptTracker() {
     .slice(0, 3)
     .map(([k]) => k as ErrorKind);
 
-  return { registerFailure, resetLesson, getAttempts, topErrors, attempts: stats.attempts };
+  /** Top error kinds for a specific concept, ranked by frequency. */
+  const topErrorsByConcept = useCallback(
+    (conceptId: string): ErrorKind[] => {
+      const histogram = stats.conceptErrorHistory[conceptId];
+      if (!histogram) return [];
+      return (Object.entries(histogram) as [ErrorKind, number][])
+        .filter(([, count]) => count > 0)
+        .sort(([, a], [, b]) => b - a)
+        .map(([kind]) => kind);
+    },
+    [stats.conceptErrorHistory],
+  );
+
+  return {
+    registerFailure,
+    resetLesson,
+    getAttempts,
+    topErrors,
+    topErrorsByConcept,
+    attempts: stats.attempts,
+    conceptErrorHistory: stats.conceptErrorHistory,
+  };
 }

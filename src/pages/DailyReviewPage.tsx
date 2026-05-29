@@ -21,12 +21,14 @@ import {
   type ReviewReason,
 } from "@/utils/dailyReview";
 import { buildConceptMasteryPlan, getWeakConceptIds } from "@/utils/conceptMastery";
+import { getDueLessonIds } from "@/utils/spacedRepetition";
 import { toLocalDateKey } from "@/utils/studyStats";
 
 const reasonCopy: Record<ReviewReason, string> = {
   stuck: "Você teve tentativa recente aqui. Vale revisar antes de avançar.",
   weak_concept: "Esse conceito apareceu como ponto fraco no seu mapa de domínio.",
   in_progress: "Você já começou essa aula. Retomar agora reduz retrabalho.",
+  scheduled: "Revisão programada para hoje pela repetição espaçada.",
   completed: "Aula concluída recentemente. Boa para fortalecer memória.",
   starter: "Fundamento inicial recomendado para aquecer.",
 };
@@ -50,6 +52,11 @@ const DailyReviewPage = () => {
     [attempts, completedLessons, savedCode],
   );
 
+  // getDueLessonIds lê o agendamento no localStorage, atualizado ao concluir
+  // uma aula; recalcula quando o estado de conclusão muda.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const dueLessonIds = useMemo(() => getDueLessonIds(), [completedLessons]);
+
   const reviewPlan = useMemo(
     () =>
       buildDailyReviewPlan({
@@ -59,8 +66,9 @@ const DailyReviewPage = () => {
         attempts,
         topErrors,
         weakConceptIds,
+        dueLessonIds,
       }),
-    [attempts, completedLessons, savedCode, topErrors, weakConceptIds],
+    [attempts, completedLessons, savedCode, topErrors, weakConceptIds, dueLessonIds],
   );
 
   const recommendedHref = `/editor/${reviewPlan.recommendedLesson.course.id}/${reviewPlan.recommendedLesson.lesson.id}`;
@@ -119,8 +127,14 @@ const DailyReviewPage = () => {
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <RefreshCw className="mb-2 text-primary" size={18} />
-            <div className="text-sm font-black">Foco adaptativo</div>
-            <p className="text-xs text-muted-foreground">Prioriza erros, aulas iniciadas e revisão espaçada.</p>
+            <div className="text-sm font-black">
+              {dueLessonIds.length > 0 ? `${dueLessonIds.length} vencendo hoje` : "Foco adaptativo"}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {dueLessonIds.length > 0
+                ? "Aulas no ponto certo de revisão pela repetição espaçada."
+                : "Prioriza erros, aulas iniciadas e revisão espaçada."}
+            </p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
             <CheckCircle2 className="mb-2 text-accent" size={18} />

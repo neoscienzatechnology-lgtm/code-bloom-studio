@@ -15,9 +15,49 @@ type ValidationResult = {
   reflectiveQuestion?: string;
 };
 
+export interface LessonTestCase {
+  call: string;
+  expected: string;
+}
+
 type ValidationOptions = {
   starterCode?: string;
+  testCases?: LessonTestCase[];
 };
+
+export interface TestCaseRunResult {
+  passed: number;
+  total: number;
+  allPassed: boolean;
+  firstFailure?: { call: string; expected: string; got: string };
+}
+
+// Runs the learner's JavaScript in a sandboxed Function, evaluating each
+// `call` expression and comparing the result to `expected`. Suited to small
+// pure functions; opt-in per lesson via the `testCases` field.
+export function runJsTestCases(userCode: string, testCases: LessonTestCase[]): TestCaseRunResult {
+  let passed = 0;
+  let firstFailure: TestCaseRunResult["firstFailure"];
+
+  for (const testCase of testCases) {
+    let got: string;
+    try {
+      const run = new Function(`"use strict";\n${userCode}\n;return (${testCase.call});`);
+      const value = run();
+      got = value === undefined ? "undefined" : String(value);
+    } catch (error) {
+      got = error instanceof Error ? `erro: ${error.message}` : "erro";
+    }
+
+    if (got.trim() === testCase.expected.trim()) {
+      passed += 1;
+    } else if (!firstFailure) {
+      firstFailure = { call: testCase.call, expected: testCase.expected, got };
+    }
+  }
+
+  return { passed, total: testCases.length, allPassed: passed === testCases.length && testCases.length > 0, firstFailure };
+}
 
 function stripLineComment(line: string): string {
   let quote: string | null = null;
@@ -215,8 +255,11 @@ function evaluateExpression(
   }
 
   const lengthMatch = expr.match(/^([A-Za-z_$][\w$]*)\.length$/);
-  if (lengthMatch && Array.isArray(env[lengthMatch[1]])) {
-    return String(env[lengthMatch[1]].length);
+  if (lengthMatch) {
+    const value = env[lengthMatch[1]];
+    if (Array.isArray(value)) {
+      return String(value.length);
+    }
   }
 
   if (Object.prototype.hasOwnProperty.call(env, expr)) return String(env[expr]);
@@ -448,6 +491,25 @@ export function validateCode(
       message: "Tem um parêntese, colchete, chave ou aspa que não fechou corretamente.",
       errorKind: "syntax",
       reflectiveQuestion: "Conte os abre e fecha: eles estão pareados?",
+    };
+  }
+
+  if (options.testCases?.length) {
+    const cases = runJsTestCases(activeCode, options.testCases);
+    if (cases.allPassed) {
+      return { level: "exact", message: `Correto! Passou em ${cases.total}/${cases.total} casos de teste. 🎉` };
+    }
+    const failureDetail = cases.firstFailure
+      ? ` Ex.: \`${cases.firstFailure.call}\` deveria dar \`${cases.firstFailure.expected}\`, mas deu \`${cases.firstFailure.got}\`.`
+      : "";
+    return {
+      level: cases.passed > 0 ? "close" : "wrong",
+      message:
+        cases.passed > 0
+          ? `Passou em ${cases.passed} de ${cases.total} casos.${failureDetail}`
+          : `Ainda não passou nos casos de teste.${failureDetail}`,
+      errorKind: "output_mismatch",
+      reflectiveQuestion: "Sua função devolve o valor certo para cada entrada testada?",
     };
   }
 

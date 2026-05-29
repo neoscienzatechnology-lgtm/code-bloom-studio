@@ -29,9 +29,14 @@ import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
 import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import CourseCoverArt from "@/components/CourseCoverArt";
+import { SelfExplain } from "@/components/Metacognition";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
+import { useLessonEditor } from "@/hooks/useLessonEditor";
 import { validateCode } from "@/utils/codeValidator";
+import { getLessonConcepts } from "@/utils/conceptMastery";
+import { recordReview } from "@/utils/spacedRepetition";
+import { calibrateXp } from "@/utils/xp";
 import confetti from "canvas-confetti";
 
 const ONBOARDING_KEY = "code-bloom-studio_editor_onboarding_seen";
@@ -70,17 +75,11 @@ const EditorPage = () => {
 
   const savedCode = lesson ? getSavedCode(lesson.id) : undefined;
   const [code, setCode] = useState(savedCode ?? lesson?.starterCode ?? "");
-  const [output, setOutput] = useState<string | null>(null);
-  const [reflectiveQ, setReflectiveQ] = useState<string | null>(null);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [hintIndex, setHintIndex] = useState(-1);
-  const [showXP, setShowXP] = useState(false);
-  const [running, setRunning] = useState(false);
+  const { state: editor, patch, advanceHint } = useLessonEditor();
+  const { running, isCorrect, output, reflectiveQ, hintIndex, showXP, codeSaved, paceMode, bonusActive } = editor;
   const [showSolution, setShowSolution] = useState(false);
   const [solutionWarned, setSolutionWarned] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [paceMode, setPaceMode] = useState<"struggling" | "thriving" | null>(null);
-  const [bonusActive, setBonusActive] = useState(false);
   const [activeStage, setActiveStage] = useState<LessonStageId>("plan");
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [practiceCompleted, setPracticeCompleted] = useState(false);
@@ -100,19 +99,23 @@ const EditorPage = () => {
   // Save code as user types (debounced)
   useEffect(() => {
     if (!lesson) return;
-    const timer = setTimeout(() => saveCode(lesson.id, code, course?.id), 500);
+    patch({ codeSaved: false });
+    const timer = setTimeout(() => {
+      saveCode(lesson.id, code, course?.id);
+      patch({ codeSaved: true });
+    }, 500);
     return () => clearTimeout(timer);
-  }, [code, course?.id, lesson, saveCode]);
+  }, [code, course?.id, lesson, saveCode, patch]);
 
   // Reset pace coach when changing lessons
   useEffect(() => {
-    setPaceMode(null);
-    setBonusActive(false);
+    patch({ paceMode: null, bonusActive: false });
     setActiveStage("plan");
     setQuizCompleted(false);
     setPracticeCompleted(false);
     setStageNotice(null);
     runLockedRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonId]);
 
   // Checkpoint lessons live on a dedicated route
@@ -120,6 +123,8 @@ const EditorPage = () => {
     return <Navigate to={`/checkpoint/${courseId}/${lessonId}`} replace />;
   }
   if (!data || !lesson || !course) return <Navigate to="/cursos" replace />;
+
+  const xpAward = calibrateXp(lesson.xpReward, lesson.level);
 
   // Compute the next step from the augmented course (so checkpoints are inserted)
   const augCourse = augmented?.course ?? { lessons: [] as { id: string; kind: "lesson" | "checkpoint" }[] };
@@ -256,65 +261,65 @@ const EditorPage = () => {
     if (running || runLockedRef.current) return;
     runLockedRef.current = true;
     setActiveStage("code");
-    setRunning(true);
+    patch({ running: true });
     setTimeout(() => {
       const result = validateCode(code, lesson.expectedOutput, lesson.solution, {
         starterCode: lesson.starterCode,
+        testCases: lesson.testCases,
       });
       const correct = result.level === "exact" || result.level === "flexible";
-      setIsCorrect(correct ? true : result.level === "close" ? null : false);
+      const nextIsCorrect = correct ? true : result.level === "close" ? null : false;
 
       if (correct) {
         const priorAttempts = getAttempts(lesson.id);
-        setOutput(lesson.expectedOutput);
-        setReflectiveQ(null);
+        recordReview(lesson.id, Math.max(3, 5 - priorAttempts));
         resetLesson(lesson.id);
-        const awardedXp = !alreadyCompleted && completeLesson(lesson.id, lesson.xpReward, course.id);
+        const awardedXp = !alreadyCompleted && completeLesson(lesson.id, xpAward, course.id);
+        const nextPaceMode = priorAttempts === 0 && !alreadyCompleted && !bonusActive ? "thriving" : null;
+        patch({
+          isCorrect: nextIsCorrect,
+          output: lesson.expectedOutput,
+          reflectiveQ: null,
+          paceMode: nextPaceMode,
+          showXP: awardedXp,
+          running: false,
+        });
         if (awardedXp) {
-          setShowXP(true);
-          setTimeout(() => setShowXP(false), 1500);
+          setTimeout(() => patch({ showXP: false }), 1500);
           fireConfetti();
         }
-        // Personalização: acertou de primeira → oferece desafio extra
-        if (priorAttempts === 0 && !alreadyCompleted && !bonusActive) {
-          setPaceMode("thriving");
-        } else {
-          setPaceMode(null);
-        }
       } else {
-        registerFailure(lesson.id, result.errorKind);
+        registerFailure(lesson.id, result.errorKind, getLessonConcepts(lesson));
         const attempts = getAttempts(lesson.id) + 1;
         let composed = result.message;
+        let nextHintIndex = hintIndex;
 
         if (attempts >= 2 && lesson.hints.length > 0) {
           const nextHintIdx = Math.min(hintIndex + 1, lesson.hints.length - 1);
-          if (nextHintIdx > hintIndex) setHintIndex(nextHintIdx);
+          if (nextHintIdx > hintIndex) nextHintIndex = nextHintIdx;
           composed += `\n\n💡 Dica direta: ${lesson.hints[nextHintIdx]}`;
         }
 
-        setOutput(composed);
-        setReflectiveQ(result.reflectiveQuestion ?? null);
-
-        // Personalização: 3+ falhas seguidas → modo apoio
-        if (attempts >= 3) {
-          setPaceMode("struggling");
-        }
+        patch({
+          isCorrect: nextIsCorrect,
+          output: composed,
+          reflectiveQ: result.reflectiveQuestion ?? null,
+          hintIndex: nextHintIndex,
+          paceMode: attempts >= 3 ? "struggling" : paceMode,
+          running: false,
+        });
       }
-      setRunning(false);
       runLockedRef.current = false;
     }, 800);
   };
 
   const handleHint = () => {
-    setHintIndex((prev) => Math.min(prev + 1, lesson.hints.length - 1));
+    advanceHint(lesson.hints.length - 1);
   };
 
   const handleReset = () => {
     setCode(lesson.starterCode);
-    setOutput(null);
-    setReflectiveQ(null);
-    setIsCorrect(null);
-    setHintIndex(-1);
+    patch({ output: null, reflectiveQ: null, isCorrect: null, hintIndex: -1 });
     setShowSolution(false);
     setSolutionWarned(false);
     resetLesson(lesson.id);
@@ -332,10 +337,7 @@ const EditorPage = () => {
   const useGuidedStarter = () => {
     const guide = `// Guia da Capy\n// 1. Releia o objetivo: ${lesson.learningObjective ?? lesson.description}\n// 2. Compare cada linha com a saída esperada: ${lesson.expectedOutput}\n// 3. Use uma dica por vez antes de testar de novo.\n\n${lesson.starterCode}`;
     setCode(guide);
-    setOutput(null);
-    setReflectiveQ(null);
-    setIsCorrect(null);
-    setPaceMode(null);
+    patch({ output: null, reflectiveQ: null, isCorrect: null, paceMode: null });
     goToStage("code");
   };
 
@@ -484,7 +486,7 @@ const EditorPage = () => {
             <div className={stageSectionClass("plan")}>
               <div className="mb-2 flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
-                  <span>✨</span> +{lesson.xpReward} XP
+                  <span>✨</span> +{xpAward} XP
                 </span>
                 {alreadyCompleted && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
@@ -511,6 +513,11 @@ const EditorPage = () => {
                     courseTitle={course.title}
                     language={course.language}
                     lessonTitle={lesson.title}
+                    contrastExample={
+                      (currentStage.theoryIndex ?? 0) === theorySlides.length - 1
+                        ? lesson.contrastExample
+                        : undefined
+                    }
                   />
                 </div>
               )}
@@ -624,19 +631,16 @@ const EditorPage = () => {
                 // "Versão preparatória": começa do starterCode com guia em comentário
                 const guide = `// Versão guiada — siga os passos abaixo:\n// 1. Releia o exercício\n// 2. Use o exemplo da teoria como base\n// 3. Saída esperada: ${lesson.expectedOutput}\n\n${lesson.starterCode}`;
                 setCode(guide);
-                setOutput(null);
-                setIsCorrect(null);
-                setPaceMode(null);
+                patch({ output: null, isCorrect: null, paceMode: null });
               }}
               onRevealSolution={() => {
                 handleRevealSolution();
-                setPaceMode(null);
+                patch({ paceMode: null });
               }}
               onAcceptBonus={() => {
-                setBonusActive(true);
-                setPaceMode(null);
+                patch({ bonusActive: true, paceMode: null });
               }}
-              onDismiss={() => setPaceMode(null)}
+              onDismiss={() => patch({ paceMode: null })}
             />
 
             {bonusActive && (
@@ -754,6 +758,15 @@ const EditorPage = () => {
                       solução
                     </span>
                   )}
+                  <span className="flex items-center gap-1 text-[11px] text-[#585b70]" aria-live="polite">
+                    {codeSaved ? (
+                      <>
+                        <Check size={11} /> Salvo
+                      </>
+                    ) : (
+                      "Salvando…"
+                    )}
+                  </span>
                 </div>
                 <Button
                   variant="ghost"
@@ -811,6 +824,12 @@ const EditorPage = () => {
             </div>
           </div>
 
+          {isCorrect === true && (
+            <div className="px-4">
+              <SelfExplain lessonId={lesson.id} />
+            </div>
+          )}
+
           {/* Run bar */}
           <div className="sticky bottom-[70px] z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl md:bottom-0 lg:static lg:shadow-none">
             {(running || output || isCorrect !== null || alreadyCompleted) && (
@@ -838,7 +857,7 @@ const EditorPage = () => {
                         exit={{ opacity: 0, y: -40 }}
                         className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-accent text-lg pointer-events-none"
                       >
-                        +{lesson.xpReward} XP! 🎉
+                        +{xpAward} XP! 🎉
                       </motion.div>
                     )}
                   </AnimatePresence>

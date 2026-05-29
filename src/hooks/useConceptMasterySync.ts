@@ -1,7 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import type { ConceptMastery, ConceptStatus } from "@/utils/conceptMastery";
+
+const CONCEPT_COLUMNS =
+  "concept_id,label,mastery,status,total_lessons,completed_lessons,in_progress_lessons,failed_attempts,reason,review_course_id,review_lesson_id,review_lesson_title,updated_at";
+
+interface ConceptMasteryRow {
+  user_id: string;
+  concept_id: string;
+  label: string;
+  mastery: number;
+  status: ConceptStatus;
+  total_lessons: number;
+  completed_lessons: number;
+  in_progress_lessons: number;
+  failed_attempts: number;
+  reason: string;
+  review_course_id: string | null;
+  review_lesson_id: string | null;
+  review_lesson_title: string | null;
+}
 
 const STORAGE_KEY = "code-bloom-studio-concept-mastery";
 
@@ -77,9 +97,7 @@ function rowToConcept(row: {
 
 export function useConceptMasterySync(localConcepts: ConceptMastery[]) {
   const { user } = useAuth();
-  const [cloudConcepts, setCloudConcepts] = useState<ConceptMastery[]>([]);
   const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
-  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     const localSnapshot = readLocalSnapshot();
@@ -88,47 +106,51 @@ export function useConceptMasterySync(localConcepts: ConceptMastery[]) {
     }
   }, []);
 
+  const cloudQuery = useQuery({
+    queryKey: ["concept-mastery", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_concept_mastery")
+        .select(CONCEPT_COLUMNS)
+        .eq("user_id", user!.id)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const cloudConcepts = useMemo(
+    () => (cloudQuery.data?.length ? cloudQuery.data.map(rowToConcept) : []),
+    [cloudQuery.data],
+  );
+
   useEffect(() => {
-    if (!user) {
-      setCloudConcepts([]);
-      return;
+    if (cloudQuery.data?.length) {
+      setLastSyncedAt(cloudQuery.data[0].updated_at);
     }
+  }, [cloudQuery.data]);
 
-    let active = true;
-    supabase
-      .from("user_concept_mastery")
-      .select(
-        "concept_id,label,mastery,status,total_lessons,completed_lessons,in_progress_lessons,failed_attempts,reason,review_course_id,review_lesson_id,review_lesson_title,updated_at",
-      )
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false })
-      .then(({ data }) => {
-        if (!active) return;
-        if (data?.length) {
-          setCloudConcepts(data.map(rowToConcept));
-          setLastSyncedAt(data[0].updated_at);
-        }
-      });
+  const { mutate: syncMastery, isPending: syncing } = useMutation({
+    mutationFn: async (rows: ConceptMasteryRow[]) => {
+      const { error } = await supabase
+        .from("user_concept_mastery")
+        .upsert(rows, { onConflict: "user_id,concept_id" });
+      if (error) throw error;
+    },
+    onSuccess: () => setLastSyncedAt(new Date().toISOString()),
+  });
 
-    return () => {
-      active = false;
-    };
-  }, [user]);
-
-  const concepts = useMemo(() => {
-    if (hasLearningSignal(localConcepts) || cloudConcepts.length === 0) return localConcepts;
-    return cloudConcepts;
-  }, [cloudConcepts, localConcepts]);
-
+  // Persist a local snapshot whenever there is a real learning signal.
   useEffect(() => {
     if (!hasLearningSignal(localConcepts)) return;
     const snapshot = saveLocalSnapshot(localConcepts);
     setLastSyncedAt(snapshot.updatedAt);
   }, [localConcepts]);
 
+  // Push local mastery to the cloud when signed in.
   useEffect(() => {
     if (!user || !hasLearningSignal(localConcepts)) return;
-
     const rows = localConcepts.map((concept) => ({
       user_id: user.id,
       concept_id: concept.id,
@@ -144,24 +166,14 @@ export function useConceptMasterySync(localConcepts: ConceptMastery[]) {
       review_lesson_id: concept.reviewLesson?.lessonId ?? null,
       review_lesson_title: concept.reviewLesson?.title ?? null,
     }));
-
-    let active = true;
-    setSyncing(true);
-    supabase
-      .from("user_concept_mastery")
-      .upsert(rows, { onConflict: "user_id,concept_id" })
-      .then(({ error }) => {
-        if (!active) return;
-        if (!error) setLastSyncedAt(new Date().toISOString());
-      })
-      .finally(() => {
-        if (active) setSyncing(false);
-      });
-
-    return () => {
-      active = false;
-    };
+    syncMastery(rows);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localConcepts, user]);
+
+  const concepts = useMemo(() => {
+    if (hasLearningSignal(localConcepts) || cloudConcepts.length === 0) return localConcepts;
+    return cloudConcepts;
+  }, [cloudConcepts, localConcepts]);
 
   const syncLabel = !user
     ? "Salvo neste dispositivo"

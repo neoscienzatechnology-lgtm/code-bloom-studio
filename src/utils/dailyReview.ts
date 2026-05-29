@@ -2,7 +2,7 @@ import type { Course, Lesson, QuizQuestion } from "@/data/mockData";
 import type { ErrorKind } from "@/utils/codeValidator";
 import { getLessonConcepts } from "@/utils/conceptMastery";
 
-export type ReviewReason = "stuck" | "weak_concept" | "in_progress" | "completed" | "starter";
+export type ReviewReason = "stuck" | "weak_concept" | "in_progress" | "scheduled" | "completed" | "starter";
 
 export interface ReviewLesson {
   course: Course;
@@ -29,6 +29,7 @@ interface BuildDailyReviewPlanInput {
   attempts: Record<string, number>;
   topErrors: ErrorKind[];
   weakConceptIds?: string[];
+  dueLessonIds?: string[];
   maxLessons?: number;
   maxQuestions?: number;
 }
@@ -83,6 +84,7 @@ export function buildDailyReviewPlan({
   attempts,
   topErrors,
   weakConceptIds = [],
+  dueLessonIds = [],
   maxLessons = 5,
   maxQuestions = 5,
 }: BuildDailyReviewPlanInput): DailyReviewPlan {
@@ -94,6 +96,7 @@ export function buildDailyReviewPlan({
       .map(([lessonId]) => lessonId),
   );
   const weakConceptSet = new Set(weakConceptIds);
+  const dueSet = new Set(dueLessonIds);
 
   const allLessons = courses.flatMap((course) =>
     course.lessons.map((lesson, lessonIndex) => {
@@ -109,6 +112,10 @@ export function buildDailyReviewPlan({
       if (isCompleted) {
         reason = "completed";
         score += 35 + completedRank;
+      }
+      if (dueSet.has(lesson.id)) {
+        reason = "scheduled";
+        score += 70;
       }
       if (conceptMatch) {
         reason = "weak_concept";

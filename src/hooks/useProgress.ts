@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildStudyStats, toLocalDateKey } from "@/utils/studyStats";
@@ -10,6 +11,15 @@ export interface ProgressData {
   activityDates: string[];
   lessonCompletedAt: Record<string, string>;
   lessonXpEarned: Record<string, number>;
+}
+
+interface ProgressRow {
+  user_id: string;
+  lesson_id: string;
+  course_id: string;
+  code: string;
+  completed: boolean;
+  xp_earned: number;
 }
 
 const STORAGE_KEY = "code-bloom-studio-progress";
@@ -167,84 +177,104 @@ export function useProgress() {
     };
   }, []);
 
-  // Load from cloud when user logs in
-  useEffect(() => {
-    if (!user) {
-      setSynced(false);
-      return;
-    }
-
-    const loadCloud = async () => {
-      const { data } = await supabase
+  // Cloud progress read — cached and retried by TanStack Query.
+  const progressQuery = useQuery({
+    queryKey: ["user-progress", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from("user_progress")
         .select("lesson_id, course_id, code, completed, xp_earned, updated_at")
-        .eq("user_id", user.id);
+        .eq("user_id", user!.id);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
 
-      const cloudRows = data ?? [];
-      const cloudLessons = cloudRows.filter((d) => d.completed).map((d) => d.lesson_id);
-      const cloudCode: Record<string, string> = {};
-      const cloudCourseIds: Record<string, string> = {};
-      const cloudCompletedAt: Record<string, string> = {};
-      const cloudXpEarned: Record<string, number> = {};
-      const cloudActivityDates: string[] = [];
-      let cloudXp = 0;
-      cloudRows.forEach((d) => {
-        cloudCourseIds[d.lesson_id] = d.course_id;
-        if (d.code) cloudCode[d.lesson_id] = d.code;
-        if (d.completed) {
-          const completedAt = d.updated_at ? toLocalDateKey(new Date(d.updated_at)) : toLocalDateKey(new Date());
-          const earned = d.xp_earned || 0;
-          cloudCompletedAt[d.lesson_id] = completedAt;
-          cloudXpEarned[d.lesson_id] = earned;
-          cloudActivityDates.push(completedAt);
-          cloudXp += earned;
-        }
-      });
+  // Cloud progress write — always a batch upsert (callers wrap a single row
+  // as [row]). `mutate` is a stable reference (per TanStack Query), so
+  // destructuring keeps consumers' useCallback deps stable; the full mutation
+  // object would be a new ref each render.
+  const { mutate: upsertProgressMutate } = useMutation({
+    mutationFn: async (rows: ProgressRow[]) => {
+      const { error } = await supabase
+        .from("user_progress")
+        .upsert(rows, { onConflict: "user_id,lesson_id" });
+      if (error) throw error;
+    },
+  });
 
-      // Merge local + cloud, then upload any local-only completions for continuity after login.
-      const local = getProgressSnapshot();
-      const mergedLessons = [...new Set([...local.completedLessons, ...cloudLessons])];
-      const mergedCode = { ...cloudCode, ...local.savedCode };
-      const mergedCompletedAt = { ...cloudCompletedAt, ...local.lessonCompletedAt };
-      const mergedXpEarned = { ...cloudXpEarned, ...local.lessonXpEarned };
-      const mergedDates = uniqueSortedDates([
-        ...local.activityDates,
-        ...cloudActivityDates,
-        ...Object.values(mergedCompletedAt),
-      ]);
-
-      const merged = normalizeProgress({
-        completedLessons: mergedLessons,
-        savedCode: mergedCode,
-        totalXp: Math.max(local.totalXp, cloudXp),
-        activityDates: mergedDates,
-        lessonCompletedAt: mergedCompletedAt,
-        lessonXpEarned: mergedXpEarned,
-      });
-      replaceProgressSnapshot(merged);
-
-      const localCompletions = local.completedLessons.map((lessonId) => ({
-        user_id: user.id,
-        lesson_id: lessonId,
-        course_id: cloudCourseIds[lessonId] ?? resolveProgressCourseId(lessonId),
-        code: mergedCode[lessonId] ?? "",
-        completed: true,
-        xp_earned: mergedXpEarned[lessonId] ?? 0,
-      }));
-
-      if (localCompletions.length > 0) {
-        await supabase.from("user_progress").upsert(localCompletions, { onConflict: "user_id,lesson_id" });
-      }
-      setSynced(true);
-    };
-
-    loadCloud();
+  useEffect(() => {
+    if (!user) setSynced(false);
   }, [user]);
 
+  // Merge cloud rows into the local-first snapshot once they arrive, then push
+  // up any completions that only existed locally (continuity after login).
+  useEffect(() => {
+    if (!user || !progressQuery.data) return;
+
+    const cloudRows = progressQuery.data;
+    const cloudLessons = cloudRows.filter((d) => d.completed).map((d) => d.lesson_id);
+    const cloudCode: Record<string, string> = {};
+    const cloudCourseIds: Record<string, string> = {};
+    const cloudCompletedAt: Record<string, string> = {};
+    const cloudXpEarned: Record<string, number> = {};
+    const cloudActivityDates: string[] = [];
+    let cloudXp = 0;
+    cloudRows.forEach((d) => {
+      cloudCourseIds[d.lesson_id] = d.course_id;
+      if (d.code) cloudCode[d.lesson_id] = d.code;
+      if (d.completed) {
+        const completedAt = d.updated_at ? toLocalDateKey(new Date(d.updated_at)) : toLocalDateKey(new Date());
+        const earned = d.xp_earned || 0;
+        cloudCompletedAt[d.lesson_id] = completedAt;
+        cloudXpEarned[d.lesson_id] = earned;
+        cloudActivityDates.push(completedAt);
+        cloudXp += earned;
+      }
+    });
+
+    const local = getProgressSnapshot();
+    const mergedLessons = [...new Set([...local.completedLessons, ...cloudLessons])];
+    const mergedCode = { ...cloudCode, ...local.savedCode };
+    const mergedCompletedAt = { ...cloudCompletedAt, ...local.lessonCompletedAt };
+    const mergedXpEarned = { ...cloudXpEarned, ...local.lessonXpEarned };
+    const mergedDates = uniqueSortedDates([
+      ...local.activityDates,
+      ...cloudActivityDates,
+      ...Object.values(mergedCompletedAt),
+    ]);
+
+    const merged = normalizeProgress({
+      completedLessons: mergedLessons,
+      savedCode: mergedCode,
+      totalXp: Math.max(local.totalXp, cloudXp),
+      activityDates: mergedDates,
+      lessonCompletedAt: mergedCompletedAt,
+      lessonXpEarned: mergedXpEarned,
+    });
+    replaceProgressSnapshot(merged);
+
+    const localCompletions: ProgressRow[] = local.completedLessons.map((lessonId) => ({
+      user_id: user.id,
+      lesson_id: lessonId,
+      course_id: cloudCourseIds[lessonId] ?? resolveProgressCourseId(lessonId),
+      code: mergedCode[lessonId] ?? "",
+      completed: true,
+      xp_earned: mergedXpEarned[lessonId] ?? 0,
+    }));
+
+    if (localCompletions.length > 0) {
+      upsertProgressMutate(localCompletions);
+    }
+    setSynced(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, progressQuery.data]);
+
   const syncToCloud = useCallback(
-    async (lessonId: string, courseId: string, code: string, completed: boolean, xp: number) => {
+    (lessonId: string, courseId: string, code: string, completed: boolean, xp: number) => {
       if (!user) return;
-      await supabase.from("user_progress").upsert(
+      upsertProgressMutate([
         {
           user_id: user.id,
           lesson_id: lessonId,
@@ -253,10 +283,9 @@ export function useProgress() {
           completed,
           xp_earned: xp,
         },
-        { onConflict: "user_id,lesson_id" }
-      );
+      ]);
     },
-    [user]
+    [user, upsertProgressMutate]
   );
 
   const completeLesson = useCallback(
