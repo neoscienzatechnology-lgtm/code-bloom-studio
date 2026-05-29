@@ -168,7 +168,7 @@ function fromQuiz(quiz: QuizQuestion[] | undefined): MicroCheck[] {
   }));
 }
 
-function generatedChecks(course: Course, lesson: Lesson, terms: PedagogyTerm[]): MicroCheck[] {
+function generatedChecks(course: Course, _lesson: Lesson, terms: PedagogyTerm[]): MicroCheck[] {
   const outputTool = LANGUAGE_OUTPUT[course.language] ?? "a sintaxe correta";
   return [
     {

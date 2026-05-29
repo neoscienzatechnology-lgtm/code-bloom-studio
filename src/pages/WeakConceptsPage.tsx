@@ -6,7 +6,6 @@ import {
   Brain,
   CheckCircle2,
   Flame,
-  RefreshCw,
   RotateCcw,
   Target,
 } from "lucide-react";

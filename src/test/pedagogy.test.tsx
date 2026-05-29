@@ -24,7 +24,9 @@ import {
   selectNextPathCourse,
   selectPathStartCourse,
 } from "@/utils/learningPathProgress";
-import { validateCode } from "@/utils/codeValidator";
+import { validateCode, runJsTestCases } from "@/utils/codeValidator";
+import { nextSchedule, recordReview, getSchedule, getDueLessonIds } from "@/utils/spacedRepetition";
+import { calibrateXp } from "@/utils/xp";
 
 const lesson: Lesson = {
   id: "lesson-1",
@@ -711,5 +713,134 @@ describe("concept mastery", () => {
     expect(session.questions.length).toBeGreaterThanOrEqual(2);
     expect(session.questions[0].successFeedback).toBeTruthy();
     expect(session.targetLessons[0].objective).toContain("Guardar");
+  });
+});
+
+describe("spaced repetition (SM-2)", () => {
+  it("schedules the first successful recall one day out", () => {
+    const schedule = nextSchedule(undefined, 5);
+    expect(schedule.repetitions).toBe(1);
+    expect(schedule.intervalDays).toBe(1);
+  });
+
+  it("expands intervals across successful repetitions", () => {
+    const first = nextSchedule(undefined, 5);
+    const second = nextSchedule(first, 5);
+    const third = nextSchedule(second, 4);
+    expect(second.repetitions).toBe(2);
+    expect(second.intervalDays).toBe(6);
+    expect(third.repetitions).toBe(3);
+    expect(third.intervalDays).toBeGreaterThan(6);
+  });
+
+  it("resets the interval when recall fails (quality < 3)", () => {
+    const strong = nextSchedule(nextSchedule(undefined, 5), 5);
+    const lapsed = nextSchedule(strong, 1);
+    expect(lapsed.repetitions).toBe(0);
+    expect(lapsed.intervalDays).toBe(1);
+    expect(lapsed.ease).toBeGreaterThanOrEqual(1.3);
+  });
+
+  it("never lets the ease factor drop below 1.3", () => {
+    let schedule = nextSchedule(undefined, 0);
+    for (let i = 0; i < 10; i += 1) schedule = nextSchedule(schedule, 0);
+    expect(schedule.ease).toBeGreaterThanOrEqual(1.3);
+  });
+
+  it("persists schedules and reports due lessons", () => {
+    localStorage.clear();
+    const today = new Date("2026-05-27T12:00:00");
+    recordReview("10-1", 5, today);
+    recordReview("10-2", 1, new Date("2026-05-20T12:00:00"));
+    const due = getDueLessonIds(today);
+    expect(getSchedule("10-1")?.lessonId).toBe("10-1");
+    expect(due).toContain("10-2");
+    expect(due).not.toContain("10-1");
+    localStorage.clear();
+  });
+
+  it("prioritizes scheduled (due) lessons in the daily review plan", () => {
+    const a: Lesson = { ...lesson, id: "sr-a", expectedOutput: "A" };
+    const b: Lesson = { ...lesson, id: "sr-b", expectedOutput: "B" };
+    const srCourse: Course = { ...course, id: "sr-course", lessons: [a, b] };
+    const plan = buildDailyReviewPlan({
+      courses: [srCourse],
+      completedLessons: ["sr-a", "sr-b"],
+      savedCode: {},
+      attempts: {},
+      topErrors: [],
+      dueLessonIds: ["sr-b"],
+    });
+    expect(plan.recommendedLesson.lesson.id).toBe("sr-b");
+    expect(plan.recommendedLesson.reason).toBe("scheduled");
+  });
+});
+
+describe("test-case validation", () => {
+  it("passes when every case matches the function output", () => {
+    const result = runJsTestCases("function dobro(n){ return n * 2; }", [
+      { call: "dobro(2)", expected: "4" },
+      { call: "dobro(5)", expected: "10" },
+    ]);
+    expect(result.allPassed).toBe(true);
+    expect(result.passed).toBe(2);
+  });
+
+  it("reports the first failing case with what it got", () => {
+    const result = runJsTestCases("function dobro(n){ return n + 2; }", [
+      { call: "dobro(2)", expected: "4" },
+      { call: "dobro(5)", expected: "10" },
+    ]);
+    expect(result.allPassed).toBe(false);
+    expect(result.passed).toBe(1);
+    expect(result.firstFailure?.call).toBe("dobro(5)");
+    expect(result.firstFailure?.got).toBe("7");
+  });
+
+  it("captures runtime errors without throwing", () => {
+    const result = runJsTestCases("function quebrar(){ throw new Error('x'); }", [
+      { call: "quebrar()", expected: "ok" },
+    ]);
+    expect(result.allPassed).toBe(false);
+    expect(result.firstFailure?.got).toContain("erro");
+  });
+
+  it("validateCode treats passing test cases as an exact answer", () => {
+    const ok = validateCode("function soma(a,b){ return a+b; }", "", "function soma(a,b){ return a+b; }", {
+      testCases: [
+        { call: "soma(1,2)", expected: "3" },
+        { call: "soma(10,5)", expected: "15" },
+      ],
+    });
+    expect(ok.level).toBe("exact");
+
+    const wrong = validateCode("function soma(a,b){ return a-b; }", "", "function soma(a,b){ return a+b; }", {
+      testCases: [
+        { call: "soma(2,2)", expected: "4" },
+        { call: "soma(10,5)", expected: "15" },
+      ],
+    });
+    expect(wrong.level).toBe("wrong");
+    expect(wrong.errorKind).toBe("output_mismatch");
+  });
+});
+
+describe("XP calibration by difficulty", () => {
+  it("returns base XP when no level is set", () => {
+    expect(calibrateXp(10, undefined)).toBe(10);
+  });
+
+  it("keeps Iniciante at 1x", () => {
+    expect(calibrateXp(10, "Iniciante")).toBe(10);
+  });
+
+  it("scales Intermediário by 1.25x", () => {
+    expect(calibrateXp(10, "Intermediário")).toBe(13);
+    expect(calibrateXp(20, "Intermediário")).toBe(25);
+  });
+
+  it("scales Avançado by 1.5x", () => {
+    expect(calibrateXp(10, "Avançado")).toBe(15);
+    expect(calibrateXp(15, "Avançado")).toBe(23);
   });
 });

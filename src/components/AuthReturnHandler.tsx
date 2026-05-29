@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { consumeOAuthRedirect } from "@/utils/oauthRedirect";
 
-const AuthReturnHandler = () => {
+const AuthReturnHandler = (): null => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();

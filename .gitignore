@@ -33,3 +33,9 @@ tmp/
 *.keystore
 *.p12
 key.properties
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

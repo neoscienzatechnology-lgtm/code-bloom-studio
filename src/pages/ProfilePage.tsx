@@ -22,7 +22,7 @@ const ProfilePage = () => {
   const displayName = user?.user_metadata?.display_name ?? "Estudante CapyCode";
   const initials = displayName
     .split(" ")
-    .map((part) => part[0])
+    .map((part: string) => part[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
