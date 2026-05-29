@@ -260,6 +260,12 @@ Um erro comum é achar que programação começa pela linguagem. Na verdade, com
       summary:
         "Você aprendeu que programação é escrever instruções claras e verificáveis. A primeira ferramenta prática foi mostrar uma mensagem na tela.",
       nextStep: "Agora vamos transformar tarefas do dia a dia em algoritmos.",
+      contrastExample: {
+        wrong: "mostrar(Estou programando);",
+        right: 'mostrar("Estou programando");',
+        explanation:
+          "Sem **aspas**, o computador tenta interpretar `Estou programando` como um comando e se perde. As aspas marcam onde a frase começa e termina.",
+      },
       quiz: [
         quiz(
           "Qual opção melhor descreve programação?",
@@ -318,6 +324,12 @@ Se você travar, responda: qual é o primeiro passo visível que aproxima o prog
       summary:
         "Você viu que algoritmos são passos organizados. Essa ideia aparece em qualquer linguagem e em qualquer projeto.",
       nextStep: "Vamos observar como a ordem das instruções afeta o resultado.",
+      contrastExample: {
+        wrong: 'mostrar("praticar");\nmostrar("estudar");\nmostrar("acordar");',
+        right: 'mostrar("acordar");\nmostrar("estudar");\nmostrar("praticar");',
+        explanation:
+          "Os mesmos passos em ordem trocada formam outra rotina. Em um **algoritmo**, a ordem dos passos faz parte do resultado.",
+      },
       quiz: [
         quiz(
           "Qual é o melhor exemplo de algoritmo?",
@@ -375,6 +387,12 @@ Trocar a ordem das linhas pode fazer o programa mostrar algo antes da hora ou ca
       summary:
         "Você praticou sequência: uma instrução depois da outra. Isso prepara a base para variáveis, condições e funções.",
       nextStep: "Antes de avançar, vamos entender por que erros fazem parte do processo.",
+      contrastExample: {
+        wrong: 'mostrar("executar");\nmostrar("preparar");',
+        right: 'mostrar("preparar");\nmostrar("executar");',
+        explanation:
+          "O programa executa de cima para baixo. Se `executar` vem antes de `preparar`, a ação acontece **antes** da preparação.",
+      },
       quiz: [
         quiz(
           "Como um algoritmo executa duas instruções simples?",
@@ -434,6 +452,12 @@ Corrigir erro é treino de leitura. Leia devagar e compare com o exemplo.`,
       summary:
         "Você praticou depuração inicial: observar, comparar e corrigir. Errar com atenção acelera o aprendizado.",
       nextStep: "Agora vamos aprender a guardar informações com variáveis.",
+      contrastExample: {
+        wrong: 'mostrar("corrigi o erro"',
+        right: 'mostrar("corrigi o erro");',
+        explanation:
+          "Cada `(` espera um `)` correspondente. Sem o fechamento, o computador não sabe onde a chamada termina.",
+      },
       quiz: [
         quiz(
           "Qual é uma boa atitude ao encontrar um erro?",
@@ -491,6 +515,12 @@ Texto precisa ficar entre aspas. const nome = Ana dá erro porque JavaScript pro
       summary:
         "Você aprendeu que variáveis guardam valores com nome. Isso permite reutilizar informações e escrever código mais claro.",
       nextStep: "Vamos separar os tipos de dados mais importantes.",
+      contrastExample: {
+        wrong: 'const nome = Ana;\nconsole.log("Olá, " + nome);',
+        right: 'const nome = "Ana";\nconsole.log("Olá, " + nome);',
+        explanation:
+          "Sem **aspas**, o JS procura uma variável chamada `Ana` (que não existe). As aspas marcam que `Ana` é **texto**.",
+      },
       quiz: [
         quiz(
           "Qual opção melhor descreve uma variável?",
@@ -550,6 +580,12 @@ Colocar aspas em tudo. "10" + "5" junta textos e vira "105"; 10 + 5 calcula 15.`
       summary:
         "Você separou texto, número e booleano. Entender tipos evita bugs em contas, mensagens e decisões.",
       nextStep: "Com tipos claros, vamos calcular com operadores.",
+      contrastExample: {
+        wrong: 'const idade = "25";\nconsole.log(idade + 1);',
+        right: "const idade = 25;\nconsole.log(idade + 1);",
+        explanation:
+          "Com aspas, `25` vira **texto** e `idade + 1` concatena para `\"251\"`. Sem aspas, é **número** e a soma dá `26`.",
+      },
       quiz: [
         quiz(
           "Qual valor é um booleano em JavaScript?",
@@ -607,6 +643,12 @@ Confundir texto com número. "20" + 15 vira "2015", porque o + também junta tex
       summary:
         "Você usou operadores para transformar dados. Programas reais fazem esse ciclo o tempo todo: recebem valores, calculam e mostram resultado.",
       nextStep: "Vamos treinar prever resultados sem executar primeiro.",
+      contrastExample: {
+        wrong: 'const precoA = "20";\nconst precoB = 15;\nconsole.log(precoA + precoB);',
+        right: "const precoA = 20;\nconst precoB = 15;\nconsole.log(precoA + precoB);",
+        explanation:
+          "`\"20\" + 15` **junta** como texto e dá `\"2015\"`. Sem as aspas, `+` **soma** e dá `35`.",
+      },
       quiz: [
         quiz(
           "Qual é o resultado de 4 * 3?",
@@ -659,6 +701,12 @@ Quando uma variável muda, acompanhe o valor com o dedo ou anote do lado.`,
       summary:
         "Você acompanhou a mudança de uma variável. Isso prepara decisões, loops e depuração.",
       nextStep: "Agora vamos fazer o programa escolher caminhos com condições.",
+      contrastExample: {
+        wrong: "let total = 10;\ntotal + 20;\nconsole.log(total);",
+        right: "let total = 10;\ntotal = total + 20;\nconsole.log(total);",
+        explanation:
+          "À esquerda, `total + 20` calcula o valor mas **não guarda** em lugar nenhum — `total` continua `10`. À direita, `total = total + 20` **atualiza** a variável para `30`.",
+      },
       quiz: [
         quiz(
           "O que aparece na tela?\nlet pontos = 5;\npontos = pontos + 2;\nconsole.log(pontos);",
@@ -713,6 +761,12 @@ Condições aparecem em login, compra, jogos, formulários e permissões.`,
       summary:
         "Você aprendeu que condições respondem verdadeiro ou falso. Esse é o primeiro passo para decisões no código.",
       nextStep: "Vamos usar if e else para agir de acordo com a condição.",
+      contrastExample: {
+        wrong: "let idade = 18;\nconsole.log(idade = 20);",
+        right: "let idade = 18;\nconsole.log(idade >= 18);",
+        explanation:
+          "`idade = 20` **substitui** o valor e devolve `20`. `idade >= 18` **compara** e devolve `true` ou `false` — que é o que uma condição precisa.",
+      },
       quiz: [
         quiz(
           "Qual expressão pergunta se idade é pelo menos 18?",
@@ -765,6 +819,12 @@ Usar = em vez de >= ou ===. Um sinal de igual atribui valor; comparação pergun
       summary:
         "Você escreveu sua primeira decisão completa. Agora o programa não apenas calcula: ele escolhe caminhos.",
       nextStep: "Vamos revisar operadores de comparação para escrever regras melhores.",
+      contrastExample: {
+        wrong: 'if (idade = 18) {\n  console.log("Liberado");\n}',
+        right: 'if (idade >= 18) {\n  console.log("Liberado");\n}',
+        explanation:
+          "Com `=` você **atribui** `18` à variável e o `if` sempre passa. Com `>=` você **compara** e o `if` decide com base na resposta.",
+      },
       quiz: [
         quiz(
           "Quando o bloco else é executado?",
@@ -827,6 +887,12 @@ Confundir = com ===. O primeiro guarda valor. O segundo compara.`,
       summary:
         "Você praticou comparações. Elas são a matéria-prima de validações, filtros, permissões e jogos.",
       nextStep: "Vamos juntar comparações em um desafio de tomada de decisão.",
+      contrastExample: {
+        wrong: "console.log(senhaDigitada = senhaCorreta);",
+        right: "console.log(senhaDigitada === senhaCorreta);",
+        explanation:
+          "`=` **substitui** `senhaDigitada` pelo valor de `senhaCorreta` e imprime esse valor. `===` **compara** os dois e imprime `true` ou `false` — sem alterar nada.",
+      },
       quiz: [
         quiz(
           "Qual operador compara igualdade de forma segura em JavaScript?",
@@ -878,6 +944,12 @@ Quando o exercício pedir decisão, escreva primeiro a condição entre parênte
       summary:
         "Você completou um ciclo importante: dado, regra e resultado. Isso já resolve muitos problemas pequenos.",
       nextStep: "Agora vamos evitar repetição manual com loops.",
+      contrastExample: {
+        wrong: 'if (nota >= 7) {\n  console.log("Aprovado");\n}\nconsole.log("Revisar");',
+        right: 'if (nota >= 7) {\n  console.log("Aprovado");\n} else {\n  console.log("Revisar");\n}',
+        explanation:
+          "Sem `else`, o `console.log(\"Revisar\")` roda **sempre** — até quando o aluno foi aprovado. Com `else`, só roda quando a condição do `if` falha.",
+      },
       quiz: [
         quiz(
           "Qual é a condição correta para aprovar com nota 7 ou mais?",
@@ -931,6 +1003,12 @@ Apps percorrem listas, mensagens, produtos, tarefas, alunos, pontos e muitos out
       summary:
         "Você aprendeu por que loops existem: repetir com regra, sem copiar e colar.",
       nextStep: "Vamos repetir ações usando listas.",
+      contrastExample: {
+        wrong: "for (let numero = 1; numero < 3; numero++) {\n  console.log(numero);\n}",
+        right: "for (let numero = 1; numero <= 3; numero++) {\n  console.log(numero);\n}",
+        explanation:
+          "Com `<`, o loop **para antes do 3** (mostra só `1` e `2`). Com `<=`, **inclui** o `3` — três voltas como o exercício pede.",
+      },
       quiz: [
         quiz(
           "Qual problema um loop resolve?",
@@ -989,6 +1067,12 @@ Confundir o nome da lista com o nome do item. tarefas é a lista inteira; tarefa
       summary:
         "Você percorreu uma lista. Essa ideia aparece em catálogos, rankings, tarefas e feeds.",
       nextStep: "Vamos controlar repetições com contadores.",
+      contrastExample: {
+        wrong: "for (const tarefa of tarefas) {\n  console.log(tarefas);\n}",
+        right: "for (const tarefa of tarefas) {\n  console.log(tarefa);\n}",
+        explanation:
+          "À esquerda mostramos a **lista inteira** a cada volta. À direita mostramos cada **item** (`tarefa`) — que é o que `for...of` foi feito para entregar.",
+      },
       quiz: [
         quiz(
           "No código for (const tarefa of tarefas), o que é tarefa?",
@@ -1046,6 +1130,12 @@ Contadores aparecem em placares, carrinhos, notificações, tentativas e relató
       summary:
         "Você criou um contador. Agora consegue transformar repetições em números úteis.",
       nextStep: "Vamos aplicar repetição sem copiar e colar.",
+      contrastExample: {
+        wrong: "let total = 0;\nfor (const tarefa of tarefas) {\n  console.log(tarefa);\n}\ntotal = total + 1;\nconsole.log(total);",
+        right: "let total = 0;\nfor (const tarefa of tarefas) {\n  total = total + 1;\n}\nconsole.log(total);",
+        explanation:
+          "À esquerda, `total = total + 1` roda **uma vez** fora do loop — sempre 1, não importa o tamanho da lista. À direita roda **a cada volta** e conta de verdade.",
+      },
       quiz: [
         quiz(
           "Por que total começa em 0?",
@@ -1101,6 +1191,12 @@ Identifique o que muda. Neste caso, a mensagem não muda; quem muda é o contado
       summary:
         "Você transformou repetição manual em lógica. Essa é uma virada importante para programas maiores.",
       nextStep: "Agora vamos nomear blocos de código com funções.",
+      contrastExample: {
+        wrong: 'console.log("Praticar");\nconsole.log("Praticar");\nconsole.log("Praticar");',
+        right: 'for (let vez = 1; vez <= 3; vez++) {\n  console.log("Praticar");\n}',
+        explanation:
+          "Ambos imprimem o mesmo. Mas o `for` deixa claro **o que muda** (o contador) e **o que se mantém** (a mensagem). Para repetir 10 vezes, basta trocar um número.",
+      },
       quiz: [
         quiz(
           "Qual parte do for faz o contador avançar?",
@@ -1153,6 +1249,12 @@ Funções evitam repetição e deixam programas organizados em pequenas responsa
       summary:
         "Você criou e chamou uma função. Agora consegue nomear tarefas em vez de espalhar linhas soltas.",
       nextStep: "Vamos aprender entrada e saída em funções.",
+      contrastExample: {
+        wrong: 'function saudar() {\n  console.log("Olá");\n}',
+        right: 'function saudar() {\n  console.log("Olá");\n}\n\nsaudar();',
+        explanation:
+          "**Definir** a função só prepara o bloco — nada acontece ainda. É a **chamada** `saudar()` que executa o código dentro dela.",
+      },
       quiz: [
         quiz(
           "O que acontece quando chamamos saudar()?",
@@ -1212,6 +1314,12 @@ Confundir console.log com return. console.log mostra; return devolve um valor pa
       summary:
         "Você aprendeu entrada e saída em funções. Isso permite criar pequenas máquinas reutilizáveis.",
       nextStep: "Vamos reutilizar a mesma função com valores diferentes.",
+      contrastExample: {
+        wrong: "function dobro(numero) {\n  console.log(numero * 2);\n}\nconsole.log(dobro(5));",
+        right: "function dobro(numero) {\n  return numero * 2;\n}\nconsole.log(dobro(5));",
+        explanation:
+          "Com `console.log` **dentro** da função, ela **mostra** o valor mas **devolve `undefined`** — o `console.log` de fora imprime `undefined`. Com `return`, a função devolve `10` e o `console.log` de fora imprime `10`.",
+      },
       quiz: [
         quiz(
           "No código dobro(5), o que é 5?",
@@ -1269,6 +1377,12 @@ Reutilização evita duplicação, reduz erro e deixa o programa mais fácil de 
       summary:
         "Você reutilizou uma função. Esse hábito organiza projetos e prepara você para componentes, APIs e bibliotecas.",
       nextStep: "Vamos fechar o módulo criando uma função simples do zero.",
+      contrastExample: {
+        wrong: "function somar() {\n  return 2 + 3;\n}\nconsole.log(somar());\nconsole.log(somar());",
+        right: "function somar(a, b) {\n  return a + b;\n}\nconsole.log(somar(2, 3));\nconsole.log(somar(10, 5));",
+        explanation:
+          "À esquerda, `somar` sempre devolve `5` — qualquer chamada dá o mesmo resultado. Com **parâmetros** (`a`, `b`), a mesma função funciona para qualquer par de números.",
+      },
       quiz: [
         quiz(
           "Por que reutilizar funções é útil?",
@@ -1327,6 +1441,12 @@ Leia o nome da função. Ele deve explicar exatamente o que a função faz.`,
       summary:
         "Você criou uma função útil com entrada, processamento e saída. Essa estrutura é base para quase todo programa.",
       nextStep: "Vamos usar tudo isso em um mini projeto de calculadora.",
+      contrastExample: {
+        wrong: "function calcularDesconto() {\n  return 50 - 10;\n}\nconsole.log(calcularDesconto());",
+        right: "function calcularDesconto(preco) {\n  return preco - 10;\n}\nconsole.log(calcularDesconto(50));",
+        explanation:
+          "À esquerda, a função **só serve para 50**. Com **parâmetro**, ela calcula desconto para qualquer preço — basta chamar com outro número.",
+      },
       quiz: [
         quiz(
           "Qual linha devolve o preço com 10 de desconto?",
@@ -1433,6 +1553,12 @@ Usar nomes genéricos como x e y antes de entender o problema. Para iniciante, n
       summary:
         "Você criou os dados do projeto com nomes claros. Agora a regra de cálculo fica mais fácil.",
       nextStep: "Vamos usar condições para escolher a operação.",
+      contrastExample: {
+        wrong: 'const x = 10;\nconst y = 5;\nconst z = "soma";',
+        right: 'const numeroA = 10;\nconst numeroB = 5;\nconst operacao = "soma";',
+        explanation:
+          "À esquerda, `x`, `y`, `z` não dizem nada — quem ler depois precisa adivinhar. **Nomes descritivos** explicam o que cada dado representa.",
+      },
       quiz: [
         quiz(
           "Por que o valor soma fica entre aspas?",
@@ -1491,6 +1617,12 @@ Compare texto com === e mantenha o texto entre aspas.`,
       summary:
         "Você colocou decisão dentro do mini projeto. Agora a calculadora começa a ter comportamento.",
       nextStep: "Vamos finalizar com uma função reutilizável.",
+      contrastExample: {
+        wrong: 'if (operacao = "soma") {\n  console.log(numeroA + numeroB);\n}',
+        right: 'if (operacao === "soma") {\n  console.log(numeroA + numeroB);\n}',
+        explanation:
+          "Com `=`, você **atribui** \"soma\" à variável e o `if` **sempre** entra. Com `===`, você **compara** e o `if` só age quando a operação realmente for `soma`.",
+      },
       quiz: [
         quiz(
           "Qual comparação verifica se a operação é soma?",
@@ -1550,6 +1682,12 @@ Depois desta base, HTML, CSS e JavaScript no navegador ficam muito mais fáceis 
       summary:
         "Você concluiu a trilha inicial com um mini projeto. Agora já entende o ciclo base de um programa: entrada, processamento, decisão e saída.",
       nextStep: "Siga para HTML/CSS se quiser criar páginas, ou JavaScript se quiser aprofundar lógica.",
+      contrastExample: {
+        wrong: 'function calcular(a, b, operacao) {\n  if (operacao === "soma") {\n    console.log(a + b);\n  }\n}\nconsole.log(calcular(10, 5, "soma"));',
+        right: 'function calcular(a, b, operacao) {\n  if (operacao === "soma") {\n    return a + b;\n  }\n  return 0;\n}\n\nconsole.log(calcular(10, 5, "soma"));',
+        explanation:
+          "À esquerda, a função **mostra** o valor mas não devolve nada — o `console.log` de fora imprime `undefined` depois. À direita, `return` devolve `15` para quem chamou a função usar.",
+      },
       quiz: [
         quiz(
           "Quais conceitos aparecem na calculadora final?",

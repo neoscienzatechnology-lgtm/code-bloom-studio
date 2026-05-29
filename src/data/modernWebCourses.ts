@@ -21,6 +21,11 @@ type ModernLessonDraft = {
   commonMistake: string;
   reference: string[];
   concepts: string[];
+  contrastExample?: {
+    wrong: string;
+    right: string;
+    explanation: string;
+  };
   quiz: {
     question: string;
     options: string[];
@@ -105,6 +110,7 @@ ${draft.reference.map((item) => `- ${item}`).join("\n")}`,
     nextStep: draft.nextStep,
     tryItPrompt: draft.tryItPrompt,
     commonMistake: draft.commonMistake,
+    contrastExample: draft.contrastExample,
     reference: draft.reference,
     concepts: draft.concepts,
     quiz: buildQuiz(draft.quiz),
@@ -145,6 +151,12 @@ const htmlLessons = [
     commonMistake: "Colocar conteúdo visível dentro do head. Textos, botões e imagens aparecem no body.",
     reference: ["<!DOCTYPE html> declara HTML5.", "<html> envolve o documento.", "<head> guarda metadados.", "<body> mostra o conteúdo."],
     concepts: ["html-structure", "document", "head-body"],
+    contrastExample: {
+      wrong: '<head>\n  <h1>Olá, web!</h1>\n</head>\n<body></body>',
+      right: '<head>\n  <title>Minha página</title>\n</head>\n<body>\n  <h1>Olá, web!</h1>\n</body>',
+      explanation:
+        "Conteúdo visível (`h1`, parágrafos, imagens) vai no `<body>`. O `<head>` é só para metadados (título, encoding, links de CSS).",
+    },
     quiz: {
       question: "Onde fica o conteúdo que aparece para o usuário?",
       options: ["Dentro do body", "Dentro do meta", "Dentro do title", "Dentro do DOCTYPE"],
@@ -186,6 +198,12 @@ const htmlLessons = [
     commonMistake: "Esquecer aspas em atributos compostos. Prefira class=\"nome-da-classe\".",
     reference: ["<tag> abre um elemento.", "</tag> fecha um elemento.", "atributo=\"valor\" adiciona informação.", "class identifica elementos para CSS."],
     concepts: ["tags", "attributes", "elements"],
+    contrastExample: {
+      wrong: '<p class=dica>HTML usa tags</p>',
+      right: '<p class="dica">HTML usa tags</p>',
+      explanation:
+        "Atributos com valores compostos ou múltiplas palavras precisam de **aspas** para o navegador entender onde o valor começa e termina.",
+    },
     quiz: {
       question: "Em <p class=\"dica\">Olá</p>, o que é class?",
       options: ["Um atributo", "Uma tag", "Um documento", "Um navegador"],
@@ -230,6 +248,12 @@ const htmlLessons = [
     commonMistake: "Usar h1 apenas para deixar texto grande. Tamanho é papel do CSS; hierarquia é papel do HTML.",
     reference: ["h1 é o título principal.", "h2 a h6 criam níveis menores.", "p cria parágrafos.", "strong marca importância; em marca ênfase."],
     concepts: ["headings", "paragraphs", "semantic-html"],
+    contrastExample: {
+      wrong: '<h1>Sobre mim</h1>\n<h1>Hoje aprendi HTML</h1>',
+      right: '<h1>Meu Site</h1>\n<h2>Sobre mim</h2>\n<p>Hoje aprendi HTML</p>',
+      explanation:
+        "Heading é **hierarquia semântica**, não tamanho. Use `h1` uma vez (assunto principal), `h2` para seções e `p` para parágrafos. Tamanho é papel do CSS.",
+    },
     quiz: {
       question: "Qual tag deve representar o título principal da página?",
       options: ["<h1>", "<p>", "<strong>", "<br>"],
@@ -271,6 +295,12 @@ const htmlLessons = [
     commonMistake: "Usar texto de link genérico como clique aqui. O texto deve explicar o destino.",
     reference: ["href define destino.", "target=\"_blank\" abre nova aba.", "rel=\"noopener noreferrer\" aumenta segurança.", "#id navega na mesma página."],
     concepts: ["links", "navigation", "security"],
+    contrastExample: {
+      wrong: '<a href="https://exemplo.com" target="_blank">Abrir</a>',
+      right: '<a href="https://exemplo.com" target="_blank" rel="noopener noreferrer">Abrir</a>',
+      explanation:
+        "Sem `rel=\"noopener noreferrer\"`, a página aberta em nova aba pode **manipular** a página original via `window.opener` — risco de segurança.",
+    },
     quiz: {
       question: "Qual atributo define o destino de um link?",
       options: ["href", "src", "alt", "class"],
@@ -312,6 +342,12 @@ const htmlLessons = [
     commonMistake: "Escrever alt=\"imagem\". O alt precisa comunicar o conteúdo ou função da imagem.",
     reference: ["src aponta para a imagem.", "alt descreve a imagem.", "width e height reduzem salto de layout.", "loading=\"lazy\" adia carregamento."],
     concepts: ["images", "accessibility", "performance"],
+    contrastExample: {
+      wrong: '<img src="perfil.jpg" alt="imagem">',
+      right: '<img src="perfil.jpg" alt="Ana estudando programação em um notebook">',
+      explanation:
+        "`alt=\"imagem\"` **não comunica nada** ao leitor de tela. O `alt` deve descrever o conteúdo ou a função da imagem.",
+    },
     quiz: {
       question: "Para que serve o atributo alt?",
       options: ["Descrever a imagem", "Aumentar a imagem", "Trocar a cor", "Criar um link"],
@@ -360,6 +396,12 @@ const htmlLessons = [
     commonMistake: "Criar vários links soltos sem agrupamento. A lista comunica que eles pertencem ao mesmo menu.",
     reference: ["ul cria lista não ordenada.", "ol cria lista ordenada.", "li cria cada item.", "nav identifica navegação."],
     concepts: ["lists", "navigation", "semantic-html"],
+    contrastExample: {
+      wrong: '<a href="/cursos">Cursos</a>\n<a href="/projetos">Projetos</a>\n<a href="/perfil">Perfil</a>',
+      right: '<nav aria-label="Principal">\n  <ul>\n    <li><a href="/cursos">Cursos</a></li>\n    <li><a href="/projetos">Projetos</a></li>\n    <li><a href="/perfil">Perfil</a></li>\n  </ul>\n</nav>',
+      explanation:
+        "Links soltos não comunicam que são um **menu**. Agrupar em `<nav>` + `<ul>` ajuda leitores de tela a anunciar 'menu com 3 itens'.",
+    },
     quiz: {
       question: "Quando usar ol?",
       options: ["Quando a ordem importa", "Para qualquer imagem", "Para formulários", "Para mudar cor"],
@@ -409,6 +451,12 @@ const htmlLessons = [
     commonMistake: "Usar section só para espaçamento visual. Se não há tema ou título, talvez seja só uma div.",
     reference: ["header: topo.", "main: conteúdo principal.", "section: seção temática.", "article: conteúdo independente.", "footer: rodapé."],
     concepts: ["semantic-html", "layout-structure", "accessibility"],
+    contrastExample: {
+      wrong: '<div class="topo">...</div>\n<div class="conteudo">...</div>\n<div class="rodape">...</div>',
+      right: "<header>...</header>\n<main>...</main>\n<footer>...</footer>",
+      explanation:
+        "Divs **não comunicam** o papel das áreas. Tags semânticas (`header`, `main`, `footer`) ajudam navegadores, SEO e leitores de tela a entender a estrutura.",
+    },
     quiz: {
       question: "Quantos elementos main uma página deve ter?",
       options: ["Um", "Três", "Um por seção", "Nenhum"],
@@ -455,6 +503,12 @@ const htmlLessons = [
     commonMistake: "Usar placeholder como único rótulo. Placeholder desaparece quando o usuário digita; label permanece.",
     reference: ["form agrupa campos.", "label descreve campo.", "input recebe dados.", "name identifica o dado.", "required torna obrigatório."],
     concepts: ["forms", "accessibility", "validation"],
+    contrastExample: {
+      wrong: '<input type="email" placeholder="E-mail">',
+      right: '<label for="email">E-mail</label>\n<input id="email" type="email">',
+      explanation:
+        "Placeholder **some** quando o usuário digita — e nunca foi rótulo de verdade. `<label>` permanece, é anunciado por leitor de tela e foca o input ao clicar no texto.",
+    },
     quiz: {
       question: "Qual combinação associa label e input?",
       options: ["label for e input id", "label src e input alt", "form href e input rel", "button id e input class"],
@@ -501,6 +555,12 @@ const htmlLessons = [
     commonMistake: "Usar table para montar colunas de layout. Use CSS Grid ou Flexbox para layout.",
     reference: ["table cria tabela.", "caption nomeia a tabela.", "thead agrupa cabeçalho.", "tbody agrupa dados.", "th cabeçalho; td valor."],
     concepts: ["tables", "data", "semantic-html"],
+    contrastExample: {
+      wrong: "<table>\n  <tr><td>Sidebar</td><td>Conteúdo</td></tr>\n</table>",
+      right: "<aside>Sidebar</aside>\n<main>Conteúdo</main>\n/* layout em CSS com Flexbox ou Grid */",
+      explanation:
+        "Tabelas são para **dados** em linhas/colunas. Para layout (sidebar + conteúdo), use tags semânticas + CSS Grid/Flexbox.",
+    },
     quiz: {
       question: "Quando tabela é a escolha certa?",
       options: ["Quando há dados em linhas e colunas", "Para centralizar qualquer layout", "Para criar botão", "Para carregar imagem"],
@@ -546,6 +606,12 @@ const htmlLessons = [
     commonMistake: "Usar autoplay com som. Navegadores bloqueiam e a experiência fica ruim.",
     reference: ["video exibe vídeo.", "audio exibe áudio.", "source define arquivo e tipo.", "iframe incorpora conteúdo externo.", "title descreve iframe."],
     concepts: ["media", "iframe", "accessibility"],
+    contrastExample: {
+      wrong: '<video src="aula.mp4" autoplay></video>',
+      right: '<video src="aula.mp4" controls></video>',
+      explanation:
+        "`autoplay` com som é **bloqueado** pelos navegadores e cria uma experiência ruim. Use `controls` para o usuário decidir quando tocar.",
+    },
     quiz: {
       question: "Por que iframe precisa de title?",
       options: ["Para acessibilidade", "Para aumentar tamanho", "Para rodar CSS", "Para trocar o idioma"],
@@ -593,6 +659,12 @@ const htmlLessons = [
     commonMistake: "Esquecer viewport. Sem ele, o site pode abrir no celular como uma página encolhida de desktop.",
     reference: ["charset define codificação.", "viewport ajusta mobile.", "description resume a página.", "title nomeia aba e resultado."],
     concepts: ["metadata", "seo", "responsive"],
+    contrastExample: {
+      wrong: '<head>\n  <meta charset="UTF-8">\n  <title>Minha página</title>\n</head>',
+      right: '<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Minha página</title>\n</head>',
+      explanation:
+        "Sem `viewport`, o navegador **encolhe** a página no celular (renderiza em ~980px). Com viewport, a página respeita a largura real do dispositivo.",
+    },
     quiz: {
       question: "Qual meta é essencial para mobile?",
       options: ["viewport", "author", "keywords", "theme"],
@@ -637,6 +709,12 @@ const htmlLessons = [
     commonMistake: "Usar div clicável no lugar de button. Button já vem com comportamento de teclado.",
     reference: ["button para ações.", "a para navegação.", "label para campos.", "alt para imagens.", "aria-label nomeia controles sem texto."],
     concepts: ["accessibility", "forms", "semantic-html"],
+    contrastExample: {
+      wrong: '<div onclick="abrir()" style="cursor:pointer">Abrir menu</div>',
+      right: '<button type="button" onclick="abrir()">Abrir menu</button>',
+      explanation:
+        "`<div>` não foca com teclado, não dispara em Enter/Espaço e não é anunciado como botão por leitor de tela. `<button>` já vem com **tudo isso pronto**.",
+    },
     quiz: {
       question: "Qual elemento é melhor para uma ação de abrir menu?",
       options: ["button", "div", "span", "meta"],
@@ -687,6 +765,12 @@ const htmlLessons = [
     commonMistake: "Tentar resolver aparência no HTML. Classes podem preparar o CSS, mas estilo visual fica para a próxima etapa.",
     reference: ["HTML estrutura.", "CSS estiliza.", "JavaScript adiciona comportamento.", "Projeto bom começa pequeno e testável."],
     concepts: ["project", "semantic-html", "forms", "accessibility"],
+    contrastExample: {
+      wrong: '<p style="font-size: 32px; font-weight: bold">Ana Dev</p>\n<p style="font-size: 20px">Sobre</p>',
+      right: "<h1>Ana Dev</h1>\n<h2>Sobre</h2>",
+      explanation:
+        "`style` no HTML resolve **visual** mas perde a **hierarquia**. Headings dão estrutura para SEO, leitor de tela e CSS. Estilo é trabalho do CSS, em outro arquivo.",
+    },
     quiz: {
       question: "Qual é o foco principal deste projeto HTML?",
       options: ["Estrutura correta", "Animações complexas", "Banco de dados", "Publicar app nativo"],
@@ -732,6 +816,12 @@ const cssLessons = [
     commonMistake: "Tentar colocar estilo diretamente em todas as tags HTML. Prefira CSS reaproveitável.",
     reference: ["seletor escolhe elemento.", "propriedade define o que muda.", "valor define como muda.", "declaração termina com ponto e vírgula."],
     concepts: ["css-basics", "selectors", "style"],
+    contrastExample: {
+      wrong: '<h1 style="color: teal; font-family: Arial">Título</h1>',
+      right: "/* arquivo .css */\nh1 { color: teal; font-family: Arial; }\n<!-- arquivo .html -->\n<h1>Título</h1>",
+      explanation:
+        "`style` na tag espalha estilo pelo HTML e impede reuso. CSS em arquivo separado serve vários elementos e troca tema sem mexer no HTML.",
+    },
     quiz: {
       question: "Qual papel principal do CSS?",
       options: ["Estilizar a apresentação", "Criar banco de dados", "Definir o conteúdo semântico", "Hospedar arquivos"],
@@ -773,6 +863,12 @@ const cssLessons = [
     commonMistake: "Usar id para todos os estilos. Classes são melhores para reaproveitar padrões.",
     reference: ["p seleciona tags p.", ".card seleciona classe.", "#app seleciona id.", ".card p seleciona p dentro de card."],
     concepts: ["selectors", "class", "specificity"],
+    contrastExample: {
+      wrong: "#botao-primario { ... }\n#botao-secundario { ... }  /* duplica tudo */",
+      right: ".botao { ... }\n.botao.primario { background: teal; }\n.botao.secundario { background: gray; }",
+      explanation:
+        "**ID é único** — não dá pra reutilizar. **Classe** pode repetir e combinar (`.botao.primario`), evitando duplicação de regras.",
+    },
     quiz: {
       question: "Qual seletor representa uma classe chamada alerta?",
       options: [".alerta", "#alerta", "alerta", "*alerta"],
@@ -814,6 +910,12 @@ const cssLessons = [
     commonMistake: "Resolver qualquer conflito com !important. Isso cria dívida e dificulta manutenção.",
     reference: ["tag: baixa especificidade.", "classe: média.", "id: alta.", "em empate, vence a regra posterior."],
     concepts: ["cascade", "specificity", "debugging"],
+    contrastExample: {
+      wrong: ".titulo { color: blue !important; }\nh1.titulo { color: red; }  /* blue vence pelo !important */",
+      right: "h1.titulo { color: red; }\n.titulo { color: blue; }  /* deixa a especificidade decidir */",
+      explanation:
+        "`!important` **quebra a cascata** e fica difícil sobrescrever depois. Resolva por especificidade ou ordem das regras — `!important` só em casos extremos.",
+    },
     quiz: {
       question: "Entre p e .aviso, quem é mais específico?",
       options: [".aviso", "p", "Empate sempre", "Nenhum CSS funciona"],
@@ -855,6 +957,12 @@ const cssLessons = [
     commonMistake: "Diminuir demais line-height. Texto apertado parece denso e cansa rápido.",
     reference: ["color: cor do texto.", "font-size: tamanho.", "font-weight: peso.", "line-height: altura da linha.", "text-align: alinhamento."],
     concepts: ["typography", "color", "readability"],
+    contrastExample: {
+      wrong: "p {\n  font-size: 16px;\n  line-height: 1;  /* texto colado */\n}",
+      right: "p {\n  font-size: 16px;\n  line-height: 1.6;  /* respiro entre linhas */\n}",
+      explanation:
+        "`line-height: 1` cola as linhas. `1.5`–`1.7` dá respiro e melhora **legibilidade** — especialmente em mobile.",
+    },
     quiz: {
       question: "Qual propriedade melhora o espaço vertical entre linhas?",
       options: ["line-height", "font-color", "display", "z-index"],
@@ -896,6 +1004,12 @@ const cssLessons = [
     commonMistake: "Confundir margin e padding. Se o espaço é dentro da borda, é padding.",
     reference: ["content: conteúdo.", "padding: espaço interno.", "border: contorno.", "margin: espaço externo.", "box-sizing: border-box simplifica cálculo."],
     concepts: ["box-model", "spacing", "layout"],
+    contrastExample: {
+      wrong: ".card {\n  margin: 16px;  /* afasta o card */\n  padding: 0;    /* texto cola na borda */\n}",
+      right: ".card {\n  padding: 16px;  /* respiro DENTRO */\n  margin: 24px 0; /* afastamento FORA */\n}",
+      explanation:
+        "**Padding** é espaço **dentro** da borda (texto até o limite). **Margin** é espaço **fora** (entre elementos).",
+    },
     quiz: {
       question: "Qual propriedade cria espaço dentro da borda?",
       options: ["padding", "margin", "outline", "position"],
@@ -937,6 +1051,12 @@ const cssLessons = [
     commonMistake: "Usar largura fixa grande em mobile. Isso causa scroll horizontal.",
     reference: ["px: fixo.", "rem: relativo à fonte base.", "%: relativo ao pai.", "vw: relativo à viewport.", "max-width limita crescimento."],
     concepts: ["units", "responsive", "container"],
+    contrastExample: {
+      wrong: ".container {\n  width: 1200px;  /* trava no celular */\n}",
+      right: ".container {\n  width: min(100% - 32px, 1200px);\n  margin: 0 auto;\n}",
+      explanation:
+        "Largura **fixa** cria scroll horizontal no celular. `min()` deixa fluido até um **limite** — funciona em mobile e desktop.",
+    },
     quiz: {
       question: "Qual combinação costuma ser boa para container?",
       options: ["width fluido + max-width", "width: 1200px sempre", "height fixo para tudo", "position absolute em tudo"],
@@ -978,6 +1098,12 @@ const cssLessons = [
     commonMistake: "Usar margin manual em todos os filhos quando gap resolveria melhor.",
     reference: ["block ocupa linha.", "inline acompanha texto.", "flex organiza em eixo.", "grid organiza em duas dimensões.", "gap espaça filhos."],
     concepts: ["display", "layout", "flexbox"],
+    contrastExample: {
+      wrong: ".acoes button { margin-right: 12px; }\n.acoes button:last-child { margin-right: 0; }  /* exceção pro último */",
+      right: ".acoes {\n  display: flex;\n  gap: 12px;\n}",
+      explanation:
+        "Margin entre filhos **exige** tratar o último item separado. `gap` no flex/grid resolve com **uma linha**, sem exceções.",
+    },
     quiz: {
       question: "Qual display é ideal para alinhar botões em uma linha simples?",
       options: ["flex", "table", "none", "contents sempre"],
@@ -1019,6 +1145,12 @@ const cssLessons = [
     commonMistake: "Esquecer flex-wrap em listas de cards. Em telas pequenas, os itens podem estourar.",
     reference: ["flex-direction define direção.", "justify-content distribui no eixo principal.", "align-items alinha no eixo cruzado.", "flex-wrap permite quebra.", "gap espaça."],
     concepts: ["flexbox", "responsive", "layout"],
+    contrastExample: {
+      wrong: ".cards {\n  display: flex;\n  gap: 16px;\n  /* sem wrap: itens estouram no mobile */\n}",
+      right: ".cards {\n  display: flex;\n  gap: 16px;\n  flex-wrap: wrap;\n}",
+      explanation:
+        "Sem `flex-wrap`, os itens ficam numa linha só e podem **estourar** o container. `wrap` permite quebrar quando faltar espaço.",
+    },
     quiz: {
       question: "Qual propriedade permite que itens flex quebrem linha?",
       options: ["flex-wrap", "font-wrap", "grid-auto", "line-height"],
@@ -1060,6 +1192,12 @@ const cssLessons = [
     commonMistake: "Usar Grid para tudo. Para uma fila simples, Flexbox costuma ser mais fácil.",
     reference: ["display: grid ativa grade.", "grid-template-columns define colunas.", "repeat evita repetição.", "minmax define limite mínimo e máximo.", "1fr ocupa fração disponível."],
     concepts: ["grid", "responsive", "layout"],
+    contrastExample: {
+      wrong: ".barra {\n  display: grid;\n  grid-template-columns: auto auto auto;\n  gap: 12px;\n}",
+      right: ".barra {\n  display: flex;\n  gap: 12px;\n}",
+      explanation:
+        "Para **fila simples** (uma dimensão), Flexbox é mais direto. Grid brilha em **duas dimensões** (linhas + colunas).",
+    },
     quiz: {
       question: "Qual propriedade define as colunas do Grid?",
       options: ["grid-template-columns", "flex-direction", "font-size", "position"],
@@ -1101,6 +1239,12 @@ const cssLessons = [
     commonMistake: "Usar absolute para montar toda página. Layout principal deve ser Flexbox/Grid.",
     reference: ["static é padrão.", "relative mantém espaço.", "absolute sai do fluxo.", "fixed prende na viewport.", "sticky gruda ao rolar."],
     concepts: ["position", "layout", "overlays"],
+    contrastExample: {
+      wrong: ".header { position: absolute; top: 0; }\n.main { position: absolute; top: 80px; }\n.sidebar { position: absolute; left: 0; }",
+      right: "/* layout principal com Grid */\n.layout { display: grid; grid-template-columns: 240px 1fr; }\n/* position só onde precisa sobrepor */\n.card { position: relative; }\n.badge { position: absolute; top: 8px; right: 8px; }",
+      explanation:
+        "Position absolute em tudo cria layout **frágil**. Use Flexbox/Grid para o layout **principal** e position só onde precisa **sobrepor** (badge, modal, tooltip).",
+    },
     quiz: {
       question: "Qual position é comum para selo dentro de um card?",
       options: ["absolute no selo e relative no card", "fixed em tudo", "static com top", "sticky no selo"],
@@ -1142,6 +1286,12 @@ const cssLessons = [
     commonMistake: "Projetar só no desktop e tentar encolher no fim. Mobile-first é mais previsível.",
     reference: ["@media cria condição.", "min-width aplica acima de uma largura.", "max-width aplica abaixo.", "mobile-first começa simples.", "breakpoints devem existir por necessidade do conteúdo."],
     concepts: ["responsive", "media-query", "mobile-first"],
+    contrastExample: {
+      wrong: "/* desktop-first */\n.cards { grid-template-columns: repeat(3, 1fr); }\n@media (max-width: 768px) {\n  .cards { grid-template-columns: 1fr; }\n}",
+      right: "/* mobile-first */\n.cards { grid-template-columns: 1fr; }\n@media (min-width: 768px) {\n  .cards { grid-template-columns: repeat(3, 1fr); }\n}",
+      explanation:
+        "Mobile-first começa simples (1 coluna) e **adiciona** colunas quando há espaço. Mais robusto e fácil de manter que desktop-first.",
+    },
     quiz: {
       question: "Na abordagem mobile-first, o CSS base mira qual tela?",
       options: ["Tela pequena", "Apenas TV", "Apenas impressora", "Nenhuma"],
@@ -1183,6 +1333,12 @@ const cssLessons = [
     commonMistake: "Remover outline com outline: none e não criar outro foco visível.",
     reference: [":hover: ponteiro sobre elemento.", ":active: clique em andamento.", ":focus-visible: foco por teclado.", ":disabled: indisponível.", "outline mostra foco."],
     concepts: ["states", "accessibility", "interaction"],
+    contrastExample: {
+      wrong: ".botao:focus { outline: none; }  /* sem alternativa */",
+      right: ".botao:focus-visible {\n  outline: 3px solid #f59e0b;\n  outline-offset: 2px;\n}",
+      explanation:
+        "Tirar o outline **sem alternativa** quebra navegação por teclado. `focus-visible` mostra o foco só pra usuário de teclado e mantém a UI limpa para mouse.",
+    },
     quiz: {
       question: "Qual pseudo-classe ajuda navegação por teclado?",
       options: [":focus-visible", ":hover", ":last-child", ":empty"],
@@ -1224,6 +1380,12 @@ const cssLessons = [
     commonMistake: "Colocar transition só no hover. Ela deve ficar no estado base para animar ida e volta.",
     reference: ["transition suaviza mudança.", "transform move/escala sem afetar fluxo.", "@keyframes define animação.", "animation aplica keyframes.", "prefers-reduced-motion reduz movimento."],
     concepts: ["animation", "transition", "motion"],
+    contrastExample: {
+      wrong: ".botao:hover {\n  background: teal;\n  transition: background .2s;  /* só anima entrando */\n}",
+      right: ".botao { transition: background .2s; }\n.botao:hover { background: teal; }",
+      explanation:
+        "`transition` no `:hover` anima só a **ida**. No estado **base**, anima ida e volta — UX mais suave.",
+    },
     quiz: {
       question: "Onde transition deve ficar normalmente?",
       options: ["No estado base", "Apenas no hover", "Dentro do HTML", "No atributo alt"],
@@ -1265,6 +1427,12 @@ const cssLessons = [
     commonMistake: "Criar nomes genéricos demais como --green. Prefira nomes de papel: --color-success ou --color-brand.",
     reference: [":root define escopo global.", "--nome cria variável.", "var(--nome) lê variável.", "tokens guardam decisões de design.", "tema pode sobrescrever variáveis."],
     concepts: ["css-variables", "theme", "design-system"],
+    contrastExample: {
+      wrong: ":root { --green: #0f766e; }\n.cta { background: var(--green); }\n.success { color: var(--green); }",
+      right: ":root {\n  --color-brand: #0f766e;\n  --color-success: #0f766e;\n}\n.cta { background: var(--color-brand); }\n.success { color: var(--color-success); }",
+      explanation:
+        "Nomes pelo **papel** (`brand`, `success`) sobrevivem a mudanças de cor. `--green` cria vínculo entre nome e tom — quebra quando a marca vira azul.",
+    },
     quiz: {
       question: "Como ler uma variável CSS?",
       options: ["var(--nome)", "$nome", "get(nome)", "use nome"],
@@ -1308,6 +1476,12 @@ const cssLessons = [
     commonMistake: "Definir altura fixa no card. Conteúdo real muda; deixe o card crescer.",
     reference: ["Card precisa de limite de largura.", "padding cria respiro.", "shadow deve ser sutil.", "hover confirma interação.", "responsividade evita cortes."],
     concepts: ["project", "card", "responsive", "interaction"],
+    contrastExample: {
+      wrong: ".profile-card {\n  height: 320px;  /* texto longo é cortado */\n}",
+      right: ".profile-card {\n  min-height: 320px;  /* cresce com o conteúdo */\n}",
+      explanation:
+        "Altura **fixa** corta conteúdo real (nome longo, bio extensa). `min-height` reserva o mínimo e deixa o card **crescer** quando precisa.",
+    },
     quiz: {
       question: "Qual decisão deixa o card mais seguro no mobile?",
       options: ["width fluida com limite", "height fixa gigante", "position absolute em tudo", "font-size com viewport"],
@@ -1353,6 +1527,12 @@ const javascriptLessons = [
     commonMistake: "Confundir console com tela do site. console.log ajuda a depurar; mudar a página exige DOM.",
     reference: ["console.log mostra valores.", "String é texto entre aspas.", "Instrução é uma ação do código.", "JavaScript roda no navegador e em outros ambientes."],
     concepts: ["javascript-basics", "console", "output"],
+    contrastExample: {
+      wrong: 'console.log("mudar a página");  /* só aparece no DevTools */',
+      right: 'document.querySelector("h1").textContent = "mudar a página";  /* muda no site */',
+      explanation:
+        "`console.log` é janela de **depuração**, só visível no DevTools. Para alterar o que aparece na página, use **DOM**.",
+    },
     quiz: {
       question: "Para que console.log é mais usado?",
       options: ["Observar valores durante o desenvolvimento", "Criar uma imagem", "Estilizar fonte", "Definir meta tags"],
@@ -1395,6 +1575,12 @@ const javascriptLessons = [
     commonMistake: "Criar variável com nome genérico como x sem necessidade. Prefira nomes que expliquem o valor.",
     reference: ["const: valor não reatribuído.", "let: valor pode mudar.", "nome = valor atribui.", "Variáveis são case-sensitive."],
     concepts: ["variables", "const", "let"],
+    contrastExample: {
+      wrong: 'const x = "Ana";\nconst y = 25;\nconsole.log(x, y);',
+      right: 'const nome = "Ana";\nconst idade = 25;\nconsole.log(nome, idade);',
+      explanation:
+        "`x` e `y` não explicam o que guardam. Nomes **descritivos** deixam o código se explicar sozinho.",
+    },
     quiz: {
       question: "Quando const é uma boa escolha?",
       options: ["Quando o valor não será reatribuído", "Quando precisa mudar sempre", "Somente para números", "Nunca"],
@@ -1436,6 +1622,12 @@ const javascriptLessons = [
     commonMistake: "Escrever número entre aspas quando precisa fazer conta. \"25\" é texto; 25 é número.",
     reference: ["string: texto.", "number: número.", "boolean: true ou false.", "typeof mostra tipo.", "Aspas mudam o tipo para texto."],
     concepts: ["types", "strings", "numbers", "booleans"],
+    contrastExample: {
+      wrong: 'const idade = "25";\nconsole.log(idade + 1);  // "251" (concatena)',
+      right: "const idade = 25;\nconsole.log(idade + 1);  // 26 (soma)",
+      explanation:
+        "Com aspas, `25` é **string** e `+` concatena. Sem aspas é **number** e `+` soma.",
+    },
     quiz: {
       question: "Qual valor é booleano?",
       options: ["true", "\"true\"", "25", "\"Ana\""],
@@ -1477,6 +1669,12 @@ const javascriptLessons = [
     commonMistake: "Usar == sem entender conversão automática. Prefira === para comparação mais previsível.",
     reference: ["+ soma ou concatena.", "- subtrai.", "* multiplica.", "/ divide.", "=== compara igualdade estrita.", ">= compara mínimo."],
     concepts: ["operators", "expressions", "comparison"],
+    contrastExample: {
+      wrong: 'if (idade == "18") { ... }  // "18" == 18 vira true (conversão)',
+      right: "if (idade === 18) { ... }  // compara valor E tipo",
+      explanation:
+        "`==` faz **conversão automática** — `\"18\" == 18` vira `true` e esconde bugs. `===` compara valor **e tipo**, mais previsível.",
+    },
     quiz: {
       question: "Qual operador compara igualdade estrita?",
       options: ["===", "=", "+", "!==="],
@@ -1519,6 +1717,12 @@ const javascriptLessons = [
     commonMistake: "Colocar = em vez de === ou >= na condição. = atribui valor; não compara.",
     reference: ["if testa condição.", "else é alternativa.", "else if testa novo caso.", "Blocos usam chaves.", "Condição precisa produzir booleano."],
     concepts: ["conditions", "if-else", "booleans"],
+    contrastExample: {
+      wrong: 'if (idade = 18) { console.log("Liberado"); }  // atribui — if SEMPRE entra',
+      right: 'if (idade >= 18) { console.log("Liberado"); }',
+      explanation:
+        "Com `=`, você **atribui** `18` à variável e o `if` sempre passa. Com `>=`, você **compara** e o `if` decide com base na resposta.",
+    },
     quiz: {
       question: "Qual bloco roda quando a condição do if é falsa?",
       options: ["else", "const", "console", "return sempre"],
@@ -1560,6 +1764,12 @@ const javascriptLessons = [
     commonMistake: "Criar condição que nunca fica falsa. Isso gera loop infinito.",
     reference: ["for tem início, condição e atualização.", "i++ soma 1.", "while repete enquanto a condição for verdadeira.", "break interrompe.", "continue pula para próxima repetição."],
     concepts: ["loops", "for", "iteration"],
+    contrastExample: {
+      wrong: "for (let i = 1; i <= 3; ) {\n  console.log(i);  // sem i++ — LOOP INFINITO\n}",
+      right: "for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}",
+      explanation:
+        "Sem `i++`, a condição `i <= 3` **nunca** fica falsa — o loop trava a aba do navegador.",
+    },
     quiz: {
       question: "Qual parte do for evita repetição infinita?",
       options: ["A condição que eventualmente fica falsa", "O nome da variável", "A cor do texto", "O comentário"],
@@ -1602,6 +1812,12 @@ const javascriptLessons = [
     commonMistake: "Esquecer return. Sem return, a função pode executar, mas devolver undefined.",
     reference: ["function declara função.", "Parâmetro recebe entrada.", "return devolve valor.", "Chamada executa função.", "Funções devem ter responsabilidade clara."],
     concepts: ["functions", "parameters", "return"],
+    contrastExample: {
+      wrong: "function dobro(n) { n * 2; }\nconsole.log(dobro(4));  // undefined",
+      right: "function dobro(n) { return n * 2; }\nconsole.log(dobro(4));  // 8",
+      explanation:
+        "Sem `return`, a função **executa** o cálculo mas devolve `undefined`. `return` entrega o valor para quem chamou.",
+    },
     quiz: {
       question: "Para que serve return?",
       options: ["Devolver um valor da função", "Criar cor", "Abrir navegador", "Declarar CSS"],
@@ -1643,6 +1859,12 @@ const javascriptLessons = [
     commonMistake: "Achar que o primeiro índice é 1. Em JavaScript, arrays começam no índice 0.",
     reference: ["[] cria array.", "array[0] acessa primeiro item.", "push adiciona no final.", "length mostra tamanho.", "for...of percorre valores."],
     concepts: ["arrays", "lists", "iteration"],
+    contrastExample: {
+      wrong: 'const frutas = ["maçã", "banana"];\nconsole.log(frutas[1]);  // esperando "maçã", vem "banana"',
+      right: 'const frutas = ["maçã", "banana"];\nconsole.log(frutas[0]);  // "maçã"',
+      explanation:
+        "Em JavaScript, o **primeiro índice é 0**. `frutas[1]` é o **segundo** item.",
+    },
     quiz: {
       question: "Qual índice acessa o primeiro item de um array?",
       options: ["0", "1", "-1", "first"],
@@ -1685,6 +1907,12 @@ const javascriptLessons = [
     commonMistake: "Usar array quando os dados têm nomes diferentes. Objetos são melhores para fichas e entidades.",
     reference: ["{} cria objeto.", "chave: valor define propriedade.", "objeto.nome acessa propriedade.", "objeto[\"nome\"] também acessa.", "Objetos representam entidades."],
     concepts: ["objects", "properties", "data-model"],
+    contrastExample: {
+      wrong: 'const usuario = ["Ana", 25, true];\nconsole.log(usuario[0]);  /* qual posição é o nome? */',
+      right: 'const usuario = { nome: "Ana", idade: 25, ativo: true };\nconsole.log(usuario.nome);',
+      explanation:
+        "Array por **ordem** vira adivinhação (qual posição é o quê?). **Objeto** acessa por nome (`usuario.nome`) — explícito e seguro.",
+    },
     quiz: {
       question: "Qual estrutura representa melhor um usuário com nome e idade?",
       options: ["Objeto", "String única", "Booleano", "CSS"],
@@ -1726,6 +1954,12 @@ const javascriptLessons = [
     commonMistake: "Tentar mexer em um elemento antes de ele existir no DOM. Garanta que o script rode depois do HTML ou espere carregamento.",
     reference: ["document representa a página.", "querySelector usa seletor CSS.", "textContent muda texto.", "classList muda classes.", "setAttribute muda atributos."],
     concepts: ["dom", "selectors", "text-content"],
+    contrastExample: {
+      wrong: '<script src="app.js"></script>\n<h1>Título</h1>\n/* app.js: querySelector("h1") → null */',
+      right: '<h1>Título</h1>\n<script src="app.js" defer></script>',
+      explanation:
+        "Script **antes** do HTML executa quando `<h1>` ainda não existe — `querySelector` devolve `null`. `defer` (ou script no fim) espera o HTML carregar.",
+    },
     quiz: {
       question: "Qual método seleciona um elemento usando seletor CSS?",
       options: ["document.querySelector", "console.log", "JSON.parse", "Math.round"],
@@ -1768,6 +2002,12 @@ const javascriptLessons = [
     commonMistake: "Chamar a função no lugar de passá-la ao listener. Use clicar, não clicar(), quando registrar.",
     reference: ["click: clique.", "input: digitação.", "submit: envio.", "addEventListener registra reação.", "event traz detalhes da interação."],
     concepts: ["events", "dom", "interaction"],
+    contrastExample: {
+      wrong: 'botao.addEventListener("click", clicar());  // chama AGORA, registra undefined',
+      right: 'botao.addEventListener("click", clicar);  // passa a referência',
+      explanation:
+        "`clicar()` **executa** a função na hora e passa o retorno. `clicar` (sem parênteses) passa a **referência** para o navegador chamar no clique.",
+    },
     quiz: {
       question: "Qual método registra uma reação a evento?",
       options: ["addEventListener", "querySelectorAll sempre", "parseInt", "toUpperCase"],
@@ -1810,6 +2050,12 @@ const javascriptLessons = [
     commonMistake: "Confiar só na validação do front-end. O servidor também precisa validar em sistemas reais.",
     reference: ["input.value lê campo.", "trim remove espaços extras.", "submit envia formulário.", "preventDefault evita recarregar.", "Mensagem de erro deve orientar."],
     concepts: ["forms", "validation", "events"],
+    contrastExample: {
+      wrong: '/* só valida no front */\nif (input.value !== "") enviar();',
+      right: "/* valida no front E o servidor revalida */\nif (input.value.trim() === \"\") return mostrarErro();\nawait fetch(\"/api\", { body: ... });",
+      explanation:
+        "Validação no front melhora UX mas pode ser **burlada** (DevTools, requisição direta). A validação real precisa acontecer também no **servidor**.",
+    },
     quiz: {
       question: "Por que usar trim antes de validar texto?",
       options: ["Para remover espaços extras", "Para mudar cor", "Para criar array", "Para abrir link"],
@@ -1851,6 +2097,12 @@ const javascriptLessons = [
     commonMistake: "Usar aspas comuns e esperar ${} funcionar. Interpolação exige crases.",
     reference: ["Crase cria template literal.", "${valor} interpola.", "Funciona com expressões.", "Ajuda em URLs e mensagens.", "Evite concatenar texto longo com muitos +."],
     concepts: ["strings", "template-literals", "interpolation"],
+    contrastExample: {
+      wrong: 'const msg = "${nome} fez ${pontos} XP";  // texto literal',
+      right: "const msg = `${nome} fez ${pontos} XP`;",
+      explanation:
+        "`${}` só interpola dentro de **crases** (`` ` ``). Com aspas normais, vira texto literal.",
+    },
     quiz: {
       question: "Qual símbolo permite template literals?",
       options: ["Crase", "Aspas simples", "Parênteses", "Colchetes"],
@@ -1893,6 +2145,12 @@ const javascriptLessons = [
     commonMistake: "Usar map quando quer remover itens. map transforma; filter filtra.",
     reference: ["map transforma todos.", "filter mantém alguns.", "find encontra o primeiro.", "some verifica se algum passa.", "every verifica se todos passam."],
     concepts: ["arrays", "map", "filter", "data-transformation"],
+    contrastExample: {
+      wrong: "const aprovados = notas.map((n) => n >= 7);  // [true, false, true]",
+      right: "const aprovados = notas.filter((n) => n >= 7);  // [8, 10]",
+      explanation:
+        "`map` **transforma** cada item (mesma quantidade). `filter` **mantém** só os que passam na regra.",
+    },
     quiz: {
       question: "Qual método cria uma nova lista transformada?",
       options: ["map", "filter sempre", "find", "push"],
@@ -1934,6 +2192,12 @@ const javascriptLessons = [
     commonMistake: "Salvar senhas ou tokens sensíveis no localStorage. Use soluções seguras para credenciais.",
     reference: ["localStorage guarda texto.", "setItem salva.", "getItem lê.", "JSON.stringify serializa.", "JSON.parse desserializa."],
     concepts: ["json", "local-storage", "persistence"],
+    contrastExample: {
+      wrong: 'localStorage.setItem("token", "abc-secreto");  // acessível por qualquer JS',
+      right: "/* tokens vão em cookies httpOnly setados pelo servidor, NUNCA em localStorage */",
+      explanation:
+        "`localStorage` é **acessível por qualquer JS** da página — XSS/scripts terceiros roubam. Tokens/credenciais ficam em cookies seguros, não aqui.",
+    },
     quiz: {
       question: "Por que usar JSON.stringify antes de salvar objeto?",
       options: ["Porque localStorage guarda texto", "Porque CSS exige", "Porque console.log apaga", "Porque arrays não existem"],
@@ -1975,6 +2239,12 @@ const javascriptLessons = [
     commonMistake: "Ignorar erros de rede. Usuário precisa de feedback quando algo falha.",
     reference: ["fetch busca recurso.", "Promise representa resultado futuro.", "async permite await.", "await espera promessa.", "try/catch trata falhas."],
     concepts: ["async", "fetch", "errors"],
+    contrastExample: {
+      wrong: 'async function carregar() {\n  const resp = await fetch("/api");\n  const dados = await resp.json();\n  mostrar(dados);  // erro de rede trava silenciosamente\n}',
+      right: 'async function carregar() {\n  try {\n    const resp = await fetch("/api");\n    const dados = await resp.json();\n    mostrar(dados);\n  } catch (erro) {\n    mostrarFalha("Não foi possível carregar. Tente de novo.");\n  }\n}',
+      explanation:
+        "Rede pode falhar (sem internet, servidor fora). Sem `try/catch`, o usuário fica olhando tela vazia sem entender o que aconteceu.",
+    },
     quiz: {
       question: "Para que serve await?",
       options: ["Esperar uma Promise resolver", "Criar CSS", "Apagar variável", "Selecionar DOM"],
@@ -2016,6 +2286,12 @@ const javascriptLessons = [
     commonMistake: "Mudar muitas coisas de uma vez. Depuração boa testa uma hipótese pequena.",
     reference: ["Leia a mensagem.", "Veja a linha.", "Reproduza o erro.", "Teste uma hipótese.", "Confirme a correção."],
     concepts: ["debugging", "errors", "variables"],
+    contrastExample: {
+      wrong: '/* mudar tudo de uma vez: troca o nome, move o console.log, comenta o if... */',
+      right: '/* uma hipótese por vez */\nconsole.log("antes do if:", idade);\nif (idade >= 18) { ... }\nconsole.log("depois do if");',
+      explanation:
+        "Mudar muita coisa junto **esconde** qual mudança resolveu (ou quebrou) algo. Adicione **um** `console.log`, observe, então decida o próximo passo.",
+    },
     quiz: {
       question: "Qual atitude ajuda mais ao depurar?",
       options: ["Testar uma hipótese por vez", "Mudar tudo junto", "Ignorar mensagem", "Apagar o projeto"],
@@ -2058,6 +2334,12 @@ const javascriptLessons = [
     commonMistake: "Guardar o contador dentro da função quando precisa manter estado entre cliques. O estado deve viver fora da função.",
     reference: ["Estado guarda valor atual.", "Evento chama função.", "Função atualiza estado.", "DOM mostra estado.", "Projeto pequeno revela fundamentos."],
     concepts: ["project", "state", "events", "dom", "functions"],
+    contrastExample: {
+      wrong: "function incrementar() {\n  let contador = 0;  // zera a cada clique!\n  contador++;\n  console.log(contador);\n}",
+      right: "let contador = 0;  // estado FORA da função\nfunction incrementar() {\n  contador++;\n  console.log(contador);\n}",
+      explanation:
+        "Variável **dentro** da função é criada do zero a cada chamada — sempre vai pra 1. Estado precisa viver **fora** da função para persistir entre cliques.",
+    },
     quiz: {
       question: "Por que contador usa let?",
       options: ["Porque o valor muda", "Porque é texto", "Porque HTML exige", "Porque const não existe"],

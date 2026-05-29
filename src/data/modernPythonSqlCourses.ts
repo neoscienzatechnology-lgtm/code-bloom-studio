@@ -21,6 +21,11 @@ type ModernLessonDraft = {
   commonMistake: string;
   reference: string[];
   concepts: string[];
+  contrastExample?: {
+    wrong: string;
+    right: string;
+    explanation: string;
+  };
   quiz: {
     question: string;
     options: string[];
@@ -105,6 +110,7 @@ ${draft.reference.map((item) => `- ${item}`).join("\n")}`,
     nextStep: draft.nextStep,
     tryItPrompt: draft.tryItPrompt,
     commonMistake: draft.commonMistake,
+    contrastExample: draft.contrastExample,
     reference: draft.reference,
     concepts: draft.concepts,
     quiz: buildQuiz(draft.quiz),
@@ -135,6 +141,12 @@ const pythonLessons = [
     commonMistake: "Esquecer aspas em textos. Sem aspas, Python acha que você está chamando uma variável.",
     reference: ["print(valor) mostra um valor.", "Textos usam aspas.", "Python executa linha por linha.", "# cria comentário."],
     concepts: ["python", "print", "sequence"],
+    contrastExample: {
+      wrong: "print(Olá, CapyCode!)",
+      right: 'print("Olá, CapyCode!")',
+      explanation:
+        "Sem **aspas**, Python procura uma variável chamada `Olá` (que não existe) e dispara `NameError`. As aspas marcam que o conteúdo é **texto**.",
+    },
     quiz: {
       question: "Para que serve print() em Python?",
       options: ["Mostrar informação no terminal", "Criar uma tabela", "Apagar uma variável", "Instalar um pacote"],
@@ -176,6 +188,12 @@ const pythonLessons = [
     commonMistake: "Usar nomes vagos como x para tudo. Prefira nomes como idade, total ou nome_usuario.",
     reference: ["nome = valor cria variável.", "Use snake_case em nomes compostos.", "Texto fica entre aspas.", "print(nome) mostra o valor guardado."],
     concepts: ["variables", "strings", "naming"],
+    contrastExample: {
+      wrong: "nome = Capy\nprint(nome)",
+      right: 'nome = "Capy"\nprint(nome)',
+      explanation:
+        "Sem aspas, Python procura uma variável chamada `Capy`. As aspas marcam que `Capy` é **texto**, não um nome de variável.",
+    },
     quiz: {
       question: "Qual opção cria uma variável válida em Python?",
       options: ['nome = "Ana"', '"Ana" = nome', "let nome = Ana", "nome: Ana"],
@@ -218,6 +236,12 @@ const pythonLessons = [
     commonMistake: 'Guardar números como texto sem necessidade, por exemplo idade = "22". Isso dificulta contas.',
     reference: ["str: texto.", "int: número inteiro.", "float: número decimal.", "bool: True ou False."],
     concepts: ["types", "strings", "numbers", "booleans"],
+    contrastExample: {
+      wrong: 'idade = "22"\nprint(idade + 1)',
+      right: "idade = 22\nprint(idade + 1)",
+      explanation:
+        "Com aspas, `22` vira **str** e `idade + 1` dispara `TypeError`. Sem aspas é **int** e a soma dá `23`.",
+    },
     quiz: {
       question: "Qual valor é booleano em Python?",
       options: ['"True"', "True", "22", '"sim"'],
@@ -259,6 +283,12 @@ const pythonLessons = [
     commonMistake: "Confundir / com //. / retorna decimal; // descarta a parte decimal.",
     reference: ["+ soma.", "- subtrai.", "* multiplica.", "/ divide.", "% pega resto.", "** potência."],
     concepts: ["operators", "numbers", "expressions"],
+    contrastExample: {
+      wrong: "metade = 7 / 2  # 3.5 (float)",
+      right: "metade = 7 // 2  # 3 (int)",
+      explanation:
+        "`/` devolve **float** (`3.5`). `//` faz **divisão inteira** e descarta a parte decimal. Use cada um de acordo com o resultado que você quer.",
+    },
     quiz: {
       question: "Qual operador calcula o resto de uma divisão?",
       options: ["/", "//", "%", "**"],
@@ -301,6 +331,12 @@ const pythonLessons = [
     commonMistake: 'Fazer input("Idade") + 1 sem converter. Texto + número gera erro.',
     reference: ["input(mensagem) lê texto.", "int(texto) converte para inteiro.", "float(texto) converte para decimal.", "Use conversão antes de calcular."],
     concepts: ["input", "conversion", "types"],
+    contrastExample: {
+      wrong: 'idade = input("Idade: ")\nprint(idade + 1)  # TypeError: str + int',
+      right: 'idade = int(input("Idade: "))\nprint(idade + 1)',
+      explanation:
+        "`input()` sempre devolve **texto** (`str`). Sem `int(...)`, somar texto com número dispara `TypeError`.",
+    },
     quiz: {
       question: "Qual tipo input() retorna por padrão?",
       options: ["str", "int", "float", "bool"],
@@ -342,6 +378,12 @@ const pythonLessons = [
     commonMistake: "Esquecer os dois pontos no fim do if ou alinhar o bloco sem indentação.",
     reference: ["if testa condição.", "elif testa alternativa.", "else cobre o restante.", "Blocos usam indentação."],
     concepts: ["conditionals", "booleans", "comparison"],
+    contrastExample: {
+      wrong: 'if nota >= 7:\nprint("Aprovado")  # sem indentação',
+      right: 'if nota >= 7:\n    print("Aprovado")',
+      explanation:
+        "Python usa **indentação** para definir o bloco do `if`. Sem o recuo, o `print` não pertence ao `if` e dá `IndentationError`.",
+    },
     quiz: {
       question: "O que define o bloco dentro do if em Python?",
       options: ["Indentação", "Chaves {}", "Ponto e vírgula", "Aspas"],
@@ -384,6 +426,12 @@ const pythonLessons = [
     commonMistake: "Escrever condições longas sem parênteses ou nomes claros. Quebre regras complexas em variáveis.",
     reference: ["== compara igualdade.", "!= compara diferença.", "and exige todas verdadeiras.", "or aceita uma verdadeira.", "not inverte."],
     concepts: ["logic", "comparison", "booleans"],
+    contrastExample: {
+      wrong: 'if energia >= 5 and online and not banido and len(amigos) > 0:\n    print("Pode jogar")',
+      right: 'pode_jogar = energia >= 5 and online and not banido and amigos\nif pode_jogar:\n    print("Pode jogar")',
+      explanation:
+        "Condições longas viram **variável com nome explicativo**. `pode_jogar` documenta a regra e deixa o `if` lendo como português.",
+    },
     quiz: {
       question: "Quando A and B retorna True?",
       options: ["Quando A e B são verdadeiros", "Quando só A é verdadeiro", "Quando só B é verdadeiro", "Quando ambos são falsos"],
@@ -426,6 +474,12 @@ const pythonLessons = [
     commonMistake: "Esperar que range(1, 5) inclua o 5. O último número fica de fora.",
     reference: ["for item in sequencia percorre itens.", "range(3) gera 0, 1, 2.", "range(1, 4) gera 1, 2, 3.", "O bloco do for usa indentação."],
     concepts: ["loops", "for", "range"],
+    contrastExample: {
+      wrong: "for n in range(1, 5):\n    print(n)\n# imprime 1 2 3 4 (esperando 5?)",
+      right: "for n in range(1, 6):\n    print(n)\n# imprime 1 2 3 4 5",
+      explanation:
+        "O **fim do range não entra** (é exclusivo). Para incluir o `5`, use `range(1, 6)`.",
+    },
     quiz: {
       question: "Quais números range(1, 4) gera?",
       options: ["1, 2, 3", "1, 2, 3, 4", "0, 1, 2, 3", "4 apenas"],
@@ -467,6 +521,12 @@ const pythonLessons = [
     commonMistake: "Acessar lista[1] esperando o primeiro item. O primeiro índice é 0.",
     reference: ["[] cria lista.", "lista[0] pega o primeiro item.", "len(lista) conta itens.", "append(valor) adiciona no final."],
     concepts: ["lists", "index", "collections"],
+    contrastExample: {
+      wrong: 'nomes = ["Ana", "Bia"]\nprint(nomes[1])  # esperando "Ana", vem "Bia"',
+      right: 'nomes = ["Ana", "Bia"]\nprint(nomes[0])  # vem "Ana"',
+      explanation:
+        "Em Python, o **primeiro índice é 0**. `nomes[1]` é o **segundo** item.",
+    },
     quiz: {
       question: "Qual índice acessa o primeiro item de uma lista?",
       options: ["0", "1", "-1", "first"],
@@ -509,6 +569,12 @@ const pythonLessons = [
     commonMistake: "Usar o nome da lista e do item igual. Prefira singular/plural: tarefa em tarefas.",
     reference: ["for item in lista percorre valores.", "Use nome singular para o item.", "O bloco precisa de indentação.", "break pode parar o loop antes do fim."],
     concepts: ["loops", "lists", "iteration"],
+    contrastExample: {
+      wrong: "for tarefas in tarefas:  # mesmo nome!\n    print(tarefas)",
+      right: "for tarefa in tarefas:\n    print(tarefa)",
+      explanation:
+        "Use **singular** para o item (`tarefa`) e **plural** para a lista (`tarefas`). Mesmo nome confunde a leitura e **sobrescreve** a lista a cada volta.",
+    },
     quiz: {
       question: "Em for tarefa in tarefas, o que tarefa representa?",
       options: ["O item atual", "A lista inteira", "O tamanho da lista", "Um erro"],
@@ -550,6 +616,12 @@ const pythonLessons = [
     commonMistake: "Usar print dentro da função quando você precisa devolver valor. print mostra; return entrega resultado.",
     reference: ["def nome(...): cria função.", "Parâmetros são entradas.", "return devolve saída.", "Funções ajudam a testar regras."],
     concepts: ["functions", "parameters", "return"],
+    contrastExample: {
+      wrong: "def dobrar(n):\n    print(n * 2)  # mostra mas devolve None\n\nresultado = dobrar(4)\nprint(resultado * 2)  # TypeError",
+      right: "def dobrar(n):\n    return n * 2\n\nresultado = dobrar(4)\nprint(resultado * 2)  # 16",
+      explanation:
+        "Com `print` dentro, a função **mostra** mas devolve `None` — cálculos seguintes quebram. `return` entrega o valor para reutilizar.",
+    },
     quiz: {
       question: "Qual palavra devolve um resultado da função?",
       options: ["return", "print", "def", "input"],
@@ -591,6 +663,12 @@ const pythonLessons = [
     commonMistake: "Confundir lista com dicionário. Lista usa posição; dicionário usa nome da chave.",
     reference: ["{} cria dicionário.", "chave: valor define campo.", "dict['chave'] acessa valor.", "dict.get('chave') acessa com segurança."],
     concepts: ["dicts", "objects", "data-modeling"],
+    contrastExample: {
+      wrong: 'usuario = ["Ana", 22, True]  # qual posição é qual?\nprint(usuario[0])',
+      right: 'usuario = {"nome": "Ana", "idade": 22, "ativo": True}\nprint(usuario["nome"])',
+      explanation:
+        "Lista por **posição** vira adivinhação (qual é o nome?). Dicionário por **nome** (`usuario[\"nome\"]`) torna o acesso explícito.",
+    },
     quiz: {
       question: "Quando um dicionário é melhor que uma lista?",
       options: ["Quando os valores precisam de nomes", "Quando só existe um número", "Quando não há dados", "Quando o código não usa variáveis"],
@@ -633,6 +711,12 @@ const pythonLessons = [
     commonMistake: "Calcular média dividindo por um número fixo. Use len(lista) para acompanhar o tamanho real.",
     reference: ["sum(lista) soma números.", "len(lista) conta itens.", "f'{valor}' insere valores no texto.", "Nomes intermediários deixam o cálculo claro."],
     concepts: ["lists", "sum", "reports", "f-strings"],
+    contrastExample: {
+      wrong: "notas = [8, 7, 9, 10]\nmedia = sum(notas) / 4  # quebra se a lista mudar",
+      right: "notas = [8, 7, 9, 10]\nmedia = sum(notas) / len(notas)",
+      explanation:
+        "Dividir por número **fixo** (`4`) quebra se a lista crescer ou diminuir. `len(notas)` acompanha o tamanho real.",
+    },
     quiz: {
       question: "Por que usar len(vendas) na média?",
       options: ["Para dividir pela quantidade real de itens", "Para apagar a lista", "Para transformar em texto", "Para ordenar valores"],
@@ -674,6 +758,12 @@ const pythonLessons = [
     commonMistake: "Usar except genérico para tudo. Prefira capturar o erro esperado, como ValueError.",
     reference: ["try tenta executar.", "except trata falha.", "ValueError aparece em conversões inválidas.", "Mensagens de erro devem orientar o próximo passo."],
     concepts: ["errors", "try-except", "validation"],
+    contrastExample: {
+      wrong: 'try:\n    preco = float(valor)\nexcept:  # captura QUALQUER erro\n    print("Erro")',
+      right: 'try:\n    preco = float(valor)\nexcept ValueError:\n    print("Preço inválido")',
+      explanation:
+        "`except:` genérico **esconde bugs reais** (até `KeyboardInterrupt` é capturado). Capture **o erro esperado** (`ValueError`) e deixe outros propagarem.",
+    },
     quiz: {
       question: "Qual erro aparece ao tentar int('abc')?",
       options: ["ValueError", "NameError", "IndentationError", "SyntaxError"],
@@ -716,6 +806,12 @@ const pythonLessons = [
     commonMistake: "Começar pelo código sem definir entradas e saída. Planeje: recebe dois números, processa operação, mostra resultado.",
     reference: ["Entrada: valores do usuário.", "Processamento: operação.", "Saída: resultado.", "Funções isolam regras."],
     concepts: ["project", "functions", "conditionals", "input"],
+    contrastExample: {
+      wrong: '# começa codando direto\ndef somar(a, b):\n    return a + b\n# e se o usuário quiser multiplicar? subtrair?',
+      right: '# planejar primeiro: Entrada → Processamento → Saída\ndef calcular(a, b, operacao):\n    if operacao == "soma":\n        return a + b\n    if operacao == "mult":\n        return a * b\n    return 0',
+      explanation:
+        "Codar sem **planejar** entrada/processamento/saída leva a improvisos. Definir o fluxo antes deixa o código direcionado.",
+    },
     quiz: {
       question: "Qual é uma boa primeira etapa antes de codar a calculadora?",
       options: ["Definir entradas, processamento e saída", "Criar dez arquivos", "Ignorar erros", "Apagar as funções"],
@@ -760,6 +856,12 @@ const sqlLessons = [
     commonMistake: "Tentar consultar sem saber o nome da tabela ou das colunas. Primeiro entenda o formato dos dados.",
     reference: ["Tabela guarda registros.", "Linha é um registro.", "Coluna é um campo.", "SQL consulta dados com SELECT."],
     concepts: ["sql", "tables", "rows", "columns"],
+    contrastExample: {
+      wrong: "SELECT * FROM ???;  -- não sei o nome da tabela nem das colunas",
+      right: "-- 1. Conferir estrutura: alunos (id, nome, idade)\n-- 2. Escolher campos\nSELECT nome FROM alunos;",
+      explanation:
+        "Sem saber o **mapa dos dados** (tabela, colunas, tipos), a consulta vira chute. Comece sempre olhando a estrutura.",
+    },
     quiz: {
       question: "Em uma tabela de alunos, o que uma linha representa?",
       options: ["Um aluno registrado", "O nome do banco", "Uma consulta", "Um operador"],
@@ -801,6 +903,12 @@ const sqlLessons = [
     commonMistake: "Usar SELECT * por hábito. Ele é útil para explorar, mas não para consultas finais.",
     reference: ["SELECT escolhe colunas.", "FROM escolhe tabela.", "Vírgula separa colunas.", "SELECT * traz todas as colunas."],
     concepts: ["select", "from", "columns"],
+    contrastExample: {
+      wrong: "SELECT * FROM produtos;  -- traz tudo, sempre",
+      right: "SELECT nome, preco FROM produtos;",
+      explanation:
+        "`SELECT *` é útil para **explorar**, mas em consultas finais carrega dados demais e quebra quando a tabela ganha colunas novas.",
+    },
     quiz: {
       question: "Qual parte indica a tabela da consulta?",
       options: ["FROM", "SELECT", "WHERE", "ORDER BY"],
@@ -842,6 +950,12 @@ const sqlLessons = [
     commonMistake: "Esquecer aspas em textos no filtro. Em SQL, textos geralmente usam aspas simples.",
     reference: ["WHERE filtra linhas.", "= compara igualdade.", "> e < comparam números.", "Textos usam aspas simples."],
     concepts: ["where", "filters", "comparison"],
+    contrastExample: {
+      wrong: "SELECT * FROM tarefas WHERE status = pendente;  -- erro: pendente é nome de coluna?",
+      right: "SELECT * FROM tarefas WHERE status = 'pendente';",
+      explanation:
+        "Texto em SQL precisa de **aspas simples**. Sem aspas, o banco tenta interpretar `pendente` como nome de coluna e dá erro.",
+    },
     quiz: {
       question: "Qual cláusula filtra linhas?",
       options: ["WHERE", "SELECT", "FROM", "LIMIT"],
@@ -884,6 +998,12 @@ const sqlLessons = [
     commonMistake: "Misturar AND e OR sem parênteses. Quando a intenção não estiver óbvia, use parênteses.",
     reference: ["AND exige todas as condições.", "OR aceita uma condição.", "NOT inverte.", "Parênteses deixam regras claras."],
     concepts: ["logical-operators", "where", "filters"],
+    contrastExample: {
+      wrong: "WHERE status = 'pendente' OR status = 'urgente' AND prioridade = 'alta';",
+      right: "WHERE (status = 'pendente' OR status = 'urgente') AND prioridade = 'alta';",
+      explanation:
+        "`AND` tem **precedência sobre OR** — sem parênteses, a regra vira algo diferente do que você queria. Use parênteses para deixar a intenção explícita.",
+    },
     quiz: {
       question: "Quando usar AND?",
       options: ["Quando todas as regras precisam ser verdadeiras", "Quando qualquer regra serve", "Para ordenar dados", "Para criar tabela"],
@@ -925,6 +1045,12 @@ const sqlLessons = [
     commonMistake: "Usar LIMIT sem ORDER BY quando a pergunta depende de ordem. Sem ordenar, 'primeiros' pode ser imprevisível.",
     reference: ["ORDER BY coluna ordena.", "ASC é crescente.", "DESC é decrescente.", "LIMIT controla quantidade."],
     concepts: ["order-by", "limit", "sorting"],
+    contrastExample: {
+      wrong: "SELECT * FROM tarefas LIMIT 5;  -- 'primeiras 5' pode ser QUALQUER 5",
+      right: "SELECT * FROM tarefas\nORDER BY criada_em DESC\nLIMIT 5;",
+      explanation:
+        "Sem `ORDER BY`, o banco devolve **qualquer 5 linhas** — a ordem não é garantida. Ordene antes para a pergunta fazer sentido.",
+    },
     quiz: {
       question: "Qual palavra coloca o maior valor primeiro?",
       options: ["DESC", "ASC", "WHERE", "FROM"],
@@ -966,6 +1092,12 @@ const sqlLessons = [
     commonMistake: "Omitir colunas no INSERT. Isso deixa a consulta frágil se a estrutura mudar.",
     reference: ["INSERT INTO tabela cria linha.", "Liste colunas explicitamente.", "VALUES recebe valores.", "Ordem de valores deve bater com colunas."],
     concepts: ["insert", "values", "write"],
+    contrastExample: {
+      wrong: "INSERT INTO tarefas VALUES ('Estudar SQL', 'pendente');  -- depende da ordem física",
+      right: "INSERT INTO tarefas (titulo, status) VALUES ('Estudar SQL', 'pendente');",
+      explanation:
+        "Sem listar colunas, a inserção depende da **ordem física** da tabela. Adicione uma coluna nova e tudo quebra. Listar colunas torna a inserção robusta.",
+    },
     quiz: {
       question: "Por que listar colunas no INSERT?",
       options: ["Para deixar a ordem explícita", "Para apagar valores", "Para ordenar a tabela", "Para criar um filtro"],
@@ -1007,6 +1139,12 @@ const sqlLessons = [
     commonMistake: "Esquecer WHERE no UPDATE. Esse é um dos erros mais perigosos em SQL.",
     reference: ["UPDATE tabela modifica registros.", "SET define novo valor.", "WHERE limita linhas.", "Teste com SELECT antes de UPDATE crítico."],
     concepts: ["update", "set", "where", "safety"],
+    contrastExample: {
+      wrong: "UPDATE usuarios SET ativo = false;  -- DESATIVA TODOS!",
+      right: "UPDATE usuarios SET ativo = false\nWHERE id = 42;",
+      explanation:
+        "`UPDATE` sem `WHERE` altera **todas as linhas** da tabela. Um dos erros mais perigosos em SQL — trate `WHERE` como obrigatório em escrita.",
+    },
     quiz: {
       question: "Qual é o risco de UPDATE sem WHERE?",
       options: ["Alterar todas as linhas", "Criar uma coluna", "Ordenar errado", "Não executar SELECT"],
@@ -1049,6 +1187,12 @@ const sqlLessons = [
     commonMistake: "DELETE sem WHERE. Esse erro pode apagar todos os registros da tabela.",
     reference: ["DELETE FROM remove linhas.", "WHERE limita remoção.", "SELECT antes ajuda a revisar.", "Soft delete marca inativo em vez de apagar."],
     concepts: ["delete", "where", "safety"],
+    contrastExample: {
+      wrong: "DELETE FROM tarefas;  -- APAGA TUDO",
+      right: "SELECT * FROM tarefas WHERE id = 8;  -- conferir\nDELETE FROM tarefas WHERE id = 8;",
+      explanation:
+        "`DELETE` sem `WHERE` esvazia a tabela inteira. **Sempre** rode um `SELECT` com o mesmo filtro primeiro para conferir o que será removido.",
+    },
     quiz: {
       question: "Qual consulta ajuda a conferir antes de excluir?",
       options: ["SELECT com o mesmo WHERE", "ORDER BY sem tabela", "INSERT sem valores", "CREATE DATABASE"],
@@ -1090,6 +1234,12 @@ const sqlLessons = [
     commonMistake: "Colocar muitos assuntos na mesma tabela. Uma tabela deve representar uma entidade principal.",
     reference: ["CREATE TABLE cria estrutura.", "INTEGER guarda inteiros.", "TEXT guarda texto.", "PRIMARY KEY identifica registros."],
     concepts: ["create-table", "schema", "types"],
+    contrastExample: {
+      wrong: "CREATE TABLE tudo (id INT, usuario_nome TEXT, produto_nome TEXT, pedido_total DECIMAL);",
+      right: "CREATE TABLE usuarios (id INT PRIMARY KEY, nome TEXT);\nCREATE TABLE produtos (id INT PRIMARY KEY, nome TEXT);\nCREATE TABLE pedidos (id INT PRIMARY KEY, usuario_id INT, total DECIMAL);",
+      explanation:
+        "Misturar assuntos numa tabela cria **duplicação** (mesmo usuário repete em vários pedidos). Uma tabela por entidade + chaves estrangeiras conecta sem repetir.",
+    },
     quiz: {
       question: "Para que serve PRIMARY KEY?",
       options: ["Identificar cada registro", "Ordenar texto", "Excluir todos os dados", "Criar um filtro"],
@@ -1131,6 +1281,12 @@ const sqlLessons = [
     commonMistake: "Confiar apenas na validação da tela. A regra importante também precisa existir no banco.",
     reference: ["NOT NULL impede vazio.", "UNIQUE impede repetição.", "Constraints ficam na coluna ou tabela.", "Banco protege consistência."],
     concepts: ["constraints", "not-null", "unique"],
+    contrastExample: {
+      wrong: "-- front-end valida que email não está vazio\nCREATE TABLE usuarios (id INT, email TEXT);  -- banco aceita NULL e duplicado",
+      right: "CREATE TABLE usuarios (\n  id INT PRIMARY KEY,\n  email TEXT NOT NULL UNIQUE\n);",
+      explanation:
+        "Validação só no **front** pode ser burlada. Regras importantes vão **também no banco** — `NOT NULL`, `UNIQUE`, `CHECK` garantem consistência mesmo se um cliente bugado mandar lixo.",
+    },
     quiz: {
       question: "Qual constraint impede e-mails repetidos?",
       options: ["UNIQUE", "NOT NULL", "ORDER BY", "LIMIT"],
@@ -1173,6 +1329,12 @@ const sqlLessons = [
     commonMistake: "Fazer JOIN sem ON. Sem a condição, o banco pode combinar linhas indevidamente.",
     reference: ["JOIN combina tabelas.", "ON define a relação.", "Chave primária identifica origem.", "Chave estrangeira aponta para outra tabela."],
     concepts: ["join", "relationships", "foreign-key"],
+    contrastExample: {
+      wrong: "SELECT * FROM pedidos JOIN clientes;  -- produto cartesiano: 100 × 1000 = 100.000 linhas",
+      right: "SELECT * FROM pedidos\nJOIN clientes ON pedidos.cliente_id = clientes.id;",
+      explanation:
+        "Sem `ON`, o banco combina **cada linha de uma tabela com cada linha da outra** (produto cartesiano). Resultado: lixo gigante.",
+    },
     quiz: {
       question: "Para que serve ON no JOIN?",
       options: ["Definir como as tabelas se conectam", "Criar uma nova tabela", "Ordenar por data", "Limitar linhas"],
@@ -1214,6 +1376,12 @@ const sqlLessons = [
     commonMistake: "Selecionar uma coluna comum sem colocá-la no GROUP BY. O grupo precisa estar claro.",
     reference: ["GROUP BY agrupa valores iguais.", "COUNT(*) conta linhas.", "SUM soma valores.", "AVG calcula média."],
     concepts: ["group-by", "count", "aggregation"],
+    contrastExample: {
+      wrong: "SELECT status, titulo, COUNT(*) FROM tarefas GROUP BY status;  -- titulo não agrupado!",
+      right: "SELECT status, COUNT(*) FROM tarefas GROUP BY status;",
+      explanation:
+        "Colunas no `SELECT` precisam estar **no GROUP BY** ou dentro de função agregadora. `titulo` solto é ambíguo — qual título mostrar do grupo?",
+    },
     quiz: {
       question: "Qual função conta linhas?",
       options: ["COUNT", "SUM", "AVG", "JOIN"],
@@ -1255,6 +1423,12 @@ const sqlLessons = [
     commonMistake: "Usar WHERE COUNT(*) > 5. Agregações devem ser filtradas com HAVING.",
     reference: ["WHERE filtra linhas.", "HAVING filtra grupos.", "Agregações usam COUNT, SUM, AVG.", "HAVING vem depois do GROUP BY."],
     concepts: ["having", "aggregation", "reports"],
+    contrastExample: {
+      wrong: "SELECT status, COUNT(*) FROM tarefas\nWHERE COUNT(*) > 5\nGROUP BY status;  -- erro",
+      right: "SELECT status, COUNT(*) FROM tarefas\nGROUP BY status\nHAVING COUNT(*) > 5;",
+      explanation:
+        "`WHERE` filtra **linhas individuais** (antes do agrupamento). `HAVING` filtra **grupos prontos** (depois). Agregações vão sempre em `HAVING`.",
+    },
     quiz: {
       question: "Quando usar HAVING?",
       options: ["Para filtrar grupos agregados", "Para escolher a tabela", "Para inserir linhas", "Para apagar banco"],
@@ -1297,6 +1471,12 @@ const sqlLessons = [
     commonMistake: "Começar pela sintaxe sem formular a pergunta. Escreva a pergunta em português antes do SQL.",
     reference: ["Pergunta clara guia a consulta.", "SELECT escolhe resposta.", "WHERE reduz ruído.", "GROUP BY cria relatório.", "ORDER BY organiza leitura."],
     concepts: ["project", "reports", "select", "group-by"],
+    contrastExample: {
+      wrong: "-- vou escrever SELECT * FROM ... e ver o que sai",
+      right: "-- 1. Pergunta: \"Quem pegou mais livros emprestados?\"\n-- 2. SQL: agrupar por usuário, contar, ordenar\nSELECT usuario_id, COUNT(*)\nFROM emprestimos\nGROUP BY usuario_id\nORDER BY COUNT(*) DESC;",
+      explanation:
+        "Começar pela sintaxe vira improviso. Escreva a **pergunta em português** primeiro — depois ela traduz naturalmente para SELECT/GROUP BY/ORDER BY.",
+    },
     quiz: {
       question: "Qual é uma boa primeira etapa para escrever SQL útil?",
       options: ["Escrever a pergunta que a consulta deve responder", "Usar SELECT * sempre", "Remover filtros", "Criar índices aleatórios"],

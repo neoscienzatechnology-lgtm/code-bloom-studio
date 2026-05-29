@@ -21,6 +21,11 @@ type ModernLessonDraft = {
   commonMistake: string;
   reference: string[];
   concepts: string[];
+  contrastExample?: {
+    wrong: string;
+    right: string;
+    explanation: string;
+  };
   quiz: {
     question: string;
     options: string[];
@@ -105,6 +110,7 @@ ${draft.reference.map((item) => `- ${item}`).join("\n")}`,
     nextStep: draft.nextStep,
     tryItPrompt: draft.tryItPrompt,
     commonMistake: draft.commonMistake,
+    contrastExample: draft.contrastExample,
     reference: draft.reference,
     concepts: draft.concepts,
     quiz: buildQuiz(draft.quiz),
@@ -135,6 +141,12 @@ const reactLessons = [
     commonMistake: "Criar componente com letra minúscula. React trata nomes minúsculos como tags HTML.",
     reference: ["Componente é função.", "Nome começa com maiúscula.", "return devolve JSX.", "Componentes podem ser reutilizados."],
     concepts: ["react", "components", "jsx"],
+    contrastExample: {
+      wrong: "function boasVindas() {\n  return <h1>Olá</h1>;\n}",
+      right: "function BoasVindas() {\n  return <h1>Olá</h1>;\n}",
+      explanation:
+        "Com minúscula, React trata como **tag HTML** — `<boasVindas />` vira tag desconhecida. Nomes com **maiúscula** são reconhecidos como componentes.",
+    },
     quiz: {
       question: "O que um componente React normalmente retorna?",
       options: ["JSX", "SQL", "Um commit", "Um arquivo CSS"],
@@ -176,6 +188,12 @@ const reactLessons = [
     commonMistake: "Usar class em JSX. Em React, a propriedade correta é className.",
     reference: ["className define classe CSS.", "{valor} insere expressão.", "Tags sem filho fecham com />.", "JSX precisa retornar um único elemento raiz."],
     concepts: ["jsx", "className", "expressions"],
+    contrastExample: {
+      wrong: '<button class="primario">Salvar</button>',
+      right: '<button className="primario">Salvar</button>',
+      explanation:
+        "Em React/JSX, `class` é palavra reservada do JavaScript. Use `className` para definir a classe CSS.",
+    },
     quiz: {
       question: "Como inserir uma variável dentro do JSX?",
       options: ["Com chaves { }", "Com SELECT", "Com aspas simples sempre", "Com git add"],
@@ -218,6 +236,12 @@ const reactLessons = [
     commonMistake: "Alterar props dentro do componente. Props devem ser lidas, não modificadas.",
     reference: ["Props entram por parâmetro.", "Pai envia props como atributos.", "Props deixam componentes reutilizáveis.", "Props são somente leitura."],
     concepts: ["props", "components", "data-flow"],
+    contrastExample: {
+      wrong: "function CardCurso({ titulo }) {\n  titulo = titulo.toUpperCase();\n  return <h2>{titulo}</h2>;\n}",
+      right: "function CardCurso({ titulo }) {\n  return <h2>{titulo.toUpperCase()}</h2>;\n}",
+      explanation:
+        "Props são **somente leitura** — alterar diretamente quebra o fluxo de dados. Calcule o valor derivado **na renderização**, sem mudar a prop.",
+    },
     quiz: {
       question: "Para que servem props?",
       options: ["Enviar dados para um componente", "Criar banco de dados", "Fazer commit", "Instalar pacote"],
@@ -259,6 +283,12 @@ const reactLessons = [
     commonMistake: "Tipar tudo como any. any remove justamente a proteção que TypeScript oferece.",
     reference: ["string representa texto.", "number representa número.", "boolean representa verdadeiro/falso.", "Props podem usar type ou interface."],
     concepts: ["typescript", "props", "types"],
+    contrastExample: {
+      wrong: "type CardProps = {\n  titulo: any;\n  aulas: any;\n};",
+      right: "type CardProps = {\n  titulo: string;\n  aulas: number;\n};",
+      explanation:
+        "`any` **desliga** a checagem de tipos — perde-se o ganho do TypeScript. Use tipos concretos (`string`, `number`, `boolean`) para o editor avisar quando um dado errado é passado.",
+    },
     quiz: {
       question: "Qual tipo representa verdadeiro/falso em TypeScript?",
       options: ["boolean", "string", "number", "array"],
@@ -301,6 +331,12 @@ const reactLessons = [
     commonMistake: "Mudar o estado diretamente, como contador = contador + 1. Use a função setContador.",
     reference: ["useState(valorInicial) cria estado.", "O setter atualiza.", "Atualizar estado re-renderiza.", "Não altere estado diretamente."],
     concepts: ["state", "useState", "interaction"],
+    contrastExample: {
+      wrong: "const [contador, setContador] = useState(0);\ncontador = contador + 1;",
+      right: "const [contador, setContador] = useState(0);\nsetContador(contador + 1);",
+      explanation:
+        "Atribuir direto a `contador` **não re-renderiza nada** (e nem deveria — é uma const). Só o **setter** (`setContador`) atualiza o estado e dispara nova renderização.",
+    },
     quiz: {
       question: "Qual função atualiza contador em const [contador, setContador]?",
       options: ["setContador", "contador", "useEffect", "return"],
@@ -342,6 +378,12 @@ const reactLessons = [
     commonMistake: "Escrever onClick={handleClick()} e executar a função durante a renderização. Passe a referência: onClick={handleClick}.",
     reference: ["onClick lida com clique.", "onChange lida com campo.", "onSubmit lida com formulário.", "Handlers costumam começar com handle."],
     concepts: ["events", "handlers", "interaction"],
+    contrastExample: {
+      wrong: "<button onClick={salvar()}>Salvar</button>",
+      right: "<button onClick={salvar}>Salvar</button>",
+      explanation:
+        "`salvar()` **executa** a função durante a renderização (e passa o `return` para `onClick`). `salvar` passa a **referência** para o React chamar quando o usuário clicar.",
+    },
     quiz: {
       question: "Qual evento reage a clique?",
       options: ["onClick", "onChange", "onSubmit", "useState"],
@@ -384,6 +426,12 @@ const reactLessons = [
     commonMistake: "Esconder informação importante só por cor. Além da cor, mostre texto claro.",
     reference: ["condicao && JSX mostra se verdadeiro.", "condicao ? A : B escolhe dois caminhos.", "Estados costumam controlar UI.", "Mensagens devem ser explícitas."],
     concepts: ["conditional-rendering", "state", "feedback"],
+    contrastExample: {
+      wrong: "{pontos && <p>Pontos: {pontos}</p>}",
+      right: "{pontos > 0 && <p>Pontos: {pontos}</p>}",
+      explanation:
+        "Com `pontos = 0`, o `&&` imprime `0` solto na tela (porque `0 && X` retorna `0`). Use uma **comparação explícita** (`pontos > 0`) para só mostrar quando há pontos.",
+    },
     quiz: {
       question: "Quando usar condicao && <Mensagem />?",
       options: ["Quando quer mostrar algo só se a condição for verdadeira", "Quando quer criar banco", "Quando quer fazer merge", "Quando quer apagar props"],
@@ -426,6 +474,12 @@ const reactLessons = [
     commonMistake: "Usar índice como key quando a lista pode mudar de ordem. Prefira id estável.",
     reference: ["map transforma array.", "key identifica item.", "id é melhor que índice.", "Cada item retorna JSX."],
     concepts: ["lists", "map", "keys"],
+    contrastExample: {
+      wrong: "tarefas.map((tarefa, i) => <li key={i}>{tarefa.titulo}</li>)",
+      right: "tarefas.map((tarefa) => <li key={tarefa.id}>{tarefa.titulo}</li>)",
+      explanation:
+        "Usar o **índice** como key quebra quando itens trocam de ordem ou são removidos — React pode reusar o componente errado. O `id` estável dos dados é a key correta.",
+    },
     quiz: {
       question: "Para que serve key em listas React?",
       options: ["Identificar itens renderizados", "Criar CSS", "Enviar formulário", "Fazer push"],
@@ -467,6 +521,12 @@ const reactLessons = [
     commonMistake: "Usar input sem value e depois tentar validar estado. Se o estado não acompanha, a validação fica frágil.",
     reference: ["value liga input ao estado.", "onChange captura digitação.", "e.target.value tem o texto.", "trim remove espaços extras."],
     concepts: ["forms", "controlled-input", "state"],
+    contrastExample: {
+      wrong: "<input onChange={(e) => salvar(e.target.value)} />  // sem value: estado e DOM ficam dessincronizados",
+      right: "<input value={nome} onChange={(e) => setNome(e.target.value)} />",
+      explanation:
+        "Sem `value`, o input vira **descontrolado** — React não sabe o conteúdo atual. Com `value={estado}`, o estado é a fonte da verdade e validação/limpeza fica confiável.",
+    },
     quiz: {
       question: "Qual evento atualiza o estado ao digitar?",
       options: ["onChange", "onClick", "onSubmit", "map"],
@@ -508,6 +568,12 @@ const reactLessons = [
     commonMistake: "Esquecer dependências. Se o efeito usa uma variável que muda, ela deve aparecer no array.",
     reference: ["useEffect roda após renderização.", "[] roda uma vez na montagem.", "[valor] roda quando valor muda.", "Use cleanup para assinaturas/eventos."],
     concepts: ["useEffect", "side-effects", "dependencies"],
+    contrastExample: {
+      wrong: "useEffect(() => { document.title = titulo; }, []);  // titulo muda mas o efeito não roda",
+      right: "useEffect(() => { document.title = titulo; }, [titulo]);",
+      explanation:
+        "`[]` significa 'rode só na montagem'. Se o efeito **lê** uma variável externa, ela tem que estar nas **dependências** — senão você lê valor desatualizado.",
+    },
     quiz: {
       question: "Quando um useEffect com [] roda?",
       options: ["Na montagem do componente", "A cada tecla sempre", "Nunca", "Apenas no servidor"],
@@ -550,6 +616,12 @@ const reactLessons = [
     commonMistake: "Colocar todo o JSX em um único componente enorme. Divida por responsabilidade.",
     reference: ["Componentes separam responsabilidades.", "Estado sobe para o pai comum.", "Props descem dados.", "Eventos sobem intenção."],
     concepts: ["project", "state", "components", "lists"],
+    contrastExample: {
+      wrong: "function App() {\n  // 200 linhas de form + lista + item misturados\n}",
+      right: "function App() {\n  return <><FormTarefa /><ListaTarefas /></>;\n}\n\nfunction FormTarefa() { ... }\nfunction ListaTarefas() { ... }\nfunction ItemTarefa(props) { ... }",
+      explanation:
+        "Componente gigante esconde responsabilidades. **Decompor** (FormTarefa, ListaTarefas, ItemTarefa) deixa cada peça testável, reusável e legível.",
+    },
     quiz: {
       question: "Qual é um bom primeiro passo em um projeto React?",
       options: ["Dividir a tela em componentes", "Escrever tudo em um arquivo gigante", "Ignorar estado", "Começar pelo deploy"],
@@ -595,6 +667,12 @@ const nodeLessons = [
     commonMistake: "Achar que backend é só banco. Backend também valida, protege, integra e aplica regras.",
     reference: ["Request é pedido.", "Response é resposta.", "API organiza rotas.", "JSON é formato comum de resposta."],
     concepts: ["backend", "http", "request", "response"],
+    contrastExample: {
+      wrong: '// "backend é só ler do banco"',
+      right: "// backend: recebe request → valida entrada → aplica regras → persiste → devolve response",
+      explanation:
+        "Backend é **mais que banco**: valida entrada, aplica regras de negócio, protege segredos, integra serviços, controla acesso. Banco é só o lugar onde guarda.",
+    },
     quiz: {
       question: "O que uma API recebe primeiro?",
       options: ["Request", "Response", "Commit", "CSS"],
@@ -636,6 +714,12 @@ const nodeLessons = [
     commonMistake: "Instalar dependência sem necessidade. Cada pacote aumenta manutenção e risco.",
     reference: ["package.json descreve o projeto.", "scripts automatizam comandos.", "dependencies vão para produção.", "devDependencies são ferramentas de desenvolvimento."],
     concepts: ["npm", "package-json", "scripts"],
+    contrastExample: {
+      wrong: "npm install pacote-aleatorio-1\nnpm install pacote-aleatorio-2  // só pra testar",
+      right: "// checar antes: package.json já tem algo equivalente?\n// instalar só o que vai usar, justificando no commit",
+      explanation:
+        "Cada `npm install` adiciona **código de terceiros** (e risco de segurança/manutenção) ao projeto. Instale só o necessário e avalie alternativas que já estão lá.",
+    },
     quiz: {
       question: "Onde ficam scripts como dev e build?",
       options: ["package.json", "index.html", "README apenas", "Banco de dados"],
@@ -677,6 +761,12 @@ const nodeLessons = [
     commonMistake: "Criar rota mas esquecer listen. Sem escutar uma porta, o servidor não recebe pedidos.",
     reference: ["app.get cria rota GET.", "req representa request.", "res representa response.", "listen inicia o servidor."],
     concepts: ["express", "server", "routes"],
+    contrastExample: {
+      wrong: "app.get('/', (req, res) => res.send('ok'));\n// esqueceu app.listen — servidor não escuta",
+      right: "app.get('/', (req, res) => res.send('ok'));\napp.listen(3000, () => console.log('Pronto na :3000'));",
+      explanation:
+        "Sem `app.listen`, o servidor **não escuta nenhuma porta** — rotas registradas, mas inacessíveis. `listen` abre a porta para receber requests.",
+    },
     quiz: {
       question: "Qual objeto envia a resposta?",
       options: ["res", "req", "app", "npm"],
@@ -718,6 +808,12 @@ const nodeLessons = [
     commonMistake: "Responder texto quando o front espera JSON. Combine formato antes de integrar.",
     reference: ["JSON representa dados.", "res.json envia JSON.", "Objetos usam chave e valor.", "Arrays guardam listas."],
     concepts: ["json", "api", "response"],
+    contrastExample: {
+      wrong: "res.send('tarefas');  // texto solto, frontend espera array",
+      right: "res.json([{ id: 1, titulo: 'Estudar' }]);",
+      explanation:
+        "`send` envia **texto cru**. `res.json` envia **estrutura** (array, objeto) com o header `Content-Type: application/json` — front-end consome direto.",
+    },
     quiz: {
       question: "Qual método envia JSON no Express?",
       options: ["res.json", "res.sql", "req.json", "git json"],
@@ -760,6 +856,12 @@ const nodeLessons = [
     commonMistake: "Colocar ação demais na URL, como /criarTarefa. Prefira método POST em /tarefas.",
     reference: ["GET lê.", "POST cria.", "PATCH atualiza parcialmente.", "DELETE remove.", "Recurso costuma ser plural."],
     concepts: ["rest", "routes", "http-methods"],
+    contrastExample: {
+      wrong: "app.get('/criarTarefa', criar);\napp.get('/excluirTarefa/:id', remover);  // ação na URL",
+      right: "app.post('/tarefas', criar);\napp.delete('/tarefas/:id', remover);",
+      explanation:
+        "REST coloca a **ação no método HTTP** (POST/PATCH/DELETE) e o **recurso na URL** (`/tarefas`). APIs ficam previsíveis: o método já diz o que faz.",
+    },
     quiz: {
       question: "Qual método normalmente cria um registro?",
       options: ["POST", "GET", "DELETE", "ORDER BY"],
@@ -801,6 +903,12 @@ const nodeLessons = [
     commonMistake: "Salvar direto tudo que vem do cliente. Cliente não é fonte confiável.",
     reference: ["req.body contém dados enviados.", "express.json lê JSON.", "400 indica erro do cliente.", "Validação vem antes de salvar."],
     concepts: ["validation", "body", "status-code"],
+    contrastExample: {
+      wrong: "app.post('/tarefas', (req, res) => {\n  salvar(req.body);  // sem validar\n  res.send('ok');\n});",
+      right: "app.post('/tarefas', (req, res) => {\n  if (!req.body.titulo?.trim()) {\n    return res.status(400).json({ erro: 'Título obrigatório' });\n  }\n  salvar(req.body);\n  res.status(201).json({ ok: true });\n});",
+      explanation:
+        "Salvar **sem validar** aceita qualquer lixo do cliente. Sempre valide antes e responda com status apropriado (`400` cliente errou, `201` criou).",
+    },
     quiz: {
       question: "Qual status combina com dados inválidos do cliente?",
       options: ["400", "200", "500", "301"],
@@ -842,6 +950,12 @@ const nodeLessons = [
     commonMistake: "Esquecer next() em middleware que deveria continuar. A request fica sem resposta.",
     reference: ["Middleware roda antes da rota.", "next continua o fluxo.", "app.use registra middleware.", "Pode bloquear com response."],
     concepts: ["middleware", "next", "express"],
+    contrastExample: {
+      wrong: "function logger(req, res, next) {\n  console.log(req.method);\n  // sem next() — request trava\n}",
+      right: "function logger(req, res, next) {\n  console.log(req.method);\n  next();\n}",
+      explanation:
+        "Middleware sem `next()` (e sem `res.send/json`) deixa a request **pendurada** — cliente espera para sempre. Chame `next()` ou responda no próprio middleware.",
+    },
     quiz: {
       question: "O que next() faz?",
       options: ["Passa para a próxima etapa", "Cria banco", "Encerra o Node sempre", "Faz commit"],
@@ -884,6 +998,12 @@ const nodeLessons = [
     commonMistake: "Confundir atualização com criação. Atualizar preserva o registro e altera campos.",
     reference: ["Create cria.", "Read lê.", "Update altera.", "Delete remove.", "Array em memória reinicia ao reiniciar servidor."],
     concepts: ["crud", "arrays", "api"],
+    contrastExample: {
+      wrong: "tarefas.splice(indice, 1);  // muta o array original",
+      right: "tarefas = tarefas.filter(t => t.id !== id);  // novo array, imutável",
+      explanation:
+        "`splice` **muta** o array — em apps com cache/state pode quebrar reatividade. `filter` cria **novo array** preservando imutabilidade.",
+    },
     quiz: {
       question: "Qual operação corresponde a listar tarefas?",
       options: ["Read", "Create", "Update", "Delete"],
@@ -925,6 +1045,12 @@ const nodeLessons = [
     commonMistake: "Responder 200 mesmo quando houve erro. Isso confunde o front-end.",
     reference: ["200 sucesso.", "201 criado.", "400 request inválida.", "401 não autenticado.", "404 não encontrado.", "500 erro interno."],
     concepts: ["status-code", "http", "feedback"],
+    contrastExample: {
+      wrong: "res.status(200).json({ erro: 'Tarefa não encontrada' });  // 200 = sucesso?!",
+      right: "res.status(404).json({ erro: 'Tarefa não encontrada' });",
+      explanation:
+        "Responder `200` em **erro** confunde o front-end (que assume sucesso). Use status apropriado: `200/201` sucesso, `400` cliente errou, `404` não achou, `500` erro do servidor.",
+    },
     quiz: {
       question: "Qual status representa recurso não encontrado?",
       options: ["404", "201", "400", "200"],
@@ -966,6 +1092,12 @@ const nodeLessons = [
     commonMistake: "Subir .env para o repositório. Use .gitignore e variáveis da plataforma.",
     reference: ["process.env lê variáveis.", ".env local não deve ser commitado.", "PORT muda por ambiente.", "Tokens e senhas são segredos."],
     concepts: ["environment", "security", "config"],
+    contrastExample: {
+      wrong: "const token = 'sk-prod-abc123-secreto';  // commitou no Git!",
+      right: "const token = process.env.API_TOKEN;",
+      explanation:
+        "Segredo no código vaza para o **histórico do Git para sempre** (mesmo apagando depois). Use `process.env` + `.env` no `.gitignore`. Se já vazou, **rotacione a chave**.",
+    },
     quiz: {
       question: "Onde o código lê variáveis de ambiente em Node?",
       options: ["process.env", "window.env", "git.env", "document.env"],
@@ -1008,6 +1140,12 @@ const nodeLessons = [
     commonMistake: "Montar query com template string usando valor do usuário. Isso abre espaço para SQL injection.",
     reference: ["Parâmetros separam dados da query.", "$1 é placeholder comum no Postgres.", "Nunca confie em entrada do cliente.", "Valide antes de consultar."],
     concepts: ["database", "sql-injection", "parameters"],
+    contrastExample: {
+      wrong: "db.query(`SELECT * FROM usuarios WHERE email = '${req.body.email}'`);  // SQL injection!",
+      right: "db.query('SELECT * FROM usuarios WHERE email = $1', [req.body.email]);",
+      explanation:
+        "Interpolar entrada do usuário direto no SQL permite **injection** (`'; DROP TABLE ...`). Parâmetros (`$1`) separam **dados de comando** — o banco trata como valor, não SQL.",
+    },
     quiz: {
       question: "Qual prática reduz SQL injection?",
       options: ["Queries parametrizadas", "SELECT * sempre", "Concatenar strings", "Ignorar validação"],
@@ -1049,6 +1187,12 @@ const nodeLessons = [
     commonMistake: "Codar rotas sem contrato. Sem contrato, o front e o backend desencontram.",
     reference: ["Contrato define rota, entrada e saída.", "CRUD cobre ciclo básico.", "Validação evita dados ruins.", "Status orienta o front-end."],
     concepts: ["project", "api", "crud", "contract"],
+    contrastExample: {
+      wrong: '// "vou começar codando e ver o que sai"\napp.get(\'/x\', ...);\napp.post(\'/y\', ...);',
+      right: "// contrato primeiro:\n// GET /tarefas → 200 [{ id, titulo }]\n// POST /tarefas { titulo } → 201 { id }\n// PATCH /tarefas/:id { concluida } → 200\n// DELETE /tarefas/:id → 204",
+      explanation:
+        "API sem **contrato** vira improviso. Definir rotas/entradas/saídas/status antes dá ao front-end algo concreto para integrar e ao back-end um objetivo claro.",
+    },
     quiz: {
       question: "O que um contrato de API deve deixar claro?",
       options: ["Rota, entrada, saída e status", "Só a cor do botão", "Apenas o nome do repo", "Somente o banco"],
@@ -1094,6 +1238,12 @@ const gitLessons = [
     commonMistake: "Usar Git só no fim do projeto. Versione em passos pequenos enquanto constrói.",
     reference: ["Git versiona mudanças.", "Commit registra um ponto.", "Status mostra estado atual.", "Histórico ajuda a revisar."],
     concepts: ["git", "version-control", "history"],
+    contrastExample: {
+      wrong: '// versionar só no fim: 1 commit gigante\ngit add . && git commit -m "first commit"',
+      right: '// versionar enquanto constrói\ngit commit -m "Add login form layout"\ngit commit -m "Validate email field"\ngit commit -m "Connect to Supabase auth"',
+      explanation:
+        "Commit gigante esconde o que mudou e impossibilita voltar parcialmente. **Commits pequenos** = histórico legível + voltar atrás sem perder tudo.",
+    },
     quiz: {
       question: "O que um commit representa?",
       options: ["Um registro de mudança", "Uma linguagem", "Um banco", "Um componente"],
@@ -1135,6 +1285,12 @@ const gitLessons = [
     commonMistake: "Rodar git init dentro de subpastas sem querer e criar repositórios aninhados.",
     reference: ["git init inicia repositório.", "git status mostra estado.", "Untracked é arquivo novo.", "Modified é arquivo já rastreado alterado."],
     concepts: ["git-init", "status", "repository"],
+    contrastExample: {
+      wrong: "cd projeto/subpasta\ngit init  // cria repo aninhado dentro de outro repo",
+      right: "cd projeto/  # pasta raiz\ngit init",
+      explanation:
+        "`git init` em subpasta cria **repositório aninhado** — Git fica confuso, commits viram bagunça. Inicialize sempre na **raiz** do projeto.",
+    },
     quiz: {
       question: "Qual comando inicia um repositório Git local?",
       options: ["git init", "git push", "git merge", "git pull"],
@@ -1176,6 +1332,12 @@ const gitLessons = [
     commonMistake: "Usar mensagens vagas como update. Prefira Add, Fix, Improve seguido do assunto.",
     reference: ["git add prepara.", "git commit registra.", "-m define mensagem.", "Commits pequenos são fáceis de revisar."],
     concepts: ["staging", "commit", "message"],
+    contrastExample: {
+      wrong: 'git commit -m "update"  // o que mudou?',
+      right: 'git commit -m "Fix validation error on signup email field"',
+      explanation:
+        "Mensagens como `update`, `fix`, `wip` **não dizem nada** ao você-do-futuro. Boas mensagens explicam **o quê** e **por quê** em uma linha clara.",
+    },
     quiz: {
       question: "Qual comando prepara arquivos para commit?",
       options: ["git add", "git push", "git pull", "git log"],
@@ -1217,6 +1379,12 @@ const gitLessons = [
     commonMistake: "Comitar sem revisar diff. Isso aumenta chance de subir alteração indesejada.",
     reference: ["git diff mostra diferenças.", "git log mostra histórico.", "--oneline resume commits.", "Diff deve ser revisado antes do commit."],
     concepts: ["diff", "log", "review"],
+    contrastExample: {
+      wrong: 'git commit -am "tudo"  // commitou sem revisar diff',
+      right: 'git diff       # revisar antes\ngit add arquivos-certos\ngit commit -m "Improve dashboard error handling"',
+      explanation:
+        "Commitar sem `diff` deixa `console.log`, arquivos temporários e mudanças fora de escopo escaparem para o histórico. **Sempre** revise antes de commitar.",
+    },
     quiz: {
       question: "Qual comando mostra diferenças não commitadas?",
       options: ["git diff", "git init", "git clone", "git branch"],
@@ -1258,6 +1426,12 @@ const gitLessons = [
     commonMistake: "Usar branch com nome genérico como teste. O nome deve explicar a mudança.",
     reference: ["branch isola trabalho.", "main costuma ser linha principal.", "git switch -c cria e entra.", "Nomeie por tipo e assunto."],
     concepts: ["branch", "workflow", "isolation"],
+    contrastExample: {
+      wrong: "git switch -c teste  // nome genérico",
+      right: "git switch -c feature/perfil-edicao",
+      explanation:
+        "`teste` não diz **o que** está sendo testado. Nomes como `feature/...`, `fix/...`, `chore/...` descrevem a intenção da branch.",
+    },
     quiz: {
       question: "Por que criar branch?",
       options: ["Para isolar uma mudança", "Para apagar histórico", "Para substituir testes", "Para instalar npm"],
@@ -1299,6 +1473,12 @@ const gitLessons = [
     commonMistake: "Fazer merge estando na branch errada. Verifique git status antes.",
     reference: ["merge integra branches.", "A branch ativa recebe as mudanças.", "PR costuma revisar antes do merge.", "Conflitos exigem decisão manual."],
     concepts: ["merge", "branch", "integration"],
+    contrastExample: {
+      wrong: "git switch feature/perfil\ngit merge main  // recebeu main na feature, não o contrário",
+      right: "git switch main\ngit merge feature/perfil",
+      explanation:
+        "`merge` aplica mudanças na **branch atual**. Para integrar feature na main, **mude para main** primeiro — senão sua feature recebe o estado da main em cima.",
+    },
     quiz: {
       question: "Em git merge feature, quem recebe a mudança?",
       options: ["A branch atual", "Sempre feature", "O GitHub", "Nenhuma branch"],
@@ -1340,6 +1520,12 @@ const gitLessons = [
     commonMistake: "Apagar tudo sem entender as duas versões. Leia ambos os lados antes de decidir.",
     reference: ["<<<<<<< marca início.", "======= separa versões.", ">>>>>>> marca fim.", "Depois de resolver, use git add e commit."],
     concepts: ["conflict", "merge", "resolution"],
+    contrastExample: {
+      wrong: "// apagar marcadores sem entender as duas versões\n<<<<<<< HEAD\n=======\n>>>>>>>\n# código fica quebrado",
+      right: "// 1. leia AMBAS as versões\n// 2. decida qual fica (ou combine)\n// 3. remova TODOS os marcadores\n// 4. teste\n// 5. git add e commit",
+      explanation:
+        "Resolver conflito **não é** apagar marcadores cegamente. Leia os dois lados, decida com intenção, remova marcadores, **teste**, então commite.",
+    },
     quiz: {
       question: "O que você deve fazer com marcadores de conflito?",
       options: ["Remover após escolher a versão final", "Deixar no código", "Comitar sem ler", "Enviar para npm"],
@@ -1382,6 +1568,12 @@ const gitLessons = [
     commonMistake: "Fazer push sem puxar mudanças recentes do time. Isso pode gerar divergência.",
     reference: ["remote é repositório externo.", "push envia commits.", "pull busca e integra.", "origin é nome comum do remoto."],
     concepts: ["remote", "push", "pull"],
+    contrastExample: {
+      wrong: "git push  // sem pull antes — rejeitado por divergência",
+      right: "git pull --rebase\n# resolver conflitos se houver\ngit push",
+      explanation:
+        "`push` sem `pull` antes pode ser **rejeitado** se alguém do time mandou commits. Sempre `pull` (ou `pull --rebase`) antes de push para evitar histórico bagunçado.",
+    },
     quiz: {
       question: "Qual comando envia commits para o remoto?",
       options: ["git push", "git pull", "git status", "git diff"],
@@ -1423,6 +1615,12 @@ const gitLessons = [
     commonMistake: "Abrir PR sem descrição. Quem revisa precisa reconstruir contexto do zero.",
     reference: ["PR mostra diff.", "Descrição explica intenção.", "Checks validam build/testes.", "Comentários registram revisão."],
     concepts: ["pull-request", "review", "collaboration"],
+    contrastExample: {
+      wrong: '# PR sem descrição\ntítulo: "fix"\ndescrição: (vazia)',
+      right: '# PR com descrição\ntítulo: "Fix dashboard XP overflow on small screens"\n## Summary\n- Adjust XP badge layout\n## Test plan\n- Verified on iPhone SE width\n- npm test passing',
+      explanation:
+        "PR sem descrição obriga reviewer a **reconstruir contexto do zero**. Resumo + plano de teste = revisão rápida e produto melhor.",
+    },
     quiz: {
       question: "O que um bom PR deve incluir?",
       options: ["Resumo e testes", "Só emojis", "Senha do banco", "Arquivos node_modules"],
@@ -1464,6 +1662,12 @@ const gitLessons = [
     commonMistake: "Adicionar .env antes de criar .gitignore. Se o segredo já foi commitado, precisa rotacionar a chave.",
     reference: [".gitignore ignora padrões.", "node_modules é dependência instalada.", "dist é build gerado.", ".env contém segredos locais."],
     concepts: ["gitignore", "security", "generated-files"],
+    contrastExample: {
+      wrong: "# primeiro commit incluiu .env e node_modules\ngit add .\ngit commit -m \"first\"",
+      right: "# .gitignore PRIMEIRO\nnode_modules/\ndist/\n.env\n*.log\n# DEPOIS o primeiro commit",
+      explanation:
+        "Sem `.gitignore`, `node_modules/` (gigante) e `.env` (segredos) vão para o histórico. Crie o `.gitignore` **antes** do primeiro commit — depois é caro de remover do histórico.",
+    },
     quiz: {
       question: "Qual arquivo costuma guardar segredos locais?",
       options: [".env", "README.md", "index.html", "package.json"],
@@ -1505,6 +1709,12 @@ const gitLessons = [
     commonMistake: "Pular revisão e testes antes do push. O remoto não deve ser o primeiro lugar onde você descobre erro.",
     reference: ["pull atualiza.", "branch isola.", "diff revisa.", "commit registra.", "push publica.", "PR revisa."],
     concepts: ["workflow", "feature-branch", "pull-request"],
+    contrastExample: {
+      wrong: "# pula etapas\ngit commit -am \"fix\"\ngit push -f origin main  // direto na main, sem testar, sem PR",
+      right: "git pull\ngit switch -c fix/login-error\n# editar código\ngit diff\nnpm test\ngit add arquivos\ngit commit -m \"Fix login error on empty email\"\ngit push -u origin fix/login-error\n# abrir PR para revisão",
+      explanation:
+        "Pular etapas (testes, branch, PR) economiza minutos mas causa **horas** debugando depois. Fluxo: pull → branch → editar → diff → test → commit → push → PR.",
+    },
     quiz: {
       question: "Qual etapa deve acontecer antes de abrir PR?",
       options: ["Rodar validações relevantes", "Apagar histórico", "Subir .env", "Ignorar diff"],

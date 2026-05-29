@@ -20,6 +20,11 @@ type AlgorithmLessonDraft = {
   commonMistake: string;
   reference: string[];
   concepts: string[];
+  contrastExample?: {
+    wrong: string;
+    right: string;
+    explanation: string;
+  };
   quiz: {
     question: string;
     options: string[];
@@ -104,6 +109,7 @@ ${draft.reference.map((item) => `- ${item}`).join("\n")}`,
     nextStep: draft.nextStep,
     tryItPrompt: draft.tryItPrompt,
     commonMistake: draft.commonMistake,
+    contrastExample: draft.contrastExample,
     reference: draft.reference,
     concepts: draft.concepts,
     quiz: quiz(draft.quiz),
@@ -134,6 +140,12 @@ const lessons = [
     commonMistake: "Somar detalhes pequenos demais. Em Big O, focamos no termo que mais cresce.",
     reference: ["O(1): constante.", "O(log n): divide o problema.", "O(n): percorre itens.", "O(n²): loop aninhado."],
     concepts: ["big-o", "complexity", "analysis"],
+    contrastExample: {
+      wrong: "for item in lista:\n    for outro in lista:\n        comparar(item, outro)  # O(n²)",
+      right: "for item in lista:\n    comparar(item)  # O(n)",
+      explanation:
+        "Cada loop sozinho é `O(n)`. **Aninhados**, o trabalho cresce `n × n = O(n²)` — para listas grandes, a diferença é gigante.",
+    },
     quiz: {
       question: "Um loop que passa por todos os itens costuma ser...",
       options: ["O(n)", "O(1)", "O(n²)", "O(log n)"],
@@ -175,6 +187,12 @@ const lessons = [
     commonMistake: "Usar busca binária em lista não ordenada. Primeiro a lista precisa estar em ordem.",
     reference: ["Busca linear olha item por item.", "Funciona sem ordenar.", "Pior caso é O(n).", "É ótima para começar simples."],
     concepts: ["linear-search", "loops", "comparison"],
+    contrastExample: {
+      wrong: "# busca binária em lista NÃO ordenada\nlista = [3, 1, 7, 4]\n# meio = lista[len(lista)//2]  # não confiável!",
+      right: "# busca linear funciona em qualquer ordem\nfor item in lista:\n    if item == alvo:\n        return True",
+      explanation:
+        "Busca binária **exige lista ordenada** — sem ordem, descartar metade é chute. Busca linear é o caminho seguro quando a lista não está ordenada.",
+    },
     quiz: {
       question: "Quando a busca linear é aceitável?",
       options: ["Quando a lista é pequena ou não ordenada", "Somente com árvores", "Nunca", "Apenas com SQL"],
@@ -217,6 +235,12 @@ const lessons = [
     commonMistake: "Atualizar inicio/fim sem excluir o meio. Isso pode criar loop infinito.",
     reference: ["Exige lista ordenada.", "Divide pela metade.", "Complexidade O(log n).", "Atualize início ou fim a cada rodada."],
     concepts: ["binary-search", "logarithmic", "sorted-data"],
+    contrastExample: {
+      wrong: "while inicio <= fim:\n    meio = (inicio + fim) // 2\n    if lista[meio] < alvo:\n        inicio = meio  # NÃO exclui o meio\n    else:\n        fim = meio",
+      right: "while inicio <= fim:\n    meio = (inicio + fim) // 2\n    if lista[meio] < alvo:\n        inicio = meio + 1\n    else:\n        fim = meio - 1",
+      explanation:
+        "Sem `+ 1`/`- 1`, o meio fica incluído na próxima rodada — quando `inicio == fim == meio`, o loop **nunca termina** (loop infinito).",
+    },
     quiz: {
       question: "Qual pré-requisito da busca binária?",
       options: ["Lista ordenada", "Lista vazia", "Dois bancos", "CSS Grid"],
@@ -258,6 +282,12 @@ const lessons = [
     commonMistake: "Implementar ordenação manual em produção sem necessidade. Use a ferramenta nativa quando possível.",
     reference: ["Ordenar aplica uma regra.", "Bubble Sort é O(n²).", "sort() é a escolha prática em Python.", "sorted() devolve nova lista."],
     concepts: ["sorting", "bubble-sort", "python-sort"],
+    contrastExample: {
+      wrong: "# Bubble Sort manual em produção\nfor i in range(len(lista)):\n    for j in range(len(lista)-1):\n        if lista[j] > lista[j+1]:\n            lista[j], lista[j+1] = lista[j+1], lista[j]",
+      right: "# usa a função nativa do Python\nlista.sort()",
+      explanation:
+        "Bubble Sort é didático mas é `O(n²)`. Em produção, `sort()` usa **Timsort** (`O(n log n)`) — muito mais rápido em listas grandes.",
+    },
     quiz: {
       question: "Por que Bubble Sort aparece tanto em estudos?",
       options: ["Porque é didático para ver comparações", "Porque é sempre o mais rápido", "Porque substitui banco", "Porque não usa loops"],
@@ -299,6 +329,12 @@ const lessons = [
     commonMistake: "Usar pilha quando a ordem precisa ser justa. Para atendimento em ordem de chegada, use fila.",
     reference: ["Pilha é LIFO.", "append adiciona no topo.", "pop remove do topo.", "peek vê o topo sem remover."],
     concepts: ["stack", "lifo", "data-structures"],
+    contrastExample: {
+      wrong: '# atendimento como pilha (LIFO)\natendimento = []\natendimento.append("Ana")  # 1ª a chegar\natendimento.append("Bia")  # 2ª\nprint(atendimento.pop())  # atende "Bia" — quem chegou por último!',
+      right: '# fila com deque (FIFO)\nfrom collections import deque\natendimento = deque()\natendimento.append("Ana")\natendimento.append("Bia")\nprint(atendimento.popleft())  # atende "Ana", quem chegou primeiro',
+      explanation:
+        "Pilha é **LIFO** — quem chega por último sai antes. Para atendimento por **ordem de chegada**, use **fila** (FIFO).",
+    },
     quiz: {
       question: "Em uma pilha, qual item sai primeiro?",
       options: ["O último que entrou", "O primeiro que entrou", "Um item aleatório", "Sempre o menor"],
@@ -341,6 +377,12 @@ const lessons = [
     commonMistake: "Usar pop(0) em listas grandes. Funciona, mas pode ser lento; deque é melhor para fila.",
     reference: ["Fila é FIFO.", "deque cria fila eficiente.", "append adiciona no fim.", "popleft remove do início."],
     concepts: ["queue", "fifo", "deque"],
+    contrastExample: {
+      wrong: 'fila = ["Ana", "Bia", "Caio"]\nfila.pop(0)  # O(n) — desloca todos os outros',
+      right: 'from collections import deque\nfila = deque(["Ana", "Bia", "Caio"])\nfila.popleft()  # O(1)',
+      explanation:
+        "`pop(0)` em lista é `O(n)` porque precisa **deslocar** todos os outros itens. `deque.popleft()` é `O(1)` — a estrutura é feita pra isso.",
+    },
     quiz: {
       question: "Qual estrutura é mais adequada para fila em Python?",
       options: ["collections.deque", "string", "CSS", "git branch"],
@@ -382,6 +424,12 @@ const lessons = [
     commonMistake: "Chamar a função com o mesmo valor. O problema precisa ficar menor a cada chamada.",
     reference: ["Recursão chama a própria função.", "Caso base para.", "Passo recursivo reduz o problema.", "Sem caso base, há loop infinito."],
     concepts: ["recursion", "base-case", "strategy"],
+    contrastExample: {
+      wrong: "def contar(n):\n    return contar(n - 1)  # cadê o caso base?",
+      right: 'def contar(n):\n    if n == 0:\n        return "fim"\n    return contar(n - 1)',
+      explanation:
+        "Sem **caso base**, a função chama a si mesma para sempre — `RecursionError` / stack overflow. O caso base é a condição que **para** a recursão.",
+    },
     quiz: {
       question: "O que evita recursão infinita?",
       options: ["Caso base", "CSS", "SELECT", "git push"],
@@ -424,6 +472,12 @@ const lessons = [
     commonMistake: "Pensar que grafo precisa ser visual. Ele pode começar como um dicionário simples.",
     reference: ["Nó representa elemento.", "Aresta representa conexão.", "Lista de adjacência guarda vizinhos.", "Grafos podem ser direcionados ou não."],
     concepts: ["graphs", "adjacency-list", "modeling"],
+    contrastExample: {
+      wrong: '# tentando representar grafo só com strings\ngrafo = "A-B, A-C, B-C"  # difícil de consultar',
+      right: 'grafo = {"A": ["B", "C"], "B": ["A", "C"], "C": ["A", "B"]}\nprint(grafo["A"])  # ["B", "C"]',
+      explanation:
+        "String é difícil de consultar. **Dicionário de adjacência** (`{nó: [vizinhos]}`) deixa `grafo[\"A\"]` devolver os vizinhos direto.",
+    },
     quiz: {
       question: "O que uma aresta representa?",
       options: ["Uma conexão", "Um tipo de cor", "Um commit", "Um número aleatório"],
@@ -465,6 +519,12 @@ const lessons = [
     commonMistake: "Não guardar visitados. Em grafo com ciclo, isso pode repetir nós para sempre.",
     reference: ["BFS usa fila.", "Visitados evita repetição.", "Percorre por camadas.", "Em grafo sem peso, encontra menor número de arestas."],
     concepts: ["bfs", "graphs", "queue"],
+    contrastExample: {
+      wrong: "fila = deque([inicio])\n# sem visitados!\nwhile fila:\n    atual = fila.popleft()\n    for vizinho in grafo[atual]:\n        fila.append(vizinho)  # ciclo vira loop infinito",
+      right: "fila = deque([inicio])\nvisitados = {inicio}\nwhile fila:\n    atual = fila.popleft()\n    for vizinho in grafo[atual]:\n        if vizinho not in visitados:\n            visitados.add(vizinho)\n            fila.append(vizinho)",
+      explanation:
+        "Sem `visitados`, BFS em grafo com **ciclo** re-adiciona o mesmo nó para sempre. O conjunto garante que cada nó é processado **uma vez**.",
+    },
     quiz: {
       question: "Qual estrutura BFS usa?",
       options: ["Fila", "Pilha", "Tabela CSS", "Commit"],
@@ -506,6 +566,12 @@ const lessons = [
     commonMistake: "Escolher algoritmo pelo nome bonito. Comece pela necessidade do usuário e pelas restrições.",
     reference: ["Pilha resolve desfazer.", "Fila resolve ordem de chegada.", "Busca binária exige ordenação.", "Grafo modela conexões.", "Big O ajuda a comparar custo."],
     concepts: ["strategy", "data-structures", "project"],
+    contrastExample: {
+      wrong: '# "vou usar busca binária porque é mais rápida"\nlista = ["Ana", "Caio", "Bia"]  # NÃO ordenada\nbusca_binaria(lista, "Bia")  # resultado imprevisível',
+      right: '# parte das restrições: lista pequena e não ordenada\nlista = ["Ana", "Caio", "Bia"]\nfor nome in lista:\n    if nome == "Bia":\n        return True',
+      explanation:
+        "Escolher pelo nome bonito ignora **pré-requisitos** (busca binária exige lista ordenada). Comece pelas **restrições** do problema, depois escolha a ferramenta.",
+    },
     quiz: {
       question: "Qual estrutura combina com desfazer?",
       options: ["Pilha", "Fila", "Grafo", "CSS"],
