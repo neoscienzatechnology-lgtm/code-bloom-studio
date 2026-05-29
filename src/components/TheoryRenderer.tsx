@@ -30,9 +30,14 @@ interface TheoryRendererProps {
   courseTitle?: string;
   language?: string;
   lessonTitle?: string;
+  contrastExample?: {
+    wrong: string;
+    right: string;
+    explanation: string;
+  };
 }
 
-const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text, courseTitle, language, lessonTitle }) => {
+const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text, courseTitle, language, lessonTitle, contrastExample }) => {
   const [expanded, setExpanded] = useState(false);
   const { introText, fullText, isLong } = useMemo(() => {
     const blocks = text.split(/\n(?=## )/);
@@ -187,6 +192,28 @@ const TheoryRenderer: React.FC<TheoryRendererProps> = ({ text, courseTitle, lang
     <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
       <LessonVisualAid courseTitle={courseTitle} language={language} lessonTitle={lessonTitle} />
       <div className="space-y-0.5">{elements}</div>
+      {contrastExample && (
+        <div className="mt-4 rounded-xl border border-border bg-background/60 p-4">
+          <div className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
+            <span aria-hidden="true">🔍</span> Compare: errado vs. certo
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+              <div className="mb-1.5 flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-destructive">
+                <span aria-hidden="true">✕</span> Evite
+              </div>
+              <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-foreground/80">{contrastExample.wrong}</pre>
+            </div>
+            <div className="rounded-lg border border-accent/40 bg-accent/10 p-3">
+              <div className="mb-1.5 flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-primary">
+                <span aria-hidden="true">✓</span> Prefira
+              </div>
+              <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-foreground/80">{contrastExample.right}</pre>
+            </div>
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{parseInlineFormatting(contrastExample.explanation)}</p>
+        </div>
+      )}
       {isLong && (
         <button
           type="button"

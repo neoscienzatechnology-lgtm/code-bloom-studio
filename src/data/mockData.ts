@@ -51,6 +51,15 @@ export interface Lesson {
   nextStep?: string;
   tryItPrompt?: string;
   commonMistake?: string;
+  contrastExample?: {
+    wrong: string;
+    right: string;
+    explanation: string;
+  };
+  testCases?: {
+    call: string;
+    expected: string;
+  }[];
   reference?: string[];
   practiceActivities?: PracticeActivity[];
   concepts?: string[];
@@ -117,6 +126,8 @@ type LessonEnhancement = Partial<
     | "nextStep"
     | "tryItPrompt"
     | "commonMistake"
+    | "contrastExample"
+    | "testCases"
     | "reference"
     | "practiceActivities"
     | "concepts"

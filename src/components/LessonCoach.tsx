@@ -14,6 +14,7 @@ import {
 import type { Course, Lesson } from "@/data/mockData";
 import { buildLessonBlueprint } from "@/utils/pedagogy";
 import { Button } from "@/components/ui/button";
+import { ConfidenceCheck } from "@/components/Metacognition";
 
 interface LessonCoachProps {
   course: Course;
@@ -47,6 +48,7 @@ const LessonCoach = ({ course, lesson }: LessonCoachProps) => {
 
   return (
     <section className="mb-6 rounded-2xl border border-primary/20 bg-card p-4 shadow-sm">
+      <ConfidenceCheck lessonId={lesson.id} />
       <div className="mb-4 flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Target size={18} />
