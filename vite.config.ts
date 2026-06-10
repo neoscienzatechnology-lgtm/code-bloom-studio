@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -12,7 +13,55 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.png", "mascote-capivara.webp"],
+      manifest: {
+        name: "CapyCode — Aprenda programação",
+        short_name: "CapyCode",
+        description:
+          "App de ensino de programação com trilhas guiadas, aulas curtas, projetos e prática de código.",
+        lang: "pt-BR",
+        start_url: "/",
+        display: "standalone",
+        theme_color: "#fbf7ef",
+        background_color: "#fbf7ef",
+        icons: [
+          { src: "/pwa-192x192.png", sizes: "192x192", type: "image/png" },
+          { src: "/pwa-512x512.png", sizes: "512x512", type: "image/png" },
+          { src: "/maskable-512x512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+        ],
+      },
+      workbox: {
+        // Precache only the app shell (JS/CSS/HTML). Images — especially the
+        // ~20 lesson infographics — are cached on demand below instead of
+        // being downloaded upfront on install.
+        globPatterns: ["**/*.{js,css,html}"],
+        navigateFallback: "/index.html",
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|webp|jpg|jpeg|svg|ico)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "capycode-images",
+              expiration: { maxEntries: 80, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "capycode-fonts",
+              expiration: { maxEntries: 20, maxAgeSeconds: 365 * 24 * 60 * 60 },
+            },
+          },
+        ],
+      },
+    }),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
