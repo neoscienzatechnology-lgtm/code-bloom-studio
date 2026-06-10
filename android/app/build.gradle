@@ -1,6 +1,12 @@
 apply plugin: 'com.android.application'
 
-def keystorePropertiesFile = rootProject.file("key.properties")
+// Release signing secrets live outside the repo tree (~/.capycode) so they
+// can never be committed or zipped along with the project by accident.
+// Fallback to android/key.properties keeps other machines/CI working.
+def keystorePropertiesFile = new File(System.getProperty('user.home'), '.capycode/key.properties')
+if (!keystorePropertiesFile.exists()) {
+    keystorePropertiesFile = rootProject.file("key.properties")
+}
 def keystoreProperties = new Properties()
 
 if (keystorePropertiesFile.exists()) {

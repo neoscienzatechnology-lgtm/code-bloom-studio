@@ -1,4 +1,9 @@
-storeFile=../capycode-upload-key.jks
+# Release signing config. Preferred location: OUTSIDE the repo, at
+#   <home>/.capycode/key.properties   (e.g. C:/Users/you/.capycode/key.properties)
+# with the keystore next to it. android/key.properties still works as a
+# fallback, but keeping secrets out of the project tree prevents them from
+# ever being committed or bundled by accident.
+storeFile=C:/Users/you/.capycode/capycode-upload-key.jks
 storePassword=CHANGE_ME
 keyAlias=capycode-upload
 keyPassword=CHANGE_ME
