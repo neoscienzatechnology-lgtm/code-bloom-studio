@@ -15,6 +15,7 @@ import ChallengeStage from "@/components/lesson/ChallengeStage";
 import CodeStageIntro from "@/components/lesson/CodeStageIntro";
 import CodeWorkspace from "@/components/lesson/CodeWorkspace";
 import { useProgress } from "@/hooks/useProgress";
+import { recordLessonCompletedAndMaybeShowAd } from "@/lib/ads";
 import { useLessonStages, splitTheorySlides, type LessonStageKind } from "@/hooks/useLessonStages";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { calibrateXp } from "@/utils/xp";
@@ -91,7 +92,11 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   const stageSectionClass = (stage: LessonStageKind) =>
     stages.currentStage.kind === stage ? "block" : "hidden";
 
-  const handleNext = () => navigate(nextHref);
+  const handleNext = () => {
+    // Intersticial (apenas no app Android) com limite de frequência
+    if (lessonReadyToAdvance) void recordLessonCompletedAndMaybeShowAd();
+    navigate(nextHref);
+  };
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col">

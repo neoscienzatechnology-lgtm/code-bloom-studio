@@ -10,6 +10,7 @@ export const STORAGE_KEYS = {
   conceptMastery: "code-bloom-studio-concept-mastery",
   learningProfile: "code-bloom-studio-learning-profile",
   editorOnboarding: "code-bloom-studio_editor_onboarding_seen",
+  ads: "code-bloom-studio-ads",
   oauthRedirect: "capycode:oauth-redirect",
   projectPrefix: "code-bloom-studio-project-",
   confidencePrefix: "capy-confidence-",

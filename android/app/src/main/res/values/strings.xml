@@ -4,4 +4,8 @@
     <string name="title_activity_main">CapyCode</string>
     <string name="package_name">com.capycode.app</string>
     <string name="custom_url_scheme">com.capycode.app</string>
+    <!-- AdMob App ID. O valor abaixo é o ID DE TESTE oficial do Google.
+         Antes de publicar na Play Store, substitua pelo App ID real do
+         seu app no console do AdMob (formato ca-app-pub-XXXX~YYYY). -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
 </resources>

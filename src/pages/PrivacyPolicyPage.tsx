@@ -110,6 +110,22 @@ const PrivacyPolicyPage = () => {
               banco de dados, hospedagem e distribuição pela loja de aplicativos, podem processar dados
               apenas para operar e proteger o app.
             </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              No aplicativo Android, podemos exibir anúncios fornecidos pelo Google AdMob. Nesse caso,
+              o Google pode coletar o identificador de publicidade do dispositivo para veicular e medir
+              anúncios, conforme a{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-black text-primary hover:underline"
+              >
+                política de privacidade do Google
+              </a>
+              . Quando exigido pela legislação aplicável, solicitamos o seu consentimento antes de
+              exibir anúncios personalizados, e você pode recusá-los. A versão web do CapyCode não
+              exibe anúncios.
+            </p>
           </section>
 
           <section>

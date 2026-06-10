@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useLessonStages, splitTheorySlides } from "@/hooks/useLessonStages";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
+import { isInterstitialDue } from "@/lib/ads";
+import { ADS_CONFIG } from "@/config/ads";
 import { readJson, writeJson, readString, writeString, removeKey } from "@/lib/storage";
 import type { Course, Lesson } from "@/data/mockData";
 
@@ -41,6 +43,37 @@ describe("storage helpers", () => {
     expect(readString("str")).toBe("value");
     removeKey("str");
     expect(readString("str")).toBeNull();
+  });
+});
+
+describe("ad frequency cap", () => {
+  const NOW = 10_000_000;
+  const quietMs = ADS_CONFIG.interstitialMinIntervalMinutes * 60_000;
+
+  it("does not show before enough lessons are completed", () => {
+    expect(
+      isInterstitialDue({ lessonsSinceLastAd: ADS_CONFIG.interstitialEveryNLessons - 1, lastAdShownAt: 0 }, NOW),
+    ).toBe(false);
+  });
+
+  it("shows after N lessons when no ad was shown yet", () => {
+    expect(
+      isInterstitialDue({ lessonsSinceLastAd: ADS_CONFIG.interstitialEveryNLessons, lastAdShownAt: 0 }, NOW),
+    ).toBe(true);
+  });
+
+  it("respects the quiet interval after a recent ad", () => {
+    const recent = NOW - quietMs + 1_000;
+    expect(
+      isInterstitialDue({ lessonsSinceLastAd: ADS_CONFIG.interstitialEveryNLessons, lastAdShownAt: recent }, NOW),
+    ).toBe(false);
+  });
+
+  it("shows again once both lesson count and interval are satisfied", () => {
+    const old = NOW - quietMs - 1_000;
+    expect(
+      isInterstitialDue({ lessonsSinceLastAd: ADS_CONFIG.interstitialEveryNLessons, lastAdShownAt: old }, NOW),
+    ).toBe(true);
   });
 });
 
