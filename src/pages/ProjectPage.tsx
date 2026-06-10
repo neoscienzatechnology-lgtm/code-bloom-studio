@@ -17,6 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import CodeEditor from "@/components/CodeEditor";
 import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import { getProjectById } from "@/data/projects";
+import { getCourseById } from "@/data/mockData";
 import { validateCode } from "@/utils/codeValidator";
 import { useProgress } from "@/hooks/useProgress";
 import { readJson, writeJson, removeKey, STORAGE_KEYS } from "@/lib/storage";
@@ -45,6 +46,7 @@ const ProjectPage = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const project = getProjectById(projectId || "");
+  const linkedCourse = project ? getCourseById(project.courseId) : undefined;
   const { completeLesson, isCompleted } = useProgress();
 
   const [state, setState] = useState<ProjectState>(() =>
@@ -331,6 +333,21 @@ const ProjectPage = () => {
                 <code className="font-mono text-accent">
                   {step!.expectedOutput}
                 </code>
+              </div>
+
+              <div className="mt-3 rounded-lg border border-quest-blue/20 bg-quest-blue/5 px-3 py-2 text-xs">
+                <span className="text-muted-foreground">
+                  Esta etapa pratica:{" "}
+                  <span className="font-bold text-foreground">{step!.concepts.join(", ")}</span>.
+                </span>{" "}
+                {linkedCourse && (
+                  <Link
+                    to={`/cursos/${project.courseId}`}
+                    className="font-bold text-quest-blue underline-offset-2 hover:underline"
+                  >
+                    Travou? Revise as lições de {linkedCourse.title}
+                  </Link>
+                )}
               </div>
 
               <CapyLessonAssistant

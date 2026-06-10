@@ -451,7 +451,7 @@ Corrigir erro é treino de leitura. Leia devagar e compare com o exemplo.`,
       xpReward: 10,
       summary:
         "Você praticou depuração inicial: observar, comparar e corrigir. Errar com atenção acelera o aprendizado.",
-      nextStep: "Agora vamos aprender a guardar informações com variáveis.",
+      nextStep: "Agora vamos trocar o pseudocódigo pelo JavaScript de verdade — e guardar informações com variáveis.",
       contrastExample: {
         wrong: 'mostrar("corrigi o erro"',
         right: 'mostrar("corrigi o erro");',
@@ -489,10 +489,17 @@ Corrigir erro é treino de leitura. Leia devagar e compare com o exemplo.`,
       codeExample: 'const nome = "Ana";\nconsole.log(nome);',
       theory: `# O que são variáveis?
 
+## Do pseudocódigo para o JavaScript
+Até aqui você treinou o raciocínio em pseudocódigo, usando mostrar() para exibir mensagens. A partir de agora vamos usar JavaScript como linguagem de apoio — a mesma lógica, com os nomes oficiais:
+
+  mostrar("Olá")   vira   console.log("Olá")
+
+Só o vocabulário muda. O raciocínio que você treinou continua valendo igual.
+
 ## Ideia principal
 Uma variável guarda uma informação para o programa usar depois. Ela tem nome e valor.
 
-Agora que você já praticou o raciocínio em pseudocódigo, vamos usar JavaScript como linguagem de apoio. Em JavaScript, const cria uma variável cujo valor não será trocado naquele momento. O nome deve explicar o que está guardado.
+Em JavaScript, const cria uma variável cujo valor não será trocado naquele momento. O nome deve explicar o que está guardado.
 
 Exemplo:
   const nome = "Ana";
@@ -760,7 +767,7 @@ Condições aparecem em login, compra, jogos, formulários e permissões.`,
       xpReward: 15,
       summary:
         "Você aprendeu que condições respondem verdadeiro ou falso. Esse é o primeiro passo para decisões no código.",
-      nextStep: "Vamos usar if e else para agir de acordo com a condição.",
+      nextStep: "Vamos conhecer os operadores de comparação para escrever regras precisas.",
       contrastExample: {
         wrong: "let idade = 18;\nconsole.log(idade = 20);",
         right: "let idade = 18;\nconsole.log(idade >= 18);",
@@ -776,69 +783,6 @@ Condições aparecem em login, compra, jogos, formulários e permissões.`,
           "Correto. Você escolheu uma comparação.",
           "Quase. A condição precisa fazer uma pergunta de verdadeiro/falso.",
           "Procure o operador que compara maior ou igual."
-        ),
-      ],
-    }),
-    lesson({
-      id: "10-10",
-      module: "Módulo 3 - Decisões",
-      level: "Iniciante",
-      estimatedMinutes: 8,
-      title: "if e else na prática",
-      learningObjective: "Usar if e else para executar mensagens diferentes conforme uma condição.",
-      description: "Mostre Liberado quando idade for 18 ou mais; caso contrário, mostre Bloqueado.",
-      analogy:
-        "if/else é uma bifurcação: se a condição for verdadeira, vá por um caminho; senão, vá pelo outro.",
-      example: "Se a senha estiver correta, entrar. Senão, mostrar erro.",
-      codeExample: 'if (idade >= 18) {\n  console.log("Liberado");\n} else {\n  console.log("Bloqueado");\n}',
-      theory: `# if e else na prática
-
-## Ideia principal
-if executa um bloco quando a condição é verdadeira. else executa outro bloco quando a condição é falsa.
-
-## Na prática
-  const idade = 18;
-  if (idade >= 18) {
-    console.log("Liberado");
-  } else {
-    console.log("Bloqueado");
-  }
-
-## Erro comum
-Usar = em vez de >= ou ===. Um sinal de igual atribui valor; comparação pergunta algo.`,
-      starterCode: "const idade = 18;\n// use if/else para liberar ou bloquear\n",
-      solution:
-        'const idade = 18;\nif (idade >= 18) {\n  console.log("Liberado");\n} else {\n  console.log("Bloqueado");\n}',
-      expectedOutput: "Liberado",
-      hints: [
-        "Comece com if (idade >= 18).",
-        "Dentro do if, mostre Liberado.",
-        "Use else para o caso contrário.",
-      ],
-      xpReward: 20,
-      summary:
-        "Você escreveu sua primeira decisão completa. Agora o programa não apenas calcula: ele escolhe caminhos.",
-      nextStep: "Vamos revisar operadores de comparação para escrever regras melhores.",
-      contrastExample: {
-        wrong: 'if (idade = 18) {\n  console.log("Liberado");\n}',
-        right: 'if (idade >= 18) {\n  console.log("Liberado");\n}',
-        explanation:
-          "Com `=` você **atribui** `18` à variável e o `if` sempre passa. Com `>=` você **compara** e o `if` decide com base na resposta.",
-      },
-      quiz: [
-        quiz(
-          "Quando o bloco else é executado?",
-          [
-            "Quando a condição do if é falsa",
-            "Sempre antes do if",
-            "Quando o código não tem variável",
-            "Somente quando há erro de sintaxe",
-          ],
-          0,
-          "else é o caminho alternativo quando a condição do if não passa.",
-          "Boa. Você entendeu a bifurcação.",
-          "Não exatamente. Pense no else como o caso contrário.",
-          "Leia: if significa se; else significa senão."
         ),
       ],
     }),
@@ -886,7 +830,7 @@ Confundir = com ===. O primeiro guarda valor. O segundo compara.`,
       xpReward: 15,
       summary:
         "Você praticou comparações. Elas são a matéria-prima de validações, filtros, permissões e jogos.",
-      nextStep: "Vamos juntar comparações em um desafio de tomada de decisão.",
+      nextStep: "Agora vamos usar comparações para escolher caminhos com if e else.",
       contrastExample: {
         wrong: "console.log(senhaDigitada = senhaCorreta);",
         right: "console.log(senhaDigitada === senhaCorreta);",
@@ -902,6 +846,69 @@ Confundir = com ===. O primeiro guarda valor. O segundo compara.`,
           "Correto. Você evitou a confusão mais comum.",
           "Ainda não. O operador de comparação segura tem três sinais.",
           "Lembre: um igual guarda; três iguais comparam."
+        ),
+      ],
+    }),
+    lesson({
+      id: "10-10",
+      module: "Módulo 3 - Decisões",
+      level: "Iniciante",
+      estimatedMinutes: 8,
+      title: "if e else na prática",
+      learningObjective: "Usar if e else para executar mensagens diferentes conforme uma condição.",
+      description: "Mostre Liberado quando idade for 18 ou mais; caso contrário, mostre Bloqueado.",
+      analogy:
+        "if/else é uma bifurcação: se a condição for verdadeira, vá por um caminho; senão, vá pelo outro.",
+      example: "Se a senha estiver correta, entrar. Senão, mostrar erro.",
+      codeExample: 'if (idade >= 18) {\n  console.log("Liberado");\n} else {\n  console.log("Bloqueado");\n}',
+      theory: `# if e else na prática
+
+## Ideia principal
+if executa um bloco quando a condição é verdadeira. else executa outro bloco quando a condição é falsa.
+
+## Na prática
+  const idade = 18;
+  if (idade >= 18) {
+    console.log("Liberado");
+  } else {
+    console.log("Bloqueado");
+  }
+
+## Erro comum
+Usar = em vez de >= ou ===. Um sinal de igual atribui valor; comparação pergunta algo.`,
+      starterCode: "const idade = 18;\n// use if/else para liberar ou bloquear\n",
+      solution:
+        'const idade = 18;\nif (idade >= 18) {\n  console.log("Liberado");\n} else {\n  console.log("Bloqueado");\n}',
+      expectedOutput: "Liberado",
+      hints: [
+        "Comece com if (idade >= 18).",
+        "Dentro do if, mostre Liberado.",
+        "Use else para o caso contrário.",
+      ],
+      xpReward: 20,
+      summary:
+        "Você escreveu sua primeira decisão completa. Agora o programa não apenas calcula: ele escolhe caminhos.",
+      nextStep: "Vamos juntar tudo em um desafio de tomada de decisão.",
+      contrastExample: {
+        wrong: 'if (idade = 18) {\n  console.log("Liberado");\n}',
+        right: 'if (idade >= 18) {\n  console.log("Liberado");\n}',
+        explanation:
+          "Com `=` você **atribui** `18` à variável e o `if` sempre passa. Com `>=` você **compara** e o `if` decide com base na resposta.",
+      },
+      quiz: [
+        quiz(
+          "Quando o bloco else é executado?",
+          [
+            "Quando a condição do if é falsa",
+            "Sempre antes do if",
+            "Quando o código não tem variável",
+            "Somente quando há erro de sintaxe",
+          ],
+          0,
+          "else é o caminho alternativo quando a condição do if não passa.",
+          "Boa. Você entendeu a bifurcação.",
+          "Não exatamente. Pense no else como o caso contrário.",
+          "Leia: if significa se; else significa senão."
         ),
       ],
     }),
