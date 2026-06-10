@@ -26,6 +26,10 @@ type ModernLessonDraft = {
     right: string;
     explanation: string;
   };
+  testCases?: {
+    call: string;
+    expected: string;
+  }[];
   quiz: {
     question: string;
     options: string[];
@@ -111,6 +115,7 @@ ${draft.reference.map((item) => `- ${item}`).join("\n")}`,
     tryItPrompt: draft.tryItPrompt,
     commonMistake: draft.commonMistake,
     contrastExample: draft.contrastExample,
+    testCases: draft.testCases,
     reference: draft.reference,
     concepts: draft.concepts,
     quiz: buildQuiz(draft.quiz),
@@ -1818,6 +1823,11 @@ const javascriptLessons = [
       explanation:
         "Sem `return`, a função **executa** o cálculo mas devolve `undefined`. `return` entrega o valor para quem chamou.",
     },
+    testCases: [
+      { call: "dobro(4)", expected: "8" },
+      { call: "dobro(10)", expected: "20" },
+      { call: "dobro(0)", expected: "0" },
+    ],
     quiz: {
       question: "Para que serve return?",
       options: ["Devolver um valor da função", "Criar cor", "Abrir navegador", "Declarar CSS"],
@@ -1902,7 +1912,7 @@ const javascriptLessons = [
     expectedOutput: "Ana",
     hints: ["Use chaves {}.", "Separe propriedades com vírgula.", "Acesse com ponto."],
     summary: "Você agrupou dados relacionados em uma estrutura com significado.",
-    nextStep: "Vamos conectar JavaScript ao HTML usando DOM.",
+    nextStep: "Agora vamos extrair propriedades direto para variáveis com desestruturação.",
     tryItPrompt: "Adicione uma propriedade linguagem: \"JavaScript\".",
     commonMistake: "Usar array quando os dados têm nomes diferentes. Objetos são melhores para fichas e entidades.",
     reference: ["{} cria objeto.", "chave: valor define propriedade.", "objeto.nome acessa propriedade.", "objeto[\"nome\"] também acessa.", "Objetos representam entidades."],
@@ -1930,6 +1940,75 @@ const javascriptLessons = [
       success: "Boa. A notação de ponto acessa a propriedade.",
       error: "Ainda não. A propriedade se chama nome.",
       hint: "Use a chave criada no objeto.",
+    },
+  }),
+  makeLesson({
+    id: "2-19",
+    title: "Desestruturação de objetos",
+    module: "JavaScript 3 - Organização",
+    learningObjective: "Extrair propriedades de um objeto direto para variáveis com desestruturação.",
+    description: "Crie uma função apresentar que usa desestruturação para montar a frase \"Ana tem 25 anos\".",
+    explanation:
+      "Desestruturação extrai propriedades de um objeto direto para variáveis com o mesmo nome, em uma linha: const { nome } = usuario. Ela também funciona em parâmetros de função, e é exatamente assim que componentes React recebem props: function Card({ titulo }).",
+    analogy:
+      "É como tirar itens etiquetados de uma caixa de uma vez: em vez de abrir a caixa toda hora (usuario.nome, usuario.idade), você pega logo o que precisa pelo rótulo.",
+    example: 'const usuario = { nome: "Ana", idade: 25 };\nconst { nome, idade } = usuario;\nconsole.log(nome);',
+    codeExample: "function apresentar({ nome, idade }) {\n  return `${nome} tem ${idade} anos`;\n}",
+    starterCode: "// Crie a função apresentar usando desestruturação no parâmetro\n",
+    solution:
+      'function apresentar({ nome, idade }) {\n  return `${nome} tem ${idade} anos`;\n}\n\nconsole.log(apresentar({ nome: "Ana", idade: 25 }));',
+    expectedOutput: "Ana tem 25 anos",
+    hints: [
+      "Use chaves no parâmetro: function apresentar({ nome, idade }).",
+      "Monte a frase com template literal: `${nome} tem ${idade} anos`.",
+      "Não esqueça do return.",
+    ],
+    summary: "Você extraiu propriedades pelo nome, o mesmo padrão que o React usa para props.",
+    nextStep: "Vamos conectar JavaScript ao HTML usando DOM.",
+    tryItPrompt: "Adicione cidade ao objeto e inclua na frase: \"Ana tem 25 anos e mora em SP\".",
+    commonMistake:
+      "Usar um nome diferente da chave do objeto. const { Nome } = usuario devolve undefined: a variável precisa ter exatamente o mesmo nome da propriedade.",
+    reference: [
+      "const { chave } = objeto extrai a propriedade.",
+      "Funciona em parâmetro: function f({ a, b }).",
+      "O nome da variável deve ser igual ao da chave.",
+      "Chave inexistente vira undefined.",
+      "React usa esse padrão nas props.",
+    ],
+    concepts: ["objects", "destructuring", "functions"],
+    contrastExample: {
+      wrong: 'const usuario = { nome: "Ana" };\nconst { Nome } = usuario;\nconsole.log(Nome);  // undefined',
+      right: 'const usuario = { nome: "Ana" };\nconst { nome } = usuario;\nconsole.log(nome);  // Ana',
+      explanation:
+        "A desestruturação busca a propriedade pelo **nome exato**. `Nome` (maiúsculo) não existe no objeto, então vira `undefined` — sem erro, o que torna o bug silencioso.",
+    },
+    testCases: [
+      { call: 'apresentar({ nome: "Ana", idade: 25 })', expected: "Ana tem 25 anos" },
+      { call: 'apresentar({ nome: "Caio", idade: 30 })', expected: "Caio tem 30 anos" },
+    ],
+    quiz: {
+      question: "O que const { nome } = usuario faz?",
+      options: [
+        "Cria a variável nome com o valor de usuario.nome",
+        "Apaga a propriedade nome do objeto",
+        "Renomeia o objeto para nome",
+        "Cria uma cópia inteira do objeto",
+      ],
+      correctIndex: 0,
+      success: "Certo. A propriedade é extraída para uma variável de mesmo nome.",
+      error: "Ainda não. Desestruturar lê a propriedade e cria uma variável com ela.",
+      hint: "Compare com const nome = usuario.nome.",
+    },
+    practice: {
+      type: "predict-output",
+      title: "Preveja a saída",
+      prompt: "O que aparece no console?",
+      code: 'const curso = { titulo: "JS", nivel: "iniciante" };\nconst { nivel } = curso;\nconsole.log(nivel);',
+      options: ["iniciante", "JS", "nivel", "undefined"],
+      correctAnswer: "iniciante",
+      success: "Boa. A variável nivel recebeu o valor da chave nivel.",
+      error: "Ainda não. Veja qual chave foi extraída entre as chaves {}.",
+      hint: "A variável tem o mesmo nome da propriedade extraída.",
     },
   }),
   makeLesson({

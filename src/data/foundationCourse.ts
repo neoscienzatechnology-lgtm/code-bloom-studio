@@ -1305,6 +1305,11 @@ Confundir console.log com return. console.log mostra; return devolve um valor pa
       starterCode: "// Crie dobro(numero) e mostre dobro(5)\n",
       solution: "function dobro(numero) {\n  return numero * 2;\n}\n\nconsole.log(dobro(5));",
       expectedOutput: "10",
+      testCases: [
+        { call: "dobro(5)", expected: "10" },
+        { call: "dobro(7)", expected: "14" },
+        { call: "dobro(0)", expected: "0" },
+      ],
       hints: [
         "A função recebe numero.",
         "Use return numero * 2.",

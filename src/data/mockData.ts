@@ -491,6 +491,12 @@ Sem fim, o jogador não entende o objetivo.`,
 
 const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
   "11-1": {
+    contrastExample: {
+      wrong: "export default function App() {\n  return <div><p>Olá, mobile!</p></div>;  // div/p não existem no celular\n}",
+      right: "export default function App() {\n  return <View><Text>Olá, mobile!</Text></View>;\n}",
+      explanation:
+        "React Native **não renderiza HTML**: `div` e `p` não existem no celular e o app quebra. Use os componentes nativos `View` (container) e `Text` (texto) — texto solto fora de `Text` também é erro.",
+    },
     module: "React Native: primeiros componentes",
     level: "Intermediário",
     estimatedMinutes: 8,
@@ -519,6 +525,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["react-native", "components", "mobile-ui"],
   },
   "11-2": {
+    contrastExample: {
+      wrong: 'const styles = StyleSheet.create({\n  container: { "background-color": "#fff" }  // nome de CSS web\n});',
+      right: 'const styles = StyleSheet.create({\n  container: { backgroundColor: "#fff" }\n});',
+      explanation:
+        "Estilos no React Native são **objetos JavaScript**, não CSS: as propriedades usam camelCase (`backgroundColor`, `fontSize`). O nome com hífen não é aplicado.",
+    },
     module: "React Native: primeiros componentes",
     level: "Intermediário",
     estimatedMinutes: 9,
@@ -547,6 +559,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["react-native", "stylesheet", "mobile-layout"],
   },
   "11-3": {
+    contrastExample: {
+      wrong: 'let total = 0;\n<Button title="Somar" onPress={() => total = total + 1} />  // a tela não atualiza',
+      right: 'const [total, setTotal] = useState(0);\n<Button title="Somar" onPress={() => setTotal(total + 1)} />',
+      explanation:
+        "Mudar uma variável comum **não redesenha a tela**: o React nem fica sabendo. Só `setTotal` avisa o React de que o estado mudou e a interface precisa atualizar.",
+    },
     module: "React Native: interação",
     level: "Intermediário",
     estimatedMinutes: 10,
@@ -575,6 +593,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["react-native", "state", "events"],
   },
   "11-4": {
+    contrastExample: {
+      wrong: "<ScrollView>\n  {tarefas.map((t) => <Text>{t}</Text>)}  /* renderiza TUDO de uma vez */\n</ScrollView>",
+      right: "<FlatList data={tarefas} renderItem={({ item }) => <Text>{item}</Text>} />",
+      explanation:
+        "`map` dentro de ScrollView **renderiza todos os itens de uma vez** — com 1.000 itens o app trava. `FlatList` renderiza só o que está visível e recicla o resto.",
+    },
     module: "React Native: dados na tela",
     level: "Intermediário",
     estimatedMinutes: 10,
@@ -603,6 +627,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["react-native", "lists", "arrays"],
   },
   "11-5": {
+    contrastExample: {
+      wrong: 'let mostrarHome = true;\nlet mostrarDetalhes = false;\nlet mostrarPerfil = false;  // um booleano por tela vira bagunça',
+      right: 'const telas = ["Home", "Detalhes", "Perfil"];\nlet telaAtual = "Home";  // um único estado diz onde o usuário está',
+      explanation:
+        "Um booleano por tela permite estados impossíveis (duas telas \"visíveis\" ao mesmo tempo). Modelar **uma tela atual** com nomes claros é a base que bibliotecas como React Navigation organizam para você.",
+    },
     module: "React Native: fluxo de telas",
     level: "Intermediário",
     estimatedMinutes: 9,
@@ -630,6 +660,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["react-native", "navigation", "mobile-flow"],
   },
   "12-1": {
+    contrastExample: {
+      wrong: "ids = [101, 102, 103]\nvendas = [100, 80, 120]\nprint(sum(ids))  # somou a coluna errada: 306 não é o total de vendas",
+      right: "ids = [101, 102, 103]\nvendas = [100, 80, 120]\nprint(sum(vendas))  # 300",
+      explanation:
+        "Antes de calcular, entenda **o que cada coluna significa**. Somar a coluna errada produz um número que parece certo — e está completamente errado.",
+    },
     module: "Dados e IA: fundamentos",
     level: "Iniciante",
     estimatedMinutes: 8,
@@ -658,6 +694,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["data", "tables", "records"],
   },
   "12-2": {
+    contrastExample: {
+      wrong: 'nome = "  ANA  "\nprint(nome == "ana")  # False: espaços e maiúsculas atrapalham',
+      right: 'nome = "  ANA  "\nprint(nome.strip().lower() == "ana")  # True',
+      explanation:
+        "Dados reais vêm com espaços e capitalização misturada. Comparar **sem limpar** gera falsos negativos silenciosos — normalize com `strip()` e `lower()` antes de comparar.",
+    },
     module: "Dados e IA: fundamentos",
     level: "Iniciante",
     estimatedMinutes: 9,
@@ -686,6 +728,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["data-cleaning", "quality", "automation"],
   },
   "12-3": {
+    contrastExample: {
+      wrong: "notas = [8, 7, 10]\nmedia = (8 + 7 + 10) / 3  # números copiados na mão",
+      right: "notas = [8, 7, 10]\nmedia = sum(notas) / len(notas)",
+      explanation:
+        "Copiar os valores na mão quebra na primeira mudança da lista — e ninguém percebe. `sum()` e `len()` acompanham os dados reais, sempre.",
+    },
     module: "Dados e IA: análise simples",
     level: "Iniciante",
     estimatedMinutes: 10,
@@ -714,6 +762,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["metrics", "analysis", "reports"],
   },
   "12-4": {
+    contrastExample: {
+      wrong: 'prompt = "analise isso"  # sem objetivo, sem contexto, sem formato',
+      right: 'prompt = "Resuma as vendas de março em 3 tópicos, destacando a maior queda e a causa provável."',
+      explanation:
+        "Prompt vago devolve resposta vaga. Um prompt bom é uma **especificação**: diz o objetivo, o dado, o formato da resposta e o critério do que importa.",
+    },
     module: "Dados e IA: produtividade",
     level: "Iniciante",
     estimatedMinutes: 9,
@@ -742,6 +796,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["ai-productivity", "prompting", "communication"],
   },
   "12-5": {
+    contrastExample: {
+      wrong: 'print("Relatório: total 300, média 100")  # números digitados na mão, desatualizam',
+      right: 'total = sum(vendas)\nmedia = total / len(vendas)\nprint(f"Relatório: total {total}, média {media}")',
+      explanation:
+        "Relatório com números **digitados** fica errado na primeira atualização dos dados. Calcule a partir da fonte e injete com f-string — o relatório se mantém sozinho.",
+    },
     module: "Dados e IA: produtividade",
     level: "Iniciante",
     estimatedMinutes: 10,
@@ -769,6 +829,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["automation", "reports", "workflow"],
   },
   "13-1": {
+    contrastExample: {
+      wrong: "let pontos = 0;\nlet vidas = 3;\nlet fase = 1;\nlet tempo = 60;  // estado espalhado em variáveis soltas",
+      right: "const jogo = { pontos: 0, vidas: 3, fase: 1, tempo: 60 };\nconsole.log(jogo.vidas);",
+      explanation:
+        "Estado espalhado em variáveis soltas dificulta salvar, reiniciar ou exibir o jogo. Um **objeto** agrupa tudo que descreve o momento atual em um lugar só.",
+    },
     module: "Game Dev: regras e estado",
     level: "Iniciante",
     estimatedMinutes: 8,
@@ -797,6 +863,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["game-state", "variables", "rules"],
   },
   "13-2": {
+    contrastExample: {
+      wrong: "let pontos = 0;\nconst acertou = false;\npontos += 10;  // soma sempre, mesmo errando\nconsole.log(pontos);  // 10",
+      right: "let pontos = 0;\nconst acertou = false;\nif (acertou) {\n  pontos += 10;\n}\nconsole.log(pontos);  // 0",
+      explanation:
+        "Regra é **condição + consequência**. Sem o `if`, a consequência acontece sempre — o jogador ganha ponto até errando, e o jogo perde o sentido.",
+    },
     module: "Game Dev: regras e estado",
     level: "Iniciante",
     estimatedMinutes: 9,
@@ -825,6 +897,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["game-rules", "conditionals", "score"],
   },
   "13-3": {
+    contrastExample: {
+      wrong: 'console.log("rodada");\nconsole.log("rodada");\nconsole.log("rodada");  // e se forem 100 rodadas?',
+      right: 'for (let rodada = 1; rodada <= 3; rodada++) {\n  console.log("rodada");\n}',
+      explanation:
+        "Copiar e colar a atualização não escala: 100 rodadas viram 100 linhas. O **loop** é o coração do jogo — repete a atualização com controle e um único lugar para mudar.",
+    },
     module: "Game Dev: ciclo do jogo",
     level: "Iniciante",
     estimatedMinutes: 10,
@@ -853,6 +931,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["game-loop", "state-update", "rendering"],
   },
   "13-4": {
+    contrastExample: {
+      wrong: 'function pular() {\n  console.log("pulou");\n}\npular();  // pula sozinho, sem o jogador agir',
+      right: 'function pular() {\n  console.log("pulou");\n}\nbotao.addEventListener("click", pular);  // pula quando o jogador clica',
+      explanation:
+        "Chamar a função direto executa a ação **no carregamento**, sem o jogador. Evento conecta a ação ao comando: o jogo só reage quando o jogador age. Note: `pular` sem parênteses — você entrega a função, não o resultado dela.",
+    },
     module: "Game Dev: ciclo do jogo",
     level: "Iniciante",
     estimatedMinutes: 8,
@@ -881,6 +965,12 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
     concepts: ["events", "functions", "player-input"],
   },
   "13-5": {
+    contrastExample: {
+      wrong: 'const pontos = 90;\nif (pontos = 100) {\n  console.log("venceu");  // = atribui, não compara: "vence" com 90 pontos\n}',
+      right: 'const pontos = 90;\nif (pontos >= 100) {\n  console.log("venceu");\n}',
+      explanation:
+        "Um `=` sozinho **atribui** o valor (e o if vira sempre verdadeiro). A comparação usa `>=` ou `===` — a condição de vitória precisa testar o estado, não alterá-lo.",
+    },
     module: "Game Dev: ciclo do jogo",
     level: "Iniciante",
     estimatedMinutes: 9,
