@@ -172,7 +172,7 @@ const MascoteCapivara = ({ state, className, message, variant = "card" }: Mascot
           {...mascotMotion}
         >
           <img
-            src="/mascote-capivara.png"
+            src="/mascote-capivara.webp"
             alt="Mascote CapyCoder, uma capivara estudante de programação"
             className="absolute left-0 top-0 w-[300%] max-w-none select-none"
             draggable={false}
@@ -283,7 +283,7 @@ const MascoteCapivara = ({ state, className, message, variant = "card" }: Mascot
       <div className="relative z-20 mx-auto max-w-xs">
         <motion.div className="relative mx-auto aspect-[1/0.7] w-52 overflow-hidden sm:w-60" {...mascotMotion}>
           <img
-            src="/mascote-capivara.png"
+            src="/mascote-capivara.webp"
             alt="Mascote CapyCoder, uma capivara estudante de programação"
             className="absolute left-0 top-0 w-[300%] max-w-none select-none"
             draggable={false}
