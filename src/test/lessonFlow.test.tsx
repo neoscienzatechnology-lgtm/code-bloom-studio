@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useLessonStages, splitTheorySlides } from "@/hooks/useLessonStages";
+import { buildLessonCards, splitTheoryChunks, cardRequiresCompletion } from "@/utils/lessonCards";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { isInterstitialDue } from "@/lib/ads";
 import { ADS_CONFIG } from "@/config/ads";
@@ -77,91 +77,79 @@ describe("ad frequency cap", () => {
   });
 });
 
-describe("splitTheorySlides", () => {
-  it("splits theory into slides on ## headings", () => {
-    const slides = splitTheorySlides("intro\n## Parte 1\ntexto\n## Parte 2\nmais");
-    expect(slides).toHaveLength(3);
-    expect(slides[1]).toMatch(/^## Parte 1/);
+describe("lesson cards (micro-learning flow)", () => {
+  const fullLesson = {
+    id: "c-1",
+    title: "Teste",
+    description: "Imprima oi",
+    theory: "Explicação curta.\n\nExemplo prático:\nprint('oi')\n\nErro comum:\nEsquecer aspas.\n\nReferência rápida:\n- print exibe",
+    starterCode: "",
+    solution: "print('oi')",
+    expectedOutput: "oi",
+    hints: [],
+    xpReward: 10,
+    learningObjective: "Aprender a imprimir.",
+    analogy: "É como falar em voz alta.",
+    codeExample: "print('oi')",
+    commonMistake: "Esquecer aspas.",
+    contrastExample: { wrong: "print(oi)", right: "print('oi')", explanation: "Texto pede aspas." },
+    quiz: [{ question: "?", options: ["a", "b"], correctIndex: 0, explanation: "" }],
+    practiceActivities: [
+      {
+        id: "p1",
+        type: "fill-code" as const,
+        title: "t",
+        prompt: "p",
+        correctAnswer: "x",
+        successFeedback: "s",
+        errorFeedback: "e",
+        hint: "h",
+      },
+    ],
+  } as unknown as Lesson;
+
+  it("starts with confidence + objective and ends with code-intro", () => {
+    const kinds = buildLessonCards(fullLesson).map((card) => card.kind);
+    expect(kinds[0]).toBe("confidence");
+    expect(kinds[1]).toBe("objective");
+    expect(kinds[kinds.length - 1]).toBe("code-intro");
   });
 
-  it("returns the whole theory as one slide when there are no headings", () => {
-    expect(splitTheorySlides("apenas um bloco")).toEqual(["apenas um bloco"]);
-  });
-});
-
-describe("useLessonStages", () => {
-  const args = { theorySlides: ["a", "b"], hasQuiz: true, alreadyCompleted: false };
-
-  it("builds plan → theory ×2 → quiz → practice → challenge → code", () => {
-    const { result } = renderHook(() => useLessonStages(args));
-    expect(result.current.stages.map((s) => s.kind)).toEqual([
-      "plan",
-      "theory",
-      "theory",
-      "quiz",
-      "practice",
-      "challenge",
-      "code",
-    ]);
-    expect(result.current.currentStage.kind).toBe("plan");
+  it("includes one card per available pedagogical asset", () => {
+    const kinds = buildLessonCards(fullLesson).map((card) => card.kind);
+    for (const kind of ["theory", "analogy", "example", "mistake", "contrast", "quiz", "practice"]) {
+      expect(kinds).toContain(kind);
+    }
   });
 
-  it("omits the quiz stage when the lesson has no quiz", () => {
-    const { result } = renderHook(() =>
-      useLessonStages({ ...args, hasQuiz: false, theorySlides: ["a"] }),
-    );
-    expect(result.current.stages.map((s) => s.kind)).toEqual([
-      "plan",
-      "theory",
-      "practice",
-      "challenge",
-      "code",
-    ]);
+  it("omits cards for missing assets", () => {
+    const minimal = { ...fullLesson, analogy: undefined, contrastExample: undefined, quiz: undefined, practiceActivities: undefined } as unknown as Lesson;
+    const kinds = buildLessonCards(minimal).map((card) => card.kind);
+    expect(kinds).not.toContain("analogy");
+    expect(kinds).not.toContain("contrast");
+    expect(kinds).not.toContain("quiz");
+    expect(kinds).not.toContain("practice");
   });
 
-  it("blocks jumping to practice before the quiz is passed", () => {
-    const { result } = renderHook(() => useLessonStages(args));
-    act(() => result.current.goToStage("practice"));
-    expect(result.current.currentStage.kind).toBe("plan");
-    expect(result.current.stageNotice).toMatch(/acerte o quiz/i);
+  it("strips builder-generated sections from theory chunks", () => {
+    const chunks = splitTheoryChunks(fullLesson.theory);
+    expect(chunks.join(" ")).not.toMatch(/Exemplo prático|Erro comum|Referência rápida/);
+    expect(chunks[0]).toContain("Explicação curta.");
   });
 
-  it("holds the learner on the quiz stage until it is passed", () => {
-    const { result } = renderHook(() => useLessonStages(args));
-    act(() => result.current.goToStage("quiz"));
-    expect(result.current.currentStage.kind).toBe("quiz");
-
-    act(() => result.current.goToNextStage());
-    expect(result.current.currentStage.kind).toBe("quiz");
-    expect(result.current.stageNotice).toMatch(/acerte o quiz/i);
-
-    act(() => result.current.setQuizCompleted(true));
-    act(() => result.current.goToNextStage());
-    expect(result.current.currentStage.kind).toBe("practice");
+  it("splits long markdown sections into bite-sized chunks", () => {
+    const long = `# Título\n\n## Parte 1\n${"frase. ".repeat(80)}\n\n## Parte 2\ncurta`;
+    const chunks = splitTheoryChunks(long);
+    expect(chunks.length).toBeGreaterThan(2);
+    expect(chunks.every((chunk) => !chunk.startsWith("#"))).toBe(true);
   });
 
-  it("blocks the challenge until guided practice is complete", () => {
-    const { result } = renderHook(() => useLessonStages(args));
-    act(() => result.current.setQuizCompleted(true));
-    act(() => result.current.goToStage("challenge"));
-    expect(result.current.currentStage.kind).toBe("plan");
-
-    act(() => result.current.setPracticeCompleted(true));
-    act(() => result.current.goToStage("challenge"));
-    expect(result.current.currentStage.kind).toBe("challenge");
-  });
-
-  it("lets already-completed lessons skip every gate", () => {
-    const { result } = renderHook(() => useLessonStages({ ...args, alreadyCompleted: true }));
-    act(() => result.current.goToStage("code"));
-    expect(result.current.currentStage.kind).toBe("code");
-  });
-
-  it("always allows navigating backwards", () => {
-    const { result } = renderHook(() => useLessonStages({ ...args, alreadyCompleted: true }));
-    act(() => result.current.goToStage("code"));
-    act(() => result.current.goToStage("plan"));
-    expect(result.current.currentStage.kind).toBe("plan");
+  it("requires completion only on interactive cards", () => {
+    expect(cardRequiresCompletion("contrast")).toBe(true);
+    expect(cardRequiresCompletion("quiz")).toBe(true);
+    expect(cardRequiresCompletion("practice")).toBe(true);
+    expect(cardRequiresCompletion("theory")).toBe(false);
+    expect(cardRequiresCompletion("code-intro")).toBe(false);
   });
 });
 
