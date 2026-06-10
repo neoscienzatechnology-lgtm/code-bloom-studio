@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
+import { readJson, writeJson, removeKey, STORAGE_KEYS } from "@/lib/storage";
 
-const STORAGE_KEY = "code-bloom-studio-learning-profile";
+const STORAGE_KEY = STORAGE_KEYS.learningProfile;
 
 export type ExperienceLevel = "new" | "basic" | "intermediate";
 export type LearningGoal = "frontend" | "modern-web" | "backend" | "python-ai" | "mobile" | "games";
@@ -21,12 +22,8 @@ const DEFAULT_PROFILE: LearningProfile = {
 };
 
 function readProfile(): LearningProfile | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? { ...DEFAULT_PROFILE, ...JSON.parse(raw) } : null;
-  } catch {
-    return null;
-  }
+  const raw = readJson<Partial<LearningProfile> | null>(STORAGE_KEY, null);
+  return raw ? { ...DEFAULT_PROFILE, ...raw } : null;
 }
 
 function firstLessonFor(profile: LearningProfile): string {
@@ -45,12 +42,12 @@ export function useLearningProfile() {
   const [profile, setProfileState] = useState<LearningProfile | null>(readProfile);
 
   const setProfile = useCallback((next: LearningProfile) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    writeJson(STORAGE_KEY, next);
     setProfileState(next);
   }, []);
 
   const clearProfile = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
+    removeKey(STORAGE_KEY);
     setProfileState(null);
   }, []);
 

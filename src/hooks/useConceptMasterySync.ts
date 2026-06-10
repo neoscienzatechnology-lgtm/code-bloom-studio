@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import type { ConceptMastery, ConceptStatus } from "@/utils/conceptMastery";
+import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
 
 const CONCEPT_COLUMNS =
   "concept_id,label,mastery,status,total_lessons,completed_lessons,in_progress_lessons,failed_attempts,reason,review_course_id,review_lesson_id,review_lesson_title,updated_at";
@@ -23,7 +24,7 @@ interface ConceptMasteryRow {
   review_lesson_title: string | null;
 }
 
-const STORAGE_KEY = "code-bloom-studio-concept-mastery";
+const STORAGE_KEY = STORAGE_KEYS.conceptMastery;
 
 interface ConceptMasterySnapshot {
   concepts: ConceptMastery[];
@@ -47,17 +48,12 @@ function saveLocalSnapshot(concepts: ConceptMastery[]) {
     concepts,
     updatedAt: new Date().toISOString(),
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  writeJson(STORAGE_KEY, snapshot);
   return snapshot;
 }
 
 function readLocalSnapshot(): ConceptMasterySnapshot | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
+  return readJson<ConceptMasterySnapshot | null>(STORAGE_KEY, null);
 }
 
 function rowToConcept(row: {

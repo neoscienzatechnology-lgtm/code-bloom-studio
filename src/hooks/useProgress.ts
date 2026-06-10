@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildStudyStats, toLocalDateKey } from "@/utils/studyStats";
+import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
 
 export interface ProgressData {
   completedLessons: string[];
@@ -22,7 +23,7 @@ interface ProgressRow {
   xp_earned: number;
 }
 
-const STORAGE_KEY = "code-bloom-studio-progress";
+const STORAGE_KEY = STORAGE_KEYS.progress;
 export const ACTIVITY_COURSE_IDS = {
   dailyReview: "__daily_review__",
   conceptTraining: "__concept_training__",
@@ -129,17 +130,12 @@ export function resolveProgressCourseId(lessonId: string, courseId?: string): st
 }
 
 function loadLocalProgress(): ProgressData {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return normalizeProgress(JSON.parse(raw));
-  } catch {
-    return EMPTY_PROGRESS;
-  }
-  return EMPTY_PROGRESS;
+  const raw = readJson<Partial<ProgressData> | null>(STORAGE_KEY, null);
+  return raw ? normalizeProgress(raw) : EMPTY_PROGRESS;
 }
 
 function saveLocalProgress(data: ProgressData) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  writeJson(STORAGE_KEY, data);
 }
 
 function getProgressSnapshot(): ProgressData {

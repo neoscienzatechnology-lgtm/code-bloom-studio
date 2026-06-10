@@ -3,6 +3,8 @@
 // surfaces which lessons are "due" today. Does not replace the reactive
 // daily-review scoring — it feeds into it.
 
+import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
+
 export interface ReviewSchedule {
   lessonId: string;
   repetitions: number;
@@ -12,26 +14,15 @@ export interface ReviewSchedule {
   lastReviewed: string; // local yyyy-mm-dd
 }
 
-const STORAGE_KEY = "code-bloom-studio-review-schedule";
 const MIN_EASE = 1.3;
 const DEFAULT_EASE = 2.5;
 
 function loadAll(): Record<string, ReviewSchedule> {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as Record<string, ReviewSchedule>;
-  } catch {
-    return {};
-  }
-  return {};
+  return readJson<Record<string, ReviewSchedule>>(STORAGE_KEYS.reviewSchedule, {});
 }
 
 function saveAll(map: Record<string, ReviewSchedule>) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
-  } catch {
-    /* storage unavailable — schedule is best-effort */
-  }
+  writeJson(STORAGE_KEYS.reviewSchedule, map);
 }
 
 export function dateKey(date: Date): string {

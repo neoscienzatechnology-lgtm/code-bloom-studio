@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ErrorKind } from "@/utils/codeValidator";
+import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
 
-const STORAGE_KEY = "code-bloom-studio-attempts";
+const STORAGE_KEY = STORAGE_KEYS.attempts;
 
 interface AttemptStats {
   /** failed attempts per lessonId in current session */
@@ -28,25 +29,18 @@ const defaultStats: AttemptStats = {
 };
 
 function load(): AttemptStats {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      return {
-        ...defaultStats,
-        ...parsed,
-        errorHistory: { ...defaultStats.errorHistory, ...parsed.errorHistory },
-        conceptErrorHistory: { ...defaultStats.conceptErrorHistory, ...(parsed.conceptErrorHistory ?? {}) },
-      };
-    }
-  } catch {
-    return defaultStats;
-  }
-  return defaultStats;
+  const parsed = readJson<Partial<AttemptStats> | null>(STORAGE_KEY, null);
+  if (!parsed) return defaultStats;
+  return {
+    ...defaultStats,
+    ...parsed,
+    errorHistory: { ...defaultStats.errorHistory, ...parsed.errorHistory },
+    conceptErrorHistory: { ...defaultStats.conceptErrorHistory, ...(parsed.conceptErrorHistory ?? {}) },
+  };
 }
 
 function save(stats: AttemptStats) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+  writeJson(STORAGE_KEY, stats);
 }
 
 export function useAttemptTracker() {

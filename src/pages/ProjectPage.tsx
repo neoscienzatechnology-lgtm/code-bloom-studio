@@ -19,8 +19,9 @@ import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import { getProjectById } from "@/data/projects";
 import { validateCode } from "@/utils/codeValidator";
 import { useProgress } from "@/hooks/useProgress";
+import { readJson, writeJson, removeKey, STORAGE_KEYS } from "@/lib/storage";
 
-const STORAGE_KEY_PREFIX = "code-bloom-studio-project-";
+const STORAGE_KEY_PREFIX = STORAGE_KEYS.projectPrefix;
 
 interface ProjectState {
   currentStep: number;
@@ -29,17 +30,15 @@ interface ProjectState {
 }
 
 function loadState(projectId: string): ProjectState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_PREFIX + projectId);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    return { currentStep: 0, completedSteps: [], codeByStep: {} };
-  }
-  return { currentStep: 0, completedSteps: [], codeByStep: {} };
+  return readJson<ProjectState>(STORAGE_KEY_PREFIX + projectId, {
+    currentStep: 0,
+    completedSteps: [],
+    codeByStep: {},
+  });
 }
 
 function saveState(projectId: string, state: ProjectState) {
-  localStorage.setItem(STORAGE_KEY_PREFIX + projectId, JSON.stringify(state));
+  writeJson(STORAGE_KEY_PREFIX + projectId, state);
 }
 
 const ProjectPage = () => {
@@ -221,7 +220,7 @@ const ProjectPage = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  localStorage.removeItem(STORAGE_KEY_PREFIX + project.id);
+                  removeKey(STORAGE_KEY_PREFIX + project.id);
                   setState({
                     currentStep: 0,
                     completedSteps: [],

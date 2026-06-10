@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
+import { readString, writeString, STORAGE_KEYS } from "@/lib/storage";
 
-const CONFIDENCE_PREFIX = "capy-confidence-";
-const EXPLAIN_PREFIX = "capy-explain-";
+const CONFIDENCE_PREFIX = STORAGE_KEYS.confidencePrefix;
+const EXPLAIN_PREFIX = STORAGE_KEYS.selfExplainPrefix;
 
 const confidenceLabels = ["Nunca vi isso", "Inseguro", "Mais ou menos", "Confiante", "Posso ensinar"];
 
@@ -11,13 +12,13 @@ export const ConfidenceCheck = ({ lessonId }: { lessonId: string }) => {
   const [value, setValue] = useState<number | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey);
+    const saved = readString(storageKey);
     setValue(saved ? Number(saved) : null);
   }, [storageKey]);
 
   const pick = (n: number) => {
     setValue(n);
-    localStorage.setItem(storageKey, String(n));
+    writeString(storageKey, String(n));
   };
 
   return (
@@ -58,12 +59,12 @@ export const SelfExplain = ({ lessonId }: { lessonId: string }) => {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    setText(localStorage.getItem(storageKey) ?? "");
+    setText(readString(storageKey) ?? "");
     setSaved(false);
   }, [storageKey]);
 
   const save = () => {
-    localStorage.setItem(storageKey, text.trim());
+    writeString(storageKey, text.trim());
     setSaved(true);
   };
 

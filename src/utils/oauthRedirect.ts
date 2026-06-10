@@ -1,4 +1,6 @@
-const oauthRedirectKey = "capycode:oauth-redirect";
+import { readString, writeString, removeKey, STORAGE_KEYS } from "@/lib/storage";
+
+const oauthRedirectKey = STORAGE_KEYS.oauthRedirect;
 
 const publicAuthRoutes = new Set(["/login", "/cadastro", "/esqueci-senha", "/reset-password"]);
 
@@ -14,15 +16,15 @@ export function normalizeInternalRedirect(path: string | null | undefined, fallb
 }
 
 export function storeOAuthRedirect(path: string) {
-  window.localStorage.setItem(oauthRedirectKey, normalizeInternalRedirect(path));
+  writeString(oauthRedirectKey, normalizeInternalRedirect(path));
 }
 
 export function consumeOAuthRedirect(fallback = "/dashboard") {
-  const stored = window.localStorage.getItem(oauthRedirectKey);
-  window.localStorage.removeItem(oauthRedirectKey);
+  const stored = readString(oauthRedirectKey);
+  removeKey(oauthRedirectKey);
   return stored ? normalizeInternalRedirect(stored, fallback) : null;
 }
 
 export function clearOAuthRedirect() {
-  window.localStorage.removeItem(oauthRedirectKey);
+  removeKey(oauthRedirectKey);
 }

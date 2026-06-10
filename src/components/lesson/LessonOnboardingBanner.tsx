@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { readString, writeString, STORAGE_KEYS } from "@/lib/storage";
 
-const ONBOARDING_KEY = "code-bloom-studio_editor_onboarding_seen";
+const ONBOARDING_KEY = STORAGE_KEYS.editorOnboarding;
 
 const LessonOnboardingBanner = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
-    const seen = localStorage.getItem(ONBOARDING_KEY);
+    const seen = readString(ONBOARDING_KEY);
     if (!seen) setShowOnboarding(true);
   }, []);
 
   const dismissOnboarding = () => {
-    localStorage.setItem(ONBOARDING_KEY, "1");
+    writeString(ONBOARDING_KEY, "1");
     setShowOnboarding(false);
   };
 
