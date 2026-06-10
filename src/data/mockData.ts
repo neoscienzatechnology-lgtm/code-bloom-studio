@@ -269,6 +269,60 @@ Antes de configurar uma biblioteca, entenda nomes de telas e fluxo de usuário.`
         xpReward: 20,
         quiz: [makeQuiz("Para que serve navegação?", ["Trocar telas", "Criar banco", "Estilizar fonte", "Instalar Git"], 0, "Navegação controla o fluxo entre telas.")],
       }),
+      createLesson({
+        id: "11-6",
+        title: "Entrada de Texto com TextInput",
+        description: "Capture o que o usuário digita com um campo controlado.",
+        theory: `# TextInput
+
+Formulários mobile usam TextInput. Ele é um campo controlado: o valor vem do estado e cada tecla chama onChangeText.
+
+Esse par value + onChangeText mantém o estado como única fonte da verdade do campo.
+
+Login, busca e cadastro começam com esse padrão.`,
+        starterCode: 'import { TextInput } from "react-native";\n\n// Crie um campo controlado com value e onChangeText\n',
+        solution: 'import { TextInput } from "react-native";\n\n<TextInput value={nome} onChangeText={setNome} placeholder="Seu nome" />;',
+        expectedOutput: "onChangeText",
+        hints: ["Use value={nome}.", "Conecte onChangeText a setNome.", "placeholder mostra a dica do campo."],
+        xpReward: 20,
+        quiz: [makeQuiz("Qual prop recebe o texto digitado a cada tecla?", ["onChangeText", "onClick", "innerHTML", "href"], 0, "onChangeText entrega o novo texto para o estado a cada alteração.")],
+      }),
+      createLesson({
+        id: "11-7",
+        title: "Toques com Pressable",
+        description: "Crie áreas tocáveis com feedback visual de pressionado.",
+        theory: `# Pressable
+
+Button resolve casos simples, mas Pressable dá controle total: qualquer conteúdo vira área de toque, e o estilo pode reagir enquanto o dedo pressiona.
+
+A prop onPress dispara a ação; a função de estilo recebe pressed para dar feedback visual.
+
+Feedback de toque é o que faz o app parecer responsivo.`,
+        starterCode: 'import { Pressable, Text } from "react-native";\n\n// Crie um Pressable com um Text dentro\n',
+        solution: 'import { Pressable, Text } from "react-native";\n\n<Pressable onPress={() => console.log("toque")}>\n  <Text>Tocar aqui</Text>\n</Pressable>;',
+        expectedOutput: "Pressable",
+        hints: ["Envolva o Text com Pressable.", "Use onPress para a ação.", "O conteúdo fica entre as tags."],
+        xpReward: 20,
+        quiz: [makeQuiz("Qual a vantagem do Pressable sobre o Button?", ["Qualquer conteúdo vira área de toque com feedback", "Ele cria banco de dados", "Ele dispensa onPress", "Ele só funciona na web"], 0, "Pressable envolve qualquer componente e permite estilo reativo ao toque.")],
+      }),
+      createLesson({
+        id: "11-8",
+        title: "Imagens na Tela",
+        description: "Exiba imagens por URL com dimensões definidas.",
+        theory: `# Image
+
+O componente Image exibe imagens locais ou por URL. Para imagens remotas, o source recebe um objeto com uri.
+
+Diferente da web, imagem remota precisa de width e height: sem dimensões, o React Native renderiza um espaço de tamanho zero.
+
+Avatares, logos e capas seguem esse padrão.`,
+        starterCode: 'import { Image } from "react-native";\n\n// Mostre uma imagem por URL com largura e altura\n',
+        solution: 'import { Image } from "react-native";\n\n<Image source={{ uri: "https://exemplo.com/capy.png" }} style={{ width: 120, height: 120 }} />;',
+        expectedOutput: "source",
+        hints: ["source recebe { uri: ... }.", "Defina width e height no style.", "São duas chaves: source={{ uri }}."],
+        xpReward: 20,
+        quiz: [makeQuiz("Por que imagem remota precisa de width e height?", ["Sem dimensões o React Native renderiza tamanho zero", "Para baixar mais rápido", "Para virar texto", "Porque a web exige"], 0, "O layout nativo não conhece o tamanho da imagem remota antes de baixar; sem dimensões, nada aparece.")],
+      }),
     ],
   };
 }
@@ -377,6 +431,60 @@ O importante é deixar cada etapa verificável.`,
         xpReward: 20,
         quiz: [makeQuiz("Por que automatizar relatórios?", ["Para repetir com consistência", "Para evitar dados", "Para esconder cálculos", "Para remover contexto"], 0, "Automação torna tarefas repetíveis e consistentes.")],
       }),
+      createLesson({
+        id: "12-6",
+        title: "Filtrando Registros",
+        description: "Selecione só os valores que atendem a uma regra.",
+        theory: `# Filtros
+
+Análise raramente usa todos os dados: você quer as vendas altas, os alunos aprovados, os erros do mês.
+
+Em Python, a list comprehension filtra em uma linha: [v for v in vendas if v > 100] lê como "cada v de vendas, se v for maior que 100".
+
+Filtrar antes de calcular evita que valores fora do recorte distorçam a métrica.`,
+        starterCode: "vendas = [80, 120, 150, 90]\n# selecione as vendas acima de 100\n",
+        solution: "vendas = [80, 120, 150, 90]\naltas = [v for v in vendas if v > 100]\nprint(altas)",
+        expectedOutput: "[120, 150]",
+        hints: ["Use [v for v in vendas].", "Adicione a condição if v > 100.", "Guarde em altas e mostre."],
+        xpReward: 20,
+        quiz: [makeQuiz("O que [v for v in vendas if v > 100] produz?", ["Uma nova lista só com os valores que passam na regra", "A soma das vendas", "Um erro de sintaxe", "A lista original alterada"], 0, "A comprehension cria uma lista nova com os itens que satisfazem a condição.")],
+      }),
+      createLesson({
+        id: "12-7",
+        title: "Agrupando com Dicionários",
+        description: "Conte quantas vezes cada categoria aparece nos dados.",
+        theory: `# Agrupamento
+
+Perguntas como "quantas vendas por categoria?" pedem agrupamento: percorrer os registros somando em um dicionário.
+
+O método get(chave, 0) devolve o valor atual ou zero se a chave ainda não existe — o padrão clássico de contador.
+
+É a versão em Python do GROUP BY do SQL.`,
+        starterCode: 'categorias = ["eletronicos", "livros", "eletronicos"]\n# conte quantas vezes eletronicos aparece\n',
+        solution: 'categorias = ["eletronicos", "livros", "eletronicos"]\ncontagem = {}\nfor c in categorias:\n    contagem[c] = contagem.get(c, 0) + 1\nprint(f"eletronicos: {contagem[\'eletronicos\']}")',
+        expectedOutput: "eletronicos: 2",
+        hints: ["Comece com contagem = {}.", "Use contagem.get(c, 0) + 1.", "Mostre a chave eletronicos no final."],
+        xpReward: 25,
+        quiz: [makeQuiz("Para que serve o get(c, 0) no contador?", ["Devolver 0 quando a chave ainda não existe", "Apagar a chave", "Ordenar o dicionário", "Converter para texto"], 0, "get com valor padrão evita erro na primeira vez que a categoria aparece.")],
+      }),
+      createLesson({
+        id: "12-8",
+        title: "Lendo Linhas de CSV",
+        description: "Separe os campos de uma linha de dados com split.",
+        theory: `# CSV
+
+Muitos dados chegam como texto separado por vírgulas: cada linha é um registro, cada vírgula separa um campo.
+
+O método split(",") corta a linha em uma lista de campos, que você acessa por posição.
+
+Esse é o primeiro passo de qualquer importação: transformar texto bruto em estrutura.`,
+        starterCode: 'linha = "Ana,28,SP"\n# separe os campos e mostre o nome\n',
+        solution: 'linha = "Ana,28,SP"\ncampos = linha.split(",")\nprint(campos[0])',
+        expectedOutput: "Ana",
+        hints: ['Use linha.split(",").', "O resultado é uma lista.", "O nome está na posição 0."],
+        xpReward: 20,
+        quiz: [makeQuiz('O que linha.split(",") devolve?', ["Uma lista com os campos da linha", "Um número", "A linha sem alterações", "Um arquivo novo"], 0, "split corta o texto em cada vírgula e devolve a lista de pedaços.")],
+      }),
     ],
   };
 }
@@ -484,6 +592,60 @@ Sem fim, o jogador não entende o objetivo.`,
         hints: ["Use if (pontos >= 100).", "Mostre venceu.", "A condição precisa ser verdadeira."],
         xpReward: 20,
         quiz: [makeQuiz("Para que serve condição de vitória?", ["Definir objetivo concluído", "Mudar fonte", "Criar SQL", "Instalar pacote"], 0, "Ela define quando o jogador alcançou o objetivo.")],
+      }),
+      createLesson({
+        id: "13-6",
+        title: "Vidas e Derrota",
+        description: "Implemente a perda de vida e o fim de jogo.",
+        theory: `# Derrota
+
+Vitória sem risco não tem graça. Vidas modelam o erro: cada falha desconta uma, e zero vidas encerra o jogo.
+
+A ordem importa: primeiro atualize o estado (desconte a vida), depois verifique a regra de fim.
+
+Esse mesmo padrão controla tentativas em quizzes e limites em formulários.`,
+        starterCode: "let vidas = 1;\n// desconte uma vida e mostre fim de jogo quando chegar a 0\n",
+        solution: 'let vidas = 1;\nvidas = vidas - 1;\nif (vidas === 0) {\n  console.log("fim de jogo");\n}',
+        expectedOutput: "fim de jogo",
+        hints: ["Desconte com vidas = vidas - 1.", "Depois verifique if (vidas === 0).", "Mostre fim de jogo dentro do if."],
+        xpReward: 20,
+        quiz: [makeQuiz("Qual a ordem correta ao perder vida?", ["Atualizar o estado e depois verificar o fim", "Verificar o fim e nunca atualizar", "Mostrar mensagem antes de descontar", "Reiniciar o jogo sempre"], 0, "Primeiro o estado muda, depois a regra de fim olha o estado novo.")],
+      }),
+      createLesson({
+        id: "13-7",
+        title: "Fases e Progressão",
+        description: "Suba de fase quando a pontuação atingir o limite.",
+        theory: `# Fases
+
+Progressão mantém o jogador motivado: ao atingir uma meta, o jogo sobe de fase e aumenta o desafio.
+
+A regra é uma comparação com limite: se pontos chegarem ao alvo, fase aumenta. O limite da próxima fase costuma crescer.
+
+Níveis, ligas e conquistas usam exatamente essa mecânica.`,
+        starterCode: "let fase = 1;\nconst pontos = 30;\n// suba para a fase 2 quando pontos chegarem a 30\n",
+        solution: 'let fase = 1;\nconst pontos = 30;\nif (pontos >= 30) {\n  fase = fase + 1;\n}\nconsole.log("fase " + fase);',
+        expectedOutput: "fase 2",
+        hints: ["Compare com pontos >= 30.", "Aumente com fase = fase + 1.", "Mostre a fase no final."],
+        xpReward: 20,
+        quiz: [makeQuiz("O que dispara a subida de fase?", ["A pontuação atingir o limite definido", "Qualquer clique", "O tempo parar", "Uma variável nova"], 0, "A progressão compara o estado atual com a meta da fase.")],
+      }),
+      createLesson({
+        id: "13-8",
+        title: "Placar e Recorde",
+        description: "Compare a pontuação da partida com o recorde salvo.",
+        theory: `# Recorde
+
+O recorde dá motivo para jogar de novo: ao fim da partida, compare os pontos com o melhor resultado anterior.
+
+Se a pontuação atual for maior, ela vira o novo recorde — e o jogador merece saber disso na hora.
+
+Em um app real, o recorde seria salvo no armazenamento para sobreviver ao fechamento do jogo.`,
+        starterCode: "const recorde = 80;\nconst pontos = 95;\n// mostre novo recorde se pontos superarem o recorde\n",
+        solution: 'const recorde = 80;\nconst pontos = 95;\nif (pontos > recorde) {\n  console.log("novo recorde");\n}',
+        expectedOutput: "novo recorde",
+        hints: ["Compare pontos > recorde.", "Mostre a mensagem dentro do if.", "Maior que, não maior ou igual."],
+        xpReward: 25,
+        quiz: [makeQuiz("Quando a partida vira novo recorde?", ["Quando os pontos superam o melhor resultado anterior", "Quando o jogo abre", "Quando há empate sempre", "Quando as vidas acabam"], 0, "Recorde é comparação: só substitui quando o resultado atual é maior.")],
       }),
     ],
   };
@@ -656,8 +818,110 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       },
     ],
     summary: "Navegação dá direção ao app e ajuda o aluno a prever onde cada ação leva.",
-    nextStep: "Combine componentes, estilos, estado, listas e navegação em um app simples.",
+    nextStep: "Agora capture o que o usuário digita com TextInput.",
     concepts: ["react-native", "navigation", "mobile-flow"],
+  },
+  "11-6": {
+    contrastExample: {
+      wrong: '<TextInput placeholder="Seu nome" />  // o texto digitado não vai para lugar nenhum',
+      right: "<TextInput value={nome} onChangeText={setNome} placeholder=\"Seu nome\" />",
+      explanation:
+        "Sem `value` + `onChangeText`, o que o usuário digita **não entra no estado** — o app não consegue validar nem salvar. O par controlado mantém o estado como única fonte da verdade.",
+    },
+    module: "React Native: formulários",
+    level: "Intermediário",
+    estimatedMinutes: 9,
+    learningObjective: "Capturar texto digitado com um campo controlado por estado.",
+    analogy: "TextInput controlado é um interfone: cada tecla avisa o estado, e o estado decide o que aparece no campo.",
+    example: "Uma tela de login usa dois TextInput controlados: e-mail e senha.",
+    codeExample: "<TextInput value={nome} onChangeText={setNome} />",
+    tryItPrompt: "Adicione um segundo TextInput para sobrenome com seu próprio estado.",
+    commonMistake: "Usar onChange como na web. No React Native, a prop que entrega o texto direto é onChangeText.",
+    reference: ["TextInput é o campo de texto nativo.", "value conecta o campo ao estado.", "onChangeText recebe o novo texto a cada tecla.", "placeholder mostra a dica antes de digitar."],
+    practiceActivities: [
+      {
+        id: "11-6-fill-input",
+        type: "fill-code",
+        title: "Complete o campo controlado",
+        prompt: "Complete a prop que recebe o texto digitado.",
+        code: "<TextInput value={nome} ____={setNome} />",
+        correctAnswer: "onChangeText",
+        successFeedback: "Boa. onChangeText entrega cada alteração para o estado.",
+        errorFeedback: "Quase. Na web seria onChange; no React Native é onChangeText.",
+        hint: "O nome da prop termina com Text.",
+      },
+    ],
+    summary: "Campos controlados mantêm o estado como única fonte da verdade do formulário.",
+    nextStep: "Agora crie áreas tocáveis flexíveis com Pressable.",
+    concepts: ["react-native", "forms", "state"],
+  },
+  "11-7": {
+    contrastExample: {
+      wrong: '<Pressable onPress={pular()}>  /* executa já na renderização */\n  <Text>Pular</Text>\n</Pressable>',
+      right: '<Pressable onPress={pular}>\n  <Text>Pular</Text>\n</Pressable>',
+      explanation:
+        "`pular()` com parênteses **executa na hora** em que a tela renderiza, não no toque. Passe a **referência** (`pular`, sem parênteses) ou uma arrow `() => pular()`.",
+    },
+    module: "React Native: interação",
+    level: "Intermediário",
+    estimatedMinutes: 9,
+    learningObjective: "Criar áreas de toque com feedback visual usando Pressable.",
+    analogy: "Pressable é um adesivo sensível ao toque: cole sobre qualquer conteúdo e ele passa a reagir ao dedo.",
+    example: "Um card de curso inteiro pode ser tocável envolvendo o conteúdo com Pressable.",
+    codeExample: '<Pressable onPress={() => abrir()}><Text>Abrir</Text></Pressable>',
+    tryItPrompt: "Envolva um card com Pressable e mude a opacidade enquanto pressionado.",
+    commonMistake: "Chamar a função com parênteses dentro de onPress, executando a ação na renderização em vez de no toque.",
+    reference: ["Pressable envolve qualquer conteúdo.", "onPress dispara a ação no toque.", "O estilo pode reagir ao estado pressed.", "Button é o atalho simples; Pressable é o flexível."],
+    practiceActivities: [
+      {
+        id: "11-7-identify-press",
+        type: "identify-error",
+        title: "Ache o disparo errado",
+        prompt: "Qual trecho faz a ação executar na renderização, não no toque?",
+        code: "<Pressable onPress={salvar()}><Text>Salvar</Text></Pressable>",
+        correctAnswer: "salvar()",
+        successFeedback: "Isso. Os parênteses executam a função imediatamente.",
+        errorFeedback: "Ainda não. Procure a chamada que acontece cedo demais.",
+        hint: "Compare salvar com salvar().",
+      },
+    ],
+    summary: "Pressable transforma qualquer componente em área de toque com feedback.",
+    nextStep: "Agora exiba imagens com dimensões corretas.",
+    concepts: ["react-native", "events", "mobile-ui"],
+  },
+  "11-8": {
+    contrastExample: {
+      wrong: '<Image source={{ uri: "https://exemplo.com/capy.png" }} />  /* nada aparece */',
+      right: '<Image source={{ uri: "https://exemplo.com/capy.png" }} style={{ width: 120, height: 120 }} />',
+      explanation:
+        "Imagem remota **sem width/height renderiza com tamanho zero** — o bug clássico do \"cadê minha imagem?\". O layout nativo não conhece o tamanho antes de baixar; declare as dimensões.",
+    },
+    module: "React Native: mídia",
+    level: "Intermediário",
+    estimatedMinutes: 8,
+    learningObjective: "Exibir imagens remotas com source e dimensões explícitas.",
+    analogy: "Imagem remota é um quadro encomendado: reserve o espaço na parede antes de ele chegar, senão não há onde pendurar.",
+    example: "Um avatar de perfil usa uri da foto e dimensões fixas com borderRadius.",
+    codeExample: '<Image source={{ uri: url }} style={{ width: 96, height: 96 }} />',
+    tryItPrompt: "Transforme a imagem em avatar redondo com borderRadius igual à metade da largura.",
+    commonMistake: "Passar a URL como texto direto em source. Imagens remotas exigem o objeto { uri: url }.",
+    reference: ["Image exibe imagens locais e remotas.", "source={{ uri }} carrega por URL.", "Imagem remota precisa de width e height.", "borderRadius arredonda o quadro."],
+    practiceActivities: [
+      {
+        id: "11-8-fill-image",
+        type: "fill-code",
+        title: "Complete a origem",
+        prompt: "Complete a chave que carrega a imagem por URL.",
+        code: '<Image source={{ ____: "https://exemplo.com/capy.png" }} style={{ width: 96, height: 96 }} />',
+        correctAnswer: "uri",
+        successFeedback: "Boa. O objeto source usa a chave uri para imagens remotas.",
+        errorFeedback: "Quase. A chave do endereço remoto tem três letras.",
+        hint: "É a sigla de identificador uniforme de recurso.",
+      },
+    ],
+    summary: "Imagens remotas pedem origem em { uri } e dimensões explícitas.",
+    nextStep: "Combine componentes, estilos, estado, listas e navegação em um app simples.",
+    concepts: ["react-native", "images", "mobile-ui"],
   },
   "12-1": {
     contrastExample: {
@@ -825,8 +1089,112 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       },
     ],
     summary: "Automação útil começa pequena e clara, resolvendo uma tarefa repetitiva real.",
-    nextStep: "Combine métricas, prompt e relatório em um mini projeto.",
+    nextStep: "Agora filtre só os registros que importam para a análise.",
     concepts: ["automation", "reports", "workflow"],
+  },
+  "12-6": {
+    contrastExample: {
+      wrong: "vendas = [80, 120, 150, 90]\nmedia = sum(vendas) / len(vendas)  # a média mistura tudo, inclusive o que não interessa",
+      right: "vendas = [80, 120, 150, 90]\naltas = [v for v in vendas if v > 100]\nmedia_altas = sum(altas) / len(altas)",
+      explanation:
+        "Calcular sobre **todos** os dados quando a pergunta é sobre um recorte distorce a resposta. Filtre primeiro, calcule depois.",
+    },
+    module: "Dados: preparação",
+    level: "Intermediário",
+    estimatedMinutes: 9,
+    learningObjective: "Filtrar registros com list comprehension antes de calcular métricas.",
+    analogy: "Filtrar é peneirar: primeiro separa o que interessa, depois pesa só o que ficou na peneira.",
+    example: "Para analisar vendas altas, primeiro selecione as acima de 100, depois calcule a média delas.",
+    codeExample: "altas = [v for v in vendas if v > 100]",
+    tryItPrompt: "Filtre as vendas abaixo de 100 e calcule quantas são com len().",
+    commonMistake: "Esquecer o if dentro da comprehension e copiar a lista inteira achando que filtrou.",
+    reference: ["[v for v in lista] percorre a lista.", "if dentro da comprehension filtra.", "O resultado é uma lista nova.", "Filtre antes de calcular métricas."],
+    practiceActivities: [
+      {
+        id: "12-6-predict-filter",
+        type: "predict-output",
+        title: "Preveja o filtro",
+        prompt: "O que aparece?",
+        code: "notas = [5, 8, 9, 4]\naprovadas = [n for n in notas if n >= 7]\nprint(aprovadas)",
+        options: ["[8, 9]", "[5, 4]", "[5, 8, 9, 4]", "2"],
+        correctAnswer: "[8, 9]",
+        successFeedback: "Certo. Só 8 e 9 passam na regra n >= 7.",
+        errorFeedback: "Ainda não. Aplique a condição a cada nota.",
+        hint: "Quais notas são maiores ou iguais a 7?",
+      },
+    ],
+    summary: "Você aprendeu a recortar os dados antes de calcular sobre eles.",
+    nextStep: "Agora agrupe os registros por categoria.",
+    concepts: ["lists", "filtering", "data-analysis"],
+  },
+  "12-7": {
+    contrastExample: {
+      wrong: 'contagem = {}\nfor c in categorias:\n    contagem[c] = contagem[c] + 1  # KeyError na primeira vez',
+      right: 'contagem = {}\nfor c in categorias:\n    contagem[c] = contagem.get(c, 0) + 1',
+      explanation:
+        "Na primeira ocorrência da categoria, a chave **ainda não existe** e `contagem[c]` quebra com KeyError. `get(c, 0)` devolve zero quando a chave é nova.",
+    },
+    module: "Dados: análise",
+    level: "Intermediário",
+    estimatedMinutes: 10,
+    learningObjective: "Agrupar e contar ocorrências por categoria usando dicionário.",
+    analogy: "Agrupar é separar moedas em potes etiquetados: cada moeda nova vai para o pote da sua categoria, e no fim você conta cada pote.",
+    example: "Contar vendas por categoria responde qual segmento mais vende.",
+    codeExample: "contagem[c] = contagem.get(c, 0) + 1",
+    tryItPrompt: "Some valores por categoria em vez de contar: total de vendas por segmento.",
+    commonMistake: "Acessar a chave antes de ela existir. Use get(chave, 0) para inicializar contadores com segurança.",
+    reference: ["Dicionário agrupa por chave.", "get(chave, 0) evita KeyError.", "O loop alimenta o agrupamento.", "É o GROUP BY do Python puro."],
+    practiceActivities: [
+      {
+        id: "12-7-fill-counter",
+        type: "fill-code",
+        title: "Complete o contador",
+        prompt: "Complete o método que devolve 0 para chaves novas.",
+        code: "contagem[c] = contagem.____(c, 0) + 1",
+        correctAnswer: "get",
+        successFeedback: "Boa. get com valor padrão é o coração do contador.",
+        errorFeedback: "Quase. É o método de leitura segura do dicionário.",
+        hint: "Três letras, lê sem quebrar.",
+      },
+    ],
+    summary: "Dicionários transformam listas de eventos em resumos por categoria.",
+    nextStep: "Agora leia dados que chegam como texto separado por vírgulas.",
+    concepts: ["dicts", "grouping", "data-analysis"],
+  },
+  "12-8": {
+    contrastExample: {
+      wrong: 'linha = "Ana,28,SP"\nprint(linha[0])  # imprime só a letra A',
+      right: 'linha = "Ana,28,SP"\ncampos = linha.split(",")\nprint(campos[0])  # imprime Ana',
+      explanation:
+        "Indexar a **string** pega um caractere, não um campo. `split(\",\")` corta a linha em campos — aí sim a posição 0 é o nome inteiro.",
+    },
+    module: "Dados: importação",
+    level: "Intermediário",
+    estimatedMinutes: 9,
+    learningObjective: "Transformar uma linha CSV em lista de campos com split.",
+    analogy: "Uma linha CSV é um trem: a vírgula separa os vagões, e split desengata cada vagão para você acessar a carga.",
+    example: "Cada linha de um relatório exportado vira uma lista de campos prontos para análise.",
+    codeExample: 'campos = linha.split(",")',
+    tryItPrompt: "Separe a linha e converta a idade para número com int(campos[1]).",
+    commonMistake: "Esquecer que os campos separados continuam sendo texto. Converta números com int() ou float() antes de calcular.",
+    reference: ['split(",") corta a linha em campos.', "O resultado é uma lista de strings.", "Acesse campos por posição.", "Converta números com int() ou float()."],
+    practiceActivities: [
+      {
+        id: "12-8-predict-split",
+        type: "predict-output",
+        title: "Preveja o campo",
+        prompt: "O que aparece?",
+        code: 'linha = "Mouse,80,eletronicos"\ncampos = linha.split(",")\nprint(campos[2])',
+        options: ["eletronicos", "Mouse", "80", "linha"],
+        correctAnswer: "eletronicos",
+        successFeedback: "Certo. A posição 2 guarda o terceiro campo.",
+        errorFeedback: "Ainda não. Conte as posições a partir do zero.",
+        hint: "0 é Mouse, 1 é 80...",
+      },
+    ],
+    summary: "split transforma texto bruto em estrutura — o primeiro passo de toda importação.",
+    nextStep: "Combine métricas, prompt e relatório em um mini projeto.",
+    concepts: ["strings", "csv", "data-import"],
   },
   "13-1": {
     contrastExample: {
@@ -995,8 +1363,111 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       },
     ],
     summary: "Um jogo simples fica completo quando estado, regras, eventos e fim conversam entre si.",
-    nextStep: "Use esses blocos para criar um protótipo jogável pequeno.",
+    nextStep: "Agora modele o outro lado: perda de vidas e derrota.",
     concepts: ["win-condition", "conditionals", "game-design"],
+  },
+  "13-6": {
+    contrastExample: {
+      wrong: 'let vidas = 1;\nif (vidas === 0) {\n  console.log("fim de jogo");  // verificou antes de descontar: nunca dispara\n}\nvidas = vidas - 1;',
+      right: 'let vidas = 1;\nvidas = vidas - 1;\nif (vidas === 0) {\n  console.log("fim de jogo");\n}',
+      explanation:
+        "A **ordem** importa: verificando antes de descontar, a regra olha o estado antigo e o fim de jogo nunca dispara. Atualize o estado primeiro, verifique depois.",
+    },
+    module: "Jogos: risco e derrota",
+    level: "Iniciante",
+    estimatedMinutes: 8,
+    learningObjective: "Implementar perda de vida e detecção de fim de jogo na ordem correta.",
+    analogy: "É como descontar um crédito do cartão do fliperama: primeiro a máquina cobra, depois confere se ainda há saldo para continuar.",
+    example: "O jogador erra a pergunta, perde uma vida e o jogo confere se acabou.",
+    codeExample: 'vidas = vidas - 1;\nif (vidas === 0) { console.log("fim de jogo"); }',
+    tryItPrompt: "Comece com 3 vidas e simule três erros seguidos até o fim de jogo.",
+    commonMistake: "Verificar o fim de jogo antes de descontar a vida, lendo o estado desatualizado.",
+    reference: ["Desconte a vida antes de verificar o fim.", "vidas === 0 detecta a derrota.", "Zero vidas encerra a rodada.", "O mesmo padrão limita tentativas em quizzes."],
+    practiceActivities: [
+      {
+        id: "13-6-order-steps",
+        type: "order-steps",
+        title: "Ordene a perda de vida",
+        prompt: "Coloque os passos na ordem correta.",
+        options: ["Jogador erra", "Descontar uma vida", "Verificar se vidas chegou a 0", "Mostrar fim de jogo"],
+        correctAnswer: ["Jogador erra", "Descontar uma vida", "Verificar se vidas chegou a 0", "Mostrar fim de jogo"],
+        successFeedback: "Isso. Estado primeiro, verificação depois.",
+        errorFeedback: "Quase. A verificação precisa olhar o estado já atualizado.",
+        hint: "O desconto vem antes da conferência.",
+      },
+    ],
+    summary: "Derrota é estado + ordem: desconta, depois verifica.",
+    nextStep: "Agora recompense o progresso com fases.",
+    concepts: ["game-state", "conditionals", "sequencing"],
+  },
+  "13-7": {
+    contrastExample: {
+      wrong: 'if (pontos >= 30) {\n  fase = 2;  // fixo: da fase 2 ela nunca mais sobe\n}',
+      right: 'if (pontos >= 30) {\n  fase = fase + 1;  // sobe a partir da fase atual\n}',
+      explanation:
+        "Atribuir um número **fixo** trava a progressão: da fase 2 em diante a regra não muda mais nada. Incrementar a partir do estado atual funciona em qualquer fase.",
+    },
+    module: "Jogos: progressão",
+    level: "Iniciante",
+    estimatedMinutes: 8,
+    learningObjective: "Subir de fase quando a pontuação atinge a meta.",
+    analogy: "Fases são degraus de uma escada: a meta de pontos é a altura do degrau, e cada subida parte de onde você já está.",
+    example: "Com 30 pontos o jogador passa da fase 1 para a 2; a próxima meta fica mais alta.",
+    codeExample: "if (pontos >= meta) { fase = fase + 1; }",
+    tryItPrompt: "Crie uma meta que dobra a cada fase: 30, 60, 120.",
+    commonMistake: "Gravar a fase com número fixo em vez de incrementar a partir da fase atual.",
+    reference: ["Compare pontos com a meta da fase.", "Incremente a fase a partir da atual.", "Metas crescentes mantêm o desafio.", "Ligas e níveis usam essa mecânica."],
+    practiceActivities: [
+      {
+        id: "13-7-predict-fase",
+        type: "predict-output",
+        title: "Preveja a fase",
+        prompt: "O que aparece?",
+        code: 'let fase = 2;\nconst pontos = 50;\nif (pontos >= 30) {\n  fase = fase + 1;\n}\nconsole.log("fase " + fase);',
+        options: ["fase 3", "fase 2", "fase 1", "fase 30"],
+        correctAnswer: "fase 3",
+        successFeedback: "Certo. A fase sobe a partir da atual: 2 vira 3.",
+        errorFeedback: "Ainda não. A regra incrementa a fase atual, não volta para um número fixo.",
+        hint: "fase = fase + 1 partindo de 2.",
+      },
+    ],
+    summary: "Progressão é comparação com meta + incremento do estado atual.",
+    nextStep: "Feche o ciclo comparando a partida com o recorde.",
+    concepts: ["game-state", "progression", "conditionals"],
+  },
+  "13-8": {
+    contrastExample: {
+      wrong: 'if (pontos >= recorde) {\n  console.log("novo recorde");  // empate não é recorde novo\n}',
+      right: 'if (pontos > recorde) {\n  console.log("novo recorde");\n}',
+      explanation:
+        "Empatar com o recorde **não** é superá-lo: com `>=` o jogo anuncia recorde novo em todo empate. Regras de borda (maior vs maior-ou-igual) merecem um teste mental com o caso exato.",
+    },
+    module: "Jogos: pontuação",
+    level: "Iniciante",
+    estimatedMinutes: 8,
+    learningObjective: "Comparar a pontuação da partida com o recorde e anunciar superação.",
+    analogy: "Recorde é a marca no batente da porta: só vale riscar uma nova quando a altura realmente passa da anterior.",
+    example: "Fim de partida: 95 pontos contra recorde de 80 anuncia novo recorde.",
+    codeExample: 'if (pontos > recorde) { console.log("novo recorde"); }',
+    tryItPrompt: "Guarde o novo recorde em uma variável quando ele for superado.",
+    commonMistake: "Usar >= e anunciar recorde novo em caso de empate com a marca anterior.",
+    reference: ["Compare pontos > recorde.", "Empate não supera a marca.", "Atualize o recorde quando superado.", "Em apps reais, o recorde é salvo no armazenamento."],
+    practiceActivities: [
+      {
+        id: "13-8-identify-record",
+        type: "identify-error",
+        title: "Ache a regra frouxa",
+        prompt: "Qual operador faz o jogo anunciar recorde em empates?",
+        code: 'if (pontos >= recorde) {\n  console.log("novo recorde");\n}',
+        correctAnswer: ">=",
+        successFeedback: "Isso. Maior ou igual aceita o empate; recorde pede maior estrito.",
+        errorFeedback: "Ainda não. Olhe o operador da comparação.",
+        hint: "Empate não deveria contar.",
+      },
+    ],
+    summary: "Placar e recorde fecham o ciclo de motivação do jogador.",
+    nextStep: "Use esses blocos para criar um protótipo jogável pequeno.",
+    concepts: ["game-state", "comparison", "persistence"],
   },
 };
 
