@@ -1,8 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Self-contained Playwright config. Expects the dev server to already be running
-// on http://localhost:8080 (run `npm run dev` in another terminal). To launch
-// the server automatically, uncomment the `webServer` block below.
+// Self-contained Playwright config. Locally, reuses a dev server that is already
+// running on http://localhost:8080; otherwise (and always in CI) it launches one.
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: false,
@@ -15,10 +14,10 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  // webServer: {
-  //   command: "npm run dev",
-  //   url: "http://localhost:8080",
-  //   reuseExistingServer: true,
-  //   timeout: 120_000,
-  // },
+  webServer: {
+    command: "npm run dev",
+    url: "http://localhost:8080",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
 });

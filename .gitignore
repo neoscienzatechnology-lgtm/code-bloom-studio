@@ -34,6 +34,10 @@ tmp/
 *.p12
 key.properties
 
+# Bun (projeto padronizado em npm + package-lock.json)
+bun.lock
+bun.lockb
+
 # Playwright
 /test-results/
 /playwright-report/

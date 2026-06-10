@@ -1,0 +1,94 @@
+# CI: lint, testes unitários e build em todo push/PR.
+# Os testes E2E rodam apenas se os secrets do Supabase estiverem configurados
+# no repositório (Settings → Secrets and variables → Actions):
+#   - VITE_SUPABASE_URL
+#   - VITE_SUPABASE_PUBLISHABLE_KEY
+# Os cenários E2E também exigem que a conta de QA usada em
+# tests/e2e/auth-editor.spec.ts exista no projeto Supabase.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, testes e build
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'http://localhost:54321' }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'ci-placeholder-key' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Testes unitários
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  e2e-gate:
+    name: Verificar secrets do Supabase
+    runs-on: ubuntu-latest
+    outputs:
+      has-secrets: ${{ steps.check.outputs.has-secrets }}
+    steps:
+      - id: check
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        run: |
+          if [ -n "$SUPABASE_URL" ]; then
+            echo "has-secrets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-secrets=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Secrets do Supabase ausentes — testes E2E pulados."
+          fi
+
+  e2e:
+    name: Testes E2E (Playwright)
+    runs-on: ubuntu-latest
+    needs: [quality, e2e-gate]
+    if: needs.e2e-gate.outputs.has-secrets == 'true'
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar navegador do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Rodar testes E2E
+        run: npx playwright test
+
+      - name: Publicar artefatos de falha
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-test-results
+          path: test-results/
+          retention-days: 7
