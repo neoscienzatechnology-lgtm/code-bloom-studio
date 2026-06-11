@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import {
   AlertTriangle,
   ArrowRight,
@@ -81,7 +80,6 @@ const CapyLessonAssistant = ({
   onRevealSolution,
   canRevealSolution = false,
 }: CapyLessonAssistantProps) => {
-  const reducedMotion = useReducedMotion();
   const [focus, setFocus] = useState<"goal" | "hint" | "check">("goal");
   const visibleHints = hints.slice(0, Math.max(0, revealedHintCount));
   const nextHint = hints[visibleHints.length];
@@ -94,7 +92,7 @@ const CapyLessonAssistant = ({
     if (state === "loading") return "Estou acompanhando seu teste. Compare o resultado com calma.";
     if (mode === "checkpoint") return "Respire e revise pelo alvo: prática curta, feedback e nova tentativa.";
     if (mode === "project") return "Vamos quebrar o projeto em uma etapa pequena e verificável.";
-    return "Eu vou apontar o que observar para você não ficar perdido na aula.";
+    return "Primeiro entenda o alvo. Se travar, eu mostro uma pista por vez.";
   }, [mode, nextHint, state]);
 
   const currentHint = visibleHints[visibleHints.length - 1] ?? nextHint;
@@ -158,16 +156,8 @@ const CapyLessonAssistant = ({
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
-        <div className="relative">
+        <div>
           <MascoteCapivara state={state} variant="compact" message={capyMessage} className="shadow-none" />
-          <motion.div
-            aria-hidden="true"
-            className="absolute right-2 top-12 hidden items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-black text-primary-foreground shadow-sm sm:flex"
-            animate={reducedMotion ? undefined : { x: [0, 8, 0], rotate: [0, -2, 0] }}
-            transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MousePointer2 size={13} /> olha aqui
-          </motion.div>
         </div>
 
         <div className="min-w-0">
