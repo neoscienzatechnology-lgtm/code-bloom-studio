@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { buildLessonCards, splitTheoryChunks, cardRequiresCompletion } from "@/utils/lessonCards";
 import { getConceptFamily } from "@/utils/conceptDiagram";
+import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
 import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { isInterstitialDue } from "@/lib/ads";
@@ -45,6 +46,35 @@ describe("storage helpers", () => {
     expect(readString("str")).toBe("value");
     removeKey("str");
     expect(readString("str")).toBeNull();
+  });
+});
+
+describe("theory markup", () => {
+  it("marks calls and keywords as code inside Portuguese prose", () => {
+    const tokens = splitInlineTokens("use sum(notas) e print para ver o total");
+    expect(tokens).toContainEqual({ kind: "code", value: "sum(notas)" });
+    expect(tokens).toContainEqual({ kind: "code", value: "print" });
+  });
+
+  it("does not treat the Portuguese verb 'for' as code", () => {
+    const tokens = splitInlineTokens("se a regra for verdadeira, siga em frente");
+    expect(tokens.every((token) => token.kind === "text")).toBe(true);
+  });
+
+  it("keeps backticks and bold as explicit markup", () => {
+    const tokens = splitInlineTokens("o `valor` é **importante** aqui");
+    expect(tokens).toContainEqual({ kind: "code", value: "valor" });
+    expect(tokens).toContainEqual({ kind: "strong", value: "importante" });
+  });
+
+  it("classifies steps, bullets, labels and operator lines", () => {
+    expect(classifyTheoryLine("1. Releia o objetivo")).toBe("step");
+    expect(classifyTheoryLine("- item da lista")).toBe("bullet");
+    expect(classifyTheoryLine("Exemplos:")).toBe("label");
+    expect(classifyTheoryLine("idade >= 18")).toBe("opline");
+    expect(classifyTheoryLine("saldo > 0")).toBe("opline");
+    expect(classifyTheoryLine("Uma frase comum de teoria.")).toBe("text");
+    expect(classifyTheoryLine("Uma frase longa que menciona algo: e segue explicando bem mais coisas.")).toBe("text");
   });
 });
 

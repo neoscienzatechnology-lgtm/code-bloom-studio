@@ -13,6 +13,12 @@ import ConceptDiagram from "@/components/lesson/ConceptDiagram";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
 import { getConceptFamily } from "@/utils/conceptDiagram";
+import {
+  classifyTheoryLine,
+  splitInlineTokens,
+  stripLineMarker,
+  stepNumber,
+} from "@/utils/theoryMarkup";
 import { track } from "@/lib/analytics";
 import { feedbackCelebrate, feedbackCorrect, feedbackWrong } from "@/lib/feedback";
 import { getVisualTone } from "@/utils/visualTones";
@@ -34,51 +40,118 @@ interface LessonCardPlayerProps {
   onQuizPassed: () => void;
 }
 
-/** Inline markdown: **bold** and `code` spans. */
+/** Prosa com marcação: keywords e chamadas viram pílulas de código,
+ * **negrito** vira grifo de marca-texto. */
 const inlineFormat = (text: string) =>
-  text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, index) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={index}>{part.slice(2, -2)}</strong>;
-    }
-    if (part.startsWith("`") && part.endsWith("`")) {
+  splitInlineTokens(text).map((token, index) => {
+    if (token.kind === "code") {
       return (
-        <code key={index} className="rounded bg-secondary px-1 font-mono text-[0.9em]">
-          {part.slice(1, -1)}
+        <code
+          key={index}
+          className="rounded-md bg-primary/10 px-1.5 py-0.5 font-mono text-[0.88em] font-semibold text-primary"
+        >
+          {token.value}
         </code>
       );
     }
-    return part;
+    if (token.kind === "strong") {
+      return (
+        <strong key={index} className="rounded bg-quest-yellow/40 px-1 font-black">
+          {token.value}
+        </strong>
+      );
+    }
+    return <span key={index}>{token.value}</span>;
   });
 
-/** Renders markdown-ish theory text: indented lines become code blocks. */
+type TheoryBlock =
+  | { kind: "code"; content: string }
+  | { kind: "paragraph"; content: string }
+  | { kind: "step"; content: string; number: string }
+  | { kind: "bullet"; content: string }
+  | { kind: "label"; content: string }
+  | { kind: "opline"; content: string };
+
+/** Revela a estrutura latente da teoria: passos numerados, listas, rótulos,
+ * linhas de operadores e blocos de código — cada um com seu estilo. */
 const TheoryText = ({ text }: { text: string }) => {
-  const blocks: { code: boolean; content: string }[] = [];
+  const blocks: TheoryBlock[] = [];
+
   for (const line of text.split("\n")) {
-    const isCode = /^\s{2,}\S/.test(line);
-    const last = blocks[blocks.length - 1];
-    if (last && last.code === isCode) {
-      last.content += `\n${line}`;
-    } else {
-      blocks.push({ code: isCode, content: line });
+    if (!line.trim()) continue;
+
+    if (/^\s{2,}\S/.test(line)) {
+      const last = blocks[blocks.length - 1];
+      if (last?.kind === "code") last.content += `\n${line.replace(/^\s{2}/, "")}`;
+      else blocks.push({ kind: "code", content: line.replace(/^\s{2}/, "") });
+      continue;
+    }
+
+    const kind = classifyTheoryLine(line);
+    const content = stripLineMarker(line, kind);
+    if (kind === "step") blocks.push({ kind, content, number: stepNumber(line) });
+    else if (kind === "bullet" || kind === "label" || kind === "opline") blocks.push({ kind, content });
+    else {
+      const last = blocks[blocks.length - 1];
+      if (last?.kind === "paragraph") last.content += `\n${content}`;
+      else blocks.push({ kind: "paragraph", content });
     }
   }
 
   return (
     <div className="space-y-3">
-      {blocks.map((block, index) =>
-        block.code ? (
-          <pre
-            key={index}
-            className="overflow-x-auto rounded-xl bg-[#1e1e2e] px-4 py-3 font-mono text-sm leading-relaxed text-[#cdd6f4]"
-          >
-            {block.content.replace(/^\s{2}/gm, "")}
-          </pre>
-        ) : (
+      {blocks.map((block, index) => {
+        if (block.kind === "code") {
+          return (
+            <pre
+              key={index}
+              className="overflow-x-auto rounded-xl bg-[#1e1e2e] px-4 py-3 font-mono text-sm leading-relaxed text-[#cdd6f4]"
+            >
+              {block.content}
+            </pre>
+          );
+        }
+        if (block.kind === "step") {
+          return (
+            <div key={index} className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary">
+                {block.number}
+              </span>
+              <p className="leading-relaxed text-foreground">{inlineFormat(block.content)}</p>
+            </div>
+          );
+        }
+        if (block.kind === "bullet") {
+          return (
+            <div key={index} className="flex gap-2.5">
+              <ChevronRight size={16} className="mt-1 shrink-0 text-accent" />
+              <p className="leading-relaxed text-foreground">{inlineFormat(block.content)}</p>
+            </div>
+          );
+        }
+        if (block.kind === "label") {
+          return (
+            <div key={index} className="pt-1 text-xs font-black uppercase tracking-wide text-primary">
+              {block.content.slice(0, -1)}
+            </div>
+          );
+        }
+        if (block.kind === "opline") {
+          return (
+            <code
+              key={index}
+              className="inline-block rounded-lg bg-[#1e1e2e] px-3 py-1.5 font-mono text-sm text-[#cdd6f4]"
+            >
+              {block.content}
+            </code>
+          );
+        }
+        return (
           <p key={index} className="whitespace-pre-line leading-relaxed text-foreground">
-            {inlineFormat(block.content.trim())}
+            {inlineFormat(block.content)}
           </p>
-        ),
-      )}
+        );
+      })}
     </div>
   );
 };
