@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,9 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   const cards = useMemo(() => buildLessonCards(lesson), [lesson]);
   const [cardIndex, setCardIndex] = useState(0);
   const [phase, setPhase] = useState<"cards" | "code">("cards");
+  // Vive aqui (escopo da lição, via key={lesson.id}) para que a celebração
+  // não repita quando o player desmonta na ida e volta ao editor
+  const celebratedRef = useRef(false);
 
   const [code, setCode] = useState(() => getSavedCode(lesson.id) ?? lesson.starterCode ?? "");
 
@@ -112,6 +115,10 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
             cards={cards}
             cardIndex={cardIndex}
             alreadyCompleted={alreadyCompleted}
+            shouldCelebrate={!alreadyCompleted && !celebratedRef.current}
+            onCelebrated={() => {
+              celebratedRef.current = true;
+            }}
             onAdvance={() => setCardIndex((index) => Math.min(index + 1, cards.length - 1))}
             onBack={() => setCardIndex((index) => Math.max(index - 1, 0))}
             onEnterCode={enterCodePhase}

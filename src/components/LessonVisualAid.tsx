@@ -30,6 +30,9 @@ interface LessonVisualAidProps {
   courseTitle?: string;
   language?: string;
   lessonTitle?: string;
+  /** Single-column layout for narrow containers (e.g. the lesson card
+   * player) — the default two-column grid assumes a wide panel. */
+  stacked?: boolean;
 }
 
 type VisualTone = {
@@ -852,7 +855,7 @@ const PatternArtwork = ({ concept, tone }: { concept: ConceptVisual; tone: Visua
   );
 };
 
-const LessonVisualAid = ({ courseTitle, language, lessonTitle }: LessonVisualAidProps) => {
+const LessonVisualAid = ({ courseTitle, language, lessonTitle, stacked = false }: LessonVisualAidProps) => {
   const tone = getTone(language);
   const CourseIcon = getCourseIcon(language);
   const concept = getLessonVisualConcept(courseTitle, language, lessonTitle);
@@ -861,7 +864,7 @@ const LessonVisualAid = ({ courseTitle, language, lessonTitle }: LessonVisualAid
 
   return (
     <figure className="mb-5 overflow-hidden rounded-xl border border-border bg-background shadow-sm sm:rounded-2xl">
-      <div className="grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(260px,0.9fr)]">
+      <div className={stacked ? "grid gap-0" : "grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(260px,0.9fr)]"}>
         <div className="relative min-h-[190px] overflow-hidden bg-secondary/30 p-2 sm:min-h-[250px] sm:p-3">
           <div className="absolute inset-2 overflow-hidden rounded-2xl opacity-70 sm:inset-3">
             <PatternArtwork concept={concept} tone={tone} />
@@ -902,7 +905,7 @@ const LessonVisualAid = ({ courseTitle, language, lessonTitle }: LessonVisualAid
             ))}
           </div>
 
-          <div className="mt-4 grid grid-cols-3 gap-2 lg:grid-cols-1 xl:grid-cols-3">
+          <div className={stacked ? "mt-4 grid grid-cols-3 gap-2" : "mt-4 grid grid-cols-3 gap-2 lg:grid-cols-1 xl:grid-cols-3"}>
             {concept.checkpoints.map((item) => (
               <div key={item} className="flex items-start gap-1.5 rounded-lg bg-secondary/60 px-2 py-2 text-[10px] leading-tight text-muted-foreground sm:gap-2 sm:px-3 sm:text-xs">
                 <ShieldCheck size={14} className="mt-0.5 shrink-0 text-accent" />

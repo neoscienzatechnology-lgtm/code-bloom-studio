@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
 import { AlertTriangle, ArrowLeft, Check, ChevronRight, Code2, Lightbulb, Sparkles, Target, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara from "@/components/MascoteCapivara";
+import LessonVisualAid from "@/components/LessonVisualAid";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
 import type { Course, Lesson } from "@/data/mockData";
@@ -16,6 +18,10 @@ interface LessonCardPlayerProps {
   cards: LessonCard[];
   cardIndex: number;
   alreadyCompleted: boolean;
+  /** Lesson-scoped flag owned by LessonView: confetti fires only once per
+   * lesson, even though this player unmounts on every cards↔editor trip. */
+  shouldCelebrate: boolean;
+  onCelebrated: () => void;
   onAdvance: () => void;
   onBack: () => void;
   onEnterCode: () => void;
@@ -96,6 +102,8 @@ const LessonCardPlayer = ({
   cards,
   cardIndex,
   alreadyCompleted,
+  shouldCelebrate,
+  onCelebrated,
   onAdvance,
   onBack,
   onEnterCode,
@@ -104,6 +112,19 @@ const LessonCardPlayer = ({
   const card = cards[cardIndex];
   const [completedCards, setCompletedCards] = useState<Set<number>>(new Set());
   const [contrastPick, setContrastPick] = useState<"first" | "second" | null>(null);
+
+  // Pequena celebração ao fechar todos os cartões — o flag vive no
+  // LessonView, então voltar do editor não dispara confetti de novo
+  useEffect(() => {
+    if (card?.kind !== "code-intro" || !shouldCelebrate) return;
+    onCelebrated();
+    confetti({
+      particleCount: 70,
+      spread: 70,
+      origin: { y: 0.65 },
+      colors: ["#0A7C78", "#7AD7A7", "#FF9F2F", "#169C93"],
+    });
+  }, [card?.kind, shouldCelebrate, onCelebrated]);
 
   // Returns the SAME Set instance when nothing changes so React bails out of
   // the update — child effects depending on our callbacks won't loop.
@@ -165,7 +186,13 @@ const LessonCardPlayer = ({
           {card.kind === "objective" && (
             <CardShell icon={<Target size={13} />} label="Objetivo" tone="bg-primary/10 text-primary">
               <h2 className="mb-3 text-xl font-black text-foreground">{card.title}</h2>
-              <p className="leading-relaxed text-foreground">{card.text}</p>
+              <p className="mb-4 leading-relaxed text-foreground">{card.text}</p>
+              <LessonVisualAid
+                courseTitle={course.title}
+                language={course.language}
+                lessonTitle={lesson.title}
+                stacked
+              />
             </CardShell>
           )}
 
@@ -276,6 +303,24 @@ const LessonCardPlayer = ({
 
           {card.kind === "code-intro" && (
             <CardShell icon={<Code2 size={13} />} label="Agora é código" tone="bg-accent/10 text-accent">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                className="mb-4 flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3"
+              >
+                <span className="text-2xl" aria-hidden="true">🎉</span>
+                <div>
+                  <div className="text-sm font-black text-accent">Cartões concluídos!</div>
+                  <div className="text-xs text-muted-foreground">Agora prove a ideia escrevendo o código de verdade.</div>
+                </div>
+              </motion.div>
+              <MascoteCapivara
+                state="celebrate"
+                variant="compact"
+                message="Você fechou os cartões! Agora é só codar."
+                className="mb-4"
+              />
               <p className="mb-3 leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
               <div className="rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
                 <span className="font-bold text-muted-foreground">Saída esperada: </span>

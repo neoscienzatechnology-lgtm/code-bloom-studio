@@ -285,34 +285,25 @@ const ProjectPage = () => {
             </h1>
             <p className="mb-5 text-sm text-muted-foreground">{project.goal}</p>
 
-            {/* Step list */}
-            <ol className="mb-6 space-y-1.5">
+            {/* Step chips (compact) */}
+            <ol className="mb-6 flex flex-wrap items-center gap-2" aria-label="Etapas do projeto">
               {project.steps.map((s, i) => {
                 const done = state.completedSteps.includes(s.id);
                 const current = i === state.currentStep;
                 return (
                   <li
                     key={s.id}
-                    className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm ${
-                      current
-                        ? "border-primary/40 bg-primary/5 font-bold text-foreground"
-                        : done
-                        ? "border-accent/30 bg-accent/5 text-accent"
-                        : "border-border bg-card text-muted-foreground"
+                    title={s.title}
+                    aria-current={current ? "step" : undefined}
+                    className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-black ${
+                      done
+                        ? "bg-accent text-accent-foreground"
+                        : current
+                        ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
+                        : "bg-secondary text-muted-foreground"
                     }`}
                   >
-                    <span
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-black ${
-                        done
-                          ? "bg-accent text-accent-foreground"
-                          : current
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary"
-                      }`}
-                    >
-                      {done ? <Check size={12} /> : i + 1}
-                    </span>
-                    <span className="truncate">{s.title}</span>
+                    {done ? <Check size={13} /> : i + 1}
                   </li>
                 );
               })}
