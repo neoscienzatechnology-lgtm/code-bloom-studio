@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { captureError } from "@/lib/analytics";
 
 interface Props {
   children: ReactNode;
@@ -17,6 +18,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("Erro inesperado na interface:", error, info);
+    captureError(error, { componentStack: info.componentStack });
   }
 
   handleReload = () => {

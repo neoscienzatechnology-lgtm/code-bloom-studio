@@ -22,6 +22,7 @@ import { getCourseById } from "@/data/mockData";
 import { validateCode } from "@/utils/codeValidator";
 import { useProgress } from "@/hooks/useProgress";
 import { readJson, writeJson, removeKey, STORAGE_KEYS } from "@/lib/storage";
+import { track } from "@/lib/analytics";
 
 const STORAGE_KEY_PREFIX = STORAGE_KEYS.projectPrefix;
 
@@ -141,6 +142,7 @@ const ProjectPage = () => {
     if (nextCompleted.length === project.steps.length && !alreadyClaimed) {
       const awardedXp = completeLesson(projectXpKey, project.xpReward, project.courseId);
       if (!awardedXp) return;
+      track("project_completed", { projectId: project.id, courseId: project.courseId, xp: project.xpReward });
 
       confetti({
         particleCount: 160,

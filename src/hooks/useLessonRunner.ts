@@ -6,6 +6,7 @@ import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode } from "@/utils/codeValidator";
 import { getLessonConcepts } from "@/utils/conceptMastery";
 import { recordReview } from "@/utils/spacedRepetition";
+import { track } from "@/lib/analytics";
 
 interface UseLessonRunnerArgs {
   lesson: Lesson;
@@ -67,12 +68,21 @@ export function useLessonRunner({
       });
       const correct = result.level === "exact" || result.level === "flexible";
       const nextIsCorrect = correct ? true : result.level === "close" ? null : false;
+      track("code_run", {
+        lessonId: lesson.id,
+        courseId: course.id,
+        correct,
+        level: result.level,
+        errorKind: correct ? undefined : result.errorKind,
+        attempts: getAttempts(lesson.id) + (correct ? 0 : 1),
+      });
 
       if (correct) {
         const priorAttempts = getAttempts(lesson.id);
         recordReview(lesson.id, Math.max(3, 5 - priorAttempts));
         resetLesson(lesson.id);
         const awardedXp = !alreadyCompleted && completeLesson(lesson.id, xpAward, course.id);
+        if (awardedXp) track("lesson_completed", { lessonId: lesson.id, courseId: course.id, xp: xpAward });
         const nextPaceMode = priorAttempts === 0 && !alreadyCompleted && !bonusActive ? "thriving" : null;
         patch({
           isCorrect: nextIsCorrect,

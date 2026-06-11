@@ -48,6 +48,19 @@ describe("storage helpers", () => {
   });
 });
 
+describe("analytics no-op safety", () => {
+  it("never throws when no key is configured", async () => {
+    const analytics = await import("@/lib/analytics");
+    expect(analytics.isAnalyticsEnabled()).toBe(false);
+    expect(() => analytics.track("evento", { a: 1 })).not.toThrow();
+    expect(() => analytics.trackPageview("/x")).not.toThrow();
+    expect(() => analytics.identifyUser("id")).not.toThrow();
+    expect(() => analytics.resetAnalyticsUser()).not.toThrow();
+    expect(() => analytics.captureError(new Error("boom"))).not.toThrow();
+    await expect(analytics.initAnalytics()).resolves.toBeUndefined();
+  });
+});
+
 describe("concept diagram mapping", () => {
   it("maps fragmented tags to the same family", () => {
     expect(getConceptFamily(["lists"])).toBe("list");

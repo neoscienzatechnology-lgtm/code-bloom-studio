@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect, type ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import { initAds } from "@/lib/ads";
+import { initAnalytics, trackPageview } from "@/lib/analytics";
 import { ThemeProvider } from "next-themes";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -91,10 +93,19 @@ const PageFallback = () => (
   </div>
 );
 
+const PageviewTracker = () => {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageview(location.pathname);
+  }, [location.pathname]);
+  return null;
+};
+
 const App = () => {
-  // AdMob: inicializa só no app nativo (no-op na web)
+  // AdMob (no-op na web) e telemetria (no-op sem VITE_POSTHOG_KEY)
   useEffect(() => {
     void initAds();
+    void initAnalytics();
   }, []);
 
   return (
@@ -105,6 +116,7 @@ const App = () => {
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <PageviewTracker />
         <AuthProvider>
           <AuthReturnHandler />
           <ErrorBoundary>

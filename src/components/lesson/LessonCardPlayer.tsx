@@ -13,6 +13,7 @@ import ConceptDiagram from "@/components/lesson/ConceptDiagram";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
 import { getConceptFamily } from "@/utils/conceptDiagram";
+import { track } from "@/lib/analytics";
 import { getVisualTone } from "@/utils/visualTones";
 import type { Course, Lesson } from "@/data/mockData";
 
@@ -151,6 +152,12 @@ const LessonCardPlayer = ({
 
   const advance = () => {
     setContrastPick(null);
+    track("card_advanced", {
+      lessonId: lesson.id,
+      kind: card.kind,
+      index: cardIndex,
+      total: cards.length,
+    });
     if (isLast) onEnterCode();
     else onAdvance();
   };
@@ -299,7 +306,9 @@ const LessonCardPlayer = ({
                 quizId={lesson.id}
                 questions={lesson.quiz}
                 onComplete={(correct) => {
-                  if (correct === lesson.quiz!.length) {
+                  const passed = correct === lesson.quiz!.length;
+                  track("quiz_completed", { lessonId: lesson.id, correct, total: lesson.quiz!.length, passed });
+                  if (passed) {
                     markCompleted();
                     onQuizPassed();
                   }

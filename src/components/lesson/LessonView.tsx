@@ -10,6 +10,7 @@ import ChallengeStage from "@/components/lesson/ChallengeStage";
 import CodeWorkspace from "@/components/lesson/CodeWorkspace";
 import { useProgress } from "@/hooks/useProgress";
 import { recordLessonCompletedAndMaybeShowAd } from "@/lib/ads";
+import { track } from "@/lib/analytics";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { buildLessonCards } from "@/utils/lessonCards";
 import { calibrateXp } from "@/utils/xp";
@@ -45,6 +46,11 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   // Vive aqui (escopo da lição, via key={lesson.id}) para que a celebração
   // não repita quando o player desmonta na ida e volta ao editor
   const celebratedRef = useRef(false);
+
+  useEffect(() => {
+    track("lesson_started", { lessonId: lesson.id, courseId: course.id, alreadyCompleted });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lesson.id]);
 
   const [code, setCode] = useState(() => getSavedCode(lesson.id) ?? lesson.starterCode ?? "");
 

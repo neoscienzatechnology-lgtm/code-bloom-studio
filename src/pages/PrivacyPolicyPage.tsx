@@ -111,6 +111,12 @@ const PrivacyPolicyPage = () => {
               apenas para operar e proteger o app.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Para melhorar o app, podemos coletar eventos de uso pseudonimizados (telas visitadas,
+              progresso nas lições e erros técnicos) por meio do PostHog. Esses eventos são vinculados
+              apenas ao identificador interno da sua conta — não incluem nome, e-mail nem o conteúdo do
+              código que você escreve. Não usamos gravação de sessão.
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               No aplicativo Android, podemos exibir anúncios fornecidos pelo Google AdMob. Nesse caso,
               o Google pode coletar o identificador de publicidade do dispositivo para veicular e medir
               anúncios, conforme a{" "}

@@ -8,6 +8,7 @@
 import { Capacitor } from "@capacitor/core";
 import { ADS_CONFIG } from "@/config/ads";
 import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
+import { track } from "@/lib/analytics";
 
 const AD_STATE_KEY = STORAGE_KEYS.ads;
 
@@ -100,6 +101,7 @@ export async function recordLessonCompletedAndMaybeShowAd(): Promise<void> {
     const { AdMob } = await import("@capacitor-community/admob");
     await AdMob.showInterstitial();
     interstitialReady = false;
+    track("ad_shown", { format: "interstitial" });
 
     writeJson(AD_STATE_KEY, { lessonsSinceLastAd: 0, lastAdShownAt: Date.now() });
     void prepareInterstitial();

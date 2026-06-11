@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { clearOAuthRedirect, storeOAuthRedirect } from "@/utils/oauthRedirect";
+import { identifyUser, resetAnalyticsUser } from "@/lib/analytics";
 
 interface AuthContextType {
   session: Session | null;
@@ -25,6 +26,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      // Telemetria: identifica só pelo id da conta (sem e-mail/nome)
+      if (session?.user) identifyUser(session.user.id);
+      else resetAnalyticsUser();
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {

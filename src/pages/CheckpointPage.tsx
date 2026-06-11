@@ -6,6 +6,7 @@ import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara from "@/components/MascoteCapivara";
 import CardIllustration from "@/components/lesson/CardIllustration";
+import { track } from "@/lib/analytics";
 import { useProgress } from "@/hooks/useProgress";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -53,6 +54,7 @@ const CheckpointPage = () => {
     const total = questions.length;
     setResult({ correct, total });
     const passed = correct / total >= PASS_RATIO;
+    track("checkpoint_completed", { checkpointId: lesson.id, courseId: course.id, correct, total, passed });
     if (passed && !alreadyDone) {
       const awardedXp = completeLesson(lesson.id, lesson.xpReward, course.id);
       if (awardedXp) {
