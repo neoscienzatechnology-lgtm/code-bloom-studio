@@ -46,7 +46,7 @@ export const ConfidenceCheck = ({ lessonId }: { lessonId: string }) => {
       </div>
       {value !== null && (
         <p className="mt-2 text-xs font-bold text-muted-foreground">
-          Você marcou {value}/5 — {confidenceLabels[value - 1]}. No fim da aula, veja se subiu.
+          Você marcou {value}/5 — {confidenceLabels[value - 1]}. Vamos firmar esse tema juntos.
         </p>
       )}
     </div>

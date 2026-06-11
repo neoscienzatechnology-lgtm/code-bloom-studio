@@ -160,8 +160,9 @@ const CodeWorkspace = ({
         </div>
       )}
 
-      {/* Run bar */}
-      <div className="sticky bottom-[70px] z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl md:bottom-0 lg:static lg:shadow-none">
+      {/* Run bar — cola no fundo no mobile (a rota /editor não mostra o menu
+          inferior, então não há barra para limpar) */}
+      <div className="sticky bottom-0 z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl lg:static lg:shadow-none">
         {(running || output || isCorrect !== null || alreadyCompleted) && (
           <MascoteCapivara
             state={mascotState}

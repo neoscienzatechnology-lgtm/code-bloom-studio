@@ -362,8 +362,8 @@ const ProjectPage = () => {
         </div>
 
         {/* Right: editor */}
-        <div className="flex flex-col">
-          <div className="flex-1 p-4">
+        <div className="flex min-h-0 flex-col">
+          <div className="min-h-[430px] flex-1 p-4 lg:min-h-0">
             <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-[#1e1e2e] shadow-sm">
               <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
                 <span className="text-xs text-[#585b70] font-mono">

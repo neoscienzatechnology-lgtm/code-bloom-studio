@@ -4,12 +4,10 @@ import {
   ArrowRight,
   CheckCircle2,
   Code2,
-  Compass,
   Eye,
   Lightbulb,
   ListChecks,
   MousePointer2,
-  Sparkles,
   Target,
 } from "lucide-react";
 import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
@@ -149,12 +147,6 @@ const CapyLessonAssistant = ({
         className,
       )}
     >
-      <div className="absolute right-4 top-4 flex items-center gap-1 text-primary/25" aria-hidden="true">
-        <Code2 size={16} />
-        <Sparkles size={14} />
-        <Compass size={15} />
-      </div>
-
       <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
         <div>
           <MascoteCapivara state={state} variant="compact" message={capyMessage} className="shadow-none" />

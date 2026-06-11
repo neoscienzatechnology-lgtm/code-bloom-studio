@@ -1,12 +1,9 @@
 import { motion, useReducedMotion, type Transition } from "framer-motion";
 import {
-  ArrowUpRight,
   CheckCircle2,
-  Code2,
   Lightbulb,
   Loader2,
   PartyPopper,
-  Sparkles,
   XCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -312,15 +309,6 @@ const MascoteCapivara = ({ state, className, message, variant = "card" }: Mascot
         </motion.div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-4 left-5 z-10 flex items-center gap-1 rounded-full bg-white/70 px-2 py-1 text-[10px] font-black text-emerald-700 shadow-sm">
-        <Code2 size={12} />
-        prática
-      </div>
-      <div className="pointer-events-none absolute bottom-5 right-5 z-10 flex items-center gap-1 rounded-full bg-white/70 px-2 py-1 text-[10px] font-black text-orange-600 shadow-sm">
-        <ArrowUpRight size={12} />
-        evolução
-      </div>
-      <Sparkles className="pointer-events-none absolute left-6 top-24 z-10 text-amber-400" size={16} />
     </section>
   );
 };
