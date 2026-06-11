@@ -73,11 +73,11 @@ export type LessonInfographicSlug = (typeof LESSON_INFOGRAPHIC_SLUGS)[number];
 
 const LESSON_INFOGRAPHIC_BASE_PATH = "/lesson-infographics";
 
-export const LESSON_INFOGRAPHIC_ASSET_PATHS = Object.fromEntries(
+const LESSON_INFOGRAPHIC_ASSET_PATHS = Object.fromEntries(
   LESSON_INFOGRAPHIC_SLUGS.map((slug) => [slug, `${LESSON_INFOGRAPHIC_BASE_PATH}/${slug}.jpg`]),
 ) as Record<LessonInfographicSlug, string>;
 
-export function getLessonInfographicSrc(slug: LessonInfographicSlug) {
+function getLessonInfographicSrc(slug: LessonInfographicSlug) {
   return LESSON_INFOGRAPHIC_ASSET_PATHS[slug];
 }
 
