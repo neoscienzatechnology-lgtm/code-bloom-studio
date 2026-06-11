@@ -21,6 +21,8 @@
     "@capacitor-community/admob": "^8.0.0",
     "@capacitor/android": "^8.3.3",
     "@capacitor/core": "^8.3.3",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/local-notifications": "^8.2.0",
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/lang-python": "^6.2.1",

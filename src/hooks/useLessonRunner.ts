@@ -7,6 +7,7 @@ import { validateCode } from "@/utils/codeValidator";
 import { getLessonConcepts } from "@/utils/conceptMastery";
 import { recordReview } from "@/utils/spacedRepetition";
 import { track } from "@/lib/analytics";
+import { feedbackCorrect, feedbackWrong } from "@/lib/feedback";
 
 interface UseLessonRunnerArgs {
   lesson: Lesson;
@@ -68,6 +69,8 @@ export function useLessonRunner({
       });
       const correct = result.level === "exact" || result.level === "flexible";
       const nextIsCorrect = correct ? true : result.level === "close" ? null : false;
+      if (correct) feedbackCorrect();
+      else if (nextIsCorrect === false) feedbackWrong();
       track("code_run", {
         lessonId: lesson.id,
         courseId: course.id,

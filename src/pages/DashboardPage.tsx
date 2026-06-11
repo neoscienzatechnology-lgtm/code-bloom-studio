@@ -9,7 +9,9 @@ import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { useAuth } from "@/contexts/AuthContext";
 import AdaptiveReview from "@/components/AdaptiveReview";
 import ConceptMasteryPanel from "@/components/ConceptMasteryPanel";
+import DailyGoalRing from "@/components/DailyGoalRing";
 import MascoteCapivara from "@/components/MascoteCapivara";
+import { toLocalDateKey } from "@/utils/studyStats";
 import { getPathById } from "@/data/learningPaths";
 import { useLearningProfile } from "@/hooks/useLearningProfile";
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,7 @@ import { selectNextLesson, selectNextPathCourse } from "@/utils/learningPathProg
 import CourseCoverArt from "@/components/CourseCoverArt";
 
 const DashboardPage = () => {
-  const { totalXp, getCourseProgress, completedLessons, savedCode, studyStats } = useProgress();
+  const { totalXp, getCourseProgress, completedLessons, savedCode, studyStats, lessonCompletedAt } = useProgress();
   const { topErrors, attempts } = useAttemptTracker();
   const { user } = useAuth();
   const { profile } = useLearningProfile();
@@ -48,6 +50,14 @@ const DashboardPage = () => {
     [attempts, completedLessons, savedCode],
   );
   const { concepts: conceptMastery, syncLabel } = useConceptMasterySync(localConceptMastery);
+
+  // Meta diária: a meta em minutos do onboarding vira lições (~6 min cada)
+  const todayKey = toLocalDateKey(new Date());
+  const lessonsToday = Object.entries(lessonCompletedAt).filter(
+    ([lessonId, completedAt]) =>
+      !lessonId.endsWith("-quiz") && toLocalDateKey(new Date(completedAt)) === todayKey,
+  ).length;
+  const goalLessons = Math.max(1, Math.round((profile?.dailyGoal ?? 10) / 6));
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
@@ -83,6 +93,11 @@ const DashboardPage = () => {
               </div>
             </div>
             <div className="space-y-4">
+              <DailyGoalRing
+                lessonsToday={lessonsToday}
+                goalLessons={goalLessons}
+                streak={studyStats.currentStreak}
+              />
               <MascoteCapivara
                 state={completedCoursesList.length > 0 ? "celebrate" : inProgressCourses.length > 0 ? "success" : "idle"}
                 message={

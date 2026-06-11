@@ -14,6 +14,7 @@ import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
 import { getConceptFamily } from "@/utils/conceptDiagram";
 import { track } from "@/lib/analytics";
+import { feedbackCelebrate, feedbackCorrect, feedbackWrong } from "@/lib/feedback";
 import { getVisualTone } from "@/utils/visualTones";
 import type { Course, Lesson } from "@/data/mockData";
 
@@ -123,6 +124,7 @@ const LessonCardPlayer = ({
   useEffect(() => {
     if (card?.kind !== "code-intro" || !shouldCelebrate) return;
     onCelebrated();
+    feedbackCelebrate();
     confetti({
       particleCount: 70,
       spread: 70,
@@ -267,6 +269,8 @@ const LessonCardPlayer = ({
                       onClick={() => {
                         setContrastPick(slot);
                         markCompleted();
+                        if (slot === contrastCorrectPick) feedbackCorrect();
+                        else feedbackWrong();
                       }}
                       className={`w-full rounded-xl border-2 bg-[#1e1e2e] px-4 py-3 text-left transition-colors ${border}`}
                     >
@@ -309,6 +313,7 @@ const LessonCardPlayer = ({
                   const passed = correct === lesson.quiz!.length;
                   track("quiz_completed", { lessonId: lesson.id, correct, total: lesson.quiz!.length, passed });
                   if (passed) {
+                    feedbackCorrect();
                     markCompleted();
                     onQuizPassed();
                   }

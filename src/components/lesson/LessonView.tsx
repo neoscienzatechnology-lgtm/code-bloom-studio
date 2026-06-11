@@ -11,6 +11,7 @@ import CodeWorkspace from "@/components/lesson/CodeWorkspace";
 import { useProgress } from "@/hooks/useProgress";
 import { recordLessonCompletedAndMaybeShowAd } from "@/lib/ads";
 import { track } from "@/lib/analytics";
+import { scheduleStreakReminder } from "@/lib/notifications";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { buildLessonCards } from "@/utils/lessonCards";
 import { calibrateXp } from "@/utils/xp";
@@ -34,7 +35,7 @@ interface LessonViewProps {
  */
 const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: LessonViewProps) => {
   const navigate = useNavigate();
-  const { completeLesson, saveCode, isCompleted, getSavedCode } = useProgress();
+  const { completeLesson, saveCode, isCompleted, getSavedCode, studyStats } = useProgress();
 
   const alreadyCompleted = isCompleted(lesson.id);
   const xpAward = calibrateXp(lesson.xpReward, lesson.level);
@@ -98,8 +99,12 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
     : "idle";
 
   const handleNext = () => {
-    // Intersticial (apenas no app Android) com limite de frequência
-    if (lessonReadyToAdvance) void recordLessonCompletedAndMaybeShowAd();
+    if (lessonReadyToAdvance) {
+      // Intersticial com limite de frequência + lembrete de sequência
+      // (ambos apenas no app Android; no-op na web)
+      void recordLessonCompletedAndMaybeShowAd();
+      void scheduleStreakReminder(studyStats.currentStreak);
+    }
     navigate(nextHref);
   };
 
