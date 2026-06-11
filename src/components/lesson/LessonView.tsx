@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import { type MascoteCapivaraState } from "@/components/MascoteCapivara";
 import LessonOnboardingBanner from "@/components/lesson/LessonOnboardingBanner";
 import LessonTopBar from "@/components/lesson/LessonTopBar";
 import LessonCardPlayer from "@/components/lesson/LessonCardPlayer";
@@ -139,11 +139,9 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
               >
                 <ArrowLeft size={14} /> Rever os cartões da lição
               </Button>
-              <MascoteCapivara state={lessonMascotState} className="mb-5" />
               <ChallengeStage
                 lesson={lesson}
                 mascotState={lessonMascotState}
-                attempts={getAttempts(lesson.id)}
                 revealedHintCount={hintIndex + 1}
                 lastFeedback={output}
                 showSolution={showSolution}

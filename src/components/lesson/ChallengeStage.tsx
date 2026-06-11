@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { Target } from "lucide-react";
 import CapyLessonAssistant from "@/components/CapyLessonAssistant";
 import PaceCoach from "@/components/PaceCoach";
 import type { MascoteCapivaraState } from "@/components/MascoteCapivara";
@@ -8,7 +9,6 @@ import type { Lesson } from "@/data/mockData";
 interface ChallengeStageProps {
   lesson: Lesson;
   mascotState: MascoteCapivaraState;
-  attempts: number;
   revealedHintCount: number;
   lastFeedback: string | null;
   showSolution: boolean;
@@ -25,10 +25,14 @@ interface ChallengeStageProps {
   onDismissPace: () => void;
 }
 
+/**
+ * Calm support column for the code phase — matches the lesson cards:
+ * one clean task card, the compact Capy helper, and adaptive coaching that
+ * only appears when the learner is stuck or breezing through.
+ */
 const ChallengeStage = ({
   lesson,
   mascotState,
-  attempts,
   revealedHintCount,
   lastFeedback,
   showSolution,
@@ -45,16 +49,13 @@ const ChallengeStage = ({
   onDismissPace,
 }: ChallengeStageProps) => (
   <>
-    {/* Exercise description */}
-    <div className="mb-6">
-      <div className="mb-3 flex items-center gap-2 text-sm font-bold text-accent">
-        <span>🎯</span> Exercício
+    {/* Task card */}
+    <div className="mb-4 rounded-2xl border border-border bg-card p-5 shadow-sm">
+      <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-black text-accent">
+        <Target size={13} /> Desafio
       </div>
-      <p className="leading-relaxed text-muted-foreground whitespace-pre-line">
-        {lesson.description}
-      </p>
-      {/* Expected output reference */}
-      <div className="mt-3 rounded-lg border border-border/30 bg-secondary/40 px-3 py-2 text-xs">
+      <p className="leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
+      <div className="mt-3 rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
         <span className="font-bold text-muted-foreground">Saída esperada: </span>
         <code className="font-mono text-accent">{lesson.expectedOutput}</code>
       </div>
@@ -65,19 +66,14 @@ const ChallengeStage = ({
       state={mascotState}
       stageLabel="Desafio"
       objective={lesson.learningObjective ?? lesson.description}
-      description={lesson.description}
-      expectedOutput={lesson.expectedOutput}
       hints={lesson.hints}
       revealedHintCount={revealedHintCount}
-      commonMistake={lesson.commonMistake}
-      reference={lesson.reference}
       lastFeedback={lastFeedback}
-      attempts={attempts}
       onRevealHint={onRevealHint}
       onUseGuidedStarter={onUseGuidedStarter}
       onRevealSolution={onRevealSolution}
       canRevealSolution={canRevealSolution}
-      className="mb-5"
+      className="mb-4"
     />
 
     <AnimatePresence>
@@ -86,7 +82,7 @@ const ChallengeStage = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="mb-5 rounded-lg border border-quest-yellow/30 bg-quest-yellow/5 px-4 py-3 text-xs text-quest-yellow"
+          className="mb-4 rounded-xl border border-quest-yellow/30 bg-quest-yellow/5 px-4 py-3 text-xs text-quest-yellow"
         >
           Ver a solução vai carregar o código no editor. Tente mais um pouco primeiro: você aprende mais corrigindo o erro.{" "}
           <button
@@ -99,6 +95,7 @@ const ChallengeStage = ({
         </motion.div>
       )}
     </AnimatePresence>
+
     {/* Personalização de ritmo: apoio extra ou desafio */}
     <PaceCoach
       mode={paceMode}

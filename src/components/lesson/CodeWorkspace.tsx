@@ -60,12 +60,9 @@ const CodeWorkspace = ({
         state={mascotState}
         stageLabel="Código"
         objective={lesson.learningObjective ?? lesson.description}
-        expectedOutput={lesson.expectedOutput}
         hints={lesson.hints}
         revealedHintCount={revealedHintCount}
         lastFeedback={output}
-        attempts={attempts}
-        compact
         onRevealHint={onRevealHint}
         onUseGuidedStarter={onUseGuidedStarter}
         className="m-4 mb-0 lg:hidden"

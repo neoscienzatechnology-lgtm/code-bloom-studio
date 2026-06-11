@@ -347,11 +347,9 @@ const ProjectPage = () => {
                 state={running ? "loading" : stepStatus === "ok" ? "success" : stepStatus === "err" ? "error" : "thinking"}
                 stageLabel={`Etapa ${state.currentStep + 1}`}
                 objective={step!.description}
-                expectedOutput={step!.expectedOutput}
                 hints={step!.hints}
                 revealedHintCount={hintIndex + 1}
                 lastFeedback={output}
-                compact
                 onRevealHint={handleNextHint}
                 onUseGuidedStarter={useGuidedProjectStarter}
                 className="mt-4"
