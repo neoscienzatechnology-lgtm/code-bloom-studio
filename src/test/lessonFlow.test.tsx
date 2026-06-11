@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { buildLessonCards, splitTheoryChunks, cardRequiresCompletion } from "@/utils/lessonCards";
+import { getConceptFamily } from "@/utils/conceptDiagram";
+import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { isInterstitialDue } from "@/lib/ads";
 import { ADS_CONFIG } from "@/config/ads";
@@ -43,6 +45,28 @@ describe("storage helpers", () => {
     expect(readString("str")).toBe("value");
     removeKey("str");
     expect(readString("str")).toBeNull();
+  });
+});
+
+describe("concept diagram mapping", () => {
+  it("maps fragmented tags to the same family", () => {
+    expect(getConceptFamily(["lists"])).toBe("list");
+    expect(getConceptFamily(["arrays"])).toBe("list");
+    expect(getConceptFamily(["conditionals"])).toBe("condition");
+    expect(getConceptFamily(["comparison"])).toBe("condition");
+    expect(getConceptFamily(["react-native"])).toBe("mobile");
+    expect(getConceptFamily(["tag-inexistente"])).toBeNull();
+    expect(getConceptFamily(undefined)).toBeNull();
+  });
+
+  it("lets the first matching tag decide the diagram", () => {
+    expect(getConceptFamily(["tag-inexistente", "loops", "lists"])).toBe("loop");
+  });
+
+  it("resolves a diagram family for at least 80% of all lessons", () => {
+    const lessons = courses.flatMap((course) => course.lessons);
+    const covered = lessons.filter((lesson) => getConceptFamily(lesson.concepts) !== null).length;
+    expect(covered / lessons.length).toBeGreaterThanOrEqual(0.8);
   });
 });
 
@@ -142,6 +166,14 @@ describe("lesson cards (micro-learning flow)", () => {
     const chunks = splitTheoryChunks(long);
     expect(chunks.length).toBeGreaterThan(2);
     expect(chunks.every((chunk) => !chunk.startsWith("#"))).toBe(true);
+  });
+
+  it("marks only the first theory card for the concept diagram", () => {
+    const multi = { ...fullLesson, theory: "## Um\nprimeiro bloco\n\n## Dois\nsegundo bloco" } as unknown as Lesson;
+    const theoryCards = buildLessonCards(multi).filter((card) => card.kind === "theory");
+    expect(theoryCards.length).toBeGreaterThan(1);
+    expect(theoryCards[0]).toMatchObject({ first: true });
+    expect(theoryCards.slice(1).every((card) => card.kind === "theory" && !card.first)).toBe(true);
   });
 
   it("requires completion only on interactive cards", () => {

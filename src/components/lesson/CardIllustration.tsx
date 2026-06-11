@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import type { LessonCardKind } from "@/utils/lessonCards";
 
+export type IllustrationKind = LessonCardKind | "checkpoint" | "trophy";
+
 // Vinhetas SVG flat (estilo Duolingo) para os cartões de texto do player.
 // Puramente decorativas: desenhadas em código (sem assets externos), com a
 // paleta do app, e marcadas como aria-hidden.
@@ -20,7 +22,7 @@ const PALETTE = {
   ink: "#7A4A12",
 };
 
-const SCENES: Partial<Record<LessonCardKind, ReactNode>> = {
+const SCENES: Partial<Record<IllustrationKind, ReactNode>> = {
   // Livro aberto + lâmpada: a ideia sendo estudada
   theory: (
     <>
@@ -138,9 +140,43 @@ const SCENES: Partial<Record<LessonCardKind, ReactNode>> = {
       />
     </>
   ),
+
+  // Marco no caminho: escudo de revisão antes do próximo bloco
+  checkpoint: (
+    <>
+      <rect width="520" height="150" rx="16" fill="#E7F4F0" />
+      <circle cx="46" cy="34" r="18" fill={PALETTE.mint} opacity="0.35" />
+      <circle cx="476" cy="118" r="22" fill={PALETTE.teal} opacity="0.15" />
+      <path d="M110 112 Q200 96 260 96 Q330 96 410 78" fill="none" stroke={PALETTE.teal} strokeWidth="5" strokeLinecap="round" strokeDasharray="2 14" />
+      <circle cx="150" cy="106" r="9" fill={PALETTE.mint} stroke={PALETTE.teal} strokeWidth="3" />
+      <circle cx="222" cy="98" r="9" fill={PALETTE.mint} stroke={PALETTE.teal} strokeWidth="3" />
+      <path d="M260 34 L296 46 V76 Q296 102 260 116 Q224 102 224 76 V46 Z" fill="#ffffff" stroke={PALETTE.teal} strokeWidth="4" strokeLinejoin="round" />
+      <path d="M244 74 L256 86 L278 58" fill="none" stroke={PALETTE.green} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="396" y1="78" x2="396" y2="36" stroke={PALETTE.orangeDark} strokeWidth="5" strokeLinecap="round" />
+      <path d="M396 36 L430 45 L396 56 Z" fill={PALETTE.orange} />
+    </>
+  ),
+
+  // Troféu do projeto concluído
+  trophy: (
+    <>
+      <rect width="520" height="150" rx="16" fill="#FBF3DC" />
+      <circle cx="48" cy="110" r="22" fill={PALETTE.yellow} opacity="0.35" />
+      <circle cx="474" cy="38" r="18" fill={PALETTE.orange} opacity="0.25" />
+      <path d="M226 36 H294 V64 Q294 92 260 100 Q226 92 226 64 Z" fill={PALETTE.yellow} stroke={PALETTE.yellowDark} strokeWidth="4" strokeLinejoin="round" />
+      <path d="M226 44 H204 Q200 70 226 76 M294 44 H316 Q320 70 294 76" fill="none" stroke={PALETTE.yellowDark} strokeWidth="4" strokeLinecap="round" />
+      <rect x="248" y="100" width="24" height="12" rx="3" fill={PALETTE.yellowDark} />
+      <rect x="236" y="112" width="48" height="10" rx="4" fill={PALETTE.ink} opacity="0.8" />
+      <path d="M260 52 L264 62 L275 62 L266 69 L269 80 L260 73 L251 80 L254 69 L245 62 L256 62 Z" fill="#ffffff" opacity="0.9" />
+      <circle cx="180" cy="48" r="5" fill={PALETTE.teal} />
+      <circle cx="344" cy="56" r="5" fill={PALETTE.red} />
+      <circle cx="200" cy="92" r="4" fill={PALETTE.blue} />
+      <circle cx="330" cy="96" r="4" fill={PALETTE.green} />
+    </>
+  ),
 };
 
-const CardIllustration = ({ kind }: { kind: LessonCardKind }) => {
+const CardIllustration = ({ kind }: { kind: IllustrationKind }) => {
   const scene = SCENES[kind];
   if (!scene) return null;
 

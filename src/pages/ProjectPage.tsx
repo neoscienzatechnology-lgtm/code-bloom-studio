@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import CodeEditor from "@/components/CodeEditor";
 import CapyLessonAssistant from "@/components/CapyLessonAssistant";
+import CardIllustration from "@/components/lesson/CardIllustration";
 import { getProjectById } from "@/data/projects";
 import { getCourseById } from "@/data/mockData";
 import { validateCode } from "@/utils/codeValidator";
@@ -181,7 +182,7 @@ const ProjectPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl border-2 border-accent/40 bg-gradient-to-br from-accent/10 to-primary/5 p-6 text-center sm:p-8"
           >
-            <div className="mb-3 text-6xl">🏆</div>
+            <CardIllustration kind="trophy" />
             <p className="text-xs font-bold uppercase tracking-wider text-accent">
               Projeto concluído
             </p>

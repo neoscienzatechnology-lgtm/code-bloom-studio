@@ -9,8 +9,11 @@ import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara from "@/components/MascoteCapivara";
 import LessonVisualAid from "@/components/LessonVisualAid";
 import CardIllustration from "@/components/lesson/CardIllustration";
+import ConceptDiagram from "@/components/lesson/ConceptDiagram";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
+import { getConceptFamily } from "@/utils/conceptDiagram";
+import { getVisualTone } from "@/utils/visualTones";
 import type { Course, Lesson } from "@/data/mockData";
 
 interface LessonCardPlayerProps {
@@ -143,6 +146,9 @@ const LessonCardPlayer = ({
   const contrastAnswered = contrastPick !== null || completedCards.has(cardIndex);
   const contrastCorrectPick = rightFirst ? "first" : "second";
 
+  const conceptFamily = getConceptFamily(lesson.concepts);
+  const tone = getVisualTone(course.language);
+
   const advance = () => {
     setContrastPick(null);
     if (isLast) onEnterCode();
@@ -199,7 +205,12 @@ const LessonCardPlayer = ({
 
           {card.kind === "theory" && (
             <CardShell icon={<Lightbulb size={13} />} label="Aprenda" tone="bg-primary/10 text-primary">
-              <CardIllustration kind="theory" />
+              {card.first &&
+                (conceptFamily ? (
+                  <ConceptDiagram family={conceptFamily} tone={tone} />
+                ) : (
+                  <CardIllustration kind="theory" />
+                ))}
               <TheoryText text={card.text} />
             </CardShell>
           )}

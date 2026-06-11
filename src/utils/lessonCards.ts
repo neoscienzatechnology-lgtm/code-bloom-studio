@@ -10,7 +10,7 @@ import type { Lesson } from "@/data/mockData";
 export type LessonCard =
   | { kind: "confidence" }
   | { kind: "objective"; title: string; text: string }
-  | { kind: "theory"; text: string }
+  | { kind: "theory"; text: string; first: boolean }
   | { kind: "analogy"; text: string }
   | { kind: "example"; code: string }
   | { kind: "mistake"; text: string }
@@ -86,9 +86,9 @@ export function buildLessonCards(lesson: Lesson): LessonCard[] {
     text: lesson.learningObjective ?? lesson.description,
   });
 
-  for (const chunk of splitTheoryChunks(lesson.theory)) {
-    cards.push({ kind: "theory", text: chunk });
-  }
+  splitTheoryChunks(lesson.theory).forEach((chunk, index) => {
+    cards.push({ kind: "theory", text: chunk, first: index === 0 });
+  });
 
   if (lesson.analogy) cards.push({ kind: "analogy", text: lesson.analogy });
 

@@ -5,6 +5,7 @@ import { getAugmentedLessonById } from "@/data/checkpoints";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara from "@/components/MascoteCapivara";
+import CardIllustration from "@/components/lesson/CardIllustration";
 import { useProgress } from "@/hooks/useProgress";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -107,6 +108,7 @@ const CheckpointPage = () => {
                 <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-black text-primary">
                   <ShieldCheck size={13} /> Revisão obrigatória
                 </div>
+                <CardIllustration kind="checkpoint" />
                 <h1 className="mb-2 text-xl font-black text-foreground">{lesson.title}</h1>
                 <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{lesson.description}</p>
 
@@ -140,6 +142,7 @@ const CheckpointPage = () => {
                 <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-quest-blue/10 px-3 py-1 text-xs font-black text-quest-blue">
                   <Lightbulb size={13} /> Quiz de passagem
                 </div>
+                <CardIllustration kind="quiz" />
                 <QuizSection key={lesson.id} quizId={lesson.id} questions={questions} onComplete={handleComplete} />
               </div>
             )}

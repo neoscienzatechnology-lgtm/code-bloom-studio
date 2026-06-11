@@ -26,6 +26,8 @@ import {
   Workflow,
 } from "lucide-react";
 
+import { getVisualTone, type VisualTone } from "@/utils/visualTones";
+
 interface LessonVisualAidProps {
   courseTitle?: string;
   language?: string;
@@ -34,15 +36,6 @@ interface LessonVisualAidProps {
    * player) — the default two-column grid assumes a wide panel. */
   stacked?: boolean;
 }
-
-type VisualTone = {
-  bg: string;
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: string;
-  soft: string;
-};
 
 export const LESSON_INFOGRAPHIC_SLUGS = [
   "programming-flow",
@@ -103,89 +96,8 @@ type ConceptVisual = {
     | "algorithm";
 };
 
-const languageTones: Record<string, VisualTone> = {
-  python: {
-    bg: "#f7fee7",
-    primary: "#2563eb",
-    secondary: "#facc15",
-    accent: "#16a34a",
-    text: "#172554",
-    soft: "#dbeafe",
-  },
-  javascript: {
-    bg: "#fef9c3",
-    primary: "#ca8a04",
-    secondary: "#111827",
-    accent: "#0891b2",
-    text: "#1f2937",
-    soft: "#fef3c7",
-  },
-  react: {
-    bg: "#ecfeff",
-    primary: "#0891b2",
-    secondary: "#7c3aed",
-    accent: "#0f766e",
-    text: "#164e63",
-    soft: "#cffafe",
-  },
-  css: {
-    bg: "#eff6ff",
-    primary: "#2563eb",
-    secondary: "#ec4899",
-    accent: "#f97316",
-    text: "#1e3a8a",
-    soft: "#dbeafe",
-  },
-  "node.js": {
-    bg: "#f0fdf4",
-    primary: "#15803d",
-    secondary: "#365314",
-    accent: "#0f766e",
-    text: "#14532d",
-    soft: "#dcfce7",
-  },
-  sql: {
-    bg: "#eef2ff",
-    primary: "#4f46e5",
-    secondary: "#0f172a",
-    accent: "#0284c7",
-    text: "#312e81",
-    soft: "#e0e7ff",
-  },
-  git: {
-    bg: "#fff7ed",
-    primary: "#ea580c",
-    secondary: "#7c2d12",
-    accent: "#dc2626",
-    text: "#7c2d12",
-    soft: "#fed7aa",
-  },
-  "lógica": {
-    bg: "#f8fafc",
-    primary: "#475569",
-    secondary: "#7c3aed",
-    accent: "#059669",
-    text: "#0f172a",
-    soft: "#e2e8f0",
-  },
-  html: {
-    bg: "#fff1f2",
-    primary: "#e11d48",
-    secondary: "#fb923c",
-    accent: "#2563eb",
-    text: "#881337",
-    soft: "#ffe4e6",
-  },
-};
-
-const baseTone: VisualTone = {
-  bg: "#f8fafc",
-  primary: "#7c3aed",
-  secondary: "#0f766e",
-  accent: "#f59e0b",
-  text: "#1f2937",
-  soft: "#ede9fe",
-};
+// Paleta por linguagem movida para @/utils/visualTones (compartilhada com os
+// diagramas de conceito dos cartões).
 
 function normalize(value = "") {
   return value
@@ -194,9 +106,7 @@ function normalize(value = "") {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-function getTone(language?: string): VisualTone {
-  return languageTones[(language || "").toLowerCase()] ?? baseTone;
-}
+const getTone = getVisualTone;
 
 function getCourseIcon(language?: string) {
   const key = (language || "").toLowerCase();
