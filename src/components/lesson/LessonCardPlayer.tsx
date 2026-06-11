@@ -8,6 +8,7 @@ import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
 import MascoteCapivara from "@/components/MascoteCapivara";
 import LessonVisualAid from "@/components/LessonVisualAid";
+import CardIllustration from "@/components/lesson/CardIllustration";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
 import type { Course, Lesson } from "@/data/mockData";
@@ -198,12 +199,14 @@ const LessonCardPlayer = ({
 
           {card.kind === "theory" && (
             <CardShell icon={<Lightbulb size={13} />} label="Aprenda" tone="bg-primary/10 text-primary">
+              <CardIllustration kind="theory" />
               <TheoryText text={card.text} />
             </CardShell>
           )}
 
           {card.kind === "analogy" && (
             <CardShell icon={<Sparkles size={13} />} label="Pense assim" tone="bg-quest-yellow/10 text-quest-yellow">
+              <CardIllustration kind="analogy" />
               <p className="text-lg font-semibold leading-relaxed text-foreground">{card.text}</p>
             </CardShell>
           )}
@@ -218,6 +221,7 @@ const LessonCardPlayer = ({
 
           {card.kind === "mistake" && (
             <CardShell icon={<AlertTriangle size={13} />} label="Cuidado com isto" tone="bg-quest-orange/10 text-quest-orange">
+              <CardIllustration kind="mistake" />
               <p className="leading-relaxed text-foreground">{inlineFormat(card.text)}</p>
             </CardShell>
           )}
@@ -278,6 +282,7 @@ const LessonCardPlayer = ({
 
           {card.kind === "quiz" && lesson.quiz && (
             <CardShell icon={<Lightbulb size={13} />} label="Teste seu conhecimento" tone="bg-quest-blue/10 text-quest-blue">
+              <CardIllustration kind="quiz" />
               <QuizSection
                 key={lesson.id}
                 quizId={lesson.id}
