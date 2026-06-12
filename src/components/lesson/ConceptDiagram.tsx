@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import type { DiagramFamily } from "@/utils/conceptDiagram";
+import { isStackConcept, type DiagramFamily } from "@/utils/conceptDiagram";
 import type { VisualTone } from "@/utils/visualTones";
+import Stack3DPanel from "@/components/lesson/Stack3DPanel";
 
 // Diagramas didáticos por família de conceito (SVG flat, desenhado em
 // código). Cada cena ilustra o MODELO MENTAL do conceito — caixa etiquetada,
@@ -279,17 +280,21 @@ const SCENES: Record<DiagramFamily, (t: VisualTone) => ReactNode> = {
 interface ConceptDiagramProps {
   family: DiagramFamily;
   tone: VisualTone;
+  concepts?: string[];
 }
 
-const ConceptDiagram = ({ family, tone }: ConceptDiagramProps) => (
-  <div aria-hidden="true" className="mb-4 overflow-hidden rounded-xl">
-    <svg viewBox="0 0 520 150" role="presentation" className="h-auto w-full">
-      <rect width="520" height="150" rx="16" fill={tone.bg} />
-      <circle cx="44" cy="116" r="24" fill={tone.soft} opacity="0.8" />
-      <circle cx="478" cy="32" r="16" fill={tone.primary} opacity="0.14" />
-      {SCENES[family](tone)}
-    </svg>
-  </div>
+const ConceptDiagram = ({ family, tone, concepts }: ConceptDiagramProps) => (
+  <>
+    <div aria-hidden="true" className="mb-4 overflow-hidden rounded-xl">
+      <svg viewBox="0 0 520 150" role="presentation" className="h-auto w-full">
+        <rect width="520" height="150" rx="16" fill={tone.bg} />
+        <circle cx="44" cy="116" r="24" fill={tone.soft} opacity="0.8" />
+        <circle cx="478" cy="32" r="16" fill={tone.primary} opacity="0.14" />
+        {SCENES[family](tone)}
+      </svg>
+    </div>
+    {isStackConcept(concepts) && <Stack3DPanel tone={tone} />}
+  </>
 );
 
 export default ConceptDiagram;

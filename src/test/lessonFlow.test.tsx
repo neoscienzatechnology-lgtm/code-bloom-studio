@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { buildLessonCards, splitTheoryChunks, cardRequiresCompletion } from "@/utils/lessonCards";
-import { getConceptFamily } from "@/utils/conceptDiagram";
+import { getConceptFamily, isStackConcept } from "@/utils/conceptDiagram";
+import { isWebglAvailable, prefersReducedMotion } from "@/utils/webgl";
 import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
 import { tokenizeCodeLine, buildAssembleData, TOKEN_SEP } from "@/utils/assembleBlocks";
 import { courses } from "@/data/mockData";
@@ -111,6 +112,27 @@ describe("concept diagram mapping", () => {
     const lessons = courses.flatMap((course) => course.lessons);
     const covered = lessons.filter((lesson) => getConceptFamily(lesson.concepts) !== null).length;
     expect(covered / lessons.length).toBeGreaterThanOrEqual(0.8);
+  });
+});
+
+describe("3D stack capability gating", () => {
+  it("detects stack lessons by concept tag", () => {
+    expect(isStackConcept(["stack", "lifo", "data-structures"])).toBe(true);
+    expect(isStackConcept(["pilha"])).toBe(true);
+    expect(isStackConcept(["queue", "fifo"])).toBe(false);
+    expect(isStackConcept(undefined)).toBe(false);
+  });
+
+  it("at least one shipped lesson opts into the 3D stack", () => {
+    const lessons = courses.flatMap((course) => course.lessons);
+    expect(lessons.some((lesson) => isStackConcept(lesson.concepts))).toBe(true);
+  });
+
+  it("probes WebGL and reduced-motion without throwing in a headless env", () => {
+    expect(() => isWebglAvailable()).not.toThrow();
+    expect(typeof isWebglAvailable()).toBe("boolean");
+    expect(() => prefersReducedMotion()).not.toThrow();
+    expect(typeof prefersReducedMotion()).toBe("boolean");
   });
 });
 

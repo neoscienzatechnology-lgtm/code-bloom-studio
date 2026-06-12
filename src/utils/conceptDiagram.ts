@@ -53,3 +53,10 @@ export function getConceptFamily(concepts?: string[]): DiagramFamily | null {
   }
   return null;
 }
+
+const STACK_TAGS = new Set(["stack", "pilha", "lifo"]);
+
+/** Lição cujo modelo mental é uma pilha (LIFO) — habilita o 3D opcional. */
+export function isStackConcept(concepts?: string[]): boolean {
+  return (concepts ?? []).some((tag) => STACK_TAGS.has(tag));
+}

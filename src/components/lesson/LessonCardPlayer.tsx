@@ -417,7 +417,7 @@ const LessonCardPlayer = ({
             <CardShell icon={<Lightbulb size={13} />} label="Aprenda" tone="bg-primary/10 text-primary">
               {card.first &&
                 (conceptFamily ? (
-                  <ConceptDiagram family={conceptFamily} tone={tone} />
+                  <ConceptDiagram family={conceptFamily} tone={tone} concepts={lesson.concepts} />
                 ) : (
                   <CardIllustration kind="theory" />
                 ))}

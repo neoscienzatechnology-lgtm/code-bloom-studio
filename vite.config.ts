@@ -76,6 +76,7 @@ export default defineConfig(({ mode }) => ({
           if (!id.includes("node_modules")) return;
           if (id.includes("@codemirror") || id.includes("codemirror")) return "editor";
           if (id.includes("@supabase")) return "supabase";
+          if (id.includes("node_modules/three")) return "three";
           if (id.includes("posthog")) return "analytics";
           if (id.includes("framer-motion") || id.includes("canvas-confetti")) return "motion";
           if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui";
