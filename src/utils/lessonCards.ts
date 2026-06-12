@@ -6,6 +6,7 @@
 // final, separate phase.
 
 import type { Lesson } from "@/data/mockData";
+import { buildAssembleData } from "@/utils/assembleBlocks";
 
 export type LessonCard =
   | { kind: "confidence" }
@@ -17,6 +18,7 @@ export type LessonCard =
   | { kind: "contrast"; wrong: string; right: string; explanation: string }
   | { kind: "quiz" }
   | { kind: "practice" }
+  | { kind: "assemble"; line: string; tokens: string[]; shuffled: string[] }
   | { kind: "code-intro" };
 
 export type LessonCardKind = LessonCard["kind"];
@@ -109,6 +111,13 @@ export function buildLessonCards(lesson: Lesson): LessonCard[] {
   if (lesson.quiz?.length) cards.push({ kind: "quiz" });
   if (lesson.practiceActivities?.length) cards.push({ kind: "practice" });
 
+  // Antes de abrir o editor: montar uma linha real da solução tocando nos
+  // blocos. Só entra quando a solução tem uma linha curta e limpa.
+  const assemble = buildAssembleData(lesson.solution, lesson.id);
+  if (assemble) {
+    cards.push({ kind: "assemble", line: assemble.line, tokens: assemble.tokens, shuffled: assemble.shuffled });
+  }
+
   cards.push({ kind: "code-intro" });
 
   return cards;
@@ -116,7 +125,7 @@ export function buildLessonCards(lesson: Lesson): LessonCard[] {
 
 /** Cards that demand a correct interaction before the learner can advance. */
 export function cardRequiresCompletion(kind: LessonCardKind): boolean {
-  return kind === "contrast" || kind === "quiz" || kind === "practice";
+  return kind === "contrast" || kind === "quiz" || kind === "practice" || kind === "assemble";
 }
 
 /** Deterministic side for the correct answer in the contrast card (stable

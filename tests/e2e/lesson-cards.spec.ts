@@ -41,6 +41,14 @@ test.describe("Fluxo completo da lição em cartões", () => {
       } else if (await page.getByText("Teste seu conhecimento").isVisible().catch(() => false)) {
         await page.getByRole("button", { name: /Dar instruções claras/ }).click();
         await page.getByRole("button", { name: "Ver Resultado" }).click();
+      } else if (await page.getByText("Monte o código").isVisible().catch(() => false)) {
+        // Blocos na ordem certa da solução de 10-1: mostrar("Estou programando");
+        // Os chips já colocados têm aria-label "Remover …", então clicar pelo
+        // texto exato sempre acerta o bloco do banco, nunca o já posicionado.
+        for (const block of ["mostrar", "(", '"Estou programando"', ")", ";"]) {
+          await page.getByRole("button", { name: block, exact: true }).click();
+        }
+        await page.getByRole("button", { name: "Verificar" }).click();
       } else if (await page.getByText("Prática guiada").isVisible().catch(() => false)) {
         await page.locator("div.max-w-xl input").first().fill("mostrar");
         await page.getByRole("button", { name: "Verificar" }).click();

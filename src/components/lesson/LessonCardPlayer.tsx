@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { AlertTriangle, ArrowLeft, Check, ChevronRight, Code2, Lightbulb, Sparkles, Target, X } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Blocks, Check, ChevronRight, Code2, Lightbulb, RotateCcw, Sparkles, Target, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import QuizSection from "@/components/QuizSection";
@@ -12,6 +12,7 @@ import CardIllustration from "@/components/lesson/CardIllustration";
 import ConceptDiagram from "@/components/lesson/ConceptDiagram";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
+import { TOKEN_SEP } from "@/utils/assembleBlocks";
 import { getConceptFamily } from "@/utils/conceptDiagram";
 import {
   classifyTheoryLine,
@@ -174,6 +175,133 @@ const CardShell = ({
     {children}
   </div>
 );
+
+/** "Monte o código tocando nos blocos" — reordenação pura, sempre resolvível.
+ * Estado próprio: o card é remontado a cada índice, então reseta sozinho. */
+const AssembleCard = ({
+  tokens,
+  shuffled,
+  onSolved,
+}: {
+  tokens: string[];
+  shuffled: string[];
+  onSolved: () => void;
+}) => {
+  const [picked, setPicked] = useState<number[]>([]);
+  const [checked, setChecked] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const isSolved = picked.map((i) => shuffled[i]).join(TOKEN_SEP) === tokens.join(TOKEN_SEP);
+  const usedSet = new Set(picked);
+
+  const add = (i: number) => {
+    if (done) return;
+    setPicked((prev) => (prev.includes(i) ? prev : [...prev, i]));
+    setChecked(false);
+  };
+  const removeAt = (pos: number) => {
+    if (done) return;
+    setPicked((prev) => prev.filter((_, idx) => idx !== pos));
+    setChecked(false);
+  };
+  const check = () => {
+    setChecked(true);
+    if (isSolved) {
+      setDone(true);
+      feedbackCorrect();
+      onSolved();
+    } else {
+      feedbackWrong();
+    }
+  };
+
+  return (
+    <CardShell icon={<Blocks size={13} />} label="Monte o código" tone="bg-accent/10 text-accent">
+      <p className="mb-3 text-sm text-muted-foreground">
+        Toque nos blocos na ordem certa para formar a linha de código.
+      </p>
+
+      <div className="mb-3 min-h-[52px] rounded-xl border-2 border-dashed border-border bg-[#1e1e2e] px-3 py-3">
+        {picked.length === 0 ? (
+          <span className="text-xs text-muted-foreground/70">Os blocos que você tocar aparecem aqui…</span>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            {picked.map((tokenIndex, pos) => (
+              <button
+                key={`${tokenIndex}-${pos}`}
+                type="button"
+                onClick={() => removeAt(pos)}
+                disabled={done}
+                aria-label={`Remover ${shuffled[tokenIndex]}`}
+                className="rounded-lg border border-accent/40 bg-accent/15 px-2.5 py-1 font-mono text-sm font-semibold text-[#cdd6f4] transition-colors hover:border-accent disabled:cursor-default disabled:opacity-100"
+              >
+                {shuffled[tokenIndex]}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {shuffled.map((token, i) =>
+          usedSet.has(i) ? (
+            <span
+              key={i}
+              className="rounded-lg border border-dashed border-border px-2.5 py-1 font-mono text-sm text-muted-foreground/40"
+            >
+              {token}
+            </span>
+          ) : (
+            <button
+              key={i}
+              type="button"
+              onClick={() => add(i)}
+              disabled={done}
+              className="rounded-lg border border-border bg-secondary px-2.5 py-1 font-mono text-sm font-semibold text-foreground transition-colors hover:border-primary/50"
+            >
+              {token}
+            </button>
+          ),
+        )}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button size="sm" onClick={check} disabled={picked.length === 0 || done} className="rounded-lg font-bold">
+          Verificar
+        </Button>
+        {picked.length > 0 && !done && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              setPicked([]);
+              setChecked(false);
+            }}
+            className="gap-1 rounded-lg"
+          >
+            <RotateCcw size={13} /> Limpar
+          </Button>
+        )}
+      </div>
+
+      {checked && (
+        <div
+          className={`mt-3 rounded-xl px-4 py-3 text-sm font-bold ${
+            isSolved ? "bg-accent/10 text-accent" : "bg-destructive/10 text-destructive"
+          }`}
+        >
+          {isSolved ? (
+            <span className="flex items-center gap-1.5">
+              <Check size={15} /> Isso! Você montou a linha certinha.
+            </span>
+          ) : (
+            "Ainda não. Confira a ordem dos blocos e tente de novo."
+          )}
+        </div>
+      )}
+    </CardShell>
+  );
+};
 
 const LessonCardPlayer = ({
   lesson,
@@ -401,6 +529,15 @@ const LessonCardPlayer = ({
               onCompletionChange={(completed) => {
                 if (completed) markCompleted();
               }}
+            />
+          )}
+
+          {card.kind === "assemble" && (
+            <AssembleCard
+              key={lesson.id}
+              tokens={card.tokens}
+              shuffled={card.shuffled}
+              onSolved={markCompleted}
             />
           )}
 

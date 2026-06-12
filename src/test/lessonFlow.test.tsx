@@ -3,6 +3,7 @@ import { renderHook, act } from "@testing-library/react";
 import { buildLessonCards, splitTheoryChunks, cardRequiresCompletion } from "@/utils/lessonCards";
 import { getConceptFamily } from "@/utils/conceptDiagram";
 import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
+import { tokenizeCodeLine, buildAssembleData, TOKEN_SEP } from "@/utils/assembleBlocks";
 import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { isInterstitialDue } from "@/lib/ads";
@@ -223,8 +224,68 @@ describe("lesson cards (micro-learning flow)", () => {
     expect(cardRequiresCompletion("contrast")).toBe(true);
     expect(cardRequiresCompletion("quiz")).toBe(true);
     expect(cardRequiresCompletion("practice")).toBe(true);
+    expect(cardRequiresCompletion("assemble")).toBe(true);
     expect(cardRequiresCompletion("theory")).toBe(false);
     expect(cardRequiresCompletion("code-intro")).toBe(false);
+  });
+
+  it("adds an assemble card right before code-intro when the solution has a clean line", () => {
+    const cards = buildLessonCards(fullLesson);
+    const kinds = cards.map((card) => card.kind);
+    expect(kinds).toContain("assemble");
+    expect(kinds.indexOf("assemble")).toBe(kinds.indexOf("code-intro") - 1);
+
+    const assemble = cards.find((card) => card.kind === "assemble");
+    expect(assemble).toMatchObject({ kind: "assemble" });
+    if (assemble?.kind === "assemble") {
+      // O banco embaralhado é exatamente os tokens da resposta (sem distratores).
+      expect([...assemble.shuffled].sort()).toEqual([...assemble.tokens].sort());
+    }
+  });
+});
+
+describe("assemble blocks engine", () => {
+  it("tokenizes a code line keeping strings whole", () => {
+    expect(tokenizeCodeLine("print('oi')")).toEqual(["print", "(", "'oi'", ")"]);
+    expect(tokenizeCodeLine("const total = preco * qtd")).toEqual([
+      "const",
+      "total",
+      "=",
+      "preco",
+      "*",
+      "qtd",
+    ]);
+    expect(tokenizeCodeLine("idade >= 18")).toEqual(["idade", ">=", "18"]);
+  });
+
+  it("keeps a string with spaces and commas as a single block", () => {
+    const tokens = tokenizeCodeLine('print("Olá, mundo!")');
+    expect(tokens).toEqual(["print", "(", '"Olá, mundo!"', ")"]);
+    // O separador de controle nunca colide com o conteúdo do bloco.
+    expect(tokens.join(TOKEN_SEP).split(TOKEN_SEP)).toEqual(tokens);
+  });
+
+  it("builds a solvable, deterministic exercise from a solution", () => {
+    const a = buildAssembleData("print('oi')", "c-1");
+    const b = buildAssembleData("print('oi')", "c-1");
+    expect(a).not.toBeNull();
+    expect(a).toEqual(b); // mesma seed → mesma ordem
+    if (a) {
+      expect([...a.shuffled].sort()).toEqual([...a.tokens].sort());
+      expect(a.shuffled.length).toBe(a.tokens.length);
+    }
+  });
+
+  it("varies the shuffle across lessons", () => {
+    const a = buildAssembleData("const total = preco * qtd", "10-4");
+    const b = buildAssembleData("const total = preco * qtd", "6-2");
+    expect(a?.shuffled.join(TOKEN_SEP)).not.toBe(b?.shuffled.join(TOKEN_SEP));
+  });
+
+  it("returns null when no line makes a good exercise", () => {
+    expect(buildAssembleData("", "x")).toBeNull();
+    expect(buildAssembleData("return <View><Text>oi</Text></View>;", "x")).toBeNull();
+    expect(buildAssembleData("ok", "x")).toBeNull(); // poucos blocos
   });
 });
 
