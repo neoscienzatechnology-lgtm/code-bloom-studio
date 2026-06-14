@@ -185,7 +185,7 @@ const ProjectPage = () => {
             className="rounded-2xl border-2 border-accent/40 bg-gradient-to-br from-accent/10 to-primary/5 p-6 text-center sm:p-8"
           >
             <CardIllustration kind="trophy" />
-            <p className="text-xs font-bold uppercase tracking-wider text-accent">
+            <p className="text-xs font-bold uppercase tracking-wider text-primary">
               Projeto concluído
             </p>
             <h1 className="text-3xl font-black text-foreground sm:text-4xl">
@@ -195,7 +195,7 @@ const ProjectPage = () => {
 
             <div className="mt-6 rounded-xl border border-border bg-card/60 p-5 text-left">
               <div className="mb-3 flex items-center gap-2 text-sm font-extrabold text-foreground">
-                <Trophy size={16} className="text-accent" />
+                <Trophy size={16} className="text-primary" />
                 Conceitos que você aplicou
               </div>
               <ul className="space-y-2">
@@ -204,14 +204,14 @@ const ProjectPage = () => {
                     key={c}
                     className="flex items-center gap-2 text-sm text-foreground"
                   >
-                    <CheckCircle2 size={14} className="shrink-0 text-accent" />
+                    <CheckCircle2 size={14} className="shrink-0 text-primary" />
                     {c}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
+            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-bold text-primary">
               {alreadyClaimed ? "XP deste projeto já registrado" : `+${project.xpReward} XP disponível`}
             </div>
 
@@ -324,7 +324,7 @@ const ProjectPage = () => {
                 <span className="font-bold text-muted-foreground">
                   Saída esperada:{" "}
                 </span>
-                <code className="font-mono text-accent">
+                <code className="font-mono text-primary">
                   {step!.expectedOutput}
                 </code>
               </div>
@@ -390,7 +390,7 @@ const ProjectPage = () => {
                 <div
                   className={`border-t px-4 py-3 font-mono text-sm ${
                     stepStatus === "ok"
-                      ? "border-accent/20 bg-accent/5 text-accent"
+                      ? "border-accent/20 bg-accent/5 text-primary"
                       : "border-destructive/20 bg-destructive/5 text-destructive"
                   }`}
                 >

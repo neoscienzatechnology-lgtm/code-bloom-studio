@@ -80,7 +80,7 @@ const AdaptiveReview = ({ topErrors, actionHref = "/revisao" }: AdaptiveReviewPr
                 {hasHistory ? (
                   <AlertCircle size={15} className="text-quest-yellow" />
                 ) : (
-                  <CheckCircle2 size={15} className="text-accent" />
+                  <CheckCircle2 size={15} className="text-primary" />
                 )}
                 {item.title}
               </div>

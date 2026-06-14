@@ -82,7 +82,7 @@ const ResetPasswordPage = () => {
         {done ? (
           <div className="text-center space-y-4">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/15">
-              <CheckCircle className="h-8 w-8 text-accent" />
+              <CheckCircle className="h-8 w-8 text-primary" />
             </div>
             <p className="text-sm text-muted-foreground">Senha atualizada com sucesso! Redirecionando...</p>
           </div>

@@ -137,7 +137,7 @@ const DailyReviewPage = () => {
             </p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
-            <CheckCircle2 className="mb-2 text-accent" size={18} />
+            <CheckCircle2 className="mb-2 text-primary" size={18} />
             <div className="text-sm font-black">
               {reviewRewardClaimed ? "XP de hoje já coletado" : `+${reviewPlan.xpReward} XP`}
             </div>

@@ -81,7 +81,7 @@ const DashboardPage = () => {
                 <div className="mt-4 max-w-md">
                   <div className="mb-1 flex justify-between text-xs">
                     <span className="text-muted-foreground">Progresso</span>
-                    <span className="font-bold text-accent">{continueCourse.realProgress}%</span>
+                    <span className="font-bold text-primary">{continueCourse.realProgress}%</span>
                   </div>
                   <Progress value={continueCourse.realProgress} className="h-2 bg-secondary [&>div]:bg-primary" />
                 </div>
@@ -161,7 +161,7 @@ const DashboardPage = () => {
                                 value={course.realProgress}
                                 className="h-2 flex-1 bg-secondary [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent"
                               />
-                              <span className="whitespace-nowrap text-xs font-bold text-accent">{course.realProgress}%</span>
+                              <span className="whitespace-nowrap text-xs font-bold text-primary">{course.realProgress}%</span>
                             </div>
                           </div>
                         </div>
@@ -206,7 +206,7 @@ const DashboardPage = () => {
                   <p className="mt-2 text-xs text-muted-foreground">{totalXp.toLocaleString()} XP reais acumulados.</p>
                 </div>
                 <div className="rounded-xl border border-border bg-background p-4">
-                  <div className="mb-3 flex items-center gap-2 text-xs font-black text-accent">
+                  <div className="mb-3 flex items-center gap-2 text-xs font-black text-primary">
                     <CalendarCheck2 size={15} /> Últimos 7 dias
                   </div>
                   <div className="grid grid-cols-7 gap-1">

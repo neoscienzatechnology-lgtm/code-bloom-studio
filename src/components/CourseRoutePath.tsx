@@ -118,7 +118,7 @@ const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps
                     <span
                       className={`absolute -left-[27px] flex h-5 w-5 items-center justify-center rounded-full border-2 bg-card ${
                         done
-                          ? "border-accent text-accent"
+                          ? "border-accent text-primary"
                           : current
                             ? "border-primary text-primary"
                             : "border-border text-muted-foreground"
@@ -148,7 +148,7 @@ const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps
                       )}
                     </div>
                     <div className="hidden items-center gap-3 sm:flex">
-                      <span className="text-xs font-black text-accent">+{lesson.xpReward} XP</span>
+                      <span className="text-xs font-black text-primary">+{lesson.xpReward} XP</span>
                       {locked ? <Lock size={17} className="text-muted-foreground" /> : <ChevronRight size={18} className="text-primary" />}
                     </div>
                   </div>

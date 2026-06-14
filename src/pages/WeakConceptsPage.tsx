@@ -25,7 +25,7 @@ const statusCopy: Record<ConceptStatus, { label: string; className: string }> = 
   weak: { label: "Precisa revisar", className: "bg-destructive/10 text-destructive" },
   learning: { label: "Em consolidação", className: "bg-quest-yellow/10 text-quest-yellow" },
   new: { label: "Ainda novo", className: "bg-secondary text-muted-foreground" },
-  strong: { label: "Forte", className: "bg-accent/10 text-accent" },
+  strong: { label: "Forte", className: "bg-accent/10 text-primary" },
 };
 
 function chooseDefaultConcept(concepts: ConceptMastery[], selectedId: string | null) {
@@ -138,7 +138,7 @@ const WeakConceptsPage = () => {
             <p className="text-xs text-muted-foreground">Priorizados antes de avançar conteúdo novo.</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4">
-            <BookOpenCheck className="mb-2 text-accent" size={18} />
+            <BookOpenCheck className="mb-2 text-primary" size={18} />
             <div className="text-sm font-black">{learningCount} em consolidação</div>
             <p className="text-xs text-muted-foreground">Bons candidatos para revisão espaçada.</p>
           </div>
@@ -262,7 +262,7 @@ const WeakConceptsPage = () => {
               </div>
             ) : (
               <div className="rounded-2xl border border-border bg-background p-6 text-center">
-                <CheckCircle2 className="mx-auto mb-3 text-accent" size={32} />
+                <CheckCircle2 className="mx-auto mb-3 text-primary" size={32} />
                 <h2 className="text-xl font-black text-foreground">Tudo estável por aqui</h2>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Faça mais aulas para o app encontrar padrões reais de domínio e dificuldade.

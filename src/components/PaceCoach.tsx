@@ -93,7 +93,7 @@ const PaceCoach = ({
           >
             <X size={14} />
           </button>
-          <div className="mb-2 flex items-center gap-2 text-sm font-extrabold text-accent">
+          <div className="mb-2 flex items-center gap-2 text-sm font-extrabold text-primary">
             <Sparkles size={16} />
             Mandou bem! Topa um desafio extra?
           </div>
@@ -102,7 +102,7 @@ const PaceCoach = ({
           </p>
           {bonusChallenge && (
             <div className="mt-3 rounded-lg border border-border bg-card/60 px-3 py-2 text-sm leading-relaxed text-foreground">
-              <span className="font-bold text-accent">Desafio: </span>
+              <span className="font-bold text-primary">Desafio: </span>
               {bonusChallenge}
             </div>
           )}

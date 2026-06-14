@@ -6,34 +6,34 @@
 
 @layer base {
   :root {
-    /* CapyCode — adulto/tech: grafite, papel frio, um acento teal */
-    --background: 200 22% 98%;
-    --foreground: 208 26% 14%;
+    /* CapyCode — estilo CODERS: charcoal, verde-escuro legível, acento lima */
+    --background: 150 12% 98%;
+    --foreground: 160 12% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 208 26% 14%;
+    --card-foreground: 160 12% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 208 26% 14%;
+    --popover-foreground: 160 12% 14%;
 
-    --primary: 173 74% 36%;
+    --primary: 134 66% 30%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 20% 94%;
-    --secondary-foreground: 208 24% 18%;
+    --secondary: 150 12% 94%;
+    --secondary-foreground: 160 14% 18%;
 
-    --muted: 205 18% 93%;
-    --muted-foreground: 206 12% 42%;
+    --muted: 150 10% 93%;
+    --muted-foreground: 155 8% 40%;
 
-    --accent: 168 48% 54%;
-    --accent-foreground: 200 30% 14%;
+    --accent: 112 67% 51%;
+    --accent-foreground: 110 70% 11%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 208 16% 88%;
-    --input: 208 16% 88%;
-    --ring: 173 74% 36%;
+    --border: 150 10% 88%;
+    --input: 150 10% 88%;
+    --ring: 134 66% 30%;
 
     --radius: 0.75rem;
 
@@ -43,58 +43,58 @@
     --quest-orange: 26 78% 52%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 208 26% 14%;
-    --sidebar-primary: 173 74% 36%;
+    --sidebar-foreground: 160 12% 14%;
+    --sidebar-primary: 134 66% 30%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 200 20% 94%;
-    --sidebar-accent-foreground: 208 26% 14%;
-    --sidebar-border: 208 16% 88%;
-    --sidebar-ring: 173 74% 36%;
+    --sidebar-accent: 150 12% 94%;
+    --sidebar-accent-foreground: 160 12% 14%;
+    --sidebar-border: 150 10% 88%;
+    --sidebar-ring: 134 66% 30%;
   }
 
   .dark {
-    /* CapyCode — adulto/tech (dark): grafite frio, acento teal */
-    --background: 205 28% 9%;
-    --foreground: 200 18% 92%;
+    /* CapyCode — estilo CODERS (dark): charcoal, acento lima */
+    --background: 150 6% 8%;
+    --foreground: 150 10% 92%;
 
-    --card: 206 24% 12%;
-    --card-foreground: 200 18% 92%;
+    --card: 156 6% 13%;
+    --card-foreground: 150 10% 92%;
 
-    --popover: 206 24% 12%;
-    --popover-foreground: 200 18% 92%;
+    --popover: 156 6% 13%;
+    --popover-foreground: 150 10% 92%;
 
-    --primary: 172 68% 44%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 112 64% 52%;
+    --primary-foreground: 120 60% 8%;
 
-    --secondary: 205 18% 18%;
-    --secondary-foreground: 200 18% 92%;
+    --secondary: 156 6% 18%;
+    --secondary-foreground: 150 10% 92%;
 
-    --muted: 205 16% 18%;
-    --muted-foreground: 205 12% 64%;
+    --muted: 156 5% 18%;
+    --muted-foreground: 150 8% 64%;
 
-    --accent: 168 50% 48%;
-    --accent-foreground: 200 40% 9%;
+    --accent: 112 64% 52%;
+    --accent-foreground: 120 60% 8%;
 
     --destructive: 0 64% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 205 14% 22%;
-    --input: 205 14% 24%;
-    --ring: 172 68% 44%;
+    --border: 156 6% 22%;
+    --input: 156 6% 24%;
+    --ring: 112 64% 52%;
 
     --quest-yellow: 40 80% 58%;
     --quest-blue: 190 52% 54%;
     --quest-pink: 16 70% 62%;
     --quest-orange: 26 80% 58%;
 
-    --sidebar-background: 206 26% 10%;
-    --sidebar-foreground: 200 18% 92%;
-    --sidebar-primary: 172 68% 44%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 205 18% 18%;
-    --sidebar-accent-foreground: 200 18% 92%;
-    --sidebar-border: 205 14% 22%;
-    --sidebar-ring: 172 68% 44%;
+    --sidebar-background: 156 6% 10%;
+    --sidebar-foreground: 150 10% 92%;
+    --sidebar-primary: 112 64% 52%;
+    --sidebar-primary-foreground: 120 60% 8%;
+    --sidebar-accent: 156 6% 18%;
+    --sidebar-accent-foreground: 150 10% 92%;
+    --sidebar-border: 156 6% 22%;
+    --sidebar-ring: 112 64% 52%;
   }
 }
 

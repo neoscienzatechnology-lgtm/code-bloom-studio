@@ -17,7 +17,7 @@ const statusBadge: Record<LessonStatus, { icon: JSX.Element; label: string; cls:
   completed: {
     icon: <CheckCircle2 size={12} />,
     label: "Concluído",
-    cls: "bg-accent/15 text-accent border-accent/30",
+    cls: "bg-accent/15 text-primary border-accent/30",
   },
   available: {
     icon: <PlayCircle size={12} />,

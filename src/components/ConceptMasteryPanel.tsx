@@ -27,7 +27,7 @@ const STATUS_COPY: Record<ConceptStatus, { label: string; className: string; ico
   },
   strong: {
     label: "Forte",
-    className: "bg-accent/10 text-accent",
+    className: "bg-accent/10 text-primary",
     icon: CheckCircle2,
   },
 };
@@ -50,7 +50,7 @@ const ConceptMasteryPanel = ({ concepts, syncLabel }: ConceptMasteryPanelProps) 
             </p>
           </div>
         </div>
-        <span className={`w-fit rounded-full px-3 py-1 text-xs font-black ${weakCount > 0 ? "bg-destructive/10 text-destructive" : "bg-accent/10 text-accent"}`}>
+        <span className={`w-fit rounded-full px-3 py-1 text-xs font-black ${weakCount > 0 ? "bg-destructive/10 text-destructive" : "bg-accent/10 text-primary"}`}>
           {weakCount > 0 ? `${weakCount} pontos fracos` : "Base estável"}
         </span>
       </div>

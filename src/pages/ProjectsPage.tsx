@@ -57,7 +57,7 @@ const ProjectsPage = () => {
                     <p className="text-sm font-bold text-primary">{course?.title ?? project.language}</p>
                   </div>
                   {projectDone ? (
-                    <Trophy size={20} className="text-accent" />
+                    <Trophy size={20} className="text-primary" />
                   ) : !unlocked ? (
                     <Lock size={20} className="text-muted-foreground" />
                   ) : null}

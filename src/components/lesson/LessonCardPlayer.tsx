@@ -125,7 +125,7 @@ const TheoryText = ({ text }: { text: string }) => {
         if (block.kind === "bullet") {
           return (
             <div key={index} className="flex gap-2.5">
-              <ChevronRight size={16} className="mt-1 shrink-0 text-accent" />
+              <ChevronRight size={16} className="mt-1 shrink-0 text-primary" />
               <p className="leading-relaxed text-foreground">{inlineFormat(block.content)}</p>
             </div>
           );
@@ -216,7 +216,7 @@ const AssembleCard = ({
   };
 
   return (
-    <CardShell icon={<Blocks size={13} />} label="Monte o código" tone="bg-accent/10 text-accent">
+    <CardShell icon={<Blocks size={13} />} label="Monte o código" tone="bg-accent/10 text-primary">
       <p className="mb-3 text-sm text-muted-foreground">
         Toque nos blocos na ordem certa para formar a linha de código.
       </p>
@@ -287,7 +287,7 @@ const AssembleCard = ({
       {checked && (
         <div
           className={`mt-3 rounded-xl px-4 py-3 text-sm font-bold ${
-            isSolved ? "bg-accent/10 text-accent" : "bg-destructive/10 text-destructive"
+            isSolved ? "bg-accent/10 text-primary" : "bg-destructive/10 text-destructive"
           }`}
         >
           {isSolved ? (
@@ -433,7 +433,7 @@ const LessonCardPlayer = ({
           )}
 
           {card.kind === "example" && (
-            <CardShell icon={<Code2 size={13} />} label="Na prática" tone="bg-accent/10 text-accent">
+            <CardShell icon={<Code2 size={13} />} label="Na prática" tone="bg-accent/10 text-primary">
               <pre className="overflow-x-auto rounded-xl bg-[#1e1e2e] px-4 py-3 font-mono text-sm leading-relaxed text-[#cdd6f4]">
                 {card.code}
               </pre>
@@ -477,7 +477,7 @@ const LessonCardPlayer = ({
                     >
                       <pre className="overflow-x-auto font-mono text-xs leading-relaxed text-[#cdd6f4]">{code}</pre>
                       {contrastAnswered && (
-                        <span className={`mt-2 inline-flex items-center gap-1 text-xs font-black ${isRightSlot ? "text-accent" : "text-destructive"}`}>
+                        <span className={`mt-2 inline-flex items-center gap-1 text-xs font-black ${isRightSlot ? "text-primary" : "text-destructive"}`}>
                           {isRightSlot ? <Check size={12} /> : <X size={12} />}
                           {isRightSlot ? "Correto" : "Tem um problema aqui"}
                         </span>
@@ -542,7 +542,7 @@ const LessonCardPlayer = ({
           )}
 
           {card.kind === "code-intro" && (
-            <CardShell icon={<Code2 size={13} />} label="Agora é código" tone="bg-accent/10 text-accent">
+            <CardShell icon={<Code2 size={13} />} label="Agora é código" tone="bg-accent/10 text-primary">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -551,7 +551,7 @@ const LessonCardPlayer = ({
               >
                 <span className="text-2xl" aria-hidden="true">🎉</span>
                 <div>
-                  <div className="text-sm font-black text-accent">Cartões concluídos!</div>
+                  <div className="text-sm font-black text-primary">Cartões concluídos!</div>
                   <div className="text-xs text-muted-foreground">Agora prove a ideia escrevendo o código de verdade.</div>
                 </div>
               </motion.div>
@@ -564,7 +564,7 @@ const LessonCardPlayer = ({
               <p className="mb-3 leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
               <div className="rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
                 <span className="font-bold text-muted-foreground">Saída esperada: </span>
-                <code className="font-mono text-accent">{lesson.expectedOutput}</code>
+                <code className="font-mono text-primary">{lesson.expectedOutput}</code>
               </div>
             </CardShell>
           )}

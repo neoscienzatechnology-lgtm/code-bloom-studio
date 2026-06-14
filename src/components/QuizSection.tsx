@@ -149,7 +149,7 @@ const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
               if (!answered) {
                 cls += " border-border bg-card hover:border-primary/50 hover:bg-primary/5 cursor-pointer";
               } else if (isThisCorrect) {
-                cls += " border-accent/50 bg-accent/10 text-accent";
+                cls += " border-accent/50 bg-accent/10 text-primary";
               } else if (isThisSelected) {
                 cls += " border-destructive/40 bg-destructive/8 text-destructive";
               } else {
@@ -193,7 +193,7 @@ const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
                 <div
                   className={`rounded-xl px-4 py-2.5 text-sm font-semibold ${
                     isCorrect
-                      ? "bg-accent/10 text-accent"
+                      ? "bg-accent/10 text-primary"
                       : "bg-destructive/8 text-destructive"
                   }`}
                 >

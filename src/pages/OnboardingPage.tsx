@@ -129,7 +129,7 @@ const OnboardingPage = () => {
             </section>
 
             <section>
-              <div className="mb-3 flex items-center gap-2 text-sm font-black text-accent">
+              <div className="mb-3 flex items-center gap-2 text-sm font-black text-primary">
                 <Clock size={16} /> 3. Quanto tempo por dia?
               </div>
               <div className="flex flex-wrap gap-2">

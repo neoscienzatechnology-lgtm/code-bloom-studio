@@ -5,7 +5,7 @@ interface BrandLogoProps {
   className?: string;
 }
 
-const ACCENT = "#17B0A0";
+const ACCENT = "#44D62C";
 
 /** Monograma "cc" reduzido a um par de colchetes — referência de código,
  * sem personagem. A parte em currentColor acompanha o tema; o acento é teal. */

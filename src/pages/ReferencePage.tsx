@@ -193,7 +193,7 @@ const ReferencePage = () => {
 
                   {entry.tryItPrompt && (
                     <div className="rounded-xl border border-accent/20 bg-accent/5 p-3">
-                      <div className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-wide text-accent">
+                      <div className="mb-1 flex items-center gap-2 text-xs font-black uppercase tracking-wide text-primary">
                         <Lightbulb size={14} /> Tente agora
                       </div>
                       <p className="text-sm leading-relaxed text-muted-foreground">{entry.tryItPrompt}</p>

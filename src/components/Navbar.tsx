@@ -82,7 +82,7 @@ const Navbar = () => {
               <span>{studyStats.currentStreak}</span>
             </div>
             <div className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm font-bold">
-              <Zap size={15} className="text-accent" />
+              <Zap size={15} className="text-primary" />
               <span>{totalXp.toLocaleString()} XP</span>
             </div>
             <button

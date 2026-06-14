@@ -19,7 +19,7 @@ const TermsPage = () => {
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
             <FileText size={24} />
           </div>
-          <p className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-accent">
+          <p className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-primary">
             Termos de uso
           </p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">
@@ -43,7 +43,7 @@ const TermsPage = () => {
             </p>
           </div>
           <div className="rounded-2xl border border-border bg-card p-5">
-            <ShieldAlert className="mb-3 text-accent" size={22} aria-hidden="true" />
+            <ShieldAlert className="mb-3 text-primary" size={22} aria-hidden="true" />
             <h2 className="mb-2 text-base font-black text-foreground">Cuidado com dados pessoais</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Não coloque senhas, documentos, telefones, endereços ou informações sensíveis nos campos

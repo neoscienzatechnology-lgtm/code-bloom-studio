@@ -818,7 +818,7 @@ const LessonVisualAid = ({ courseTitle, language, lessonTitle, stacked = false }
           <div className={stacked ? "mt-4 grid grid-cols-3 gap-2" : "mt-4 grid grid-cols-3 gap-2 lg:grid-cols-1 xl:grid-cols-3"}>
             {concept.checkpoints.map((item) => (
               <div key={item} className="flex items-start gap-1.5 rounded-lg bg-secondary/60 px-2 py-2 text-[10px] leading-tight text-muted-foreground sm:gap-2 sm:px-3 sm:text-xs">
-                <ShieldCheck size={14} className="mt-0.5 shrink-0 text-accent" />
+                <ShieldCheck size={14} className="mt-0.5 shrink-0 text-primary" />
                 <span>{item}</span>
               </div>
             ))}

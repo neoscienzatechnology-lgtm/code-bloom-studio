@@ -51,13 +51,13 @@ const ChallengeStage = ({
   <>
     {/* Task card */}
     <div className="mb-4 rounded-2xl border border-border bg-card p-5 shadow-sm">
-      <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-black text-accent">
+      <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-black text-primary">
         <Target size={13} /> Desafio
       </div>
       <p className="leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
       <div className="mt-3 rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
         <span className="font-bold text-muted-foreground">Saída esperada: </span>
-        <code className="font-mono text-accent">{lesson.expectedOutput}</code>
+        <code className="font-mono text-primary">{lesson.expectedOutput}</code>
       </div>
     </div>
 
@@ -113,7 +113,7 @@ const ChallengeStage = ({
 
     {bonusActive && (
       <div className="mt-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-foreground">
-        <span className="font-bold text-accent">✨ Modo desafio ativo:</span>{" "}
+        <span className="font-bold text-primary">✨ Modo desafio ativo:</span>{" "}
         tente refazer este exercício de uma forma diferente antes de avançar.
       </div>
     )}

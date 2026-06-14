@@ -125,7 +125,7 @@ const CourseDetailPage = () => {
             <div className="w-full rounded-2xl border border-border bg-background p-4 lg:col-start-2 lg:w-full xl:col-start-auto">
               <div className="mb-1 flex justify-between text-xs">
                 <span className="text-muted-foreground">Progresso do curso</span>
-                <span className="font-bold text-accent">{progressPct}%</span>
+                <span className="font-bold text-primary">{progressPct}%</span>
               </div>
               <Progress
                 value={progressPct}

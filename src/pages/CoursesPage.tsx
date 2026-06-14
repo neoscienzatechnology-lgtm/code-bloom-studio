@@ -147,7 +147,7 @@ const CoursesPage = () => {
                   <div className="mb-5 rounded-xl border border-border bg-background p-4">
                     <div className="mb-3 flex items-center justify-between text-xs">
                       <span className="font-bold text-muted-foreground">Caminho guiado</span>
-                      <span className="font-black text-accent">{pathProgress}%</span>
+                      <span className="font-black text-primary">{pathProgress}%</span>
                     </div>
                     <Progress value={pathProgress} className="mb-4 h-2 bg-secondary [&>div]:bg-primary" />
                     <div className="flex flex-wrap items-center gap-2">
@@ -229,7 +229,7 @@ const CoursesPage = () => {
                                 <p className="text-xs font-bold text-primary">{meta.kind}</p>
                               </div>
                               {progress === 100 ? (
-                                <CheckCircle2 size={18} className="text-accent" />
+                                <CheckCircle2 size={18} className="text-primary" />
                               ) : !unlocked ? (
                                 <Lock size={18} className="text-muted-foreground" />
                               ) : null}

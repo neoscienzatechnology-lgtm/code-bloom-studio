@@ -115,14 +115,14 @@ const CheckpointPage = () => {
                 <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{lesson.description}</p>
 
                 <div className="mb-4 flex flex-wrap items-center gap-2 text-xs">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 font-bold text-accent">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 font-bold text-primary">
                     <Trophy size={12} /> +{lesson.xpReward} XP
                   </span>
                   <span className="rounded-full bg-secondary px-3 py-1 font-bold text-muted-foreground">
                     Acerte {requiredCorrect} de {questions.length} para passar
                   </span>
                   {alreadyDone && (
-                    <span className="rounded-full bg-accent/15 px-3 py-1 font-bold text-accent">Já concluído</span>
+                    <span className="rounded-full bg-accent/15 px-3 py-1 font-bold text-primary">Já concluído</span>
                   )}
                 </div>
 

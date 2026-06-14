@@ -288,7 +288,7 @@ const Stack3D = ({ tone }: { tone: VisualTone }) => {
       />
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
-          <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 px-2 py-0.5 text-accent">
+          <span className="inline-flex items-center gap-1 rounded-full bg-accent/15 px-2 py-0.5 text-primary">
             <Layers size={12} /> LIFO
           </span>
           {count} {count === 1 ? "bloco" : "blocos"} · arraste para girar

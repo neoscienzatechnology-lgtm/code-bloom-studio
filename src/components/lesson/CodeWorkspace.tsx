@@ -113,7 +113,7 @@ const CodeWorkspace = ({
             <div
               className={`border-t px-4 py-3 font-mono text-sm ${
                 isCorrect === true
-                  ? "border-accent/20 bg-accent/5 text-accent"
+                  ? "border-accent/20 bg-accent/5 text-primary"
                   : isCorrect === null
                   ? "border-quest-yellow/20 bg-quest-yellow/5 text-quest-yellow"
                   : "border-destructive/20 bg-destructive/5 text-destructive"
@@ -183,7 +183,7 @@ const CodeWorkspace = ({
                     initial={{ opacity: 0, scale: 0.5, y: 0 }}
                     animate={{ opacity: 1, scale: 1.2, y: -20 }}
                     exit={{ opacity: 0, y: -40 }}
-                    className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-accent text-lg pointer-events-none"
+                    className="absolute -top-2 left-1/2 -translate-x-1/2 font-black text-primary text-lg pointer-events-none"
                   >
                     +{xpAward} XP! 🎉
                   </motion.div>
@@ -205,7 +205,7 @@ const CodeWorkspace = ({
             disabled={!lessonReadyToAdvance}
             className={`gap-1 text-sm ${
               lessonReadyToAdvance
-                ? "bg-accent/20 text-accent font-bold hover:bg-accent/30"
+                ? "bg-accent/20 text-primary font-bold hover:bg-accent/30"
                 : "text-muted-foreground opacity-60"
             }`}
           >

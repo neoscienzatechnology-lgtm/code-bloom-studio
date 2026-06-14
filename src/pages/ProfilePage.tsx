@@ -70,7 +70,7 @@ const ProfilePage = () => {
               <div className="max-w-xl">
                 <div className="mb-1 flex justify-between text-xs">
                   <span className="text-muted-foreground">XP para o próximo nível</span>
-                  <span className="font-bold text-accent">
+                  <span className="font-bold text-primary">
                     {studyStats.xpIntoLevel.toLocaleString()} / {studyStats.xpForNextLevel.toLocaleString()}
                   </span>
                 </div>
@@ -106,7 +106,7 @@ const ProfilePage = () => {
             <div className="text-xs font-bold text-muted-foreground">cursos concluídos</div>
           </div>
           <div className="rounded-2xl border border-border bg-card p-5 text-center">
-            <TrendingUp className="mx-auto mb-2 text-accent" size={22} />
+            <TrendingUp className="mx-auto mb-2 text-primary" size={22} />
             <div className="text-2xl font-black text-foreground">{completedLessons.length}</div>
             <div className="text-xs font-bold text-muted-foreground">atividades concluídas</div>
           </div>
@@ -134,7 +134,7 @@ const ProfilePage = () => {
                         </div>
                         <div className="flex items-center gap-2">
                           <Progress value={course.realProgress} className="h-2 flex-1 bg-secondary [&>div]:bg-primary" />
-                          <span className="text-xs font-black text-accent">{course.realProgress}%</span>
+                          <span className="text-xs font-black text-primary">{course.realProgress}%</span>
                         </div>
                       </div>
                     </Link>
@@ -196,7 +196,7 @@ const ProfilePage = () => {
                   <div className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2">
                     <CourseCoverArt course={course} variant="thumb" className="h-8 w-10 shrink-0 rounded-lg" />
                     <span className="text-sm font-bold">{course.title}</span>
-                    <span className="text-accent">✓</span>
+                    <span className="text-primary">✓</span>
                   </div>
                 </Link>
               ))}
@@ -221,7 +221,7 @@ const ProfilePage = () => {
               to="/termos"
               className="flex items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-accent/40"
             >
-              <FileText size={20} className="text-accent" />
+              <FileText size={20} className="text-primary" />
               <div>
                 <div className="font-black text-foreground">Termos de uso</div>
                 <p className="text-xs text-muted-foreground">Veja as regras para estudar, praticar e salvar progresso.</p>
