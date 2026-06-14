@@ -4,7 +4,7 @@ import { projects } from "@/data/projects";
 import { courses } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 
 const ProjectsPage = () => {
   const { isCompleted, getCourseProgress } = useProgress();
@@ -34,7 +34,7 @@ const ProjectsPage = () => {
         </div>
 
         <div className="mb-8 max-w-2xl">
-          <MascoteCapivara
+          <CoachGuide
             state={hasDoneProject ? "celebrate" : hasUnlockedProject ? "success" : "thinking"}
             message={
               hasDoneProject

@@ -1,14 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Target } from "lucide-react";
-import CapyLessonAssistant from "@/components/CapyLessonAssistant";
+import LessonGuide from "@/components/LessonGuide";
 import PaceCoach from "@/components/PaceCoach";
-import type { MascoteCapivaraState } from "@/components/MascoteCapivara";
+import type { CoachState } from "@/components/CoachGuide";
 import type { PaceMode } from "@/hooks/useLessonEditor";
 import type { Lesson } from "@/data/mockData";
 
 interface ChallengeStageProps {
   lesson: Lesson;
-  mascotState: MascoteCapivaraState;
+  mascotState: CoachState;
   revealedHintCount: number;
   lastFeedback: string | null;
   showSolution: boolean;
@@ -61,7 +61,7 @@ const ChallengeStage = ({
       </div>
     </div>
 
-    <CapyLessonAssistant
+    <LessonGuide
       title={lesson.title}
       state={mascotState}
       stageLabel="Desafio"

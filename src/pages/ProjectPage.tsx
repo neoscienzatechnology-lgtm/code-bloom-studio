@@ -15,7 +15,7 @@ import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import CodeEditor from "@/components/CodeEditor";
-import CapyLessonAssistant from "@/components/CapyLessonAssistant";
+import LessonGuide from "@/components/LessonGuide";
 import CardIllustration from "@/components/lesson/CardIllustration";
 import { getProjectById } from "@/data/projects";
 import { getCourseById } from "@/data/mockData";
@@ -344,7 +344,7 @@ const ProjectPage = () => {
                 )}
               </div>
 
-              <CapyLessonAssistant
+              <LessonGuide
                 mode="project"
                 title={step!.title}
                 state={running ? "loading" : stepStatus === "ok" ? "success" : stepStatus === "err" ? "error" : "thinking"}

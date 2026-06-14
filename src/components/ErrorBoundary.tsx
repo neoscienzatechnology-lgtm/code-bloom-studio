@@ -29,10 +29,13 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center">
-          <div className="text-5xl" role="img" aria-label="Capivara">🦫</div>
+          <svg viewBox="0 0 64 64" className="h-14 w-14 text-foreground" fill="none" role="img" aria-label="Erro">
+            <path d="M31 16 C16 27 16 37 31 48" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
+            <path d="M35 16 C49 27 49 37 35 48" stroke="#17B0A0" strokeWidth="7" strokeLinecap="round" />
+          </svg>
           <h1 className="text-xl font-black text-foreground">Algo deu errado por aqui</h1>
           <p className="max-w-sm text-sm text-muted-foreground">
-            A Capy tropeçou em um bug inesperado. Tente recarregar a página — seu progresso fica salvo.
+            O app tropeçou em um bug inesperado. Tente recarregar a página — seu progresso fica salvo.
           </p>
           <button
             onClick={this.handleReload}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import { type CoachState } from "@/components/CoachGuide";
 import LessonOnboardingBanner from "@/components/lesson/LessonOnboardingBanner";
 import LessonTopBar from "@/components/lesson/LessonTopBar";
 import LessonCardPlayer from "@/components/lesson/LessonCardPlayer";
@@ -86,7 +86,7 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   }, [code, course.id, lesson.id, saveCode, patch]);
 
   const lessonReadyToAdvance = alreadyCompleted || isCorrect === true;
-  const lessonMascotState: MascoteCapivaraState = running
+  const lessonMascotState: CoachState = running
     ? "loading"
     : alreadyCompleted
     ? "celebrate"

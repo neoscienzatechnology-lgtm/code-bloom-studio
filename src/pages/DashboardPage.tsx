@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import AdaptiveReview from "@/components/AdaptiveReview";
 import ConceptMasteryPanel from "@/components/ConceptMasteryPanel";
 import DailyGoalRing from "@/components/DailyGoalRing";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import { toLocalDateKey } from "@/utils/studyStats";
 import { getPathById } from "@/data/learningPaths";
 import { useLearningProfile } from "@/hooks/useLearningProfile";
@@ -98,7 +98,7 @@ const DashboardPage = () => {
                 goalLessons={goalLessons}
                 streak={studyStats.currentStreak}
               />
-              <MascoteCapivara
+              <CoachGuide
                 state={completedCoursesList.length > 0 ? "celebrate" : inProgressCourses.length > 0 ? "success" : "idle"}
                 message={
                   completedCoursesList.length > 0

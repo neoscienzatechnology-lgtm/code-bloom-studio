@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { Code2, Eye, Lightbulb, MousePointer2 } from "lucide-react";
-import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import CoachGuide, { type CoachState } from "@/components/CoachGuide";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type AssistantMode = "lesson" | "project" | "checkpoint";
 
-interface CapyLessonAssistantProps {
+interface LessonGuideProps {
   title: string;
   mode?: AssistantMode;
-  state?: MascoteCapivaraState;
+  state?: CoachState;
   stageLabel?: string;
   objective?: string;
   hints?: string[];
@@ -23,9 +23,9 @@ interface CapyLessonAssistantProps {
 }
 
 const modeLabel: Record<AssistantMode, string> = {
-  lesson: "Auxílio da Capy",
-  project: "Capy no projeto",
-  checkpoint: "Capy na revisão",
+  lesson: "Guia da lição",
+  project: "Guia do projeto",
+  checkpoint: "Guia da revisão",
 };
 
 function firstUsefulLine(text?: string | null) {
@@ -36,11 +36,10 @@ function firstUsefulLine(text?: string | null) {
 }
 
 /**
- * Compact Capy helper: mascot with a contextual line, the current hint, and
- * up to three actions. Intentionally light — it sits beside the editor and
- * matches the calm of the lesson cards.
+ * Guia compacto ao lado do editor: o coach reage ao estado, mostra a dica
+ * atual e até três ações. Intencionalmente leve, no mesmo tom calmo das aulas.
  */
-const CapyLessonAssistant = ({
+const LessonGuide = ({
   title,
   mode = "lesson",
   state = "thinking",
@@ -54,14 +53,14 @@ const CapyLessonAssistant = ({
   onUseGuidedStarter,
   onRevealSolution,
   canRevealSolution = false,
-}: CapyLessonAssistantProps) => {
+}: LessonGuideProps) => {
   const visibleHints = hints.slice(0, Math.max(0, revealedHintCount));
   const nextHint = hints[visibleHints.length];
   const hasMoreHints = Boolean(nextHint && onRevealHint);
   const feedbackLine = firstUsefulLine(lastFeedback);
   const currentHint = visibleHints[visibleHints.length - 1] ?? nextHint;
 
-  const capyMessage = useMemo(() => {
+  const coachMessage = useMemo(() => {
     if (state === "success") return "Boa. Agora confira por que funcionou antes de avançar.";
     if (state === "error") return nextHint ?? "Quase. Compare o resultado com a saída esperada e ajuste uma coisa por vez.";
     if (state === "loading") return "Estou acompanhando seu teste. Compare o resultado com calma.";
@@ -72,7 +71,7 @@ const CapyLessonAssistant = ({
 
   return (
     <section className={cn("rounded-2xl border border-primary/20 bg-card p-3 shadow-sm", className)}>
-      <MascoteCapivara state={state} variant="compact" message={capyMessage} className="shadow-none" />
+      <CoachGuide state={state} variant="compact" message={coachMessage} className="shadow-none" />
       <div className="mt-3 rounded-xl border border-border bg-background/70 p-3">
         <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-wide text-primary">
           <MousePointer2 size={14} /> {stageLabel ?? modeLabel[mode]}
@@ -101,4 +100,4 @@ const CapyLessonAssistant = ({
   );
 };
 
-export default CapyLessonAssistant;
+export default LessonGuide;

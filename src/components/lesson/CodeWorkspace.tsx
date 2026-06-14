@@ -2,8 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, ChevronRight, Lightbulb, Play, RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/CodeEditor";
-import CapyLessonAssistant from "@/components/CapyLessonAssistant";
-import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import LessonGuide from "@/components/LessonGuide";
+import CoachGuide, { type CoachState } from "@/components/CoachGuide";
 import { SelfExplain } from "@/components/Metacognition";
 import type { LessonEditorState } from "@/hooks/useLessonEditor";
 import type { Course, Lesson } from "@/data/mockData";
@@ -14,7 +14,7 @@ interface CodeWorkspaceProps {
   code: string;
   onCodeChange: (code: string) => void;
   editor: LessonEditorState;
-  mascotState: MascoteCapivaraState;
+  mascotState: CoachState;
   showSolution: boolean;
   xpAward: number;
   attempts: number;
@@ -55,7 +55,7 @@ const CodeWorkspace = ({
 
   return (
     <div className="flex min-h-0 flex-col">
-      <CapyLessonAssistant
+      <LessonGuide
         title={lesson.title}
         state={mascotState}
         stageLabel="Código"
@@ -161,7 +161,7 @@ const CodeWorkspace = ({
           inferior, então não há barra para limpar) */}
       <div className="sticky bottom-0 z-20 border-t border-border/20 bg-[#181825] p-4 shadow-2xl lg:static lg:shadow-none">
         {(running || output || isCorrect !== null || alreadyCompleted) && (
-          <MascoteCapivara
+          <CoachGuide
             state={mascotState}
             variant="compact"
             className="mb-3 border-white/10 font-sans shadow-none lg:hidden"

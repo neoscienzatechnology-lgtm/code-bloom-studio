@@ -4,7 +4,7 @@ import { ArrowLeft, ChevronRight, Lightbulb, ShieldCheck, Target, Trophy } from 
 import { getAugmentedLessonById } from "@/data/checkpoints";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import CardIllustration from "@/components/lesson/CardIllustration";
 import { track } from "@/lib/analytics";
 import { useProgress } from "@/hooks/useProgress";
@@ -126,7 +126,7 @@ const CheckpointPage = () => {
                   )}
                 </div>
 
-                <MascoteCapivara state="thinking" variant="compact" />
+                <CoachGuide state="thinking" variant="compact" />
               </div>
             )}
 

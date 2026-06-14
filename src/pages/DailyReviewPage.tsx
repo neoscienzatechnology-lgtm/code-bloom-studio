@@ -13,7 +13,7 @@ import QuizSection from "@/components/QuizSection";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import CourseCoverArt from "@/components/CourseCoverArt";
 import {
   buildDailyReviewPlan,
@@ -105,7 +105,7 @@ const DailyReviewPage = () => {
             </p>
           </div>
 
-          <MascoteCapivara
+          <CoachGuide
             state={result ? (result.passed ? "celebrate" : "error") : "thinking"}
             message={
               result

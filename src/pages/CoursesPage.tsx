@@ -7,7 +7,7 @@ import { getCourseMeta, learningPaths, type LearningPath } from "@/data/learning
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import CourseCoverArt from "@/components/CourseCoverArt";
 import { useLearningProfile } from "@/hooks/useLearningProfile";
 import { calculatePathProgress, selectPathStartCourse } from "@/utils/learningPathProgress";
@@ -84,7 +84,7 @@ const CoursesPage = () => {
         </motion.div>
 
         <div className="mb-8 max-w-2xl">
-          <MascoteCapivara
+          <CoachGuide
             state={activeTab === "Trilhas" ? "thinking" : "idle"}
             message="Minha sugestão: se você está começando, siga uma trilha. O catálogo fica aqui para quando você já souber qual tecnologia quer estudar."
           />

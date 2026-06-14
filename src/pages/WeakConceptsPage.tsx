@@ -9,7 +9,7 @@ import {
   RotateCcw,
   Target,
 } from "lucide-react";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import QuizSection from "@/components/QuizSection";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -115,7 +115,7 @@ const WeakConceptsPage = () => {
             </p>
           </div>
 
-          <MascoteCapivara
+          <CoachGuide
             variant="compact"
             state={passed ? "celebrate" : result ? "thinking" : "thinking"}
             message={

@@ -34,7 +34,6 @@ const OnboardingPage = lazy(() => import("./pages/OnboardingPage.tsx"));
 const DailyReviewPage = lazy(() => import("./pages/DailyReviewPage.tsx"));
 const WeakConceptsPage = lazy(() => import("./pages/WeakConceptsPage.tsx"));
 const ReferencePage = lazy(() => import("./pages/ReferencePage.tsx"));
-const MascoteDemoPage = lazy(() => import("./pages/MascoteDemoPage.tsx"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
 const AccountDeletionPage = lazy(() => import("./pages/AccountDeletionPage.tsx"));
@@ -133,7 +132,6 @@ const App = () => {
               <Route path="/revisao" element={<ProtectedPageWithNav><DailyReviewPage /></ProtectedPageWithNav>} />
               <Route path="/pontos-fracos" element={<ProtectedPageWithNav><WeakConceptsPage /></ProtectedPageWithNav>} />
               <Route path="/referencia" element={<ProtectedPageWithNav><ReferencePage /></ProtectedPageWithNav>} />
-              <Route path="/mascote" element={<ProtectedPageWithNav><MascoteDemoPage /></ProtectedPageWithNav>} />
               <Route path="/privacidade" element={<PageWithNav><PrivacyPolicyPage /></PageWithNav>} />
               <Route path="/termos" element={<PageWithNav><TermsPage /></PageWithNav>} />
               <Route path="/excluir-conta" element={<PageWithNav><AccountDeletionPage /></PageWithNav>} />

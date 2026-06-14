@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, BookOpenCheck, Code2, Gamepad2, Trophy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import BrandLogo from "@/components/BrandLogo";
 import { appCatalogSummary, landingTracks } from "@/data/courseCatalog";
 import CourseCoverArt from "@/components/CourseCoverArt";
@@ -153,7 +153,7 @@ const LandingPage = () => {
               </Button>
             </div>
             <div className="mb-8 max-w-md">
-              <MascoteCapivara
+              <CoachGuide
                 state="idle"
                 message="Eu sou o CapyCoder. Vou te guiar com explicações curtinhas, aquecimentos e revisões quando você precisar."
               />

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import LessonVisualAid from "@/components/LessonVisualAid";
 import CardIllustration from "@/components/lesson/CardIllustration";
 import ConceptDiagram from "@/components/lesson/ConceptDiagram";
@@ -396,7 +396,7 @@ const LessonCardPlayer = ({
               <h2 className="mb-1 text-xl font-black text-foreground">{lesson.title}</h2>
               <p className="mb-4 text-sm text-muted-foreground">{course.title}</p>
               <ConfidenceCheck lessonId={lesson.id} />
-              <MascoteCapivara state="idle" variant="compact" className="mt-3" />
+              <CoachGuide state="idle" variant="compact" className="mt-3" />
             </CardShell>
           )}
 
@@ -555,7 +555,7 @@ const LessonCardPlayer = ({
                   <div className="text-xs text-muted-foreground">Agora prove a ideia escrevendo o código de verdade.</div>
                 </div>
               </motion.div>
-              <MascoteCapivara
+              <CoachGuide
                 state="celebrate"
                 variant="compact"
                 message="Você fechou os cartões! Agora é só codar."

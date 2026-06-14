@@ -11,7 +11,7 @@ import {
 import { learningPaths } from "@/data/learningPaths";
 import { courses } from "@/data/mockData";
 import { selectPathStartCourse } from "@/utils/learningPathProgress";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 
 const experienceOptions: Array<{ value: ExperienceLevel; title: string; description: string }> = [
   { value: "new", title: "Nunca programei", description: "Começar devagar, com linguagem simples e muitos exemplos." },
@@ -67,7 +67,7 @@ const OnboardingPage = () => {
         </div>
 
         <div className="mb-8 max-w-2xl">
-          <MascoteCapivara
+          <CoachGuide
             state="thinking"
             message="Boa escolha começa pelo objetivo. Depois eu mostro quais tecnologias entram em cada etapa."
           />

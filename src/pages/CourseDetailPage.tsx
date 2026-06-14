@@ -8,7 +8,7 @@ import { getAugmentedCourseById } from "@/data/checkpoints";
 import { getProjectsByCourse } from "@/data/projects";
 import { getCourseMeta } from "@/data/learningPaths";
 import { useProgress } from "@/hooks/useProgress";
-import MascoteCapivara, { type MascoteCapivaraState } from "@/components/MascoteCapivara";
+import CoachGuide, { type CoachState } from "@/components/CoachGuide";
 import CourseRoutePath from "@/components/CourseRoutePath";
 import CourseCoverArt from "@/components/CourseCoverArt";
 
@@ -23,7 +23,7 @@ const CourseDetailPage = () => {
   const progressPct = Math.round((completedLessons / course.lessons.length) * 100);
   const projects = getProjectsByCourse(course.id);
   const meta = getCourseMeta(course);
-  const mascotState: MascoteCapivaraState = progressPct === 100 ? "celebrate" : progressPct > 0 ? "success" : "idle";
+  const mascotState: CoachState = progressPct === 100 ? "celebrate" : progressPct > 0 ? "success" : "idle";
   const firstOpenIndex = course.lessons.findIndex((lesson) => !isCompleted(lesson.id));
   const currentLesson = course.lessons[firstOpenIndex === -1 ? course.lessons.length - 1 : firstOpenIndex];
   const currentLessonHref =
@@ -52,7 +52,7 @@ const CourseDetailPage = () => {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(280px,0.85fr)_1.15fr] lg:items-start xl:grid-cols-[minmax(320px,0.85fr)_minmax(0,1fr)_18rem]">
-            <CourseCoverArt course={course} variant="hero" loading="eager" />
+            <CourseCoverArt course={course} variant="hero" />
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-black sm:text-3xl">{course.title}</h1>
@@ -139,7 +139,7 @@ const CourseDetailPage = () => {
         </motion.div>
 
         <div className="mb-6">
-          <MascoteCapivara
+          <CoachGuide
             state={mascotState}
             message={
               progressPct === 100

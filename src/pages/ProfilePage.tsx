@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, FileText, Flame, ShieldCheck, Star, TrendingUp, Trophy, UserX } from "lucide-react";
 import { courses } from "@/data/mockData";
 import { Progress } from "@/components/ui/progress";
-import MascoteCapivara from "@/components/MascoteCapivara";
+import CoachGuide from "@/components/CoachGuide";
 import { useProgress } from "@/hooks/useProgress";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildAchievements, type AchievementRarity } from "@/utils/achievements";
@@ -82,7 +82,7 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <MascoteCapivara
+          <CoachGuide
             state={completedCourses.length > 0 ? "celebrate" : activeCourses.length > 0 ? "success" : "idle"}
             message={
               completedCourses.length > 0
