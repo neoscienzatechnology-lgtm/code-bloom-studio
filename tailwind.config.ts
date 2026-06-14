@@ -15,7 +15,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Nunito", "system-ui", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
         mono: ["Fira Code", "monospace"],
       },
       colors: {

@@ -121,7 +121,7 @@ const CourseCoverArt = ({ course, variant = "card", className = "" }: CourseCove
       {variant === "hero" && (
         <figcaption className="absolute bottom-5 left-5 right-5 max-w-lg">
           <div className="mb-2 text-xs font-black uppercase tracking-wide text-white/75">Trilha CapyCode</div>
-          <div className="text-2xl font-black leading-tight text-white sm:text-3xl">{course.title}</div>
+          <div className="font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl">{course.title}</div>
           <div className="mt-1 text-sm font-bold text-white/80">{course.language} · {course.emoji}</div>
         </figcaption>
       )}
