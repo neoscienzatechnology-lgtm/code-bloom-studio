@@ -168,7 +168,7 @@ const ProjectPage = () => {
   const useGuidedProjectStarter = () => {
     if (!step) return;
     setCode(
-      `// Guia da Capy\n// Projeto: ${project.title}\n// Etapa: ${step.title}\n// Saída esperada: ${step.expectedOutput}\n// Resolva só esta etapa antes de avançar.\n\n${step.starterCode}`,
+      `// Guia\n// Projeto: ${project.title}\n// Etapa: ${step.title}\n// Saída esperada: ${step.expectedOutput}\n// Resolva só esta etapa antes de avançar.\n\n${step.starterCode}`,
     );
     setOutput(null);
     setStepStatus("idle");

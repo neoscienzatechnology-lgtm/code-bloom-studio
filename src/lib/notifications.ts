@@ -33,7 +33,7 @@ export async function scheduleStreakReminder(streak: number): Promise<void> {
       notifications: [
         {
           id: REMINDER_ID,
-          title: streak >= 2 ? `🔥 Sequência de ${streak} dias em risco!` : "🦫 A Capy está esperando",
+          title: streak >= 2 ? `🔥 Sequência de ${streak} dias em risco!` : "Hora de praticar",
           body:
             streak >= 2
               ? "Cinco minutos hoje mantêm sua sequência viva."

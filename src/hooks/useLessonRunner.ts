@@ -146,7 +146,7 @@ export function useLessonRunner({
   };
 
   const applyGuidedStarter = () => {
-    const guide = `// Guia da Capy\n// 1. Releia o objetivo: ${lesson.learningObjective ?? lesson.description}\n// 2. Compare cada linha com a saída esperada: ${lesson.expectedOutput}\n// 3. Use uma dica por vez antes de testar de novo.\n\n${lesson.starterCode}`;
+    const guide = `// Guia\n// 1. Releia o objetivo: ${lesson.learningObjective ?? lesson.description}\n// 2. Compare cada linha com a saída esperada: ${lesson.expectedOutput}\n// 3. Use uma dica por vez antes de testar de novo.\n\n${lesson.starterCode}`;
     setCode(guide);
     patch({ output: null, reflectiveQ: null, isCorrect: null, paceMode: null });
     goToCodeStage();

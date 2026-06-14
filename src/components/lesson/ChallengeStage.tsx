@@ -27,7 +27,7 @@ interface ChallengeStageProps {
 
 /**
  * Calm support column for the code phase — matches the lesson cards:
- * one clean task card, the compact Capy helper, and adaptive coaching that
+ * one clean task card, the compact guide helper, and adaptive coaching that
  * only appears when the learner is stuck or breezing through.
  */
 const ChallengeStage = ({

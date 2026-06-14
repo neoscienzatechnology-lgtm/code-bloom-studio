@@ -178,9 +178,9 @@ const pythonLessons = [
       "Uma variável é como uma etiqueta em uma caixa. A etiqueta diz o que tem dentro, e você pode abrir a caixa de novo quando precisar do valor.",
     example: 'nome = "Ana"\nprint(nome)',
     codeExample: 'curso = "Python"\nprint(curso)',
-    starterCode: '# Crie uma variável chamada nome com o valor "Capy"\n',
-    solution: 'nome = "Capy"\nprint(nome)',
-    expectedOutput: "Capy",
+    starterCode: '# Crie uma variável chamada nome com o valor "Ana"\n',
+    solution: 'nome = "Ana"\nprint(nome)',
+    expectedOutput: "Ana",
     hints: ["Use nome = ...", "Textos precisam de aspas.", "Mostre a variável com print(nome)."],
     summary: "Você guardou uma informação em uma variável e reutilizou esse valor.",
     nextStep: "Depois de guardar textos, vamos ver os principais tipos de dados.",
@@ -189,10 +189,10 @@ const pythonLessons = [
     reference: ["nome = valor cria variável.", "Use snake_case em nomes compostos.", "Texto fica entre aspas.", "print(nome) mostra o valor guardado."],
     concepts: ["variables", "strings", "naming"],
     contrastExample: {
-      wrong: "nome = Capy\nprint(nome)",
-      right: 'nome = "Capy"\nprint(nome)',
+      wrong: "nome = Ana\nprint(nome)",
+      right: 'nome = "Ana"\nprint(nome)',
       explanation:
-        "Sem aspas, Python procura uma variável chamada `Capy`. As aspas marcam que `Capy` é **texto**, não um nome de variável.",
+        "Sem aspas, Python procura uma variável chamada `Ana`. As aspas marcam que `Ana` é **texto**, não um nome de variável.",
     },
     quiz: {
       question: "Qual opção cria uma variável válida em Python?",

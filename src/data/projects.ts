@@ -512,7 +512,7 @@ export const projects: Project[] = [
   {
     id: "proj-foundation-calculator",
     courseId: "10",
-    title: "Calculadora da Capy",
+    title: "Calculadora pessoal",
     emoji: "🧮",
     language: "JavaScript",
     goal: "Construir uma calculadora simples usando variáveis, condição e função.",

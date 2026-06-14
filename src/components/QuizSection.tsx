@@ -205,7 +205,7 @@ const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
                 {/* Explanation */}
                 {q.explanation && (
                   <div className="rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-xs text-muted-foreground leading-relaxed">
-                    Dica da Capy: {q.explanation}
+                    Dica: {q.explanation}
                   </div>
                 )}
 

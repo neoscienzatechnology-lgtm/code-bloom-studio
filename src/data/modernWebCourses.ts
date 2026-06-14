@@ -436,7 +436,7 @@ const htmlLessons = [
       "Semântica significa escolher tags pelo significado do conteúdo. header indica cabeçalho; main indica o conteúdo principal; section separa temas; article representa conteúdo independente; footer fecha uma página ou seção. Isso melhora leitura humana, acessibilidade e manutenção.",
     analogy:
       "É como sinalizar uma cidade: placas claras ajudam qualquer pessoa a se orientar sem perguntar a cada esquina.",
-    example: `<header><h1>Blog da Capy</h1></header>
+    example: `<header><h1>Meu Blog</h1></header>
 <main>
   <section>
     <h2>Artigos recentes</h2>
@@ -447,7 +447,7 @@ const htmlLessons = [
     codeExample: "<main>\n  <section>\n    <h2>Conteúdo</h2>\n  </section>\n</main>",
     starterCode: "<!-- Estruture a página semanticamente -->\n",
     solution:
-      "<header><h1>Blog da Capy</h1></header>\n<main>\n  <section>\n    <h2>Artigos recentes</h2>\n    <article><h3>HTML semântico</h3><p>Estrutura importa.</p></article>\n  </section>\n</main>\n<footer>CapyCode</footer>",
+      "<header><h1>Meu Blog</h1></header>\n<main>\n  <section>\n    <h2>Artigos recentes</h2>\n    <article><h3>HTML semântico</h3><p>Estrutura importa.</p></article>\n  </section>\n</main>\n<footer>CapyCode</footer>",
     expectedOutput: "<main>",
     hints: ["Use apenas um main por página.", "section precisa ter um tema.", "article deve fazer sentido isolado."],
     summary: "Você saiu do div para tudo e começou a escrever HTML com intenção.",
@@ -1550,9 +1550,9 @@ const javascriptLessons = [
       type: "predict-output",
       title: "Preveja a saída",
       prompt: "O que aparece no console?",
-      code: 'console.log("Capy");',
-      options: ["Capy", "console.log", "Erro", "Nada"],
-      correctAnswer: "Capy",
+      code: 'console.log("Ana");',
+      options: ["Ana", "console.log", "Erro", "Nada"],
+      correctAnswer: "Ana",
       success: "Boa. O texto dentro das aspas é exibido.",
       error: "Ainda não. console.log mostra o valor passado para ele.",
       hint: "Ignore o nome da função e veja o argumento.",

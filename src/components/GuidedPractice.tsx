@@ -221,7 +221,7 @@ const GuidedPractice = ({ lesson, onCompletionChange }: GuidedPracticeProps) => 
                   <div className={`mt-3 rounded-lg px-3 py-2 text-xs font-bold ${ok ? "bg-accent/10 text-accent" : "bg-destructive/10 text-destructive"}`}>
                     {ok ? activity.successFeedback : activity.errorFeedback}
                     {!ok && activity.hint && (
-                      <div className="mt-1 font-medium opacity-90">Dica da Capy: {activity.hint}</div>
+                      <div className="mt-1 font-medium opacity-90">Dica: {activity.hint}</div>
                     )}
                   </div>
                 )}

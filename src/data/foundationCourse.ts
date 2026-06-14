@@ -310,7 +310,7 @@ Exemplo:
   mostrar("montar lanche");
   mostrar("servir");
 
-## Dica da Capy
+## Dica
 Se você travar, responda: qual é o primeiro passo visível que aproxima o programa do objetivo?`,
       starterCode: "// Mostre os passos: acordar, estudar, praticar\n",
       solution: 'mostrar("acordar");\nmostrar("estudar");\nmostrar("praticar");',
@@ -438,7 +438,7 @@ Muitos erros de iniciante vêm de aspas, parênteses ou nomes digitados errado.
 Exemplo correto:
   mostrar("corrigi o erro");
 
-## Dica da Capy
+## Dica
 Corrigir erro é treino de leitura. Leia devagar e compare com o exemplo.`,
       starterCode: 'mostrar("corrigi o erro"\n',
       solution: 'mostrar("corrigi o erro");',
@@ -694,7 +694,7 @@ Isso cria uma habilidade importante: encontrar erros antes de depender do botão
 
 Leia assim: total começa em 10. Depois recebe o valor antigo de total mais 20. Então vira 30.
 
-## Dica da Capy
+## Dica
 Quando uma variável muda, acompanhe o valor com o dedo ou anote do lado.`,
       starterCode: "let total = 10;\n// some 20 ao total\nconsole.log(total);\n",
       solution: "let total = 10;\ntotal = total + 20;\nconsole.log(total);",
@@ -936,7 +936,7 @@ Agora você vai juntar três peças:
 Leia a regra em português antes de escrever:
 Se nota for maior ou igual a 7, mostrar Aprovado. Senão, mostrar Revisar.
 
-## Dica da Capy
+## Dica
 Quando o exercício pedir decisão, escreva primeiro a condição entre parênteses.`,
       starterCode: "const nota = 8;\n// aplique a regra de aprovação\n",
       solution:
@@ -1184,7 +1184,7 @@ Loops deixam a intenção clara: repetir uma ação enquanto uma regra for verda
     console.log("Praticar");
   }
 
-## Dica da Capy
+## Dica
 Identifique o que muda. Neste caso, a mensagem não muda; quem muda é o contador de repetições.`,
       starterCode: "// Mostre Praticar três vezes usando for\n",
       solution: 'for (let vez = 1; vez <= 3; vez++) {\n  console.log("Praticar");\n}',
@@ -1438,7 +1438,7 @@ Regra: receber um preço e devolver o preço com 10 de desconto.
 
   console.log(calcularDesconto(50));
 
-## Dica da Capy
+## Dica
 Leia o nome da função. Ele deve explicar exatamente o que a função faz.`,
       starterCode: "// Crie calcularDesconto(preco) e teste com 50\n",
       solution:
@@ -1496,7 +1496,7 @@ Saída: resultado mostrado.
 ## Projeto
 Nossa calculadora vai receber dois números, escolher uma operação e mostrar o resultado.
 
-## Dica da Capy
+## Dica
 Projeto bom não começa digitando. Começa entendendo quais peças precisam existir.`,
       starterCode: "// Mostre o plano: entrada, processamento e saída\n",
       solution:
@@ -1614,7 +1614,7 @@ Uma calculadora precisa decidir qual operação aplicar. Para isso, usamos condi
 ## Por que importa
 Esse padrão aparece em menus, botões, filtros e jogos: olhar um valor e escolher uma ação.
 
-## Dica da Capy
+## Dica
 Compare texto com === e mantenha o texto entre aspas.`,
       starterCode: 'const numeroA = 10;\nconst numeroB = 5;\nconst operacao = "soma";\n// se for soma, mostre o resultado\n',
       solution:
