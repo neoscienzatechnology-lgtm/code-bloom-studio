@@ -29,51 +29,44 @@ interface StateConfig {
   icon: LucideIcon;
   iconClassName: string;
   discClassName: string;
-  glowClassName: string;
 }
 
 const stateConfig: Record<CoachState, StateConfig> = {
   idle: {
     message: "Pronto para estudar?",
     icon: CheckCircle2,
-    iconClassName: "text-emerald-600",
-    discClassName: "bg-emerald-50 ring-emerald-200",
-    glowClassName: "from-emerald-200/70 via-sky-100/60 to-white",
+    iconClassName: "text-emerald-500",
+    discClassName: "bg-emerald-500/10 ring-emerald-500/20",
   },
   success: {
     message: "Boa! Você mandou muito bem.",
     icon: CheckCircle2,
-    iconClassName: "text-emerald-600",
-    discClassName: "bg-emerald-50 ring-emerald-200",
-    glowClassName: "from-emerald-200/80 via-lime-100/70 to-white",
+    iconClassName: "text-emerald-500",
+    discClassName: "bg-emerald-500/10 ring-emerald-500/20",
   },
   error: {
     message: "Quase! Vamos tentar de novo?",
     icon: XCircle,
-    iconClassName: "text-orange-600",
-    discClassName: "bg-orange-50 ring-orange-200",
-    glowClassName: "from-orange-200/80 via-amber-100/70 to-white",
+    iconClassName: "text-orange-500",
+    discClassName: "bg-orange-500/10 ring-orange-500/20",
   },
   thinking: {
     message: "Hmm... pensa com calma.",
     icon: Lightbulb,
     iconClassName: "text-amber-500",
-    discClassName: "bg-amber-50 ring-amber-200",
-    glowClassName: "from-amber-200/80 via-sky-100/70 to-white",
+    discClassName: "bg-amber-500/10 ring-amber-500/20",
   },
   celebrate: {
     message: "Aula concluída! Bora para a próxima?",
     icon: PartyPopper,
-    iconClassName: "text-fuchsia-600",
-    discClassName: "bg-fuchsia-50 ring-fuchsia-200",
-    glowClassName: "from-fuchsia-200/70 via-emerald-100/70 to-white",
+    iconClassName: "text-fuchsia-500",
+    discClassName: "bg-fuchsia-500/10 ring-fuchsia-500/20",
   },
   loading: {
     message: "Preparando sua atividade...",
     icon: Loader2,
-    iconClassName: "text-sky-600",
-    discClassName: "bg-sky-50 ring-sky-200",
-    glowClassName: "from-sky-200/80 via-cyan-100/70 to-white",
+    iconClassName: "text-sky-500",
+    discClassName: "bg-sky-500/10 ring-sky-500/20",
   },
 };
 
@@ -128,8 +121,7 @@ const CoachGuide = ({ state, className, message, variant = "card" }: CoachGuideP
         aria-live="polite"
         aria-label={`Guia: ${messageText}`}
         className={cn(
-          "relative isolate flex items-center gap-3 overflow-hidden rounded-2xl border border-border bg-gradient-to-br p-2.5 shadow-sm",
-          config.glowClassName,
+          "relative isolate flex items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-2.5 shadow-sm",
           className,
         )}
       >
@@ -139,7 +131,7 @@ const CoachGuide = ({ state, className, message, variant = "card" }: CoachGuideP
         >
           <Icon size={22} className={cn(config.iconClassName, spinning && "animate-spin")} />
         </motion.span>
-        <span className="relative z-10 min-w-0 flex-1 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold leading-snug text-slate-800 shadow-sm">
+        <span className="relative z-10 min-w-0 flex-1 rounded-xl bg-secondary px-3 py-2 text-xs font-bold leading-snug text-foreground">
           {messageText}
         </span>
       </section>
@@ -151,12 +143,10 @@ const CoachGuide = ({ state, className, message, variant = "card" }: CoachGuideP
       aria-live="polite"
       aria-label={`Guia: ${messageText}`}
       className={cn(
-        "relative isolate overflow-hidden rounded-3xl border border-border bg-gradient-to-br p-4 shadow-sm",
-        config.glowClassName,
+        "relative isolate overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-sm",
         className,
       )}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),transparent_58%)]" />
 
       {(state === "celebrate" || state === "success") &&
         confettiItems.map((item, index) => (
@@ -184,7 +174,7 @@ const CoachGuide = ({ state, className, message, variant = "card" }: CoachGuideP
           key={state}
           initial={reducedMotion ? false : { opacity: 0, y: 8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="mt-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 text-sm font-bold leading-snug text-slate-800 shadow-sm backdrop-blur"
+          className="mt-3 rounded-2xl border border-border bg-secondary px-4 py-3 text-sm font-bold leading-snug text-foreground shadow-sm"
         >
           {messageText}
         </motion.div>
