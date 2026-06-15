@@ -1,8 +1,14 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildStudyStats, toLocalDateKey } from "@/utils/studyStats";
+import {
+  resolveStreakFreezes,
+  freezeStatesEqual,
+  DEFAULT_FREEZE_STATE,
+  type FreezeState,
+} from "@/utils/streakFreeze";
 import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
 
 export interface ProgressData {
@@ -343,9 +349,29 @@ export function useProgress() {
     [progress.completedLessons]
   );
 
+  // Protetor de ofensiva: cobre dias perdidos para a sequência não zerar.
+  const [freezeState, setFreezeState] = useState<FreezeState>(() =>
+    readJson<FreezeState>(STORAGE_KEYS.freeze, DEFAULT_FREEZE_STATE),
+  );
+  const today = useMemo(() => new Date(), []);
+  const resolvedFreezes = useMemo(
+    () => resolveStreakFreezes(progress.activityDates, freezeState, today),
+    [progress.activityDates, freezeState, today],
+  );
+  useEffect(() => {
+    if (!freezeStatesEqual(resolvedFreezes.state, freezeState)) {
+      setFreezeState(resolvedFreezes.state);
+      writeJson(STORAGE_KEYS.freeze, resolvedFreezes.state);
+    }
+  }, [resolvedFreezes.state, freezeState]);
+
   return {
     ...progress,
-    studyStats: buildStudyStats(progress),
+    studyStats: buildStudyStats({ ...progress, activityDates: resolvedFreezes.effectiveDates }),
+    streakFreeze: {
+      available: resolvedFreezes.state.available,
+      frozenDates: resolvedFreezes.state.frozenDates,
+    },
     completeLesson,
     saveCode,
     isCompleted,

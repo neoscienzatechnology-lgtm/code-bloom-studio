@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { ArrowRight, CalendarCheck2, Flame, Zap } from "lucide-react";
+import { ArrowRight, CalendarCheck2, Flame, Shield, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { courses } from "@/data/mockData";
 import { Progress } from "@/components/ui/progress";
@@ -21,7 +21,8 @@ import { selectNextLesson, selectNextPathCourse } from "@/utils/learningPathProg
 import CourseCoverArt from "@/components/CourseCoverArt";
 
 const DashboardPage = () => {
-  const { totalXp, getCourseProgress, completedLessons, savedCode, studyStats, lessonCompletedAt } = useProgress();
+  const { totalXp, getCourseProgress, completedLessons, savedCode, studyStats, lessonCompletedAt, streakFreeze } =
+    useProgress();
   const { topErrors, attempts } = useAttemptTracker();
   const { user } = useAuth();
   const { profile } = useLearningProfile();
@@ -194,6 +195,15 @@ const DashboardPage = () => {
                   <p className="mt-1 text-xs text-muted-foreground">
                     {studyStats.studiedToday ? "Você já estudou hoje." : "Faça uma aula curta hoje para manter o ritmo."}
                   </p>
+                  {streakFreeze.available > 0 && (
+                    <span
+                      className="mt-2 inline-flex items-center gap-1 rounded-full bg-quest-blue/10 px-2.5 py-0.5 text-[11px] font-black text-quest-blue"
+                      title="Protetor de ofensiva: cobre um dia perdido para sua sequência não zerar."
+                    >
+                      <Shield size={12} /> {streakFreeze.available}{" "}
+                      {streakFreeze.available === 1 ? "protetor" : "protetores"}
+                    </span>
+                  )}
                 </div>
                 <div className="rounded-xl border border-border bg-background p-4">
                   <div className="mb-1 flex items-center gap-2 text-xs font-black text-primary">

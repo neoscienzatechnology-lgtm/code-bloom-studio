@@ -6,6 +6,8 @@ import { isWebglAvailable, prefersReducedMotion } from "@/utils/webgl";
 import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
 import { tokenizeCodeLine, buildAssembleData, TOKEN_SEP } from "@/utils/assembleBlocks";
 import { evaluatePythonRun } from "@/utils/pythonOutput";
+import { resolveStreakFreezes } from "@/utils/streakFreeze";
+import { toLocalDateKey } from "@/utils/studyStats";
 import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { isInterstitialDue } from "@/lib/ads";
@@ -330,6 +332,52 @@ describe("python output evaluation", () => {
     expect(ev.correct).toBe(false);
     expect(ev.errorKind).toBe("syntax");
     expect(ev.message).toContain("NameError");
+  });
+});
+
+describe("streak freeze", () => {
+  const today = new Date(2026, 5, 14);
+  const k = (offset: number) => toLocalDateKey(new Date(2026, 5, 14 + offset));
+  const fresh = { available: 0, frozenDates: [] as string[], grantedBlocks: 0 };
+
+  it("does not consume a freeze when there is no gap", () => {
+    const r = resolveStreakFreezes([k(0), k(-1), k(-2)], { ...fresh, available: 1 }, today);
+    expect(r.streak).toBe(3);
+    expect(r.state.available).toBe(1);
+    expect(r.state.frozenDates).toEqual([]);
+  });
+
+  it("spends a freeze to bridge a one-day gap and preserve the streak", () => {
+    const real = [k(-2), k(-3), k(-4)];
+    const withFreeze = resolveStreakFreezes(real, { ...fresh, available: 1 }, today);
+    expect(withFreeze.state.frozenDates).toContain(k(-1));
+    expect(withFreeze.state.available).toBe(0);
+    expect(withFreeze.streak).toBe(4);
+
+    const noFreeze = resolveStreakFreezes(real, { ...fresh }, today);
+    expect(noFreeze.streak).toBe(0);
+  });
+
+  it("does not waste freezes when the gap is too big to cover", () => {
+    const r = resolveStreakFreezes([k(-3), k(-4)], { ...fresh, available: 1 }, today);
+    expect(r.state.available).toBe(1);
+    expect(r.state.frozenDates).toEqual([]);
+    expect(r.streak).toBe(0);
+  });
+
+  it("grants a freeze at a 5-day streak", () => {
+    const r = resolveStreakFreezes([k(0), k(-1), k(-2), k(-3), k(-4)], { ...fresh }, today);
+    expect(r.streak).toBe(5);
+    expect(r.state.available).toBe(1);
+    expect(r.state.grantedBlocks).toBe(1);
+  });
+
+  it("is idempotent", () => {
+    const real = [k(-2), k(-3), k(-4)];
+    const first = resolveStreakFreezes(real, { ...fresh, available: 1 }, today);
+    const second = resolveStreakFreezes(real, first.state, today);
+    expect(second.state).toEqual(first.state);
+    expect(second.streak).toBe(first.streak);
   });
 });
 
