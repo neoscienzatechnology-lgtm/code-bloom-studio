@@ -5,6 +5,7 @@ import { getConceptFamily, isStackConcept } from "@/utils/conceptDiagram";
 import { isWebglAvailable, prefersReducedMotion } from "@/utils/webgl";
 import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
 import { tokenizeCodeLine, buildAssembleData, TOKEN_SEP } from "@/utils/assembleBlocks";
+import { evaluatePythonRun } from "@/utils/pythonOutput";
 import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
 import { isInterstitialDue } from "@/lib/ads";
@@ -308,6 +309,27 @@ describe("assemble blocks engine", () => {
     expect(buildAssembleData("", "x")).toBeNull();
     expect(buildAssembleData("return <View><Text>oi</Text></View>;", "x")).toBeNull();
     expect(buildAssembleData("ok", "x")).toBeNull(); // poucos blocos
+  });
+});
+
+describe("python output evaluation", () => {
+  it("matches stdout against expected, ignoring trailing whitespace", () => {
+    expect(evaluatePythonRun("Olá, Ana\n", "", undefined, "Olá, Ana").correct).toBe(true);
+    expect(evaluatePythonRun("a\nb\n\n", "", undefined, "a\nb").correct).toBe(true);
+  });
+
+  it("reports a mismatch with both outputs", () => {
+    const ev = evaluatePythonRun("oi", "", undefined, "Olá");
+    expect(ev.correct).toBe(false);
+    expect(ev.errorKind).toBe("output_mismatch");
+    expect(ev.message).toContain("Esperado");
+  });
+
+  it("surfaces a Python error as the message", () => {
+    const ev = evaluatePythonRun("", "", "NameError: name 'x' is not defined", "Olá");
+    expect(ev.correct).toBe(false);
+    expect(ev.errorKind).toBe("syntax");
+    expect(ev.message).toContain("NameError");
   });
 });
 

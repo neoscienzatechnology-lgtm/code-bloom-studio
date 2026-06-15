@@ -3,7 +3,9 @@ import confetti from "canvas-confetti";
 import type { Course, Lesson } from "@/data/mockData";
 import { useLessonEditor } from "@/hooks/useLessonEditor";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
-import { validateCode } from "@/utils/codeValidator";
+import { validateCode, type ErrorKind } from "@/utils/codeValidator";
+import { evaluatePythonRun } from "@/utils/pythonOutput";
+import { isPythonRuntimeSupported, runPython } from "@/lib/pythonRunner";
 import { getLessonConcepts } from "@/utils/conceptMastery";
 import { recordReview } from "@/utils/spacedRepetition";
 import { track } from "@/lib/analytics";
@@ -57,71 +59,115 @@ export function useLessonRunner({
 
   const { running, hintIndex, paceMode, bonusActive } = editor;
 
+  // Aplica o resultado de uma execução (heurística ou Python real) ao estado.
+  const finishRun = (params: {
+    correct: boolean;
+    nextIsCorrect: boolean | null;
+    level: string;
+    message: string;
+    errorKind?: ErrorKind;
+    reflectiveQuestion?: string | null;
+  }) => {
+    const { correct, nextIsCorrect, level, message, errorKind, reflectiveQuestion } = params;
+    if (correct) feedbackCorrect();
+    else if (nextIsCorrect === false) feedbackWrong();
+    track("code_run", {
+      lessonId: lesson.id,
+      courseId: course.id,
+      correct,
+      level,
+      errorKind: correct ? undefined : errorKind,
+      attempts: getAttempts(lesson.id) + (correct ? 0 : 1),
+    });
+
+    if (correct) {
+      const priorAttempts = getAttempts(lesson.id);
+      recordReview(lesson.id, Math.max(3, 5 - priorAttempts));
+      resetLesson(lesson.id);
+      const awardedXp = !alreadyCompleted && completeLesson(lesson.id, xpAward, course.id);
+      if (awardedXp) track("lesson_completed", { lessonId: lesson.id, courseId: course.id, xp: xpAward });
+      const nextPaceMode = priorAttempts === 0 && !alreadyCompleted && !bonusActive ? "thriving" : null;
+      patch({
+        isCorrect: nextIsCorrect,
+        output: message,
+        reflectiveQ: null,
+        paceMode: nextPaceMode,
+        showXP: awardedXp,
+        running: false,
+      });
+      if (awardedXp) {
+        setTimeout(() => patch({ showXP: false }), 1500);
+        fireConfetti();
+      }
+    } else {
+      registerFailure(lesson.id, errorKind, getLessonConcepts(lesson));
+      const attempts = getAttempts(lesson.id) + 1;
+      let composed = message;
+      let nextHintIndex = hintIndex;
+
+      if (attempts >= 2 && lesson.hints.length > 0) {
+        const nextHintIdx = Math.min(hintIndex + 1, lesson.hints.length - 1);
+        if (nextHintIdx > hintIndex) nextHintIndex = nextHintIdx;
+        composed += `\n\n💡 Dica direta: ${lesson.hints[nextHintIdx]}`;
+      }
+
+      patch({
+        isCorrect: nextIsCorrect,
+        output: composed,
+        reflectiveQ: reflectiveQuestion ?? null,
+        hintIndex: nextHintIndex,
+        paceMode: attempts >= 3 ? "struggling" : paceMode,
+        running: false,
+      });
+    }
+    runLockedRef.current = false;
+  };
+
+  // Caminho heurístico (JS e linguagens sem runtime): valida por padrões.
+  const runValidator = () => {
+    const result = validateCode(code, lesson.expectedOutput, lesson.solution, {
+      starterCode: lesson.starterCode,
+      testCases: lesson.testCases,
+    });
+    const correct = result.level === "exact" || result.level === "flexible";
+    finishRun({
+      correct,
+      nextIsCorrect: correct ? true : result.level === "close" ? null : false,
+      level: result.level,
+      message: correct ? lesson.expectedOutput : result.message,
+      errorKind: result.errorKind,
+      reflectiveQuestion: result.reflectiveQuestion,
+    });
+  };
+
+  const isPython = course.language.trim().toLowerCase() === "python";
+
   const handleRun = () => {
     if (running || runLockedRef.current) return;
     runLockedRef.current = true;
     forceCodeStage();
     patch({ running: true });
-    setTimeout(() => {
-      const result = validateCode(code, lesson.expectedOutput, lesson.solution, {
-        starterCode: lesson.starterCode,
-        testCases: lesson.testCases,
-      });
-      const correct = result.level === "exact" || result.level === "flexible";
-      const nextIsCorrect = correct ? true : result.level === "close" ? null : false;
-      if (correct) feedbackCorrect();
-      else if (nextIsCorrect === false) feedbackWrong();
-      track("code_run", {
-        lessonId: lesson.id,
-        courseId: course.id,
-        correct,
-        level: result.level,
-        errorKind: correct ? undefined : result.errorKind,
-        attempts: getAttempts(lesson.id) + (correct ? 0 : 1),
-      });
 
-      if (correct) {
-        const priorAttempts = getAttempts(lesson.id);
-        recordReview(lesson.id, Math.max(3, 5 - priorAttempts));
-        resetLesson(lesson.id);
-        const awardedXp = !alreadyCompleted && completeLesson(lesson.id, xpAward, course.id);
-        if (awardedXp) track("lesson_completed", { lessonId: lesson.id, courseId: course.id, xp: xpAward });
-        const nextPaceMode = priorAttempts === 0 && !alreadyCompleted && !bonusActive ? "thriving" : null;
-        patch({
-          isCorrect: nextIsCorrect,
-          output: lesson.expectedOutput,
-          reflectiveQ: null,
-          paceMode: nextPaceMode,
-          showXP: awardedXp,
-          running: false,
-        });
-        if (awardedXp) {
-          setTimeout(() => patch({ showXP: false }), 1500);
-          fireConfetti();
-        }
-      } else {
-        registerFailure(lesson.id, result.errorKind, getLessonConcepts(lesson));
-        const attempts = getAttempts(lesson.id) + 1;
-        let composed = result.message;
-        let nextHintIndex = hintIndex;
+    // Python roda DE VERDADE no navegador (Pyodide, sob demanda). Se o runtime
+    // não carregar (offline/sem suporte), cai no validador heurístico.
+    if (isPython && isPythonRuntimeSupported()) {
+      patch({ output: "⏳ Carregando o Python e rodando seu código…", isCorrect: null, reflectiveQ: null });
+      runPython(code)
+        .then((res) => {
+          const ev = evaluatePythonRun(res.stdout, res.stderr, res.error, lesson.expectedOutput);
+          finishRun({
+            correct: ev.correct,
+            nextIsCorrect: ev.correct,
+            level: ev.correct ? "exact" : "wrong",
+            message: ev.message,
+            errorKind: ev.errorKind,
+          });
+        })
+        .catch(() => runValidator());
+      return;
+    }
 
-        if (attempts >= 2 && lesson.hints.length > 0) {
-          const nextHintIdx = Math.min(hintIndex + 1, lesson.hints.length - 1);
-          if (nextHintIdx > hintIndex) nextHintIndex = nextHintIdx;
-          composed += `\n\n💡 Dica direta: ${lesson.hints[nextHintIdx]}`;
-        }
-
-        patch({
-          isCorrect: nextIsCorrect,
-          output: composed,
-          reflectiveQ: result.reflectiveQuestion ?? null,
-          hintIndex: nextHintIndex,
-          paceMode: attempts >= 3 ? "struggling" : paceMode,
-          running: false,
-        });
-      }
-      runLockedRef.current = false;
-    }, 800);
+    setTimeout(runValidator, 800);
   };
 
   const handleHint = () => {
