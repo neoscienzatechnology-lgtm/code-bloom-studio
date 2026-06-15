@@ -19,6 +19,7 @@ const desktopLinks = [
   { to: "/dashboard", label: "Início" },
   { to: "/cursos", label: "Trilhas" },
   { to: "/pontos-fracos", label: "Praticar" },
+  { to: "/playground", label: "Playground" },
   { to: "/referencia", label: "Referência" },
   { to: "/projetos", label: "Projetos" },
   { to: "/perfil", label: "Perfil" },
