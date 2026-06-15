@@ -1,9 +1,0 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#0E141B"/>
-  <g transform="translate(360,250)">
-    <path d="M40 0 C-44 66 -44 126 40 192" fill="none" stroke="#ECF1EF" stroke-width="34" stroke-linecap="round"/>
-    <path d="M86 0 C170 66 170 126 86 192" fill="none" stroke="#44D62C" stroke-width="34" stroke-linecap="round"/>
-  </g>
-  <text x="540" y="372" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="120" font-weight="700" letter-spacing="-5" fill="#ECF1EF">capycode</text>
-  <text x="544" y="430" font-family="'Segoe UI',system-ui,sans-serif" font-size="30" fill="#9AA4AE">aprenda a programar, uma ideia por vez</text>
-</svg>
