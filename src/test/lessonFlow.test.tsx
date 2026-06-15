@@ -7,6 +7,7 @@ import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
 import { tokenizeCodeLine, buildAssembleData, TOKEN_SEP } from "@/utils/assembleBlocks";
 import { evaluatePythonRun } from "@/utils/pythonOutput";
 import { resolveStreakFreezes } from "@/utils/streakFreeze";
+import { isCourseComplete, courseCompletionDate } from "@/utils/certificate";
 import { toLocalDateKey } from "@/utils/studyStats";
 import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
@@ -378,6 +379,20 @@ describe("streak freeze", () => {
     const second = resolveStreakFreezes(real, first.state, today);
     expect(second.state).toEqual(first.state);
     expect(second.streak).toBe(first.streak);
+  });
+});
+
+describe("course certificate", () => {
+  it("is complete only when every lesson is done", () => {
+    expect(isCourseComplete(["a", "b"], ["a", "b", "c"])).toBe(true);
+    expect(isCourseComplete(["a", "b"], ["a"])).toBe(false);
+    expect(isCourseComplete([], ["a"])).toBe(false);
+  });
+
+  it("takes the most recent lesson completion as the date", () => {
+    const at = { a: "2026-06-01T10:00:00Z", b: "2026-06-10T10:00:00Z" };
+    expect(courseCompletionDate(["a", "b"], at)?.getTime()).toBe(new Date("2026-06-10T10:00:00Z").getTime());
+    expect(courseCompletionDate(["x"], at)).toBeNull();
   });
 });
 

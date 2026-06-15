@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Clock, Code2, GraduationCap, Play, Trophy } from "lucide-react";
+import { Award, BookOpen, Clock, Code2, GraduationCap, Play, Trophy } from "lucide-react";
 import { getAugmentedCourseById } from "@/data/checkpoints";
 import { getProjectsByCourse } from "@/data/projects";
 import { getCourseMeta } from "@/data/learningPaths";
@@ -134,6 +134,13 @@ const CourseDetailPage = () => {
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                 A rota abre uma etapa por vez para reduzir distrações e manter a progressão clara.
               </p>
+              {progressPct === 100 && (
+                <Button asChild className="mt-3 w-full gap-2 rounded-full font-black">
+                  <Link to={`/certificado/${course.id}`}>
+                    <Award size={16} /> Ver certificado
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </motion.div>
