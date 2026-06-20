@@ -166,6 +166,27 @@ function updateProgressSnapshot(updater: (progress: ProgressData) => Partial<Pro
   return replaceProgressSnapshot(updater(getProgressSnapshot()));
 }
 
+// Snapshot compartilhado do protetor de ofensiva — mesmo padrão do `progress`,
+// para todas as instâncias de useProgress (dashboard, navbar, lição) verem o
+// mesmo estado. Sem isso, cada instância tinha o seu `freezeState` e podia
+// divergir até reconvergir (resolve é idempotente, mas gerava writes duplicados).
+const freezeListeners = new Set<(state: FreezeState) => void>();
+let freezeSnapshot: FreezeState | null = null;
+
+function getFreezeSnapshot(): FreezeState {
+  if (!freezeSnapshot) {
+    freezeSnapshot = readJson<FreezeState>(STORAGE_KEYS.freeze, DEFAULT_FREEZE_STATE);
+  }
+  return freezeSnapshot;
+}
+
+function replaceFreezeSnapshot(next: FreezeState): FreezeState {
+  freezeSnapshot = next;
+  writeJson(STORAGE_KEYS.freeze, next);
+  freezeListeners.forEach((listener) => listener(next));
+  return next;
+}
+
 export function useProgress() {
   const { user } = useAuth();
   const [progress, setProgress] = useState<ProgressData>(getProgressSnapshot);
@@ -350,9 +371,15 @@ export function useProgress() {
   );
 
   // Protetor de ofensiva: cobre dias perdidos para a sequência não zerar.
-  const [freezeState, setFreezeState] = useState<FreezeState>(() =>
-    readJson<FreezeState>(STORAGE_KEYS.freeze, DEFAULT_FREEZE_STATE),
-  );
+  // Lê do snapshot compartilhado e escuta mudanças de outras instâncias.
+  const [freezeState, setFreezeState] = useState<FreezeState>(getFreezeSnapshot);
+  useEffect(() => {
+    freezeListeners.add(setFreezeState);
+    setFreezeState(getFreezeSnapshot());
+    return () => {
+      freezeListeners.delete(setFreezeState);
+    };
+  }, []);
   // `today` se atualiza quando o app volta ao foco (cobre a virada de meia-noite
   // num PWA que ficou aberto), em vez de congelar no horário de montagem.
   const [todayKey, setTodayKey] = useState(() => toLocalDateKey(new Date()));
@@ -378,8 +405,7 @@ export function useProgress() {
   );
   useEffect(() => {
     if (!freezeStatesEqual(resolvedFreezes.state, freezeState)) {
-      setFreezeState(resolvedFreezes.state);
-      writeJson(STORAGE_KEYS.freeze, resolvedFreezes.state);
+      replaceFreezeSnapshot(resolvedFreezes.state);
     }
   }, [resolvedFreezes.state, freezeState]);
 
