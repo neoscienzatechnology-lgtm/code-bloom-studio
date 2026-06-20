@@ -121,9 +121,6 @@
   .mimo-card {
     @apply rounded-2xl border border-border bg-card shadow-sm;
   }
-  .mimo-btn-primary {
-    @apply rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-primary/90 transition-colors;
-  }
   .mimo-section-title {
     @apply text-xs font-bold uppercase tracking-widest text-muted-foreground;
   }

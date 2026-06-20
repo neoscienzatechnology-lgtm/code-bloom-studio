@@ -353,7 +353,25 @@ export function useProgress() {
   const [freezeState, setFreezeState] = useState<FreezeState>(() =>
     readJson<FreezeState>(STORAGE_KEYS.freeze, DEFAULT_FREEZE_STATE),
   );
-  const today = useMemo(() => new Date(), []);
+  // `today` se atualiza quando o app volta ao foco (cobre a virada de meia-noite
+  // num PWA que ficou aberto), em vez de congelar no horário de montagem.
+  const [todayKey, setTodayKey] = useState(() => toLocalDateKey(new Date()));
+  useEffect(() => {
+    const sync = () => {
+      const key = toLocalDateKey(new Date());
+      setTodayKey((prev) => (prev === key ? prev : key));
+    };
+    document.addEventListener("visibilitychange", sync);
+    window.addEventListener("focus", sync);
+    return () => {
+      document.removeEventListener("visibilitychange", sync);
+      window.removeEventListener("focus", sync);
+    };
+  }, []);
+  const today = useMemo(() => {
+    const [year, month, day] = todayKey.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }, [todayKey]);
   const resolvedFreezes = useMemo(
     () => resolveStreakFreezes(progress.activityDates, freezeState, today),
     [progress.activityDates, freezeState, today],

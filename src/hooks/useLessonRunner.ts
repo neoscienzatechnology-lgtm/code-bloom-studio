@@ -163,7 +163,22 @@ export function useLessonRunner({
             errorKind: ev.errorKind,
           });
         })
-        .catch(() => runValidator());
+        .catch((err: unknown) => {
+          // O código rodou e estourou o tempo (provável laço infinito) → erra,
+          // não cai na heurística (que poderia marcar como certo sem rodar).
+          if (err instanceof Error && err.message === "exec-timeout") {
+            finishRun({
+              correct: false,
+              nextIsCorrect: false,
+              level: "wrong",
+              message: "Tempo esgotado. Seu código demorou demais — verifique se há um laço infinito.",
+              errorKind: "syntax",
+            });
+          } else {
+            // Pyodide indisponível (sem suporte/offline) → validador heurístico.
+            runValidator();
+          }
+        });
       return;
     }
 

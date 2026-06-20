@@ -81,10 +81,12 @@ const Stack3D = ({ tone }: { tone: VisualTone }) => {
       ctx.font = "bold 84px ui-sans-serif, system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.lineWidth = 9;
-      ctx.strokeStyle = "rgba(15,23,42,0.6)";
+      // Dígito escuro com halo claro: legível tanto no bloco verde-escuro
+      // (primary) quanto no bloco do topo em verde-lima (accent).
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = "rgba(255,255,255,0.92)";
       ctx.strokeText(String(n), 64, 70);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#10231a";
       ctx.fillText(String(n), 64, 70);
       const tex = new THREE.CanvasTexture(c);
       tex.anisotropy = 2;

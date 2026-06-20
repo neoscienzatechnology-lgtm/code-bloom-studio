@@ -32,22 +32,6 @@ function addDays(date: Date, days: number): Date {
   return copy;
 }
 
-function walkStreak(active: Set<string>, today: Date): number {
-  const todayKey = toLocalDateKey(today);
-  const yesterdayKey = toLocalDateKey(addDays(today, -1));
-  let cursor = active.has(todayKey)
-    ? startOfDay(today)
-    : active.has(yesterdayKey)
-      ? addDays(today, -1)
-      : null;
-  let streak = 0;
-  while (cursor && active.has(toLocalDateKey(cursor))) {
-    streak += 1;
-    cursor = addDays(cursor, -1);
-  }
-  return streak;
-}
-
 export interface ResolvedFreezes {
   state: FreezeState;
   effectiveDates: string[];
@@ -84,8 +68,27 @@ export function resolveStreakFreezes(realDates: string[], state: FreezeState, to
 
   const allFrozen = [...state.frozenDates, ...newlyFrozen];
   const active = new Set([...realDates, ...allFrozen]);
-  const effectiveDates = Array.from(active).sort();
-  const streak = walkStreak(active, today);
+
+  // Caminha a ofensiva coletando os dias que a compõem.
+  const todayKey = toLocalDateKey(today);
+  const yesterdayKey = toLocalDateKey(addDays(today, -1));
+  let cursor = active.has(todayKey)
+    ? startOfDay(today)
+    : active.has(yesterdayKey)
+      ? addDays(today, -1)
+      : null;
+  let streak = 0;
+  const streakDays = new Set<string>();
+  while (cursor && active.has(toLocalDateKey(cursor))) {
+    streakDays.add(toLocalDateKey(cursor));
+    streak += 1;
+    cursor = addDays(cursor, -1);
+  }
+
+  // Mantém só os dias congelados que ainda fazem parte da ofensiva atual; os
+  // antigos viram lixo e não devem contar como "ativo" no calendário/activeDays.
+  const frozenDates = allFrozen.filter((date) => streakDays.has(date));
+  const effectiveDates = Array.from(new Set([...realDates, ...frozenDates])).sort();
 
   // Concede protetores pelos marcos da ofensiva atual (reseta junto com ela).
   const earnedBlocks = Math.floor(streak / STREAK_PER_FREEZE);
@@ -94,7 +97,7 @@ export function resolveStreakFreezes(realDates: string[], state: FreezeState, to
   }
 
   return {
-    state: { available, frozenDates: allFrozen, grantedBlocks: earnedBlocks },
+    state: { available, frozenDates, grantedBlocks: earnedBlocks },
     effectiveDates,
     streak,
   };

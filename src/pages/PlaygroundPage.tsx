@@ -43,7 +43,7 @@ const PlaygroundPage = () => {
     setIsError(false);
 
     if (lang === "javascript") {
-      const res = runJs(code);
+      const res = await runJs(code);
       const combined = `${res.output}${res.error ? `\n${res.error}` : ""}`.trimEnd();
       setOutput(combined || "(sem saída)");
       setIsError(Boolean(res.error));

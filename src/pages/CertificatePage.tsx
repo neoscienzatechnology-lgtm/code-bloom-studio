@@ -35,24 +35,30 @@ const CertificatePage = () => {
     }
     const xml = new XMLSerializer().serializeToString(svg);
     const src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xml)}`;
+    const fail = () => {
+      setShareMsg("Não consegui gerar a imagem. Tente de novo.");
+      setTimeout(() => setShareMsg(null), 2500);
+    };
     const img = new Image();
+    img.onerror = fail;
     img.onload = () => {
       const scale = 2;
       const canvas = document.createElement("canvas");
       canvas.width = 1200 * scale;
       canvas.height = 850 * scale;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      if (!ctx) return fail();
       ctx.scale(scale, scale);
       ctx.drawImage(img, 0, 0, 1200, 850);
       canvas.toBlob((blob) => {
-        if (!blob) return;
+        if (!blob) return fail();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.download = `certificado-capycode-${course.id}.png`;
         link.click();
-        URL.revokeObjectURL(url);
+        // Revoga depois para não cancelar um download que ainda vai começar.
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
       }, "image/png");
     };
     img.src = src;

@@ -92,10 +92,6 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
-        "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(178 72% 28% / 0.28)" },
-          "50%": { boxShadow: "0 0 40px hsl(151 48% 60% / 0.55)" },
-        },
         "typing": {
           "from": { width: "0" },
           "to": { width: "100%" },
@@ -120,7 +116,6 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
         "float": "float 3s ease-in-out infinite",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "typing": "typing 3s steps(30) forwards",
         "blink": "blink 0.8s step-end infinite",
         "xp-pop": "xp-pop 1s ease-out forwards",

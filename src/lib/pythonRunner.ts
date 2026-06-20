@@ -22,6 +22,9 @@ let worker: Worker | null = null;
 let ready = false;
 let seq = 0;
 const pending = new Map<number, Pending>();
+// Serializa execuções: o Pyodide é uma instância única e o stdout/stderr é
+// capturado por run, então dois runs concorrentes embaralhariam a saída.
+let queue: Promise<unknown> = Promise.resolve();
 
 export function isPythonRuntimeSupported(): boolean {
   return typeof Worker !== "undefined" && typeof WebAssembly !== "undefined";
@@ -54,19 +57,37 @@ function ensureWorker(): Worker {
   return worker;
 }
 
-/** Roda o código Python e devolve stdout/stderr (ou error em traceback/timeout). */
+/** Roda o código Python e devolve stdout/stderr. Rejeita com:
+ *  - "exec-timeout": o código rodou e estourou o tempo (provável laço infinito);
+ *  - "load-timeout"/"load-failed": o Pyodide não carregou (cair na heurística).
+ * Construir o worker fica DENTRO da Promise: uma falha síncrona (ex.: CSP
+ * bloqueando o módulo) vira rejeição, em vez de estourar no chamador. */
 export function runPython(code: string): Promise<PythonRunResult> {
-  const active = ensureWorker();
-  const id = ++seq;
-  const timeoutMs = ready ? WARM_TIMEOUT_MS : COLD_TIMEOUT_MS;
+  const task = () =>
+    new Promise<PythonRunResult>((resolve, reject) => {
+      let active: Worker;
+      try {
+        active = ensureWorker();
+      } catch {
+        reject(new Error("load-failed"));
+        return;
+      }
+      const id = ++seq;
+      const timeoutMs = ready ? WARM_TIMEOUT_MS : COLD_TIMEOUT_MS;
+      const timer = setTimeout(() => {
+        const wasReady = ready;
+        pending.delete(id);
+        resetWorker(new Error("timeout"));
+        reject(new Error(wasReady ? "exec-timeout" : "load-timeout"));
+      }, timeoutMs);
+      pending.set(id, { resolve, reject, timer });
+      active.postMessage({ type: "run", id, code });
+    });
 
-  return new Promise<PythonRunResult>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      pending.delete(id);
-      resetWorker(new Error("timeout"));
-      reject(new Error("timeout"));
-    }, timeoutMs);
-    pending.set(id, { resolve, reject, timer });
-    active.postMessage({ type: "run", id, code });
-  });
+  const run = queue.then(task, task);
+  queue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
 }

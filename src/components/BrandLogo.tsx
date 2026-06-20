@@ -8,7 +8,8 @@ interface BrandLogoProps {
 const ACCENT = "#44D62C";
 
 /** Monograma "cc" reduzido a um par de colchetes — referência de código,
- * sem personagem. A parte em currentColor acompanha o tema; o acento é teal. */
+ * sem personagem. A parte em currentColor acompanha o tema; o acento é o
+ * verde-lima da marca (#44D62C). */
 const Mark = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 64 64" className={className} fill="none" aria-hidden="true">
     <path d="M31 14 C16 26 16 38 31 50" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />

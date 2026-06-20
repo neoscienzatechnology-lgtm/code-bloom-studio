@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.png", "mascote-capivara.webp"],
+      includeAssets: ["favicon.svg"],
       manifest: {
         name: "CapyCode — Aprenda programação",
         short_name: "CapyCode",
@@ -27,8 +27,8 @@ export default defineConfig(({ mode }) => ({
         lang: "pt-BR",
         start_url: "/",
         display: "standalone",
-        theme_color: "#fbf7ef",
-        background_color: "#fbf7ef",
+        theme_color: "#fbfbfb",
+        background_color: "#fbfbfb",
         icons: [
           { src: "/pwa-192x192.png", sizes: "192x192", type: "image/png" },
           { src: "/pwa-512x512.png", sizes: "512x512", type: "image/png" },
