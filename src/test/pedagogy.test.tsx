@@ -521,6 +521,23 @@ describe("code validation", () => {
     expect(acceptedStarters).toEqual([]);
   });
 
+  it("keeps Python lesson solutions runnable in the Pyodide worker (no input())", () => {
+    // O worker do Pyodide não tem stdin: input() trava/erra e o stdout nunca
+    // bate com expectedOutput (evaluatePythonRun usa match exato). Soluções de
+    // Python precisam ser determinísticas e imprimir a saída esperada.
+    const offenders: string[] = [];
+    courses
+      .filter((courseItem) => courseItem.language.trim().toLowerCase() === "python")
+      .forEach((courseItem) => {
+        courseItem.lessons.forEach((courseLesson) => {
+          if (/\binput\s*\(/.test(courseLesson.solution)) {
+            offenders.push(`${courseItem.id}/${courseLesson.id}`);
+          }
+        });
+      });
+    expect(offenders).toEqual([]);
+  });
+
   it("does not accept unchanged starter code just because it contains the expected text", () => {
     const result = validateCode(
       'mostrar("corrigi o erro"',
