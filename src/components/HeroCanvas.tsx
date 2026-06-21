@@ -9,7 +9,7 @@ import { prefersReducedMotion } from "@/utils/webgl";
 // Cuidados de bateria: pixelRatio <= 2, render pausado fora de tela
 // (IntersectionObserver) e com a aba oculta, sem animação em prefers-reduced-
 // motion, e dispose completo (geometria, material, renderer, contexto) ao sair.
-const HeroCanvas = () => {
+const HeroCanvas = ({ meshOpacity = 0.42 }: { meshOpacity?: number }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const HeroCanvas = () => {
     const geo = new THREE.PlaneGeometry(SIZE, SIZE, SEG, SEG);
     geo.rotateX(-Math.PI / 2); // posição passa a ser (x, altura=0, z)
     geo.translate(0, 0, -22);
-    const mat = new THREE.MeshBasicMaterial({ color: 0x2fd62a, wireframe: true, transparent: true, opacity: 0.42 });
+    const mat = new THREE.MeshBasicMaterial({ color: 0x2fd62a, wireframe: true, transparent: true, opacity: meshOpacity });
     const mesh = new THREE.Mesh(geo, mat);
     scene.add(mesh);
 
@@ -53,7 +53,7 @@ const HeroCanvas = () => {
       np[i * 3 + 2] = -Math.random() * 60 + 6;
     }
     nodeGeo.setAttribute("position", new THREE.BufferAttribute(np, 3));
-    const nodeMat = new THREE.PointsMaterial({ color: 0x6df56a, size: 0.16, transparent: true, opacity: 0.7, sizeAttenuation: true });
+    const nodeMat = new THREE.PointsMaterial({ color: 0x6df56a, size: 0.16, transparent: true, opacity: Math.min(0.9, meshOpacity * 1.9), sizeAttenuation: true });
     const nodes = new THREE.Points(nodeGeo, nodeMat);
     scene.add(nodes);
 
@@ -145,7 +145,7 @@ const HeroCanvas = () => {
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, []);
+  }, [meshOpacity]);
 
   return <div ref={mountRef} className="h-full w-full" aria-hidden="true" />;
 };

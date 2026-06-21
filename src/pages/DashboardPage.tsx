@@ -19,6 +19,7 @@ import { buildConceptMasteryPlan } from "@/utils/conceptMastery";
 import { useConceptMasterySync } from "@/hooks/useConceptMasterySync";
 import { selectNextLesson, selectNextPathCourse } from "@/utils/learningPathProgress";
 import CourseCoverArt from "@/components/CourseCoverArt";
+import LiveBackdrop from "@/components/LiveBackdrop";
 
 const DashboardPage = () => {
   const { totalXp, getCourseProgress, completedLessons, savedCode, studyStats, lessonCompletedAt, streakFreeze } =
@@ -72,8 +73,9 @@ const DashboardPage = () => {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="ct-ambient ct-grid relative mb-8 overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8"
+          className="ct-ambient relative mb-8 overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8"
         >
+          <LiveBackdrop posterClass="opacity-20" meshOpacity={0.22} />
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <div>
               <p className="mimo-section-title mb-1">Continue sua jornada</p>
