@@ -5,6 +5,8 @@ import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
+import { useEntitlement } from "@/contexts/EntitlementContext";
+import { MONETIZATION } from "@/config/monetization";
 import BrandLogo from "@/components/BrandLogo";
 
 const navLinks = [
@@ -30,6 +32,9 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { totalXp, studyStats } = useProgress();
+  const { isPro } = useEntitlement();
+  const links =
+    MONETIZATION.enabled && !isPro ? [...desktopLinks, { to: "/pro", label: "Seja Pro" }] : desktopLinks;
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -62,7 +67,7 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden items-center gap-1 md:flex">
-            {desktopLinks.map((link) => (
+            {links.map((link) => (
               <Link
                 key={`${link.to}-${link.label}`}
                 to={link.to}
@@ -138,7 +143,7 @@ const Navbar = () => {
               className="overflow-hidden border-t border-border/50 md:hidden"
             >
               <div className="flex flex-col gap-1 p-4">
-                {desktopLinks.map((link) => (
+                {links.map((link) => (
                   <Link
                     key={`${link.to}-${link.label}`}
                     to={link.to}

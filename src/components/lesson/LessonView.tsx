@@ -9,6 +9,7 @@ import LessonCardPlayer from "@/components/lesson/LessonCardPlayer";
 import ChallengeStage from "@/components/lesson/ChallengeStage";
 import CodeWorkspace from "@/components/lesson/CodeWorkspace";
 import { useProgress } from "@/hooks/useProgress";
+import { useEntitlement } from "@/contexts/EntitlementContext";
 import { recordLessonCompletedAndMaybeShowAd } from "@/lib/ads";
 import { track } from "@/lib/analytics";
 import { scheduleStreakReminder } from "@/lib/notifications";
@@ -36,6 +37,7 @@ interface LessonViewProps {
 const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: LessonViewProps) => {
   const navigate = useNavigate();
   const { completeLesson, saveCode, isCompleted, getSavedCode, studyStats } = useProgress();
+  const { isPro } = useEntitlement();
 
   const alreadyCompleted = isCompleted(lesson.id);
   const xpAward = calibrateXp(lesson.xpReward, lesson.level);
@@ -101,8 +103,8 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   const handleNext = () => {
     if (lessonReadyToAdvance) {
       // Intersticial com limite de frequência + lembrete de sequência
-      // (ambos apenas no app Android; no-op na web)
-      void recordLessonCompletedAndMaybeShowAd();
+      // (ambos apenas no app Android; no-op na web). Pro não vê anúncios.
+      if (!isPro) void recordLessonCompletedAndMaybeShowAd();
       void scheduleStreakReminder(studyStats.currentStreak);
     }
     navigate(nextHref);

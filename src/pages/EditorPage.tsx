@@ -2,9 +2,16 @@ import { useParams, Navigate } from "react-router-dom";
 import { getLessonById } from "@/data/mockData";
 import { getAugmentedLessonById } from "@/data/checkpoints";
 import LessonView from "@/components/lesson/LessonView";
+import { useEntitlement } from "@/contexts/EntitlementContext";
+import { useProgress } from "@/hooks/useProgress";
+import { MONETIZATION } from "@/config/monetization";
+import { isDailyLimitReached, isLessonLocked } from "@/utils/entitlement";
+import { toLocalDateKey } from "@/utils/studyStats";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
+  const { isPro } = useEntitlement();
+  const { lessonCompletedAt } = useProgress();
   const augmented = getAugmentedLessonById(courseId || "", lessonId || "");
   const data = getLessonById(courseId || "", lessonId || "");
 
@@ -16,6 +23,31 @@ const EditorPage = () => {
 
   const { lesson, course } = data;
   const lessonIndex = data.lessonIndex ?? 0;
+
+  // Paywall (freemium "Equilibrado") — só atua com o flag ligado e usuário grátis.
+  if (
+    isLessonLocked({
+      enabled: MONETIZATION.enabled,
+      isPro,
+      lessons: course.lessons,
+      lessonId: lesson.id,
+      freeModuleCount: MONETIZATION.freeModuleCount,
+    })
+  ) {
+    return <Navigate to="/pro" replace />;
+  }
+  if (
+    isDailyLimitReached({
+      enabled: MONETIZATION.enabled,
+      isPro,
+      lessonCompletedAt,
+      todayKey: toLocalDateKey(new Date()),
+      lessonId: lesson.id,
+      limit: MONETIZATION.freeDailyLessons,
+    })
+  ) {
+    return <Navigate to="/pro?reason=daily" replace />;
+  }
 
   // Compute the next step from the augmented course (so checkpoints are inserted)
   const augCourse = augmented?.course ?? { lessons: [] as { id: string; kind: "lesson" | "checkpoint" }[] };

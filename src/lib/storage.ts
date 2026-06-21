@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   learningProfile: "code-bloom-studio-learning-profile",
   editorOnboarding: "code-bloom-studio_editor_onboarding_seen",
   ads: "code-bloom-studio-ads",
+  entitlement: "code-bloom-studio-entitlement",
   reminder: "code-bloom-studio-reminder",
   freeze: "code-bloom-studio-freeze",
   oauthRedirect: "capycode:oauth-redirect",

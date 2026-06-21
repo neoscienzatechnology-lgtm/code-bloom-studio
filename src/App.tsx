@@ -9,6 +9,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { EntitlementProvider } from "@/contexts/EntitlementContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AuthReturnHandler from "@/components/AuthReturnHandler";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -36,6 +37,7 @@ const WeakConceptsPage = lazy(() => import("./pages/WeakConceptsPage.tsx"));
 const ReferencePage = lazy(() => import("./pages/ReferencePage.tsx"));
 const PlaygroundPage = lazy(() => import("./pages/PlaygroundPage.tsx"));
 const CertificatePage = lazy(() => import("./pages/CertificatePage.tsx"));
+const ProPage = lazy(() => import("./pages/ProPage.tsx"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
 const AccountDeletionPage = lazy(() => import("./pages/AccountDeletionPage.tsx"));
@@ -119,6 +121,7 @@ const App = () => {
         <ScrollToTop />
         <PageviewTracker />
         <AuthProvider>
+          <EntitlementProvider>
           <AuthReturnHandler />
           <ErrorBoundary>
           <Suspense fallback={<PageFallback />}>
@@ -136,6 +139,7 @@ const App = () => {
               <Route path="/referencia" element={<ProtectedPageWithNav><ReferencePage /></ProtectedPageWithNav>} />
               <Route path="/playground" element={<ProtectedPageWithNav><PlaygroundPage /></ProtectedPageWithNav>} />
               <Route path="/certificado/:courseId" element={<ProtectedPageWithNav><CertificatePage /></ProtectedPageWithNav>} />
+              <Route path="/pro" element={<ProtectedPageWithNav><ProPage /></ProtectedPageWithNav>} />
               <Route path="/privacidade" element={<PageWithNav><PrivacyPolicyPage /></PageWithNav>} />
               <Route path="/termos" element={<PageWithNav><TermsPage /></PageWithNav>} />
               <Route path="/excluir-conta" element={<PageWithNav><AccountDeletionPage /></PageWithNav>} />
@@ -150,6 +154,7 @@ const App = () => {
             </Routes>
           </Suspense>
           </ErrorBoundary>
+          </EntitlementProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
