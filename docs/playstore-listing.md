@@ -1,8 +1,8 @@
-# CapyCode - ficha da Play Store
+# CodeTier - ficha da Play Store
 
 ## Nome do app
 
-CapyCode
+CodeTier
 
 ## Nome do desenvolvedor
 
@@ -18,11 +18,11 @@ Aprenda programação com trilhas, missões e prática guiada.
 
 ## Descrição completa
 
-CapyCode é um app educacional para aprender programação de forma guiada, prática e progressiva.
+CodeTier é um app educacional para aprender programação de forma guiada, prática e progressiva.
 
 O app organiza o estudo em trilhas curtas, missões, quizzes, exercícios com feedback, prática de código, revisão de pontos fracos e projetos simples para fixar o conteúdo. A primeira trilha, Fundamentos da Programação, começa do zero e apresenta conceitos como algoritmos, variáveis, tipos de dados, condições, loops, funções e um mini projeto guiado.
 
-Com o CapyCode, você pode:
+Com o CodeTier, você pode:
 
 - estudar uma ideia por vez;
 - praticar com exercícios curtos e feedback imediato;
@@ -31,13 +31,13 @@ Com o CapyCode, você pode:
 - construir projetos para aplicar o que aprendeu;
 - seguir uma progressão pensada para iniciantes.
 
-O mascote CapyCoder aparece como tutor durante a jornada, com dicas e mensagens para ajudar o aluno a entender o próximo passo sem sobrecarregar a aula.
+O mascote CodeTierr aparece como tutor durante a jornada, com dicas e mensagens para ajudar o aluno a entender o próximo passo sem sobrecarregar a aula.
 
-O CapyCode é indicado para iniciantes que querem aprender programação com uma experiência mais visual, leve e prática.
+O CodeTier é indicado para iniciantes que querem aprender programação com uma experiência mais visual, leve e prática.
 
 ## Novidades da versão 1.0
 
-Primeira versão beta do CapyCode para Android.
+Primeira versão beta do CodeTier para Android.
 
 - Trilha Fundamentos da Programação.
 - Aulas divididas em mini etapas.
@@ -45,7 +45,7 @@ Primeira versão beta do CapyCode para Android.
 - Prática guiada e editor de código.
 - Revisão diária e treino de pontos fracos.
 - Projetos práticos.
-- Mascote CapyCoder animado.
+- Mascote CodeTierr animado.
 - Progresso, XP, sequência e conquistas.
 
 ## Classificação e conteúdo

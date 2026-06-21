@@ -1,6 +1,6 @@
-# Monetização — CapyCode Pro
+# Monetização — CodeTier Pro
 
-Modelo: **assinatura "CapyCode Pro" + anúncios no grátis** (freemium).
+Modelo: **assinatura "CodeTier Pro" + anúncios no grátis** (freemium).
 Cobrança: **Google Play via RevenueCat**. Fronteira: **"Equilibrado"** — os
 primeiros `freeModuleCount` módulos de cada curso são grátis + limite de
 `freeDailyLessons` lições/dia; o Pro libera tudo, sem anúncios.

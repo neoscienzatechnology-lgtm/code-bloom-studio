@@ -1,6 +1,6 @@
-# CapyCode
+# CodeTier
 
-Aplicativo web de ensino de programação com trilhas em mapa por curso, lições práticas, checkpoints de revisão, projetos guiados, validação de código, mascote CapyCoder e progresso persistente.
+Aplicativo web de ensino de programação com trilhas em mapa por curso, lições práticas, checkpoints de revisão, projetos guiados, validação de código, mascote CodeTierr e progresso persistente.
 
 ## Stack
 
@@ -49,7 +49,7 @@ npm run android:bundle  # gera AAB release para a Play Store
 
 Configuracao inicial:
 
-- App name: `CapyCode`
+- App name: `CodeTier`
 - Package name: `com.capycode.app`
 - Web dir: `dist`
 - Android target: definido em `android/variables.gradle`
@@ -64,7 +64,7 @@ O produto foi estruturado para aprendizagem progressiva:
 
 - diagnóstico inicial por nível, objetivo e tempo diário;
 - cursos apresentados como mapas de mundo temáticos, com regiões, etapas bloqueadas e projeto final;
-- mascote CapyCoder como guia leve para explicações curtas, foco e revisão;
+- mascote CodeTierr como guia leve para explicações curtas, foco e revisão;
 - teoria curta antes da prática;
 - plano da lição com objetivo, passos pequenos, vocabulário e critérios de sucesso;
 - aquecimento interativo antes do editor livre;

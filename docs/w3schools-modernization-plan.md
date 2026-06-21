@@ -1,10 +1,10 @@
-# CapyCode - plano de modernização didática inspirado na W3Schools
+# CodeTier - plano de modernização didática inspirado na W3Schools
 
 Consulta feita em 13 de maio de 2026.
 
 ## Princípio de adaptação
 
-Este plano usa a W3Schools como referência de estrutura didática, cobertura e fluxo de estudo. O conteúdo do CapyCode deve ser autoral, em português brasileiro, com exemplos próprios, feedback pedagógico e exercícios gamificados. Não copiar textos, exemplos ou exercícios literalmente.
+Este plano usa a W3Schools como referência de estrutura didática, cobertura e fluxo de estudo. O conteúdo do CodeTier deve ser autoral, em português brasileiro, com exemplos próprios, feedback pedagógico e exercícios gamificados. Não copiar textos, exemplos ou exercícios literalmente.
 
 ## O que aproveitar da didática da W3Schools
 
@@ -17,7 +17,7 @@ Este plano usa a W3Schools como referência de estrutura didática, cobertura e 
 - Repetição de padrões: conceito, exemplo, prática, quiz.
 - Conteúdo útil para consulta rápida, não apenas curso linear.
 
-## O que o CapyCode melhora
+## O que o CodeTier melhora
 
 - Mini etapas em carrossel, evitando página gigante.
 - Mascote como tutor contextual.
@@ -29,7 +29,7 @@ Este plano usa a W3Schools como referência de estrutura didática, cobertura e 
 
 ## Matriz de cobertura aplicada no primeiro lote
 
-| Área | Cobertura W3Schools-like | Adaptação CapyCode |
+| Área | Cobertura W3Schools-like | Adaptação CodeTier |
 | --- | --- | --- |
 | HTML | estrutura, tags, links, imagens, listas, semântica, forms, tabelas, mídia, meta, acessibilidade | 13 lições autorais com referência rápida, erro comum, tente agora, quiz e prática |
 | CSS | seletores, cascata, cores, box model, unidades, display, flex, grid, position, responsividade, estados, animação, variáveis | 15 lições autorais com foco em UI moderna e mobile |
@@ -66,5 +66,5 @@ Cada lição modernizada passa a conter:
 1. React avançado com rotas, contexto, consumo de API e testes de componente.
 2. Node.js avançado com autenticação, persistência real, testes de API e deploy.
 3. Git avançado com stash, rebase, tags, cherry-pick e estratégia de branches.
-4. Área de busca/consulta rápida para transformar o CapyCode também em referência de bolso.
+4. Área de busca/consulta rápida para transformar o CodeTier também em referência de bolso.
 5. Separação futura dos cursos por rota com lazy loading, caso o volume de conteúdo continue crescendo.

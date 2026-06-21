@@ -1,4 +1,4 @@
-# CapyCode - referências oficiais usadas
+# CodeTier - referências oficiais usadas
 
 Consulta feita em 11 de maio de 2026.
 

@@ -1,4 +1,4 @@
-# CapyCode - checklist de release Android
+# CodeTier - checklist de release Android
 
 ## Separação web e Android
 
@@ -10,11 +10,11 @@
 ## Status atual
 
 - Capacitor configurado com `appId` `com.capycode.app`.
-- Nome Android configurado como `CapyCode`.
+- Nome Android configurado como `CodeTier`.
 - `targetSdkVersion` definido como `36` em `android/variables.gradle`.
 - `android:usesCleartextTraffic="false"` configurado.
 - Backup nativo e transferência de dispositivo desativados por `backup_rules.xml` e `data_extraction_rules.xml`.
-- Ícone e splash Android configurados com a marca CapyCode.
+- Ícone e splash Android configurados com a marca CodeTier.
 - Política de privacidade criada em `/privacidade`.
 - Termos de uso criados em `/termos`.
 - Página pública de exclusão de conta criada em `/excluir-conta`.

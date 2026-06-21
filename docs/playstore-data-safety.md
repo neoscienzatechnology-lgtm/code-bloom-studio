@@ -1,4 +1,4 @@
-# CapyCode - rascunho de Data Safety
+# CodeTier - rascunho de Data Safety
 
 Este documento prepara as respostas para a seção Data Safety da Play Console. Revise antes de enviar, porque a declaração final precisa refletir o ambiente real de produção, SDKs ativos e provedores configurados.
 

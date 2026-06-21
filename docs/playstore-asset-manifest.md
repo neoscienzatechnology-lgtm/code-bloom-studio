@@ -1,4 +1,4 @@
-# CapyCode - assets da Play Store
+# CodeTier - assets da Play Store
 
 ## Arquivos gerados
 
@@ -19,7 +19,7 @@
 - Screenshots foram capturados do app real em viewport mobile.
 - As imagens têm proporção 9:16 e resolução mínima recomendada para telefone.
 - A feature graphic foi gerada sem transparência, no tamanho exigido pela Play Store.
-- O ícone usa a marca CapyCode sem texto promocional ou promessa enganosa.
+- O ícone usa a marca CodeTier sem texto promocional ou promessa enganosa.
 
 ## Ordem sugerida dos screenshots
 
