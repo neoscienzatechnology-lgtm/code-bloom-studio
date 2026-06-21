@@ -862,7 +862,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "`pular()` com parênteses **executa na hora** em que a tela renderiza, não no toque. Passe a **referência** (`pular`, sem parênteses) ou uma arrow `() => pular()`.",
     },
-    module: "React Native: interação",
+    module: "React Native: áreas de toque",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Criar áreas de toque com feedback visual usando Pressable.",

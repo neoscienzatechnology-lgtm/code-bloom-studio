@@ -14,7 +14,8 @@ import { buildAchievements } from "@/utils/achievements";
 import { buildStudyStats } from "@/utils/studyStats";
 import { ACTIVITY_COURSE_IDS, awardProgressOnce, normalizeProgress, resolveProgressCourseId } from "@/hooks/useProgress";
 import { courses, type Course, type Lesson } from "@/data/mockData";
-import { appCatalogSummary, courseCatalog } from "@/data/courseCatalog";
+import { moduleGroups } from "@/utils/entitlement";
+import { appCatalogSummary, courseCatalog, landingTracks } from "@/data/courseCatalog";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
@@ -170,6 +171,48 @@ describe("pedagogy blueprint", () => {
     expect(appCatalogSummary.courseCount).toBe(courses.length);
     expect(appCatalogSummary.lessonCount).toBe(courses.reduce((total, item) => total + item.lessons.length, 0));
     expect(appCatalogSummary.projectCount).toBe(projects.length);
+  });
+
+  it("mantém a contagem de lições do landingTracks alinhada com o courseCatalog", () => {
+    const offenders: string[] = [];
+    landingTracks.forEach((track) => {
+      const catalogItem = courseCatalog.find((course) => course.id === track.id);
+      if (!catalogItem) {
+        offenders.push(`${track.id}: ausente no courseCatalog`);
+      } else if (catalogItem.lessonCount !== track.lessons) {
+        offenders.push(`${track.id}: landing=${track.lessons} vs catalog=${catalogItem.lessonCount}`);
+      }
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("não tem títulos de módulo duplicados (não contíguos) em nenhum curso", () => {
+    const offenders: string[] = [];
+    courses.forEach((course) => {
+      const titles = moduleGroups(course.lessons).map((group) => group.title);
+      const seen = new Set<string>();
+      const dupes = new Set<string>();
+      titles.forEach((title) => {
+        if (seen.has(title)) dupes.add(title);
+        seen.add(title);
+      });
+      if (dupes.size > 0) offenders.push(`${course.id} (${course.title}): ${[...dupes].join(" | ")}`);
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("não repete o id de lição dentro do mesmo curso", () => {
+    const offenders: string[] = [];
+    courses.forEach((course) => {
+      const seen = new Set<string>();
+      const dupes = new Set<string>();
+      course.lessons.forEach((lesson) => {
+        if (seen.has(lesson.id)) dupes.add(lesson.id);
+        seen.add(lesson.id);
+      });
+      if (dupes.size > 0) offenders.push(`${course.id}: ${[...dupes].join(", ")}`);
+    });
+    expect(offenders).toEqual([]);
   });
 
   it("maps every lesson to a generated infographic asset", () => {
