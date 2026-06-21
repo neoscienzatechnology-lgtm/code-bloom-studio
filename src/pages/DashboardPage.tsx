@@ -187,7 +187,7 @@ const DashboardPage = () => {
             </h2>
             <div className="ct-surface rounded-xl p-5">
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                <div className="rounded-xl border border-border bg-background p-4">
+                <div className="rounded-xl border border-border bg-secondary/30 p-4">
                   <div className="mb-1 flex items-center gap-2 text-xs font-black text-quest-orange">
                     <Flame size={15} /> Sequência
                   </div>
@@ -205,7 +205,7 @@ const DashboardPage = () => {
                     </span>
                   )}
                 </div>
-                <div className="rounded-xl border border-border bg-background p-4">
+                <div className="rounded-xl border border-border bg-secondary/30 p-4">
                   <div className="mb-1 flex items-center gap-2 text-xs font-black text-primary">
                     <Zap size={15} /> Nível {studyStats.level}
                   </div>
@@ -215,7 +215,7 @@ const DashboardPage = () => {
                   />
                   <p className="mt-2 text-xs text-muted-foreground">{totalXp.toLocaleString()} XP reais acumulados.</p>
                 </div>
-                <div className="rounded-xl border border-border bg-background p-4">
+                <div className="rounded-xl border border-border bg-secondary/30 p-4">
                   <div className="mb-3 flex items-center gap-2 text-xs font-black text-primary">
                     <CalendarCheck2 size={15} /> Últimos 7 dias
                   </div>

@@ -50,7 +50,7 @@ const ChallengeStage = ({
 }: ChallengeStageProps) => (
   <>
     {/* Task card */}
-    <div className="mb-4 rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <div className="ct-surface mb-4 rounded-2xl p-5">
       <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-black text-primary">
         <Target size={13} /> Desafio
       </div>

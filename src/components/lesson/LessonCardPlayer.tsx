@@ -168,7 +168,7 @@ const CardShell = ({
   tone: string;
   children: React.ReactNode;
 }) => (
-  <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+  <div className="ct-surface rounded-2xl p-5">
     <div className={`mb-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-black ${tone}`}>
       {icon} {label}
     </div>
