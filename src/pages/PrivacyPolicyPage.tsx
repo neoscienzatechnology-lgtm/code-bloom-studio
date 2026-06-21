@@ -32,7 +32,7 @@ const PrivacyPolicyPage = () => {
         <Button asChild variant="ghost" className="mb-6 rounded-full px-3">
           <Link to="/">
             <ArrowLeft size={16} className="mr-2" />
-            Voltar para o CapyCode
+            Voltar para o CodeTier
           </Link>
         </Button>
 
@@ -44,10 +44,10 @@ const PrivacyPolicyPage = () => {
             Política de privacidade
           </p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">
-            Como o CapyCode cuida dos seus dados
+            Como o CodeTier cuida dos seus dados
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Esta política explica quais informações podem ser usadas pelo CapyCode para salvar seu
+            Esta política explica quais informações podem ser usadas pelo CodeTier para salvar seu
             progresso, personalizar revisões e manter a plataforma funcionando com segurança.
           </p>
           <p className="mt-4 text-xs font-bold text-muted-foreground">Última atualização: {updatedAt}</p>
@@ -70,7 +70,7 @@ const PrivacyPolicyPage = () => {
           <section>
             <h2 className="mb-2 text-xl font-black text-foreground">1. Quem opera o app</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              O CapyCode é uma plataforma educacional da Code Bloom Studio. O app ajuda estudantes a
+              O CodeTier é uma plataforma educacional da Code Bloom Studio. O app ajuda estudantes a
               aprender programação por trilhas, missões, exercícios, revisões e acompanhamento de
               progresso.
             </p>
@@ -98,7 +98,7 @@ const PrivacyPolicyPage = () => {
             <h2 className="mb-2 text-xl font-black text-foreground">4. Armazenamento local e sincronização</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               O app pode salvar progresso no próprio dispositivo. Ao entrar com uma conta, parte desse
-              progresso pode ser sincronizada com os serviços de infraestrutura usados pelo CapyCode,
+              progresso pode ser sincronizada com os serviços de infraestrutura usados pelo CodeTier,
               como autenticação, banco de dados e hospedagem.
             </p>
           </section>
@@ -129,7 +129,7 @@ const PrivacyPolicyPage = () => {
                 política de privacidade do Google
               </a>
               . Quando exigido pela legislação aplicável, solicitamos o seu consentimento antes de
-              exibir anúncios personalizados, e você pode recusá-los. A versão web do CapyCode não
+              exibir anúncios personalizados, e você pode recusá-los. A versão web do CodeTier não
               exibe anúncios.
             </p>
           </section>
@@ -137,7 +137,7 @@ const PrivacyPolicyPage = () => {
           <section>
             <h2 className="mb-2 text-xl font-black text-foreground">6. Dados de menores de idade</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              O CapyCode é voltado ao aprendizado de iniciantes. Estudantes menores de idade devem usar
+              O CodeTier é voltado ao aprendizado de iniciantes. Estudantes menores de idade devem usar
               o app com orientação de responsáveis. Não solicitamos dados sensíveis nos exercícios e
               recomendamos não inserir informações pessoais no editor de código.
             </p>
@@ -168,7 +168,7 @@ const PrivacyPolicyPage = () => {
           <section>
             <h2 className="mb-2 text-xl font-black text-foreground">9. Mudanças nesta política</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Esta política pode ser atualizada conforme o CapyCode evoluir. Quando houver mudanças
+              Esta política pode ser atualizada conforme o CodeTier evoluir. Quando houver mudanças
               relevantes, a data de atualização será alterada nesta página.
             </p>
           </section>

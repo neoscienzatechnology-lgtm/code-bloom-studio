@@ -191,7 +191,7 @@ const htmlLessons = [
       "Uma tag é a marca que abre ou fecha uma instrução. Um elemento é o conjunto formado pela tag de abertura, conteúdo e tag de fechamento. Atributos ficam na abertura e adicionam detalhes, como idioma, destino de link, texto alternativo ou classe.",
     analogy:
       "A tag é como uma etiqueta em uma caixa; o conteúdo é o que está dentro; o atributo é uma observação escrita na etiqueta.",
-    example: '<a href="https://capycode.com">Visitar CapyCode</a>',
+    example: '<a href="https://codetier.com">Visitar CodeTier</a>',
     codeExample: '<p class="aviso">Estude uma etapa por vez.</p>',
     starterCode: "<!-- Crie um parágrafo com class=\"dica\" -->\n",
     solution: '<p class="dica">HTML usa tags para marcar o conteúdo.</p>',
@@ -241,7 +241,7 @@ const htmlLessons = [
     example: `<h1>Meu diário de estudos</h1>
 <h2>O que aprendi hoje</h2>
 <p>Aprendi que HTML organiza a página.</p>`,
-    codeExample: "<h1>CapyCode</h1>\n<h2>Fundamentos</h2>\n<p>Uma ideia por vez.</p>",
+    codeExample: "<h1>CodeTier</h1>\n<h2>Fundamentos</h2>\n<p>Uma ideia por vez.</p>",
     starterCode: "<!-- Crie a hierarquia de texto -->\n",
     solution:
       "<h1>Meu Site</h1>\n<h2>Sobre mim</h2>\n<p>Estou aprendendo HTML com prática.</p>\n<p>Hoje criei minha primeira estrutura.</p>",
@@ -336,7 +336,7 @@ const htmlLessons = [
     analogy:
       "A imagem é o quadro; o alt é a legenda que permite entender o quadro mesmo sem vê-lo.",
     example: '<img src="perfil.jpg" alt="Foto de Ana sorrindo em frente ao notebook" width="320" height="240" loading="lazy">',
-    codeExample: '<img src="logo.png" alt="Logo CapyCode" width="160" height="80">',
+    codeExample: '<img src="logo.png" alt="Logo CodeTier" width="160" height="80">',
     starterCode: "<!-- Adicione uma imagem acessível -->\n",
     solution: '<img src="perfil.jpg" alt="Pessoa estudando programação em um notebook" width="320" height="240" loading="lazy">',
     expectedOutput: 'alt="',
@@ -443,11 +443,11 @@ const htmlLessons = [
     <article><h3>HTML semântico</h3><p>Estrutura importa.</p></article>
   </section>
 </main>
-<footer>CapyCode</footer>`,
+<footer>CodeTier</footer>`,
     codeExample: "<main>\n  <section>\n    <h2>Conteúdo</h2>\n  </section>\n</main>",
     starterCode: "<!-- Estruture a página semanticamente -->\n",
     solution:
-      "<header><h1>Meu Blog</h1></header>\n<main>\n  <section>\n    <h2>Artigos recentes</h2>\n    <article><h3>HTML semântico</h3><p>Estrutura importa.</p></article>\n  </section>\n</main>\n<footer>CapyCode</footer>",
+      "<header><h1>Meu Blog</h1></header>\n<main>\n  <section>\n    <h2>Artigos recentes</h2>\n    <article><h3>HTML semântico</h3><p>Estrutura importa.</p></article>\n  </section>\n</main>\n<footer>CodeTier</footer>",
     expectedOutput: "<main>",
     hints: ["Use apenas um main por página.", "section precisa ter um tema.", "article deve fazer sentido isolado."],
     summary: "Você saiu do div para tudo e começou a escrever HTML com intenção.",
@@ -761,7 +761,7 @@ const htmlLessons = [
     codeExample: "<main>\n  <section>\n    <h2>Sobre mim</h2>\n  </section>\n</main>",
     starterCode: "<!-- Monte sua página pessoal -->\n",
     solution:
-      '<header><h1>Ana Dev</h1><nav><a href="#contato">Contato</a></nav></header>\n<main>\n  <section><h2>Sobre</h2><img src="ana.jpg" alt="Ana estudando programação"><p>Estou aprendendo web.</p></section>\n  <section><h2>Habilidades</h2><ul><li>HTML</li><li>CSS</li></ul></section>\n  <section id="contato"><h2>Contato</h2><form><label for="email">E-mail</label><input id="email" name="email" type="email"></form></section>\n</main>\n<footer>Feito com CapyCode</footer>',
+      '<header><h1>Ana Dev</h1><nav><a href="#contato">Contato</a></nav></header>\n<main>\n  <section><h2>Sobre</h2><img src="ana.jpg" alt="Ana estudando programação"><p>Estou aprendendo web.</p></section>\n  <section><h2>Habilidades</h2><ul><li>HTML</li><li>CSS</li></ul></section>\n  <section id="contato"><h2>Contato</h2><form><label for="email">E-mail</label><input id="email" name="email" type="email"></form></section>\n</main>\n<footer>Feito com CodeTier</footer>',
     expectedOutput: "<main>",
     hints: ["Use header, main e footer.", "Inclua pelo menos uma section.", "Associe label e input no formulário."],
     summary: "Você construiu uma página HTML completa o suficiente para receber estilo com CSS.",
@@ -1520,7 +1520,7 @@ const javascriptLessons = [
       "JavaScript adiciona comportamento à página: responde a cliques, valida formulários, altera texto, busca dados e controla estados. O console é uma área de teste para observar valores e entender o que o código está fazendo.",
     analogy:
       "Se HTML é a estrutura e CSS é o visual, JavaScript é a parte que reage quando alguém usa a página.",
-    example: 'console.log("CapyCode em ação");',
+    example: 'console.log("CodeTier em ação");',
     codeExample: 'console.log("Estou aprendendo JavaScript");',
     starterCode: "// Mostre uma mensagem no console\n",
     solution: 'console.log("Olá, JavaScript");',

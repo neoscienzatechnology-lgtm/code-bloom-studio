@@ -22,7 +22,7 @@ const CertificatePage = () => {
     return <Navigate to={`/cursos/${course.id}`} replace />;
   }
 
-  const name = (user?.user_metadata?.display_name as string | undefined)?.trim() || "Estudante CapyCode";
+  const name = (user?.user_metadata?.display_name as string | undefined)?.trim() || "Estudante CodeTier";
   const dateText = formatCertificateDate(courseCompletionDate(lessonIds, lessonCompletedAt) ?? new Date());
 
   const downloadPng = async () => {
@@ -55,7 +55,7 @@ const CertificatePage = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `certificado-capycode-${course.id}.png`;
+        link.download = `certificado-codetier-${course.id}.png`;
         link.click();
         // Revoga depois para não cancelar um download que ainda vai começar.
         setTimeout(() => URL.revokeObjectURL(url), 2000);
@@ -66,11 +66,11 @@ const CertificatePage = () => {
 
   const share = async () => {
     const url = window.location.href;
-    const text = `Concluí a trilha ${course.title} no CapyCode! 🎓`;
+    const text = `Concluí a trilha ${course.title} no CodeTier! 🎓`;
     const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
     if (typeof nav.share === "function") {
       try {
-        await nav.share({ title: "Certificado CapyCode", text, url });
+        await nav.share({ title: "Certificado CodeTier", text, url });
         return;
       } catch {
         /* usuário cancelou — cai no copiar */
@@ -102,7 +102,7 @@ const CertificatePage = () => {
             <g transform="translate(600,150)">
               <path d="M-26 -28 C-46 -10 -46 10 -26 28" fill="none" stroke="#242424" strokeWidth="9" strokeLinecap="round" />
               <path d="M-18 -28 C2 -10 2 10 -18 28" fill="none" stroke="#44D62C" strokeWidth="9" strokeLinecap="round" />
-              <text x="34" y="13" fontFamily="'Space Grotesk',sans-serif" fontSize="40" fontWeight="700" letterSpacing="-2" fill="#242424">capycode</text>
+              <text x="34" y="13" fontFamily="'Space Grotesk',sans-serif" fontSize="40" fontWeight="700" letterSpacing="-2" fill="#242424">CodeTier</text>
             </g>
 
             <text x="600" y="270" textAnchor="middle" fontFamily="'Space Grotesk',sans-serif" fontSize="22" fontWeight="600" letterSpacing="6" fill="#1F8A3A">CERTIFICADO DE CONCLUSÃO</text>

@@ -31,7 +31,7 @@ const ForgotPasswordPage = () => {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-72 w-72 rounded-full bg-primary/10 blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-quest-orange/10 blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-accent/10 blur-[100px]" />
       </div>
 
       <motion.div
@@ -82,7 +82,7 @@ const ForgotPasswordPage = () => {
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-full bg-gradient-to-r from-primary via-accent to-quest-orange font-extrabold shadow-lg shadow-primary/25"
+              className="w-full rounded-full bg-gradient-to-r from-[#4DE84A] to-[#1C8F2A] font-extrabold shadow-lg shadow-primary/25"
             >
               {submitting ? "Enviando..." : "Enviar link de recuperação"}
             </Button>

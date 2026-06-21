@@ -19,7 +19,7 @@ const rarityColors: Record<AchievementRarity, string> = {
 const ProfilePage = () => {
   const { user } = useAuth();
   const { totalXp, completedLessons, getCourseProgress, studyStats } = useProgress();
-  const displayName = user?.user_metadata?.display_name ?? "Estudante CapyCode";
+  const displayName = user?.user_metadata?.display_name ?? "Estudante CodeTier";
   const initials = displayName
     .split(" ")
     .map((part: string) => part[0])
@@ -51,7 +51,7 @@ const ProfilePage = () => {
           className="mb-8 grid gap-6 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8 lg:grid-cols-[1fr_360px] lg:items-start"
         >
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-primary via-accent to-quest-orange text-3xl font-black text-white shadow-lg shadow-primary/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-[#4DE84A] to-[#1C8F2A] text-3xl font-black text-white shadow-lg shadow-primary/20">
               {initials}
             </div>
             <div className="min-w-0 flex-1">
@@ -214,7 +214,7 @@ const ProfilePage = () => {
               <ShieldCheck size={20} className="text-primary" />
               <div>
                 <div className="font-black text-foreground">Política de privacidade</div>
-                <p className="text-xs text-muted-foreground">Entenda como o CapyCode usa dados de conta e progresso.</p>
+                <p className="text-xs text-muted-foreground">Entenda como o CodeTier usa dados de conta e progresso.</p>
               </div>
             </Link>
             <Link

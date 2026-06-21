@@ -1,4 +1,4 @@
-// Configuração da monetização (assinatura "CapyCode Pro" + anúncios no grátis).
+// Configuração da monetização (assinatura "CodeTier Pro" + anúncios no grátis).
 //
 // IMPORTANTE: `enabled` controla TODO o gating de paywall (lições Pro, limite
 // diário, link "Seja Pro"). Vem DESLIGADO por padrão. Ligue só quando a

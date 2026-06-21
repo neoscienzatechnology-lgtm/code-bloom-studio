@@ -11,7 +11,7 @@ const TermsPage = () => {
         <Button asChild variant="ghost" className="mb-6 rounded-full px-3">
           <Link to="/">
             <ArrowLeft size={16} className="mr-2" />
-            Voltar para o CapyCode
+            Voltar para o CodeTier
           </Link>
         </Button>
 
@@ -23,10 +23,10 @@ const TermsPage = () => {
             Termos de uso
           </p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">
-            Regras para usar o CapyCode
+            Regras para usar o CodeTier
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Estes termos explicam o uso educacional do CapyCode, seus limites e os cuidados esperados
+            Estes termos explicam o uso educacional do CodeTier, seus limites e os cuidados esperados
             ao estudar, criar uma conta e praticar com os exercícios do app.
           </p>
           <p className="mt-4 text-xs font-bold text-muted-foreground">Última atualização: {updatedAt}</p>
@@ -37,7 +37,7 @@ const TermsPage = () => {
             <BookOpenCheck className="mb-3 text-primary" size={22} aria-hidden="true" />
             <h2 className="mb-2 text-base font-black text-foreground">Uso educacional</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              O CapyCode ensina programação por aulas, missões, quizzes, prática guiada e projetos
+              O CodeTier ensina programação por aulas, missões, quizzes, prática guiada e projetos
               progressivos. O conteúdo não substitui acompanhamento profissional ou certificações
               oficiais.
             </p>
@@ -56,7 +56,7 @@ const TermsPage = () => {
           <section>
             <h2 className="mb-2 text-xl font-black text-foreground">1. Aceitação dos termos</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Ao usar o CapyCode, você concorda com estes termos e com a política de privacidade do
+              Ao usar o CodeTier, você concorda com estes termos e com a política de privacidade do
               app. Se não concordar, não utilize a plataforma.
             </p>
           </section>
@@ -91,7 +91,7 @@ const TermsPage = () => {
             <h2 className="mb-2 text-xl font-black text-foreground">5. Uso permitido</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Você não deve tentar invadir, copiar indevidamente, prejudicar, automatizar abuso, burlar
-              limitações técnicas ou usar o CapyCode de modo que comprometa outros usuários, a
+              limitações técnicas ou usar o CodeTier de modo que comprometa outros usuários, a
               infraestrutura ou a experiência educacional.
             </p>
           </section>
@@ -99,7 +99,7 @@ const TermsPage = () => {
           <section>
             <h2 className="mb-2 text-xl font-black text-foreground">6. Disponibilidade do app</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              O CapyCode pode passar por manutenção, mudanças de conteúdo, melhorias de interface e
+              O CodeTier pode passar por manutenção, mudanças de conteúdo, melhorias de interface e
               ajustes técnicos. Faremos esforços razoáveis para manter o serviço estável, mas não
               garantimos disponibilidade contínua.
             </p>
@@ -117,7 +117,7 @@ const TermsPage = () => {
           <section>
             <h2 className="mb-2 text-xl font-black text-foreground">8. Limites do conteúdo educacional</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              O CapyCode ajuda na aprendizagem, mas não promete emprego, aprovação em processos seletivos,
+              O CodeTier ajuda na aprendizagem, mas não promete emprego, aprovação em processos seletivos,
               certificação oficial ou domínio completo de uma tecnologia apenas pelo uso do app.
             </p>
           </section>
@@ -126,7 +126,7 @@ const TermsPage = () => {
             <h2 className="mb-2 text-xl font-black text-foreground">9. Contato e suporte</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Dúvidas, solicitações e pedidos relacionados à conta devem ser enviados pelos canais
-              oficiais informados no site, na página do app ou na loja em que o CapyCode estiver
+              oficiais informados no site, na página do app ou na loja em que o CodeTier estiver
               disponível. Solicitações de remoção de dados podem começar pela página de{" "}
               <Link to="/excluir-conta" className="font-black text-primary hover:underline">
                 exclusão de conta

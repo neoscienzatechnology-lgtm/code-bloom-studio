@@ -2,10 +2,10 @@ export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL?.trim() ?? "";
 
 export const hasSupportEmail = SUPPORT_EMAIL.length > 0;
 
-export const accountDeletionSubject = "Solicitação de exclusão de conta CapyCode";
+export const accountDeletionSubject = "Solicitação de exclusão de conta CodeTier";
 
 export const accountDeletionBody = [
-  "Olá, equipe CapyCode.",
+  "Olá, equipe CodeTier.",
   "",
   "Quero solicitar a exclusão da minha conta e dos dados vinculados ao meu progresso.",
   "",

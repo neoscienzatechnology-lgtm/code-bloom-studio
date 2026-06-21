@@ -155,7 +155,7 @@ const LandingPage = () => {
             <div className="mb-8 max-w-md">
               <CoachGuide
                 state="idle"
-                message="Eu sou o CapyCoder. Vou te guiar com explicações curtinhas, aquecimentos e revisões quando você precisar."
+                message="Sou o seu mentor no CodeTier — explicações curtinhas, aquecimentos e revisões quando você precisar."
               />
             </div>
           </motion.div>
@@ -296,7 +296,7 @@ const LandingPage = () => {
           <div className="flex items-center gap-2">
             <BrandLogo className="h-10 max-w-[170px]" />
           </div>
-          <p className="text-sm text-muted-foreground">2026 CapyCode · Uma plataforma da Code Bloom Studio</p>
+          <p className="text-sm text-muted-foreground">2026 CodeTier · Uma plataforma da Code Bloom Studio</p>
           <div className="flex flex-wrap justify-center gap-5 text-sm text-muted-foreground">
             <Link to="/cursos" className="hover:text-foreground transition-colors">Cursos</Link>
             <Link to="/privacidade" className="hover:text-foreground transition-colors">Privacidade</Link>

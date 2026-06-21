@@ -102,7 +102,7 @@ const SignUpPage = () => {
           <Button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-full bg-gradient-to-r from-primary via-accent to-quest-orange font-extrabold shadow-lg shadow-primary/25"
+            className="w-full rounded-full bg-gradient-to-r from-[#4DE84A] to-[#1C8F2A] font-extrabold shadow-lg shadow-primary/25"
           >
             {submitting ? "Criando conta..." : "Começar grátis"}
           </Button>

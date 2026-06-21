@@ -129,7 +129,7 @@ const reactLessons = [
       "React ajuda a montar interfaces dividindo a tela em componentes. Um componente é uma função que devolve uma parte da interface. Em vez de pensar em uma página gigante, você pensa em peças menores: botão, card, formulário, lista e tela.",
     analogy:
       "Pense em componentes como peças de montar. Cada peça tem uma função, e a tela final nasce da combinação dessas peças.",
-    example: "function Saudacao() {\n  return <h1>Olá, CapyCode</h1>;\n}",
+    example: "function Saudacao() {\n  return <h1>Olá, CodeTier</h1>;\n}",
     codeExample: "function Card() {\n  return <article>Missão disponível</article>;\n}",
     starterCode: "// Crie um componente chamado BoasVindas\n",
     solution: "function BoasVindas() {\n  return <h1>Bem-vindo ao React</h1>;\n}",
@@ -159,7 +159,7 @@ const reactLessons = [
       type: "fill-code",
       title: "Complete o componente",
       prompt: "Complete a palavra que devolve o JSX.",
-      code: "function Titulo() {\n  ____ <h1>CapyCode</h1>;\n}",
+      code: "function Titulo() {\n  ____ <h1>CodeTier</h1>;\n}",
       correctAnswer: "return",
       success: "Perfeito. return entrega o JSX do componente.",
       error: "Ainda não. A função precisa devolver algo.",
@@ -556,7 +556,7 @@ const reactLessons = [
       "useEffect serve para sincronizar o componente com algo externo: buscar dados, assinar eventos, mexer no título da página ou ler armazenamento. Ele não deve substituir cálculos simples que poderiam acontecer durante a renderização.",
     analogy:
       "É como uma rotina automática que roda quando uma tela abre ou quando um valor importante muda.",
-    example: "useEffect(() => {\n  document.title = 'CapyCode';\n}, []);",
+    example: "useEffect(() => {\n  document.title = 'CodeTier';\n}, []);",
     codeExample: "useEffect(() => {\n  carregarCursos();\n}, []);",
     starterCode: "// Rode um efeito uma vez ao montar\n",
     solution: "useEffect(() => {\n  console.log('Tela carregada');\n}, []);",

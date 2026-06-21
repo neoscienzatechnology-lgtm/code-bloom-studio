@@ -129,11 +129,11 @@ const pythonLessons = [
       "Python é uma linguagem usada para automação, dados, web, IA e scripts do dia a dia. O primeiro passo é entender que o programa segue instruções em sequência. print() envia uma informação para a saída do terminal, como se o código estivesse falando com você.",
     analogy:
       "Pense no programa como uma receita. Cada linha é uma instrução. Se a primeira linha diz para mostrar uma mensagem, Python faz isso antes de ir para a próxima.",
-    example: 'print("Olá, CapyCode!")',
+    example: 'print("Olá, CodeTier!")',
     codeExample: 'print("Olá, mundo!")',
-    starterCode: "# Mostre a mensagem: Olá, CapyCode!\n",
-    solution: 'print("Olá, CapyCode!")',
-    expectedOutput: "Olá, CapyCode!",
+    starterCode: "# Mostre a mensagem: Olá, CodeTier!\n",
+    solution: 'print("Olá, CodeTier!")',
+    expectedOutput: "Olá, CodeTier!",
     hints: ["Use print().", "Coloque o texto entre aspas.", "Feche os parênteses no final."],
     summary: "Você escreveu uma instrução que mostra texto no terminal.",
     nextStep: "Agora vamos guardar valores para reutilizar depois.",
@@ -142,8 +142,8 @@ const pythonLessons = [
     reference: ["print(valor) mostra um valor.", "Textos usam aspas.", "Python executa linha por linha.", "# cria comentário."],
     concepts: ["python", "print", "sequence"],
     contrastExample: {
-      wrong: "print(Olá, CapyCode!)",
-      right: 'print("Olá, CapyCode!")',
+      wrong: "print(Olá, CodeTier!)",
+      right: 'print("Olá, CodeTier!")',
       explanation:
         "Sem **aspas**, Python procura uma variável chamada `Olá` (que não existe) e dispara `NameError`. As aspas marcam que o conteúdo é **texto**.",
     },

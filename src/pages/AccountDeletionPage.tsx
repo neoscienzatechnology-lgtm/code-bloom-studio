@@ -58,7 +58,7 @@ const AccountDeletionPage = () => {
             Exclusão de conta
           </p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">
-            Solicite a exclusão da sua conta CapyCode
+            Solicite a exclusão da sua conta CodeTier
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             Esta página explica como pedir a remoção dos dados vinculados à sua conta, incluindo
@@ -112,7 +112,7 @@ const AccountDeletionPage = () => {
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
             Dados que precisem ser mantidos por obrigação legal, segurança, prevenção de fraude ou
             resolução de conflitos podem ser retidos pelo período necessário. Dados salvos somente no
-            dispositivo podem ser removidos limpando os dados do app ou desinstalando o CapyCode.
+            dispositivo podem ser removidos limpando os dados do app ou desinstalando o CodeTier.
           </p>
         </section>
 

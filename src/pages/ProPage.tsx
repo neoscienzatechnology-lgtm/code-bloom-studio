@@ -48,7 +48,7 @@ const ProPage = () => {
         {isPro ? (
           <div className="rounded-3xl border border-accent/30 bg-accent/5 p-8 text-center">
             <Crown className="mx-auto mb-3 text-primary" size={40} />
-            <h1 className="text-2xl font-black text-foreground">Você é CapyCode Pro 🎉</h1>
+            <h1 className="text-2xl font-black text-foreground">Você é CodeTier Pro 🎉</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Todos os cursos, sem anúncios e sem limites estão liberados. Bons estudos!
             </p>
@@ -62,7 +62,7 @@ const ProPage = () => {
               <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
                 <Sparkles size={26} />
               </span>
-              <h1 className="text-3xl font-black text-foreground">CapyCode Pro</h1>
+              <h1 className="text-3xl font-black text-foreground">CodeTier Pro</h1>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
                 {reason === "daily"
                   ? "Você atingiu o limite diário de lições do plano grátis. Assine o Pro para estudar sem limites."

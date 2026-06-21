@@ -110,7 +110,7 @@ const WeakConceptsPage = () => {
             <p className="mimo-section-title mb-1">Treino adaptativo</p>
             <h1 className="text-3xl font-black text-foreground sm:text-4xl">Pontos fracos</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              O CapyCode cruza aulas concluídas, código salvo e tentativas com erro para sugerir uma prática curta
+              O CodeTier cruza aulas concluídas, código salvo e tentativas com erro para sugerir uma prática curta
               por conceito. A ideia é corrigir uma dificuldade por vez, sem virar uma página gigante.
             </p>
           </div>

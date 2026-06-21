@@ -20,15 +20,15 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg"],
       manifest: {
-        name: "CapyCode — Aprenda programação",
-        short_name: "CapyCode",
+        name: "CodeTier — Aprenda programação",
+        short_name: "CodeTier",
         description:
           "App de ensino de programação com trilhas guiadas, aulas curtas, projetos e prática de código.",
         lang: "pt-BR",
         start_url: "/",
         display: "standalone",
-        theme_color: "#fbfbfb",
-        background_color: "#fbfbfb",
+        theme_color: "#0A0E0C",
+        background_color: "#0A0E0C",
         icons: [
           { src: "/pwa-192x192.png", sizes: "192x192", type: "image/png" },
           { src: "/pwa-512x512.png", sizes: "512x512", type: "image/png" },

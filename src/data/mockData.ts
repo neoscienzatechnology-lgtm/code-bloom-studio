@@ -675,7 +675,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
         type: "identify-error",
         title: "Ache o componente errado",
         prompt: "Qual parte deste código não pertence ao React Native?",
-        code: "return <div><Text>CapyCode</Text></div>;",
+        code: "return <div><Text>CodeTier</Text></div>;",
         correctAnswer: "div",
         successFeedback: "Isso. div é um elemento da web; no React Native use View.",
         errorFeedback: "Ainda não. Procure uma tag que existe no HTML, mas não no React Native.",
