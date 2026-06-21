@@ -2,11 +2,14 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, BookOpenCheck, Code2, Gamepad2, Trophy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import CoachGuide from "@/components/CoachGuide";
 import BrandLogo from "@/components/BrandLogo";
 import { appCatalogSummary, landingTracks } from "@/data/courseCatalog";
 import CourseCoverArt from "@/components/CourseCoverArt";
+import { isWebglAvailable, prefersReducedMotion } from "@/utils/webgl";
+
+const HeroCanvasLazy = lazy(() => import("@/components/HeroCanvas"));
 
 const statIcons = [Gamepad2, BookOpenCheck, Code2, Trophy] as const;
 
@@ -110,6 +113,7 @@ const CodePreview = () => {
 };
 
 const LandingPage = () => {
+  const [enable3d] = useState(() => isWebglAvailable() && !prefersReducedMotion());
   return (
     <div className="min-h-screen bg-background">
 
@@ -119,8 +123,15 @@ const LandingPage = () => {
           src="/hero-codetier.png"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-70"
+          className={`pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover ${enable3d ? "opacity-25" : "opacity-70"}`}
         />
+        {enable3d && (
+          <div className="pointer-events-none absolute inset-0 -z-10">
+            <Suspense fallback={null}>
+              <HeroCanvasLazy />
+            </Suspense>
+          </div>
+        )}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-background" />
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
           <motion.div
