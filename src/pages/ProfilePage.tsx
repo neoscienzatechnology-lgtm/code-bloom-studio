@@ -43,7 +43,13 @@ const ProfilePage = () => {
   const unlockedAchievements = achievements.filter((achievement) => achievement.unlocked);
 
   return (
-    <main className="min-h-screen bg-background px-4 pb-28 pt-10 sm:px-6 md:pb-10">
+    <main className="relative min-h-screen bg-background px-4 pb-28 pt-10 sm:px-6 md:pb-10">
+      <img
+        src="/atmos-codetier.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[640px] w-full object-cover opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]"
+      />
       <div className="mx-auto max-w-7xl">
         <motion.section
           initial={{ opacity: 0, y: 18 }}

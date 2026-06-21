@@ -84,7 +84,13 @@ const PlaygroundPage = () => {
   };
 
   return (
-    <div className="min-h-screen px-4 py-10 sm:px-6">
+    <div className="relative min-h-screen px-4 py-10 sm:px-6">
+      <img
+        src="/atmos-codetier.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[640px] w-full object-cover opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]"
+      />
       <div className="mx-auto max-w-5xl">
         <header className="mb-6">
           <p className="mimo-section-title mb-1">sandbox</p>
