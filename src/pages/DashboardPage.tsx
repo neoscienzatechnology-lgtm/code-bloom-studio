@@ -66,7 +66,7 @@ const DashboardPage = () => {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-card to-accent/10 p-6 sm:p-8"
+          className="ct-ambient ct-grid relative mb-8 overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8"
         >
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <div>
@@ -74,7 +74,7 @@ const DashboardPage = () => {
               <h1 className="text-3xl font-black text-foreground">
                 Olá, {displayName}. Hoje vamos continuar em {currentPath.shortTitle}
               </h1>
-              <div className="mt-5 rounded-2xl border border-border bg-card p-5">
+              <div className="ct-surface relative mt-5 rounded-2xl p-5">
                 <CourseCoverArt course={continueCourse} className="mb-4 h-32 w-full" />
                 <div className="mb-1 text-sm font-black text-primary">Próxima aula</div>
                 <h2 className="text-xl font-black text-foreground">{currentLesson.title}</h2>
@@ -86,7 +86,7 @@ const DashboardPage = () => {
                   </div>
                   <Progress value={continueCourse.realProgress} className="h-2 bg-secondary [&>div]:bg-primary" />
                 </div>
-                <Button asChild className="mt-5 rounded-full font-black">
+                <Button asChild className="ct-glow mt-5 rounded-full font-black">
                   <Link to={`/editor/${continueCourse.id}/${currentLesson.id}`}>
                     Continuar aula <ArrowRight size={16} />
                   </Link>
@@ -109,7 +109,7 @@ const DashboardPage = () => {
                       : "Escolha uma trilha e eu acompanho seu progresso aula por aula."
                 }
               />
-              <div className="rounded-2xl border border-border bg-card p-4">
+              <div className="ct-surface rounded-2xl p-4">
                 <div className="mb-3 text-sm font-black text-foreground">Seu caminho atual</div>
                 <div className="flex flex-wrap items-center gap-2">
                   {currentPath.steps.map((step, index) => (
@@ -119,7 +119,7 @@ const DashboardPage = () => {
                   ))}
                 </div>
               </div>
-              <div className="rounded-2xl border border-border bg-card p-4">
+              <div className="ct-surface rounded-2xl p-4">
                 <div className="mb-3 text-sm font-black text-foreground">Cursos recomendados</div>
                 <div className="space-y-2">
                   {recommendedCourses.slice(0, 3).map((course) => (
@@ -185,7 +185,7 @@ const DashboardPage = () => {
             <h2 className="mb-4 flex items-center gap-2 text-xl font-black">
               <Flame className="text-quest-orange" size={20} /> Ritmo de estudo
             </h2>
-            <div className="rounded-xl border border-border/30 bg-card p-5">
+            <div className="ct-surface rounded-xl p-5">
               <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
                 <div className="rounded-xl border border-border bg-background p-4">
                   <div className="mb-1 flex items-center gap-2 text-xs font-black text-quest-orange">
