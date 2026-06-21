@@ -26,7 +26,7 @@ const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps
   const projectUnlocked = course.lessons.every((lesson) => isCompleted(lesson.id));
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
+    <section className="ct-surface rounded-2xl p-5 sm:p-6">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-black text-foreground">{course.title}</h2>

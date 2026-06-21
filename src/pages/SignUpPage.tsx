@@ -53,7 +53,7 @@ const SignUpPage = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-2xl border border-border/30 bg-card p-8"
+        className="ct-surface w-full max-w-md rounded-2xl p-8"
       >
         <div className="mb-6 text-center">
           <Link to="/" className="inline-flex items-center gap-2 mb-4 [&>span]:hidden">

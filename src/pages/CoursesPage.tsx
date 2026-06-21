@@ -120,7 +120,7 @@ const CoursesPage = () => {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.04 }}
-                  className="rounded-2xl border border-border bg-card p-5 shadow-sm"
+                  className="ct-surface rounded-2xl p-5"
                 >
                   {startCourse && <CourseCoverArt course={startCourse} className="-m-5 mb-5 rounded-b-none border-0" />}
                   <div className="mb-4 flex items-start justify-between gap-4">
@@ -221,7 +221,7 @@ const CoursesPage = () => {
                           to={unlocked ? `/cursos/${course.id}` : "#"}
                           className={unlocked ? "block" : "pointer-events-none block"}
                         >
-                          <div className={`card-hover h-full rounded-2xl border bg-card p-5 ${unlocked ? "border-border" : "border-border opacity-60"}`}>
+                          <div className={`card-hover h-full ct-surface rounded-2xl p-5 ${unlocked ? "" : "opacity-60"}`}>
                             <CourseCoverArt course={course} className="-m-5 mb-5 rounded-b-none border-0" />
                             <div className="mb-4 flex items-start justify-between gap-3">
                               <div>

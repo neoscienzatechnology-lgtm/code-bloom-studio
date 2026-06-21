@@ -87,6 +87,7 @@ const PlaygroundPage = () => {
     <div className="min-h-screen px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-5xl">
         <header className="mb-6">
+          <p className="mimo-section-title mb-1">sandbox</p>
           <h1 className="text-3xl font-black text-foreground">Playground</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
             Escreva e rode código livre — sem lição, sem pressão. O Python roda de verdade no seu navegador.

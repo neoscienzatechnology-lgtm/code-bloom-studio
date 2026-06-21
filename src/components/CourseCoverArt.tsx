@@ -75,15 +75,18 @@ const CourseCoverArt = ({ course, variant = "card", className = "" }: CourseCove
   return (
     <figure
       className={`relative overflow-hidden rounded-2xl border border-white/10 ${variantClasses[variant]} ${className}`}
-      style={{ background: "linear-gradient(135deg, #15191a, #232a26)" }}
+      style={{
+        background: "linear-gradient(140deg, #0B0F0D 0%, #0F1B16 100%)",
+        boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.05)",
+      }}
     >
       <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden="true">
         <defs>
-          <pattern id={dotsId} width="20" height="20" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.2" fill={theme.accent} fillOpacity="0.5" />
+          <pattern id={dotsId} width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill={theme.accent} fillOpacity="0.42" />
           </pattern>
-          <radialGradient id={`${dotsId}-glow`} cx="80%" cy="22%" r="60%">
-            <stop offset="0%" stopColor={theme.accent} stopOpacity="0.32" />
+          <radialGradient id={`${dotsId}-glow`} cx="82%" cy="16%" r="66%">
+            <stop offset="0%" stopColor={theme.accent} stopOpacity="0.42" />
             <stop offset="100%" stopColor={theme.accent} stopOpacity="0" />
           </radialGradient>
         </defs>
@@ -91,14 +94,20 @@ const CourseCoverArt = ({ course, variant = "card", className = "" }: CourseCove
         <rect width="320" height="180" fill={`url(#${dotsId}-glow)`} />
       </svg>
 
-      <Icon size={isThumb ? 64 : 132} strokeWidth={1.5} className="absolute -bottom-4 -right-3" style={{ color: theme.accent, opacity: 0.22 }} aria-hidden="true" />
+      <Icon size={isThumb ? 64 : 140} strokeWidth={1.4} className="absolute -bottom-5 -right-4" style={{ color: theme.accent, opacity: 0.16 }} aria-hidden="true" />
 
       <div className={`absolute ${isThumb ? "left-2 top-2" : "left-4 top-4"} flex items-center gap-2`}>
-        <div className={`flex items-center justify-center rounded-xl bg-white/92 text-slate-900 shadow-sm ${isThumb ? "h-8 w-8" : "h-11 w-11"}`}>
+        <div
+          className={`flex items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15 backdrop-blur ${isThumb ? "h-8 w-8" : "h-11 w-11"}`}
+          style={{ color: theme.accent }}
+        >
           <Icon size={iconSize[variant]} strokeWidth={2.4} />
         </div>
         {!isThumb && (
-          <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-white shadow-sm ring-1 ring-white/15 backdrop-blur">
+          <span
+            className="rounded-full bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/90 ring-1 ring-white/12 backdrop-blur"
+            style={{ fontFamily: "'Fira Code', ui-monospace, monospace" }}
+          >
             {theme.label}
           </span>
         )}
@@ -106,7 +115,12 @@ const CourseCoverArt = ({ course, variant = "card", className = "" }: CourseCove
 
       {variant === "hero" && (
         <figcaption className="absolute bottom-5 left-5 right-5 max-w-lg">
-          <div className="mb-2 text-xs font-black uppercase tracking-wide" style={{ color: theme.accent }}>Trilha CodeTier</div>
+          <div
+            className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
+            style={{ color: theme.accent, fontFamily: "'Fira Code', ui-monospace, monospace" }}
+          >
+            // trilha CodeTier
+          </div>
           <div className="font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl">{course.title}</div>
           <div className="mt-1 text-sm font-bold text-white/80">{course.language} · {course.emoji}</div>
         </figcaption>
