@@ -35,7 +35,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     emoji: "🐍",
     level: "Iniciante",
     duration: "15h",
-    lessonCount: 27,
+    lessonCount: 31,
     kind: "Linguagem de programação",
     prerequisite: "Nenhum",
     finalProject: "Automação de tarefas",
@@ -198,7 +198,7 @@ export const landingTracks = [
   { id: "9", emoji: "🏗️", name: "HTML Semântico", language: "HTML", level: "Iniciante", lessons: 13 },
   { id: "4", emoji: "🎨", name: "CSS", language: "CSS", level: "Iniciante", lessons: 15 },
   { id: "2", emoji: "⚡", name: "JavaScript", language: "JavaScript", level: "Intermediário", lessons: 18 },
-  { id: "1", emoji: "🐍", name: "Python", language: "Python", level: "Iniciante", lessons: 27 },
+  { id: "1", emoji: "🐍", name: "Python", language: "Python", level: "Iniciante", lessons: 31 },
 ];
 
 export function getCourseCatalogItem(courseId: string | null | undefined): CourseCatalogItem | undefined {
