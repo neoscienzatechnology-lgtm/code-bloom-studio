@@ -62,6 +62,7 @@ const ResetPasswordPage = () => {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="absolute inset-0 -z-10">
+        <img src="/hero-codetier.png" alt="" aria-hidden="true" className="h-full w-full object-cover opacity-40" />
         <div className="absolute left-1/4 top-1/4 h-72 w-72 rounded-full bg-primary/10 blur-[100px]" />
         <div className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full bg-accent/10 blur-[100px]" />
       </div>

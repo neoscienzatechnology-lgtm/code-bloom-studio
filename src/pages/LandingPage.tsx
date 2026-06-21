@@ -114,7 +114,14 @@ const LandingPage = () => {
     <div className="min-h-screen bg-background">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="px-4 pb-20 pt-14 sm:px-6">
+      <section className="relative isolate overflow-hidden px-4 pb-20 pt-14 sm:px-6">
+        <img
+          src="/hero-codetier.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-70"
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-background" />
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
