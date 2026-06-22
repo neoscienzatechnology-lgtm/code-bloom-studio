@@ -46,14 +46,22 @@ de MB no repo/Vercel).
 ## Go-live (hospedar + ligar no app)
 
 1. **Renderizar** os vídeos desejados (`npm run video:render`).
-2. **Hospedar** os MP4 num bucket **público** — recomendado **Supabase
-   Storage** (a base já usa Supabase), mantendo o layout
-   `<courseId>/<lessonId>.mp4`. (Eu não faço upload nem crio bucket sem sua
-   autorização/credenciais.)
-3. **Ligar no app**: defina `VITE_THEORY_VIDEO_BASE` com a URL pública do
-   bucket (sem barra final) e faça o deploy. Pronto: o card "Teoria em vídeo"
-   passa a aparecer nas lições que têm vídeo (índice em
-   `src/data/theoryVideoIndex.ts`).
+2. **Subir para o Supabase Storage** com o helper (cria um bucket **público**
+   e mantém o layout `<courseId>/<lessonId>.mp4`). As credenciais vêm do
+   ambiente — a `service_role` nunca é commitada:
+
+   ```powershell
+   $env:SUPABASE_URL="https://<ref>.supabase.co"
+   $env:SUPABASE_SERVICE_KEY="<chave service_role>"   # NÃO é a anon/publishable
+   npm run video:upload
+   ```
+
+   Ao final ele imprime o valor exato de `VITE_THEORY_VIDEO_BASE`.
+   (Egress: o plano grátis do Supabase tem limite de banda — para muitos
+   acessos, considere um CDN de vídeo como Cloudflare R2/Stream ou Bunny.)
+3. **Ligar no app**: defina `VITE_THEORY_VIDEO_BASE` com a URL impressa e faça
+   o deploy. Pronto: o card "Teoria em vídeo" passa a aparecer nas lições que
+   têm vídeo (índice em `src/data/theoryVideoIndex.ts`).
 
 Sem `VITE_THEORY_VIDEO_BASE` o recurso fica **dormente** — nada muda na UI.
 

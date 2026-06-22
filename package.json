@@ -19,6 +19,7 @@
     "video:extract": "tsx scripts/extract-theory.ts",
     "video:render": "tsx scripts/render-theory.ts",
     "video:still": "tsx scripts/still-theory.ts",
+    "video:upload": "tsx scripts/upload-theory.ts",
     "video:studio": "remotion studio remotion/index.ts"
   },
   "dependencies": {
