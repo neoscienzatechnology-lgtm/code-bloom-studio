@@ -566,7 +566,7 @@ const LessonCardPlayer = ({
               />
               <p className="mb-3 leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
               <div className="rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
-                <span className="font-bold text-muted-foreground">Saída esperada: </span>
+                <span className="font-bold text-muted-foreground">{course.language === "SQL" ? "Sua query deve conter: " : "Saída esperada: "}</span>
                 <code className="font-mono text-primary">{lesson.expectedOutput}</code>
               </div>
             </CardShell>

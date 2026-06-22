@@ -464,7 +464,7 @@ const lessons = [
     codeExample: 'grafo["A"]',
     starterCode: "# Crie um grafo pequeno\n",
     solution: 'grafo = {"A": ["B"], "B": ["A", "C"], "C": ["B"]}\nprint(grafo["B"])',
-    expectedOutput: "A",
+    expectedOutput: "['A', 'C']",
     hints: ["Use dicionário.", "Cada chave é um nó.", "Cada valor é lista de vizinhos."],
     summary: "Você representou conexões como dados.",
     nextStep: "Vamos percorrer grafos com BFS.",

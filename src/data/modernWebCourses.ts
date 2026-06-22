@@ -1619,7 +1619,7 @@ const javascriptLessons = [
     codeExample: 'console.log(typeof nome);\nconsole.log(typeof idade);\nconsole.log(typeof estudando);',
     starterCode: "// Crie três tipos de dados\n",
     solution: 'const nome = "Ana";\nconst idade = 25;\nconst estudando = true;\nconsole.log(nome, idade, estudando);',
-    expectedOutput: "Ana",
+    expectedOutput: "Ana 25 true",
     hints: ["Texto usa aspas.", "Número não usa aspas.", "Booleano é true ou false."],
     summary: "Você separou os tipos básicos que aparecem em quase todo programa.",
     nextStep: "Vamos operar valores com matemática e comparação.",

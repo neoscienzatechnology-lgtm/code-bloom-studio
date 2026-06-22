@@ -154,6 +154,7 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
               </Button>
               <ChallengeStage
                 lesson={lesson}
+                language={course.language}
                 mascotState={lessonMascotState}
                 revealedHintCount={hintIndex + 1}
                 lastFeedback={output}

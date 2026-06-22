@@ -314,7 +314,7 @@ Exemplo:
 Se você travar, responda: qual é o primeiro passo visível que aproxima o programa do objetivo?`,
       starterCode: "// Mostre os passos: acordar, estudar, praticar\n",
       solution: 'mostrar("acordar");\nmostrar("estudar");\nmostrar("praticar");',
-      expectedOutput: "praticar",
+      expectedOutput: "acordar\nestudar\npraticar",
       hints: [
         "Use uma linha de mostrar para cada passo.",
         "Mantenha os passos na ordem do enunciado.",
@@ -377,7 +377,7 @@ O resultado também aparece nessa ordem.
 Trocar a ordem das linhas pode fazer o programa mostrar algo antes da hora ou calcular com dados que ainda não existem.`,
       starterCode: "// Primeiro mostre preparar, depois mostre executar\n",
       solution: 'mostrar("preparar");\nmostrar("executar");',
-      expectedOutput: "executar",
+      expectedOutput: "preparar\nexecutar",
       hints: [
         "A primeira linha deve mostrar preparar.",
         "A segunda linha deve mostrar executar.",
@@ -1000,7 +1000,7 @@ Com loop:
 Apps percorrem listas, mensagens, produtos, tarefas, alunos, pontos e muitos outros dados.`,
       starterCode: "// Mostre os números de 1 a 3 usando for\n",
       solution: "for (let numero = 1; numero <= 3; numero++) {\n  console.log(numero);\n}",
-      expectedOutput: "3",
+      expectedOutput: "1\n2\n3",
       hints: [
         "Comece com let numero = 1.",
         "Repita enquanto numero <= 3.",
@@ -1064,7 +1064,7 @@ Confundir o nome da lista com o nome do item. tarefas é a lista inteira; tarefa
       starterCode: 'const tarefas = ["ler", "praticar", "revisar"];\n// mostre cada tarefa\n',
       solution:
         'const tarefas = ["ler", "praticar", "revisar"];\nfor (const tarefa of tarefas) {\n  console.log(tarefa);\n}',
-      expectedOutput: "revisar",
+      expectedOutput: "ler\npraticar\nrevisar",
       hints: [
         "Use for (const tarefa of tarefas).",
         "Dentro do loop, mostre tarefa.",
@@ -1501,7 +1501,7 @@ Projeto bom não começa digitando. Começa entendendo quais peças precisam exi
       starterCode: "// Mostre o plano: entrada, processamento e saída\n",
       solution:
         'console.log("entrada: números");\nconsole.log("processamento: soma");\nconsole.log("saída: resultado");',
-      expectedOutput: "saída: resultado",
+      expectedOutput: "entrada: números\nprocessamento: soma\nsaída: resultado",
       hints: [
         "Use três console.log.",
         "Mostre uma mensagem para cada parte do plano.",

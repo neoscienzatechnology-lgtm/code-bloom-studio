@@ -8,6 +8,8 @@ import type { Lesson } from "@/data/mockData";
 
 interface ChallengeStageProps {
   lesson: Lesson;
+  /** Idioma do curso — relabela "Saída esperada" para SQL (fragmento de query). */
+  language?: string;
   mascotState: CoachState;
   revealedHintCount: number;
   lastFeedback: string | null;
@@ -32,6 +34,7 @@ interface ChallengeStageProps {
  */
 const ChallengeStage = ({
   lesson,
+  language,
   mascotState,
   revealedHintCount,
   lastFeedback,
@@ -56,7 +59,7 @@ const ChallengeStage = ({
       </div>
       <p className="leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
       <div className="mt-3 rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
-        <span className="font-bold text-muted-foreground">Saída esperada: </span>
+        <span className="font-bold text-muted-foreground">{language === "SQL" ? "Sua query deve conter: " : "Saída esperada: "}</span>
         <code className="font-mono text-primary">{lesson.expectedOutput}</code>
       </div>
     </div>
