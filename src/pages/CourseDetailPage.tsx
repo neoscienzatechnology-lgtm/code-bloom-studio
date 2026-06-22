@@ -34,7 +34,9 @@ const CourseDetailPage = () => {
   return (
     <div className="relative min-h-screen px-4 py-10 sm:px-6">
       <img
-        src="/atmos-codetier.png"
+        src="/atmos-codetier.webp"
+        loading="lazy"
+        decoding="async"
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[640px] w-full object-cover opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]"

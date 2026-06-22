@@ -45,7 +45,9 @@ const ProfilePage = () => {
   return (
     <main className="relative min-h-screen bg-background px-4 pb-28 pt-10 sm:px-6 md:pb-10">
       <img
-        src="/atmos-codetier.png"
+        src="/atmos-codetier.webp"
+        loading="lazy"
+        decoding="async"
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[640px] w-full object-cover opacity-50 [mask-image:linear-gradient(to_bottom,black,transparent)]"

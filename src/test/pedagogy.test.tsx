@@ -481,7 +481,7 @@ describe("QuizSection", () => {
     );
 
     await waitFor(() => expect(screen.getByText("Novo quiz?")).toBeInTheDocument());
-    expect(screen.getByRole("button", { name: /Alternativa nova/ })).not.toBeDisabled();
+    expect(screen.getByRole("radio", { name: /Alternativa nova/ })).not.toBeDisabled();
     expect(screen.queryByText("Quiz concluído!")).not.toBeInTheDocument();
   });
 });

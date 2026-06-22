@@ -120,7 +120,8 @@ const LandingPage = () => {
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden px-4 pb-20 pt-14 sm:px-6">
         <img
-          src="/hero-codetier.png"
+          src="/hero-codetier.webp"
+          fetchPriority="high"
           alt=""
           aria-hidden="true"
           className={`pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover ${enable3d ? "opacity-25" : "opacity-70"}`}

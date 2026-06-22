@@ -138,7 +138,7 @@ const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
           <p className="text-sm font-bold text-foreground leading-snug">{q.question}</p>
 
           {/* Options */}
-          <div className="space-y-2">
+          <div className="space-y-2" role="radiogroup" aria-label={q.question}>
             {q.options.map((opt, idx) => {
               const isThisCorrect = idx === q.correctIndex;
               const isThisSelected = idx === selected;
@@ -157,7 +157,14 @@ const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
               }
 
               return (
-                <button key={idx} onClick={() => handleSelect(idx)} disabled={answered} className={cls}>
+                <button
+                  key={idx}
+                  onClick={() => handleSelect(idx)}
+                  disabled={answered}
+                  className={cls}
+                  role="radio"
+                  aria-checked={isThisSelected}
+                >
                   <span
                     className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold ${
                       answered && isThisCorrect
