@@ -13,19 +13,39 @@
  *   npm run video:upload
  */
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 
-const url = process.env.SUPABASE_URL?.trim();
-const key = process.env.SUPABASE_SERVICE_KEY?.trim();
+// URL: do ambiente, senão deriva de supabase/config.toml (project_id).
+function deriveUrl(): string | undefined {
+  if (process.env.SUPABASE_URL?.trim()) return process.env.SUPABASE_URL.trim();
+  const cfg = join(root, "supabase", "config.toml");
+  if (!existsSync(cfg)) return undefined;
+  const m = readFileSync(cfg, "utf8").match(/project_id\s*=\s*"([^"]+)"/);
+  return m ? `https://${m[1]}.supabase.co` : undefined;
+}
+
+// Chave service_role: do ambiente, senão de um arquivo local (git ignora
+// *.local). Este script NUNCA imprime a chave.
+function readKey(): string | undefined {
+  if (process.env.SUPABASE_SERVICE_KEY?.trim()) return process.env.SUPABASE_SERVICE_KEY.trim();
+  const f = join(root, "supabase-service-key.local");
+  return existsSync(f) ? readFileSync(f, "utf8").trim() : undefined;
+}
+
+const url = deriveUrl();
+const key = readKey();
 const bucket = process.env.THEORY_VIDEO_BUCKET?.trim() || "theory-videos";
 
 if (!url || !key) {
-  console.error("Defina SUPABASE_URL e SUPABASE_SERVICE_KEY no ambiente (veja o cabeçalho deste arquivo).");
+  console.error(
+    "Faltam credenciais. Cole a chave service_role em 'supabase-service-key.local' " +
+      "(na raiz do projeto; o git ignora *.local) ou defina SUPABASE_SERVICE_KEY no ambiente.",
+  );
   process.exit(1);
 }
 
