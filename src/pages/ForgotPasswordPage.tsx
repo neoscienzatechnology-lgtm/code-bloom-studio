@@ -67,8 +67,9 @@ const ForgotPasswordPage = () => {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-bold">Email</label>
+              <label htmlFor="forgot-email" className="mb-1.5 block text-sm font-bold">Email</label>
               <Input
+                id="forgot-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

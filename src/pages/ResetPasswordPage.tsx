@@ -87,8 +87,9 @@ const ResetPasswordPage = () => {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-bold">Nova senha</label>
+              <label htmlFor="reset-password" className="mb-1.5 block text-sm font-bold">Nova senha</label>
               <Input
+                id="reset-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -99,8 +100,9 @@ const ResetPasswordPage = () => {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-bold">Confirmar senha</label>
+              <label htmlFor="reset-confirm" className="mb-1.5 block text-sm font-bold">Confirmar senha</label>
               <Input
+                id="reset-confirm"
                 type="password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}

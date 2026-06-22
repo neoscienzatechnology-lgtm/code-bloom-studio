@@ -188,6 +188,8 @@ const QuizSection = ({ quizId, questions, onComplete }: QuizSectionProps) => {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-2"
+                role="status"
+                aria-live="polite"
               >
                 {/* Result badge */}
                 <div

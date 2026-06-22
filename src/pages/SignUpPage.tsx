@@ -19,7 +19,13 @@ const SignUpPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
-  if (loading) return null;
+  if (loading)
+    return (
+      <div className="flex min-h-screen items-center justify-center" role="status" aria-busy="true">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <span className="sr-only">Carregando…</span>
+      </div>
+    );
   if (user) return <Navigate to={redirectTo} replace />;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,8 +70,9 @@ const SignUpPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-bold">Nome</label>
+            <label htmlFor="signup-name" className="mb-1.5 block text-sm font-bold">Nome</label>
             <Input
+              id="signup-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -75,8 +82,9 @@ const SignUpPage = () => {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-bold">Email</label>
+            <label htmlFor="signup-email" className="mb-1.5 block text-sm font-bold">Email</label>
             <Input
+              id="signup-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -86,8 +94,9 @@ const SignUpPage = () => {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-bold">Senha</label>
+            <label htmlFor="signup-password" className="mb-1.5 block text-sm font-bold">Senha</label>
             <Input
+              id="signup-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

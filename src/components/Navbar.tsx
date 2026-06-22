@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Bell, Brain, Flame, FolderKanban, Home, LogIn, LogOut, Menu, Moon, Sun, Target, User, X, Zap } from "lucide-react";
+import { Brain, Flame, FolderKanban, Home, LogIn, LogOut, Menu, Moon, Sun, Target, User, X, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
@@ -101,13 +101,6 @@ const Navbar = () => {
             {user ? (
               <>
                 <button
-                  aria-label="Notificações"
-                  className="relative rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                >
-                  <Bell size={18} />
-                  <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-quest-orange" />
-                </button>
-                <button
                   onClick={signOut}
                   className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                   title="Sair"
@@ -125,7 +118,7 @@ const Navbar = () => {
           </div>
 
           <button
-            className="rounded-lg p-2 text-foreground md:hidden"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-foreground md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={mobileOpen}

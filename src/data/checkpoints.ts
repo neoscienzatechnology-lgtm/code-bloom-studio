@@ -234,10 +234,17 @@ function buildCheckpoint(
   };
 }
 
+// O catálogo é estático, então o curso aumentado é sempre o mesmo — cacheia por
+// id para não reconstruir (deep-clone + checkpoints) a cada render e estabilizar
+// referências para memos a jusante. #checkup-15
+const augmentedCache = new Map<string, AugmentedCourse>();
+
 /**
  * Returns a course with checkpoint lessons interleaved every N normal lessons.
  */
 export function augmentCourse(course: Course): AugmentedCourse {
+  const cached = augmentedCache.get(course.id);
+  if (cached) return cached;
   const out: AugmentedLesson[] = [];
   let group: Lesson[] = [];
   let groupIdx = 0;
@@ -264,7 +271,9 @@ export function augmentCourse(course: Course): AugmentedCourse {
     }
   });
 
-  return { ...course, lessons: out };
+  const result = { ...course, lessons: out };
+  augmentedCache.set(course.id, result);
+  return result;
 }
 
 export function getAugmentedCourseById(courseId: string): AugmentedCourse | undefined {

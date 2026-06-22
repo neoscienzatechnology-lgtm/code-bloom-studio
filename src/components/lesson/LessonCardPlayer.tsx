@@ -374,7 +374,7 @@ const LessonCardPlayer = ({
           onClick={onBack}
           disabled={cardIndex === 0}
           aria-label="Cartão anterior"
-          className="text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
         >
           <ArrowLeft size={18} />
         </button>
