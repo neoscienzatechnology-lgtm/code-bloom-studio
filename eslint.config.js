@@ -8,10 +8,15 @@ export default tseslint.config(
   {
     ignores: [
       "dist",
+      "out",
       "android/.gradle/**",
       "android/**/build/**",
       "android/app/src/main/assets/public/**",
       "android/capacitor-cordova-android-plugins/**",
+      // Ferramentas de build/render (Node + Remotion), fora do app web:
+      "remotion/**",
+      "remotion.config.ts",
+      "scripts/**",
     ],
   },
   {

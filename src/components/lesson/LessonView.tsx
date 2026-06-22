@@ -43,7 +43,7 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   const xpAward = calibrateXp(lesson.xpReward, lesson.level);
   const progressPercent = ((lessonIndex + 1) / course.lessons.length) * 100;
 
-  const cards = useMemo(() => buildLessonCards(lesson), [lesson]);
+  const cards = useMemo(() => buildLessonCards(lesson, course.id), [lesson, course.id]);
   const [cardIndex, setCardIndex] = useState(0);
   const [phase, setPhase] = useState<"cards" | "code">("cards");
   // Vive aqui (escopo da lição, via key={lesson.id}) para que a celebração

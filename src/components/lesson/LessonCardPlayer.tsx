@@ -10,6 +10,7 @@ import CoachGuide from "@/components/CoachGuide";
 import LessonVisualAid from "@/components/LessonVisualAid";
 import CardIllustration from "@/components/lesson/CardIllustration";
 import ConceptDiagram from "@/components/lesson/ConceptDiagram";
+import TheoryVideoCard from "@/components/lesson/TheoryVideoCard";
 import { ConfidenceCheck } from "@/components/Metacognition";
 import { cardRequiresCompletion, contrastRightOnFirstPosition, type LessonCard } from "@/utils/lessonCards";
 import { TOKEN_SEP } from "@/utils/assembleBlocks";
@@ -412,6 +413,8 @@ const LessonCardPlayer = ({
               />
             </CardShell>
           )}
+
+          {card.kind === "video" && <TheoryVideoCard courseId={card.courseId} lessonId={card.lessonId} />}
 
           {card.kind === "theory" && (
             <CardShell icon={<Lightbulb size={13} />} label="Aprenda" tone="bg-primary/10 text-primary">

@@ -7,10 +7,12 @@
 
 import type { Lesson } from "@/data/mockData";
 import { buildAssembleData } from "@/utils/assembleBlocks";
+import { THEORY_VIDEO, hasTheoryVideo } from "@/config/theoryVideos";
 
 export type LessonCard =
   | { kind: "confidence" }
   | { kind: "objective"; title: string; text: string }
+  | { kind: "video"; courseId: string; lessonId: string }
   | { kind: "theory"; text: string; first: boolean }
   | { kind: "analogy"; text: string }
   | { kind: "example"; code: string }
@@ -78,7 +80,7 @@ export function splitTheoryChunks(theory: string): string[] {
   return chunks;
 }
 
-export function buildLessonCards(lesson: Lesson): LessonCard[] {
+export function buildLessonCards(lesson: Lesson, courseId?: string): LessonCard[] {
   const cards: LessonCard[] = [];
 
   cards.push({ kind: "confidence" });
@@ -87,6 +89,12 @@ export function buildLessonCards(lesson: Lesson): LessonCard[] {
     title: lesson.title,
     text: lesson.learningObjective ?? lesson.description,
   });
+
+  // Vídeo de teoria (Remotion) logo após o objetivo — dormente até hospedar
+  // os vídeos (VITE_THEORY_VIDEO_BASE). Só entra para lições que têm vídeo.
+  if (courseId && THEORY_VIDEO.enabled && hasTheoryVideo(courseId, lesson.id)) {
+    cards.push({ kind: "video", courseId, lessonId: lesson.id });
+  }
 
   splitTheoryChunks(lesson.theory).forEach((chunk, index) => {
     cards.push({ kind: "theory", text: chunk, first: index === 0 });

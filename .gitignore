@@ -43,3 +43,10 @@ bun.lockb
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Remotion (render outputs + cache; vídeos finais vão para o bucket público)
+/out/
+.remotion/
+# manifesto gerado por `npm run video:extract` (regenerável; o índice usado
+# pelo app é src/data/theoryVideoIndex.ts, esse sim versionado)
+/remotion/theory-data.json
