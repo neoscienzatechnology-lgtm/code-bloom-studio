@@ -35,11 +35,16 @@ o botão **[dev] Desbloquear Pro para teste** no `/pro` (ou
    e uma offering com os produtos de assinatura.
 2. **Google Play Console**: publicar o app (pelo menos em teste interno) e criar
    os produtos de assinatura (mensal/anual) com os mesmos ids do RevenueCat.
-3. **Plugin**: `npm i @revenuecat/purchases-capacitor` e `npx cap sync android`.
-4. **Código**: preencher os `TODO go-live` em `src/lib/revenuecat.ts`
-   (configure / getCustomerInfo / getOfferings+purchasePackage / restorePurchases).
+3. ~~**Plugin**: `npm i @revenuecat/purchases-capacitor` e `npx cap sync android`.~~ ✅ FEITO.
+4. ~~**Código**: preencher os `TODO go-live` em `src/lib/revenuecat.ts`.~~ ✅ FEITO
+   (configure / getCustomerInfo / getOfferings+purchasePackage / restorePurchases
+   implementados; `EntitlementContext` já usa o RevenueCat no nativo).
 5. **Env** (Vercel + build Android): `VITE_REVENUECAT_ANDROID_KEY=<chave pública>`
    e `VITE_MONETIZATION_ENABLED=true`.
+
+> Para o roteiro completo de **publicar na Play Store** (conta, keystore,
+> produtos, RevenueCat↔Play, build do AAB, teste fechado), veja
+> **`docs/PUBLICAR-PLAYSTORE.md`**.
 6. **AdMob (anúncios do grátis)**: trocar os ad-units de teste pelos reais via
    `VITE_ADMOB_INTERSTITIAL_ID` / `VITE_ADMOB_BANNER_ID` e o App ID em
    `android/app/src/main/res/values/strings.xml` (ver `src/config/ads.ts`).

@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.capycode.app',
+  appId: 'com.codetier.app',
   appName: 'CodeTier',
   webDir: 'dist',
   server: {

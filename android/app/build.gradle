@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 
-// Release signing secrets live outside the repo tree (~/.capycode) so they
+// Release signing secrets live outside the repo tree (~/.codetier) so they
 // can never be committed or zipped along with the project by accident.
 // Fallback to android/key.properties keeps other machines/CI working.
-def keystorePropertiesFile = new File(System.getProperty('user.home'), '.capycode/key.properties')
+def keystorePropertiesFile = new File(System.getProperty('user.home'), '.codetier/key.properties')
 if (!keystorePropertiesFile.exists()) {
     keystorePropertiesFile = rootProject.file("key.properties")
 }
@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.capycode.app"
+        applicationId "com.codetier.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

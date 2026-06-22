@@ -1,12 +1,12 @@
 // Bridge para o RevenueCat (assinatura via Google Play).
 //
-// HOJE é um stub SEGURO: enquanto não houver conta RevenueCat + o plugin
-// `@revenuecat/purchases-capacitor` instalado + VITE_REVENUECAT_ANDROID_KEY,
-// tudo resolve para "sem Pro" e nenhuma compra acontece. A interface já é a
-// final, então o go-live é só preencher os TODOs abaixo (ver docs/MONETIZACAO.md).
+// Web é sempre no-op: `purchasesAvailable()` exige app nativo + a chave pública
+// configurada (VITE_REVENUECAT_ANDROID_KEY). O plugin nativo só é importado
+// dinamicamente (lazy chunk) DEPOIS desse check, então o bundle web não carrega
+// nada do RevenueCat até rodar no Android com a chave presente.
 //
-// Como em ads.ts: web é sempre no-op (o plugin nativo só seria importado
-// dinamicamente após o check de plataforma nativa).
+// Go-live: criar a conta/produtos no RevenueCat + Play, definir
+// VITE_REVENUECAT_ANDROID_KEY e VITE_MONETIZATION_ENABLED=true. Ver docs/MONETIZACAO.md.
 
 import { Capacitor } from "@capacitor/core";
 import { MONETIZATION } from "@/config/monetization";
@@ -16,11 +16,13 @@ export function purchasesAvailable(): boolean {
   return Capacitor.isNativePlatform() && MONETIZATION.revenueCatAndroidKey.length > 0;
 }
 
+let configured = false;
+
 export async function initPurchases(): Promise<void> {
-  if (!purchasesAvailable()) return;
-  // TODO go-live:
-  // const { Purchases } = await import(/* @vite-ignore */ "@revenuecat/purchases-capacitor");
-  // await Purchases.configure({ apiKey: MONETIZATION.revenueCatAndroidKey });
+  if (!purchasesAvailable() || configured) return;
+  const { Purchases } = await import("@revenuecat/purchases-capacitor");
+  await Purchases.configure({ apiKey: MONETIZATION.revenueCatAndroidKey });
+  configured = true;
 }
 
 /**
@@ -30,30 +32,29 @@ export async function initPurchases(): Promise<void> {
  */
 export async function fetchProEntitlement(): Promise<boolean | null> {
   if (!purchasesAvailable()) return null;
-  // TODO go-live:
-  // const { Purchases } = await import(/* @vite-ignore */ "@revenuecat/purchases-capacitor");
-  // const info = await Purchases.getCustomerInfo();
-  // return Boolean(info.customerInfo.entitlements.active[MONETIZATION.entitlementId]);
-  return null;
+  const { Purchases } = await import("@revenuecat/purchases-capacitor");
+  const { customerInfo } = await Purchases.getCustomerInfo();
+  return Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]);
 }
 
 export async function purchaseProSubscription(): Promise<{ ok: boolean; reason?: string }> {
   if (!purchasesAvailable()) return { ok: false, reason: "indisponivel" };
-  // TODO go-live:
-  // const { Purchases } = await import(/* @vite-ignore */ "@revenuecat/purchases-capacitor");
-  // const offerings = await Purchases.getOfferings();
-  // const pkg = offerings.current?.availablePackages?.[0];
-  // if (!pkg) return { ok: false, reason: "sem-oferta" };
-  // const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
-  // return { ok: Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]) };
-  return { ok: false, reason: "indisponivel" };
+  try {
+    const { Purchases } = await import("@revenuecat/purchases-capacitor");
+    const offerings = await Purchases.getOfferings();
+    const pkg = offerings.current?.availablePackages?.[0];
+    if (!pkg) return { ok: false, reason: "sem-oferta" };
+    const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
+    return { ok: Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]) };
+  } catch (e) {
+    const err = e as { userCancelled?: boolean };
+    return { ok: false, reason: err?.userCancelled ? "cancelado" : "erro" };
+  }
 }
 
 export async function restorePurchases(): Promise<boolean> {
   if (!purchasesAvailable()) return false;
-  // TODO go-live:
-  // const { Purchases } = await import(/* @vite-ignore */ "@revenuecat/purchases-capacitor");
-  // const { customerInfo } = await Purchases.restorePurchases();
-  // return Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]);
-  return false;
+  const { Purchases } = await import("@revenuecat/purchases-capacitor");
+  const { customerInfo } = await Purchases.restorePurchases();
+  return Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]);
 }

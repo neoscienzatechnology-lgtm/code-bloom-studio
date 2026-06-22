@@ -1,9 +1,14 @@
-# Release signing config. Preferred location: OUTSIDE the repo, at
-#   <home>/.capycode/key.properties   (e.g. C:/Users/you/.capycode/key.properties)
-# with the keystore next to it. android/key.properties still works as a
-# fallback, but keeping secrets out of the project tree prevents them from
-# ever being committed or bundled by accident.
-storeFile=C:/Users/you/.capycode/capycode-upload-key.jks
+# Assinatura do app (release). Local preferido: FORA do repo, em
+#   <home>/.codetier/key.properties   (ex.: C:/Users/voce/.codetier/key.properties)
+# com a keystore ao lado. android/key.properties também funciona como fallback,
+# mas manter o segredo fora da árvore do projeto evita commit/zip acidental.
+#
+# Gere a keystore uma vez (você escolhe as senhas):
+#   keytool -genkey -v -keystore codetier-upload.jks -alias upload \
+#           -keyalg RSA -keysize 2048 -validity 10000
+# Guarde a .jks + senhas com segurança (perder = não atualizar mais o app,
+# salvo Play App Signing, que é recomendado).
+storeFile=C:/Users/voce/.codetier/codetier-upload.jks
 storePassword=CHANGE_ME
-keyAlias=capycode-upload
+keyAlias=upload
 keyPassword=CHANGE_ME
