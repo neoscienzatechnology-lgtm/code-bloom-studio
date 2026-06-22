@@ -42,7 +42,10 @@ export async function purchaseProSubscription(): Promise<{ ok: boolean; reason?:
   try {
     const { Purchases } = await import("@revenuecat/purchases-capacitor");
     const offerings = await Purchases.getOfferings();
-    const pkg = offerings.current?.availablePackages?.[0];
+    const offering = offerings.current;
+    // Escolhe o plano explicitamente — a ordem de availablePackages NÃO é
+    // garantida, então [0] poderia cobrar o plano errado. Default: mensal.
+    const pkg = offering?.monthly ?? offering?.annual ?? offering?.availablePackages?.[0];
     if (!pkg) return { ok: false, reason: "sem-oferta" };
     const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
     return { ok: Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]) };
@@ -57,4 +60,17 @@ export async function restorePurchases(): Promise<boolean> {
   const { Purchases } = await import("@revenuecat/purchases-capacitor");
   const { customerInfo } = await Purchases.restorePurchases();
   return Boolean(customerInfo.entitlements.active[MONETIZATION.entitlementId]);
+}
+
+/**
+ * Reage em tempo real a mudanças na assinatura (compra, renovação, EXPIRAÇÃO,
+ * cancelamento, reembolso) — essencial para REVOGAR o Pro quando a assinatura
+ * acaba, em vez de manter o cache local "pro" para sempre.
+ */
+export async function addProListener(onChange: (isPro: boolean) => void): Promise<void> {
+  if (!purchasesAvailable()) return;
+  const { Purchases } = await import("@revenuecat/purchases-capacitor");
+  Purchases.addCustomerInfoUpdateListener((info) => {
+    onChange(Boolean(info.entitlements.active[MONETIZATION.entitlementId]));
+  });
 }

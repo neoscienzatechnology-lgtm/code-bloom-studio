@@ -10,7 +10,7 @@ import { toLocalDateKey } from "@/utils/studyStats";
 
 const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
-  const { isPro } = useEntitlement();
+  const { isPro, ready } = useEntitlement();
   const { lessonCompletedAt } = useProgress();
   const augmented = getAugmentedLessonById(courseId || "", lessonId || "");
   const data = getLessonById(courseId || "", lessonId || "");
@@ -26,6 +26,7 @@ const EditorPage = () => {
 
   // Paywall (freemium "Equilibrado") — só atua com o flag ligado e usuário grátis.
   if (
+    ready &&
     isLessonLocked({
       enabled: MONETIZATION.enabled,
       isPro,
@@ -37,6 +38,7 @@ const EditorPage = () => {
     return <Navigate to="/pro" replace />;
   }
   if (
+    ready &&
     isDailyLimitReached({
       enabled: MONETIZATION.enabled,
       isPro,

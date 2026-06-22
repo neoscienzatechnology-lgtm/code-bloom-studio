@@ -16,10 +16,10 @@ interface CourseRoutePathProps {
 const EMPTY_LOCK = new Set<string>();
 
 const CourseRoutePath = ({ course, projects, isCompleted }: CourseRoutePathProps) => {
-  const { isPro } = useEntitlement();
+  const { isPro, ready } = useEntitlement();
   const modules = moduleGroups(course.lessons);
   const proLocked =
-    MONETIZATION.enabled && !isPro ? proLessonIds(course.lessons, MONETIZATION.freeModuleCount) : EMPTY_LOCK;
+    MONETIZATION.enabled && ready && !isPro ? proLessonIds(course.lessons, MONETIZATION.freeModuleCount) : EMPTY_LOCK;
   const firstOpenIndex = course.lessons.findIndex((lesson) => !isCompleted(lesson.id));
   const currentLesson = course.lessons[firstOpenIndex === -1 ? course.lessons.length - 1 : firstOpenIndex];
   const currentIsProLocked = proLocked.has(currentLesson.id) && currentLesson.kind !== "checkpoint";

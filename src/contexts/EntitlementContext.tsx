@@ -7,6 +7,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { readString, writeString, removeKey, STORAGE_KEYS } from "@/lib/storage";
 import {
+  addProListener,
   fetchProEntitlement,
   initPurchases,
   purchaseProSubscription,
@@ -49,6 +50,10 @@ export function EntitlementProvider({ children }: { children: ReactNode }) {
         await initPurchases();
         const fromStore = await fetchProEntitlement();
         if (active && fromStore !== null) apply(fromStore);
+        // Revoga/atualiza o Pro em tempo real quando a assinatura muda na loja.
+        await addProListener((pro) => {
+          if (active) apply(pro);
+        });
       } catch {
         /* billing indisponível — segue com o estado local */
       } finally {
