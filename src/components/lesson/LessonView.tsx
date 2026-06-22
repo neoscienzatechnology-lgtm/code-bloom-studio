@@ -9,6 +9,7 @@ import LessonCardPlayer from "@/components/lesson/LessonCardPlayer";
 import ChallengeStage from "@/components/lesson/ChallengeStage";
 import CodeWorkspace from "@/components/lesson/CodeWorkspace";
 import { useProgress } from "@/hooks/useProgress";
+import { useAuth } from "@/contexts/AuthContext";
 import { useEntitlement } from "@/contexts/EntitlementContext";
 import { recordLessonCompletedAndMaybeShowAd } from "@/lib/ads";
 import { track } from "@/lib/analytics";
@@ -36,7 +37,8 @@ interface LessonViewProps {
  */
 const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: LessonViewProps) => {
   const navigate = useNavigate();
-  const { completeLesson, saveCode, isCompleted, getSavedCode, studyStats } = useProgress();
+  const { completeLesson, saveCode, isCompleted, getSavedCode, studyStats, synced } = useProgress();
+  const { user } = useAuth();
   const { isPro } = useEntitlement();
 
   const alreadyCompleted = isCompleted(lesson.id);
@@ -56,6 +58,20 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   }, [lesson.id]);
 
   const [code, setCode] = useState(() => getSavedCode(lesson.id) ?? lesson.starterCode ?? "");
+  const initialCodeRef = useRef(code);
+
+  // Quando o progresso da nuvem chega (após login), re-hidrata o editor com o
+  // código salvo SE o aluno ainda não digitou — senão o autosave gravaria o
+  // starter por cima do código da nuvem. #checkup-8
+  useEffect(() => {
+    if (!synced || code !== initialCodeRef.current) return;
+    const cloud = getSavedCode(lesson.id);
+    if (cloud != null && cloud !== code) {
+      initialCodeRef.current = cloud;
+      setCode(cloud);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synced]);
 
   const enterCodePhase = () => {
     setPhase("code");
@@ -77,15 +93,18 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
   const { editor, patch, getAttempts, showSolution, solutionWarned } = runner;
   const { running, isCorrect, output, hintIndex, paceMode, bonusActive } = editor;
 
-  // Save code as user types (debounced)
+  // Save code as user types (debounced). Logado: não persiste antes do merge
+  // da nuvem (evita gravar o starter por cima do código salvo); sem conta,
+  // salva local normalmente. #checkup-8
   useEffect(() => {
+    if (user && !synced) return;
     patch({ codeSaved: false });
     const timer = setTimeout(() => {
       saveCode(lesson.id, code, course.id);
       patch({ codeSaved: true });
     }, 500);
     return () => clearTimeout(timer);
-  }, [code, course.id, lesson.id, saveCode, patch]);
+  }, [code, course.id, lesson.id, saveCode, patch, user, synced]);
 
   const lessonReadyToAdvance = alreadyCompleted || isCorrect === true;
   const lessonMascotState: CoachState = running

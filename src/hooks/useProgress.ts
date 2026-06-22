@@ -9,7 +9,7 @@ import {
   DEFAULT_FREEZE_STATE,
   type FreezeState,
 } from "@/utils/streakFreeze";
-import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
+import { readJson, writeJson, removeKey, STORAGE_KEYS } from "@/lib/storage";
 
 export interface ProgressData {
   completedLessons: string[];
@@ -187,6 +187,29 @@ function replaceFreezeSnapshot(next: FreezeState): FreezeState {
   return next;
 }
 
+/**
+ * Limpa TODO o progresso local — snapshot em memória, locks de conclusão,
+ * freeze e as chaves de estudo no localStorage — e notifica as instâncias
+ * montadas. Chamado no signOut para o progresso de uma conta NÃO vazar para a
+ * próxima no MESMO aparelho (a nuvem continua intacta; ao logar de novo, o
+ * merge parte de um estado local vazio). Não mexe na sessão nem no entitlement.
+ */
+export function resetLocalProgress() {
+  progressSnapshot = normalizeProgress(null);
+  freezeSnapshot = DEFAULT_FREEZE_STATE;
+  completedLessonLocks.clear();
+  [
+    STORAGE_KEYS.progress,
+    STORAGE_KEYS.freeze,
+    STORAGE_KEYS.attempts,
+    STORAGE_KEYS.conceptMastery,
+    STORAGE_KEYS.reviewSchedule,
+    STORAGE_KEYS.learningProfile,
+  ].forEach(removeKey);
+  progressListeners.forEach((listener) => listener(progressSnapshot!));
+  freezeListeners.forEach((listener) => listener(freezeSnapshot!));
+}
+
 export function useProgress() {
   const { user } = useAuth();
   const [progress, setProgress] = useState<ProgressData>(getProgressSnapshot);
@@ -248,6 +271,9 @@ export function useProgress() {
       cloudCourseIds[d.lesson_id] = d.course_id;
       if (d.code) cloudCode[d.lesson_id] = d.code;
       if (d.completed) {
+        // TODO #checkup-14: após aplicar a migration 20260622120000_progress_completed_at,
+        // selecionar/gravar `completed_at` e usar `d.completed_at ?? d.updated_at` aqui —
+        // updated_at muda a cada saveCode e infla a contagem diária do freemium.
         const completedAt = d.updated_at ? toLocalDateKey(new Date(d.updated_at)) : toLocalDateKey(new Date());
         const earned = d.xp_earned || 0;
         cloudCompletedAt[d.lesson_id] = completedAt;

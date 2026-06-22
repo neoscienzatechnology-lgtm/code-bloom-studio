@@ -3,6 +3,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { clearOAuthRedirect, storeOAuthRedirect } from "@/utils/oauthRedirect";
 import { identifyUser, resetAnalyticsUser } from "@/lib/analytics";
+import { resetLocalProgress } from "@/hooks/useProgress";
 
 interface AuthContextType {
   session: Session | null;
@@ -79,6 +80,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    // Evita que o progresso/estudo de uma conta vaze para a próxima no mesmo
+    // aparelho (o merge na nuvem partiria do estado local antigo). #checkup-1
+    resetLocalProgress();
   };
 
   return (
