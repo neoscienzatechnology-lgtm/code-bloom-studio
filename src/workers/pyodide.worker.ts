@@ -2,6 +2,15 @@
 // carregado sob demanda de um CDN na PRIMEIRA execução — não entra no bundle.
 // Rodar fora da thread principal mantém a UI fluida e permite matar laços
 // infinitos (a thread principal dá timeout e termina o worker).
+//
+// Segurança (checkup #9): a URL é PINADA numa versão imutável do jsdelivr
+// (v0.26.4) — o risco de cadeia de suprimentos fica limitado (jsdelivr serve
+// arquivos versionados imutáveis). Por isso `cdn.jsdelivr.net` está no
+// script-src do CSP (vercel.json). Hardening máximo seria self-hostar os
+// artefatos do Pyodide e remover o jsdelivr do CSP, mas isso adicionaria
+// ~10 MB ao deploy — trade-off não justificado dado o pinning. Se for
+// self-hostar no futuro, copie /full/ para public/pyodide/ e aponte as URLs
+// abaixo + ajuste o CSP.
 
 const PYODIDE_URL = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs";
 const PYODIDE_INDEX = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/";
