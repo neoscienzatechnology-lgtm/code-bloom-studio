@@ -9,6 +9,10 @@ const TEST_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
 const TEST_INTERSTITIAL_ID = "ca-app-pub-3940256099942544/1033173712";
 
 export const ADS_CONFIG = {
+  /** Liga os anúncios. Independente do paywall Pro (MONETIZATION.enabled), para
+   * permitir lançar com ads sem trancar conteúdo. Default OFF: sem a flag,
+   * o SDK de Ads NEM inicializa (evita servir test ads em produção). */
+  enabled: import.meta.env.VITE_ADS_ENABLED?.trim() === "true",
   bannerAdId: import.meta.env.VITE_ADMOB_BANNER_ID?.trim() || TEST_BANNER_ID,
   interstitialAdId: import.meta.env.VITE_ADMOB_INTERSTITIAL_ID?.trim() || TEST_INTERSTITIAL_ID,
   /** True while no real ad unit is configured — keeps AdMob in test mode. */

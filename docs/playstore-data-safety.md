@@ -11,8 +11,8 @@ Este documento prepara as respostas para a seção Data Safety da Play Console. 
 | Os dados são criptografados em trânsito? | Sim, o app usa HTTPS/Supabase e o Android está com `usesCleartextTraffic=false`. |
 | O usuário pode solicitar exclusão dos dados? | Parcialmente pronto: a página `/excluir-conta` existe, mas o build de produção precisa de `VITE_SUPPORT_EMAIL` ou formulário oficial conectado. |
 | O app segue a política para famílias/crianças? | Não marcar como direcionado a crianças sem revisão específica de Families Policy. |
-| O app usa anúncios? | Não. |
-| O app usa compras no app? | Não. |
+| O app usa anúncios? | Sim — AdMob (intersticiais) quando `VITE_ADS_ENABLED=true` no build. Declarar Anúncios e o uso do Advertising ID. |
+| O app usa compras no app? | No 1º lançamento (Pro dormente): Não. Ao ligar o Pro (RevenueCat/Play Billing): Sim — declarar Compras no app. |
 | O app coleta localização? | Não. |
 | O app coleta contatos, fotos, áudio, calendário ou SMS? | Não. |
 
@@ -34,11 +34,13 @@ O app usa `localStorage` para manter progresso, perfil de aprendizado, tentativa
 ## Provedores e SDKs relevantes
 
 - Supabase: autenticação, sessão e tabelas de progresso.
-- Lovable Auth: integração de autenticação com Supabase.
 - Capacitor Android: empacotamento Android.
-- Vercel ou hospedagem web equivalente: entrega do app web e páginas públicas.
+- Vercel (ou equivalente): entrega do app web e páginas públicas.
+- AdMob (`@capacitor-community/admob`): anúncios — usa o Advertising ID. Ativo só com `VITE_ADS_ENABLED=true`.
+- RevenueCat (`@revenuecat/purchases-capacitor`): assinaturas/compras — ativo só com a monetização ligada (`VITE_MONETIZATION_ENABLED=true` + chave).
+- PostHog (`posthog-js`): analytics/diagnóstico de uso — ativo só com `VITE_POSTHOG_KEY` definido.
 
-Não há SDK de anúncios, Firebase Analytics, localização, pagamentos, contatos ou mídia no estado atual do código.
+Declare no Data Safety conforme os SDKs realmente ATIVOS no build enviado (flags/envs acima). Se o lançamento não incluir algum deles ligado, não declare aquele item.
 
 ## Exclusão de dados
 
@@ -57,4 +59,4 @@ Sem canal real de envio, o app ainda pode ficar bloqueado na revisão por permit
 - Não declarar que o app não coleta dados, porque login e progresso sincronizado coletam dados.
 - Não declarar certificado, auditoria de segurança independente ou conformidade Families sem revisão real.
 - Não declarar que dados são anonimizados quando estão vinculados a `user_id`.
-- Não declarar anúncios, pagamentos ou localização se essas funções não foram adicionadas.
+- Anúncios (AdMob) e compras (RevenueCat) JÁ existem no código, atrás de flags — declare-os se estiverem ATIVOS no build enviado; localização continua não aplicável.

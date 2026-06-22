@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">CapyCode</string>
-    <string name="title_activity_main">CapyCode</string>
+    <string name="app_name">CodeTier</string>
+    <string name="title_activity_main">CodeTier</string>
     <string name="package_name">com.capycode.app</string>
     <string name="custom_url_scheme">com.capycode.app</string>
     <!-- AdMob App ID. O valor abaixo é o ID DE TESTE oficial do Google.

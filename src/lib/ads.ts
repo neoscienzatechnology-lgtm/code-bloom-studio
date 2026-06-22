@@ -43,7 +43,7 @@ export function isInterstitialDue(state: AdState, now: number): boolean {
  * ads must never break the app.
  */
 export async function initAds(): Promise<void> {
-  if (!isNative() || initialized) return;
+  if (!isNative() || initialized || !ADS_CONFIG.enabled) return;
   try {
     const { AdMob, AdmobConsentStatus } = await import("@capacitor-community/admob");
 
@@ -80,7 +80,7 @@ async function prepareInterstitial(): Promise<void> {
  * cap allows it. Fire-and-forget: resolves immediately on web.
  */
 export async function recordLessonCompletedAndMaybeShowAd(): Promise<void> {
-  if (!isNative()) return;
+  if (!isNative() || !ADS_CONFIG.enabled) return;
 
   const state = { ...DEFAULT_AD_STATE, ...readJson<Partial<AdState>>(AD_STATE_KEY, {}) };
   state.lessonsSinceLastAd += 1;
