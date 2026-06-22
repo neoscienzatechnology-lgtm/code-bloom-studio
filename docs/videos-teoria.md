@@ -62,6 +62,9 @@ de MB no repo/Vercel).
 3. **Ligar no app**: defina `VITE_THEORY_VIDEO_BASE` com a URL impressa e faça
    o deploy. Pronto: o card "Teoria em vídeo" passa a aparecer nas lições que
    têm vídeo (índice em `src/data/theoryVideoIndex.ts`).
+   > ⚠️ Só ligue a env depois do upload **100%** concluído (`npm run video:upload`
+   > sem falhas) — o índice é estático, então lições sem o MP4 no bucket mostram
+   > "Vídeo em breve" até subir. (checkup #11)
 
 Sem `VITE_THEORY_VIDEO_BASE` o recurso fica **dormente** — nada muda na UI.
 

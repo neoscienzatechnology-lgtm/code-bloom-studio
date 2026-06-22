@@ -55,3 +55,8 @@ o botão **[dev] Desbloquear Pro para teste** no `/pro` (ou
 - Benefícios e preço exibidos: mesmo arquivo.
 - Web: a Play Store exige Play Billing dentro do app Android; para cobrar no
   navegador depois, dá para somar Stripe (RevenueCat Web Billing) sem mexer no gating.
+- Gating é **best-effort no cliente** (localStorage + conteúdo no bundle):
+  suficiente para o app Android (a Play valida a compra de verdade). Se a WEB
+  for monetizada, mover a fonte da verdade para o servidor (tabela
+  `entitlements` + RLS + webhook do RevenueCat) e servir o conteúdo pago sob
+  demanda. (checkup #22)

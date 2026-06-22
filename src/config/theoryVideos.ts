@@ -6,6 +6,10 @@
 // nenhum vídeo é carregado e a experiência atual (cards) fica intacta.
 //
 // Layout esperado dos arquivos no bucket: <base>/<courseId>/<lessonId>.mp4
+//
+// CSP: o vercel.json precisa de `media-src` com o host dos vídeos (hoje só
+// https://*.supabase.co). Se migrar de CDN (R2/Bunny), atualize o media-src lá,
+// senão o navegador bloqueia os vídeos (falha silenciosa = "em breve"). #checkup-12
 import { THEORY_VIDEO_KEYS } from "@/data/theoryVideoIndex";
 
 const RAW = import.meta.env.VITE_THEORY_VIDEO_BASE?.trim();
