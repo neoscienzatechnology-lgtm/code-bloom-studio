@@ -1,6 +1,7 @@
 /**
  * Gera as artes da Play Store (ícone 512×512 + feature graphic 1024×500) com a
- * marca CodeTier, renderizando SVG no Chromium headless. Saída em out/store/.
+ * marca CodeTier na linguagem "Ascendant Strata": contornos topográficos
+ * luminosos + emblema hexágono. SVG no Chromium headless. Saída em out/store/.
  *   npm run store:art
  */
 import { chromium } from "@playwright/test";
@@ -9,44 +10,70 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const root = join(here, "..");
-const outDir = join(root, "out", "store");
+const outDir = join(here, "..", "out", "store");
 mkdirSync(outDir, { recursive: true });
 
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">`;
 
 const DEFS = `
-  <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+  <radialGradient id="bg" cx="40%" cy="38%" r="90%">
     <stop offset="0%" stop-color="#10211a"/>
-    <stop offset="55%" stop-color="#0A0E0C"/>
-    <stop offset="100%" stop-color="#060907"/>
+    <stop offset="52%" stop-color="#0A0E0C"/>
+    <stop offset="100%" stop-color="#050806"/>
   </radialGradient>
-  <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+  <linearGradient id="neon" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#9CFFC0"/>
+    <stop offset="44%" stop-color="#4DE84A"/>
+    <stop offset="100%" stop-color="#155E26"/>
+  </linearGradient>
+  <linearGradient id="neonEmblem" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0%" stop-color="#86F5A6"/>
     <stop offset="48%" stop-color="#4DE84A"/>
     <stop offset="100%" stop-color="#1C8F2A"/>
   </linearGradient>
+  <radialGradient id="summit" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#CFFFD9" stop-opacity="0.5"/>
+    <stop offset="20%" stop-color="#7CF59A" stop-opacity="0.3"/>
+    <stop offset="55%" stop-color="#2FAF3C" stop-opacity="0.11"/>
+    <stop offset="100%" stop-color="#1C8F2A" stop-opacity="0"/>
+  </radialGradient>
   <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
     <feGaussianBlur stdDeviation="9" result="b"/>
     <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
-  <pattern id="hexgrid" width="56" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
-    <path d="M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z" fill="none" stroke="rgba(77,232,74,0.10)" stroke-width="1.5"/>
-  </pattern>`;
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>`;
+
+// contornos topográficos em torno de um cume, esmaecendo com o raio
+function contours(cx: number, cy: number, count: number, r0: number, step: number, yScale: number, maxOp: number) {
+  let s = "";
+  for (let i = 0; i < count; i++) {
+    const r = r0 + i * step;
+    const p: string[] = [];
+    for (let k = 0; k <= 140; k++) {
+      const a = (k / 140) * Math.PI * 2;
+      const wob = Math.sin(a * 3 + i) * r * 0.07 + Math.sin(a * 5 + i * 1.7) * r * 0.04;
+      const rr = r + wob;
+      p.push(`${(cx + rr * Math.cos(a)).toFixed(1)},${(cy + rr * Math.sin(a) * yScale).toFixed(1)}`);
+    }
+    const op = (maxOp * Math.pow(1 - i / count, 1.4)).toFixed(3);
+    s += `<polyline points="${p.join(" ")}" fill="none" stroke="url(#neon)" stroke-width="${(1.5 - (i / count) * 0.9).toFixed(2)}" opacity="${op}" stroke-linejoin="round"/>`;
+  }
+  return s;
+}
 
 // hexágono "pointy-top" + glifo </> centrado em (cx,cy) com raio r
 function emblem(cx: number, cy: number, r: number, stroke = 14, glyph = r * 0.62) {
-  const w = r, h = r * 1.06;
+  const h = r * 1.06;
   const pts = [
-    [cx, cy - h], [cx + w, cy - h * 0.5], [cx + w, cy + h * 0.5],
-    [cx, cy + h], [cx - w, cy + h * 0.5], [cx - w, cy - h * 0.5],
-  ].map((p) => p.join(",")).join(" ");
+    [cx, cy - h], [cx + r, cy - h * 0.5], [cx + r, cy + h * 0.5],
+    [cx, cy + h], [cx - r, cy + h * 0.5], [cx - r, cy - h * 0.5],
+  ].map((q) => q.map((n) => n.toFixed(1)).join(",")).join(" ");
   return `
-    <polygon points="${pts}" fill="rgba(77,232,74,0.07)" stroke="url(#neon)" stroke-width="${stroke}" stroke-linejoin="round" filter="url(#glow)"/>
-    <text x="${cx}" y="${cy}" font-family="'Fira Code',monospace" font-weight="700" font-size="${glyph}" fill="url(#neon)" text-anchor="middle" dominant-baseline="central" filter="url(#glow)">&lt;/&gt;</text>`;
+    <polygon points="${pts}" fill="rgba(77,232,74,0.07)" stroke="url(#neonEmblem)" stroke-width="${stroke}" stroke-linejoin="round" filter="url(#glow)"/>
+    <text x="${cx}" y="${cy}" font-family="'Fira Code',monospace" font-weight="700" font-size="${glyph}" fill="url(#neonEmblem)" text-anchor="middle" dominant-baseline="central" filter="url(#glow)">&lt;/&gt;</text>`;
 }
 
-function tierBars(x: number, baseY: number, neon = "url(#neon)") {
+function tierBars(x: number, baseY: number, neon = "url(#neonEmblem)") {
   const bw = 22, gap = 12;
   return [34, 56, 82]
     .map((bh, i) => `<rect x="${x + i * (bw + gap)}" y="${baseY - bh}" width="${bw}" height="${bh}" rx="6" fill="${neon}" opacity="${0.55 + i * 0.18}"/>`)
@@ -57,23 +84,25 @@ const iconSvg = `
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>${DEFS}</defs>
   <rect width="512" height="512" fill="url(#bg)"/>
-  <rect width="512" height="512" fill="url(#hexgrid)" opacity="0.5" style="mask:radial-gradient(circle at 50% 42%, #000 30%, transparent 78%)"/>
-  <circle cx="256" cy="214" r="150" fill="rgba(55,211,44,0.16)" filter="url(#glow)"/>
-  ${emblem(256, 226, 150, 16, 116)}
-  <g transform="translate(256,0)">${tierBars(-67, 452)}</g>
-  <rect width="512" height="512" fill="none" style="box-shadow:inset 0 0 120px 30px rgba(0,0,0,.6)"/>
+  <ellipse cx="256" cy="220" rx="230" ry="150" fill="url(#summit)"/>
+  <g style="mask:radial-gradient(circle at 50% 44%, #000 28%, transparent 82%)">${contours(256, 220, 15, 70, 22, 0.62, 0.4)}</g>
+  ${emblem(256, 230, 150, 16, 116)}
+  <g transform="translate(256,0)">${tierBars(-67, 456)}</g>
+  <rect width="512" height="512" filter="url(#grain)" opacity="0.045" style="mix-blend-mode:overlay"/>
+  <rect width="512" height="512" fill="none" style="box-shadow:inset 0 0 120px 34px rgba(0,0,0,.62)"/>
 </svg>`;
 
 const featureSvg = `
 <svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
   <defs>${DEFS}</defs>
   <rect width="1024" height="500" fill="url(#bg)"/>
-  <rect width="1024" height="500" fill="url(#hexgrid)" opacity="0.6" style="mask:radial-gradient(120% 90% at 35% 45%, #000, transparent 80%)"/>
-  <circle cx="250" cy="250" r="190" fill="rgba(55,211,44,0.14)" filter="url(#glow)"/>
-  ${emblem(250, 250, 132, 14, 102)}
-  <text x="430" y="232" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="104" fill="#EAF2EC">Code<tspan fill="url(#neon)">Tier</tspan></text>
+  <ellipse cx="250" cy="250" rx="340" ry="240" fill="url(#summit)"/>
+  <g style="mask:radial-gradient(95% 120% at 24% 50%, #000, transparent 86%)">${contours(250, 250, 22, 70, 26, 0.66, 0.42)}</g>
+  ${emblem(250, 250, 130, 14, 100)}
+  <text x="430" y="232" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="104" fill="#EAF2EC">Code<tspan fill="url(#neonEmblem)">Tier</tspan></text>
   <text x="436" y="296" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="34" fill="#8DA294">Aprenda a programar de verdade</text>
   <g>${tierBars(436, 360)}</g>
+  <rect width="1024" height="500" filter="url(#grain)" opacity="0.04" style="mix-blend-mode:overlay"/>
 </svg>`;
 
 async function shoot(svg: string, w: number, h: number, file: string) {
