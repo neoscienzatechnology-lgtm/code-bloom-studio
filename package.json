@@ -23,7 +23,8 @@
     "video:studio": "remotion studio remotion/index.ts",
     "store:art": "tsx scripts/gen-store-art.ts",
     "icon:android": "tsx scripts/gen-app-icon.ts",
-    "assets:webp": "tsx scripts/png-to-webp.ts"
+    "assets:webp": "tsx scripts/png-to-webp.ts",
+    "brand:art": "tsx scripts/gen-brand-creatives.ts"
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.0.0",
