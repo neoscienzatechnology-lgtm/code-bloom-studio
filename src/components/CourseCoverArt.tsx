@@ -63,41 +63,53 @@ const variantClasses: Record<CourseCoverVariant, string> = {
 
 const iconSize: Record<CourseCoverVariant, number> = { hero: 34, card: 24, thumb: 16 };
 
-// "Ascendant Strata": contornos topográficos orgânicos subindo de um cume
-// (canto superior-direito), esmaecendo com o raio. Gerados em código.
-function contourRings(accent: string, cx: number, cy: number) {
-  const rings = [];
-  const count = 12;
-  for (let i = 0; i < count; i++) {
-    const r = 12 + i * 18;
-    const pts: string[] = [];
-    for (let s = 0; s <= 60; s++) {
-      const a = (s / 60) * Math.PI * 2;
-      const wob = Math.sin(a * 3 + i) * r * 0.08 + Math.sin(a * 5 + i * 1.7) * r * 0.045;
-      const rr = r + wob;
-      const x = cx + rr * Math.cos(a);
-      const y = cy + rr * Math.sin(a) * 0.6;
-      pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+// "Lattice Ascension": malha de nós conectados (rede / circuito / grafo)
+// adensando e brilhando rumo a um foco no canto superior-direito. A geometria
+// é a MESMA para todas as capas (só o acento muda), então é pré-computada uma
+// vez no load — custo zero por render.
+const rand = (i: number) => {
+  const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+const COVER_LATTICE = (() => {
+  const fx = 262;
+  const fy = 29;
+  const s = 26;
+  const maxD = 235;
+  const maxConn = s * 1.5;
+  const nodes: { x: number; y: number; d: number }[] = [];
+  let idx = 1;
+  for (let gy = -s; gy <= 180 + s; gy += s)
+    for (let gx = -s; gx <= 320 + s; gx += s) {
+      idx++;
+      const x = gx + (rand(idx) - 0.5) * s * 0.55;
+      const y = gy + (rand(idx + 97) - 0.5) * s * 0.55;
+      nodes.push({ x, y, d: Math.hypot(x - fx, y - fy) });
     }
-    const op = (0.5 * Math.pow(1 - i / count, 1.4)).toFixed(3);
-    rings.push(
-      <polyline
-        key={i}
-        points={pts.join(" ")}
-        fill="none"
-        stroke={accent}
-        strokeWidth={i < 3 ? 1 : 0.7}
-        opacity={op}
-        strokeLinejoin="round"
-      />,
-    );
+  const fall = (d: number) => Math.max(0, Math.pow(1 - Math.min(d / maxD, 1), 1.6));
+  const dots: { x: number; y: number; r: number; o: string }[] = [];
+  const lines: { x1: number; y1: number; x2: number; y2: number; o: string }[] = [];
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    const opA = fall(a.d);
+    if (opA < 0.05) continue;
+    dots.push({ x: a.x, y: a.y, r: 0.5 + opA * 1.1, o: (opA * 0.85).toFixed(3) });
+    for (let j = i + 1; j < nodes.length; j++) {
+      const b = nodes[j];
+      if (Math.abs(a.x - b.x) > maxConn || Math.abs(a.y - b.y) > maxConn) continue;
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (dist > maxConn) continue;
+      const o = Math.min(opA, fall(b.d)) * (1 - dist / maxConn) * 0.6;
+      if (o < 0.04) continue;
+      lines.push({ x1: a.x, y1: a.y, x2: b.x, y2: b.y, o: o.toFixed(3) });
+    }
   }
-  return rings;
-}
+  return { dots, lines };
+})();
 
 /** Capa de curso gerada em código (sem assets raster), na linguagem
- * "Ascendant Strata": base charcoal, contornos topográficos no acento da
- * trilha subindo de um cume, e o ícone do curso como marca d'água. */
+ * "Lattice Ascension": base charcoal, malha de nós conectados no acento da
+ * trilha rumo a um foco luminoso, e o ícone do curso como marca d'água. */
 const CourseCoverArt = ({ course, variant = "card", className = "" }: CourseCoverArtProps) => {
   const theme = courseThemes[course.id] ?? fallbackTheme(course);
   const Icon = theme.icon;
@@ -121,7 +133,14 @@ const CourseCoverArt = ({ course, variant = "card", className = "" }: CourseCove
           </radialGradient>
         </defs>
         <rect width="320" height="180" fill={`url(#${uid}-glow)`} />
-        <g>{contourRings(theme.accent, 262, 29)}</g>
+        <g>
+          {COVER_LATTICE.lines.map((l, i) => (
+            <line key={`l${i}`} x1={l.x1.toFixed(1)} y1={l.y1.toFixed(1)} x2={l.x2.toFixed(1)} y2={l.y2.toFixed(1)} stroke={theme.accent} strokeWidth={0.6} opacity={l.o} />
+          ))}
+          {COVER_LATTICE.dots.map((d, i) => (
+            <circle key={`d${i}`} cx={d.x.toFixed(1)} cy={d.y.toFixed(1)} r={d.r.toFixed(1)} fill={theme.accent} opacity={d.o} />
+          ))}
+        </g>
       </svg>
 
       <Icon size={isThumb ? 64 : 140} strokeWidth={1.4} className="absolute -bottom-5 -right-4" style={{ color: theme.accent, opacity: 0.16 }} aria-hidden="true" />

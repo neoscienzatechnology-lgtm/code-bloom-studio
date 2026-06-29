@@ -1,7 +1,7 @@
 /**
  * Gera as artes da Play Store (ícone 512×512 + feature graphic 1024×500) com a
- * marca CodeTier na linguagem "Ascendant Strata": contornos topográficos
- * luminosos + emblema hexágono. SVG no Chromium headless. Saída em out/store/.
+ * marca CodeTier na linguagem "Lattice Ascension": malha de nós conectados
+ * (rede/circuito) + emblema hexágono. SVG no Chromium headless. Saída em out/store/.
  *   npm run store:art
  */
 import { chromium } from "@playwright/test";
@@ -43,22 +43,43 @@ const DEFS = `
   </filter>
   <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>`;
 
-// contornos topográficos em torno de um cume, esmaecendo com o raio
-function contours(cx: number, cy: number, count: number, r0: number, step: number, yScale: number, maxOp: number) {
-  let s = "";
-  for (let i = 0; i < count; i++) {
-    const r = r0 + i * step;
-    const p: string[] = [];
-    for (let k = 0; k <= 140; k++) {
-      const a = (k / 140) * Math.PI * 2;
-      const wob = Math.sin(a * 3 + i) * r * 0.07 + Math.sin(a * 5 + i * 1.7) * r * 0.04;
-      const rr = r + wob;
-      p.push(`${(cx + rr * Math.cos(a)).toFixed(1)},${(cy + rr * Math.sin(a) * yScale).toFixed(1)}`);
+// malha de nós conectados (rede/circuito) adensando rumo a um foco
+const rnd = (i: number) => {
+  const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+function lattice(w: number, h: number, fx: number, fy: number, grid: number, lineOp: number, reach: number) {
+  const s = grid;
+  const nodes: { x: number; y: number; d: number }[] = [];
+  let idx = 1;
+  for (let gy = -s; gy <= h + s; gy += s)
+    for (let gx = -s; gx <= w + s; gx += s) {
+      idx++;
+      const x = gx + (rnd(idx) - 0.5) * s * 0.55;
+      const y = gy + (rnd(idx + 97) - 0.5) * s * 0.55;
+      nodes.push({ x, y, d: Math.hypot(x - fx, y - fy) });
     }
-    const op = (maxOp * Math.pow(1 - i / count, 1.4)).toFixed(3);
-    s += `<polyline points="${p.join(" ")}" fill="none" stroke="url(#neon)" stroke-width="${(1.5 - (i / count) * 0.9).toFixed(2)}" opacity="${op}" stroke-linejoin="round"/>`;
+  const maxD = Math.hypot(w, h) * reach;
+  const fall = (d: number) => Math.max(0, Math.pow(1 - Math.min(d / maxD, 1), 1.6));
+  const maxConn = s * 1.5;
+  let out = "";
+  let dots = "";
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    const opA = fall(a.d);
+    if (opA < 0.04) continue;
+    dots += `<circle cx="${a.x.toFixed(1)}" cy="${a.y.toFixed(1)}" r="${(1 + opA * 2.4).toFixed(1)}" fill="url(#neon)" opacity="${(opA * 0.9).toFixed(3)}"/>`;
+    for (let j = i + 1; j < nodes.length; j++) {
+      const b = nodes[j];
+      if (Math.abs(a.x - b.x) > maxConn || Math.abs(a.y - b.y) > maxConn) continue;
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (dist > maxConn) continue;
+      const o = Math.min(opA, fall(b.d)) * (1 - dist / maxConn) * lineOp;
+      if (o < 0.02) continue;
+      out += `<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="url(#neon)" stroke-width="${(0.7 + o * 0.8).toFixed(2)}" opacity="${o.toFixed(3)}"/>`;
+    }
   }
-  return s;
+  return out + dots;
 }
 
 // hexágono "pointy-top" + glifo </> centrado em (cx,cy) com raio r
@@ -85,7 +106,7 @@ const iconSvg = `
   <defs>${DEFS}</defs>
   <rect width="512" height="512" fill="url(#bg)"/>
   <ellipse cx="256" cy="220" rx="230" ry="150" fill="url(#summit)"/>
-  <g style="mask:radial-gradient(circle at 50% 44%, #000 28%, transparent 82%)">${contours(256, 220, 15, 70, 22, 0.62, 0.4)}</g>
+  <g style="mask:radial-gradient(circle at 50% 44%, #000 30%, transparent 84%)">${lattice(512, 512, 256, 220, 44, 0.5, 0.5)}</g>
   ${emblem(256, 230, 150, 16, 116)}
   <g transform="translate(256,0)">${tierBars(-67, 456)}</g>
   <rect width="512" height="512" filter="url(#grain)" opacity="0.045" style="mix-blend-mode:overlay"/>
@@ -97,7 +118,7 @@ const featureSvg = `
   <defs>${DEFS}</defs>
   <rect width="1024" height="500" fill="url(#bg)"/>
   <ellipse cx="250" cy="250" rx="340" ry="240" fill="url(#summit)"/>
-  <g style="mask:radial-gradient(95% 120% at 24% 50%, #000, transparent 86%)">${contours(250, 250, 22, 70, 26, 0.66, 0.42)}</g>
+  <g style="mask:radial-gradient(95% 120% at 24% 50%, #000, transparent 86%)">${lattice(1024, 500, 250, 250, 52, 0.5, 0.55)}</g>
   ${emblem(250, 250, 130, 14, 100)}
   <text x="430" y="232" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="104" fill="#EAF2EC">Code<tspan fill="url(#neonEmblem)">Tier</tspan></text>
   <text x="436" y="296" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="34" fill="#8DA294">Aprenda a programar de verdade</text>
