@@ -25,7 +25,8 @@
     "icon:android": "tsx scripts/gen-app-icon.ts",
     "assets:webp": "tsx scripts/png-to-webp.ts",
     "brand:art": "tsx scripts/gen-brand-creatives.ts",
-    "store:screens": "tsx scripts/cap-landing.ts && tsx scripts/gen-store-screenshots.ts"
+    "store:screens": "tsx scripts/cap-landing.ts && tsx scripts/gen-store-screenshots.ts",
+    "infographics": "tsx scripts/gen-infographics.ts"
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.0.0",

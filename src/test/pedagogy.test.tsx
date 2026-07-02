@@ -221,14 +221,15 @@ describe("pedagogy blueprint", () => {
     const smallAssets: string[] = [];
 
     LESSON_INFOGRAPHIC_SLUGS.forEach((slug) => {
-      const assetPath = join(process.cwd(), "public", "lesson-infographics", `${slug}.jpg`);
+      const assetPath = join(process.cwd(), "public", "lesson-infographics", `${slug}.webp`);
 
       if (!existsSync(assetPath)) {
         missingAssets.push(`catalog:${slug}`);
         return;
       }
 
-      if (statSync(assetPath).size < 50_000) {
+      // WebP escuro comprime muito; o piso pega só arquivo vazio/corrompido.
+      if (statSync(assetPath).size < 5_000) {
         smallAssets.push(slug);
       }
     });
@@ -236,7 +237,7 @@ describe("pedagogy blueprint", () => {
     courses.forEach((courseItem) => {
       courseItem.lessons.forEach((courseLesson) => {
         const concept = getLessonVisualConcept(courseItem.title, courseItem.language, courseLesson.title);
-        const assetPath = join(process.cwd(), "public", "lesson-infographics", `${concept.assetSlug}.jpg`);
+        const assetPath = join(process.cwd(), "public", "lesson-infographics", `${concept.assetSlug}.webp`);
 
         expect(allowedSlugs.has(concept.assetSlug)).toBe(true);
 
