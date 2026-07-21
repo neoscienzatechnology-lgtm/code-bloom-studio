@@ -31,7 +31,7 @@
      `VITE_ADMOB_INTERSTITIAL_ID` (e `VITE_ADMOB_BANNER_ID`).
      Com o ID real definido, o modo de teste desliga sozinho.
 3. **app-ads.txt**: publicar o arquivo indicado pelo AdMob na raiz do domínio
-   do desenvolvedor (ex.: `https://code-bloom-studio.vercel.app/app-ads.txt` —
+   do desenvolvedor (ex.: `https://codetier.vercel.app/app-ads.txt` —
    basta colocar o arquivo em `public/`).
 4. **Play Console — Data Safety**: declarar que o app exibe anúncios e que o
    SDK do Google coleta identificadores de dispositivo para publicidade.

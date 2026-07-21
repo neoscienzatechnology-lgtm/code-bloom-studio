@@ -35,10 +35,10 @@
 ## Antes de enviar para teste interno
 
 - Confirmar que o domínio público está ativo e acessível.
-- Confirmar que `https://code-bloom-studio.vercel.app/privacidade` abre sem erro.
-- Confirmar que `https://code-bloom-studio.vercel.app/termos` abre sem erro.
+- Confirmar que `https://codetier.vercel.app/privacidade` abre sem erro.
+- Confirmar que `https://codetier.vercel.app/termos` abre sem erro.
 - Definir `VITE_SUPPORT_EMAIL` com o e-mail oficial de suporte e refazer o build.
-- Confirmar que `https://code-bloom-studio.vercel.app/excluir-conta` abre sem erro e mostra o canal real.
+- Confirmar que `https://codetier.vercel.app/excluir-conta` abre sem erro e mostra o canal real.
 - Preencher Data Safety com base em `docs/playstore-data-safety.md`.
 - Configurar conta de teste na Play Console se o revisor precisar acessar login.
 - Conferir screenshots em `docs/playstore/assets/screenshots/phone/`.

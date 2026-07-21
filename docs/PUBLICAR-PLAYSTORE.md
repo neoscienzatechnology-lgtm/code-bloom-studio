@@ -53,7 +53,7 @@ keytool -genkey -v -keystore codetier-upload.jks -alias upload \
 2. **Ficha da loja**: título, descrição curta/completa, ícone 512², feature
    graphic 1024×500, screenshots. (Texto sugerido em `docs/ficha-playstore.md`.)
 3. **Política de privacidade**: aponte para a URL do app `/privacidade`
-   (ex.: https://code-bloom-studio.vercel.app/privacidade).
+   (ex.: https://codetier.vercel.app/privacidade).
 4. **Data safety / Content rating**: preencha os questionários.
 5. **Monetização → Produtos → Assinaturas**: crie
    - `pro_monthly` (mensal) e `pro_yearly` (anual) — anote os **IDs**.

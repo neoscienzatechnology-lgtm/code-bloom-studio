@@ -52,7 +52,7 @@ editor de código com execução real.
 
 ## Política de privacidade (URL)
 ```
-https://code-bloom-studio.vercel.app/privacidade
+https://codetier.vercel.app/privacidade
 ```
 
 ## Checklist de artes (assets gráficos)
@@ -64,4 +64,4 @@ https://code-bloom-studio.vercel.app/privacidade
 - [ ] (Opcional) Vídeo promocional (link YouTube)
 
 > Dica: dá pra capturar as screenshots do próprio app rodando
-> (`code-bloom-studio.vercel.app`) num celular ou no modo responsivo do navegador.
+> (`codetier.vercel.app`) num celular ou no modo responsivo do navegador.

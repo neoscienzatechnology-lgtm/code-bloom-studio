@@ -60,9 +60,9 @@ Primeira versão beta do CodeTier para Android.
 
 ## URLs públicas
 
-- Política de privacidade: `https://code-bloom-studio.vercel.app/privacidade`
-- Termos de uso: `https://code-bloom-studio.vercel.app/termos`
-- Exclusão de conta: `https://code-bloom-studio.vercel.app/excluir-conta`
+- Política de privacidade: `https://codetier.vercel.app/privacidade`
+- Termos de uso: `https://codetier.vercel.app/termos`
+- Exclusão de conta: `https://codetier.vercel.app/excluir-conta`
 
 Se o domínio final mudar, atualize essas URLs na Play Console antes do envio. Antes de publicar,
 configure `VITE_SUPPORT_EMAIL` com o e-mail oficial de suporte para ativar o botão real de solicitação
