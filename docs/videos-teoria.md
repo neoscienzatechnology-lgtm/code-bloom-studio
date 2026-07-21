@@ -43,25 +43,28 @@ npm run video:studio                        # Remotion Studio (preview interativ
 Os MP4 vão para `out/videos/` (ignorado pelo git — **não** committar centenas
 de MB no repo/Vercel).
 
-## Go-live (hospedar + ligar no app)
+## Hospedagem atual: Railway (serviço + volume)
 
-1. **Renderizar** os vídeos desejados (`npm run video:render`).
-2. **Subir para o Supabase Storage** com o helper (cria um bucket **público**
-   e mantém o layout `<courseId>/<lessonId>.mp4`). As credenciais vêm do
-   ambiente — a `service_role` nunca é commitada:
+Os vídeos moram num serviço dedicado no Railway (`railway-videos/`):
+`https://codetier-videos-production.up.railway.app/<courseId>/<lessonId>.mp4`.
+Um Volume em `/data` guarda os MP4 (o upload de código do Railway limita
+~500MB, então os vídeos NÃO vão no deploy — são enviados via HTTP).
 
-   ```powershell
-   $env:SUPABASE_URL="https://<ref>.supabase.co"
-   $env:SUPABASE_SERVICE_KEY="<chave service_role>"   # NÃO é a anon/publishable
-   npm run video:upload
-   ```
+> Histórico: antes ficavam num projeto Supabase grátis dedicado, que foi
+> **pausado por inatividade** (projetos free pausam após ~1 semana sem
+> atividade) e derrubou os vídeos. O Railway não tem esse comportamento.
 
-   Ao final ele imprime o valor exato de `VITE_THEORY_VIDEO_BASE`.
-   (Egress: o plano grátis do Supabase tem limite de banda — para muitos
-   acessos, considere um CDN de vídeo como Cloudflare R2/Stream ou Bunny.)
-3. **Ligar no app**: defina `VITE_THEORY_VIDEO_BASE` com a URL impressa e faça
-   o deploy. Pronto: o card "Teoria em vídeo" passa a aparecer nas lições que
-   têm vídeo (índice em `src/data/theoryVideoIndex.ts`).
+Para (re)enviar vídeos após um novo render:
+
+1. `npm run video:render` (MP4s em `out/videos/`).
+2. Rode o pusher (PUT autenticado; o token está em
+   `railway-videos/upload-token.local`, gitignored — recrie/rotacione com
+   `railway variables --set "UPLOAD_TOKEN=..."` se preciso):
+   envia cada `out/videos/<c>/<l>.mp4` para
+   `PUT <base>/upload/<c>/<l>.mp4` com `Authorization: Bearer <token>`
+   (pula os que já existem — ver script usado no deploy inicial).
+3. Nada mais muda: `VITE_THEORY_VIDEO_BASE` já aponta pro Railway (Vercel +
+   `.env`), e o CSP (`vercel.json`, `media-src`) já libera o domínio.
    > ⚠️ Só ligue a env depois do upload **100%** concluído (`npm run video:upload`
    > sem falhas) — o índice é estático, então lições sem o MP4 no bucket mostram
    > "Vídeo em breve" até subir. (checkup #11)
