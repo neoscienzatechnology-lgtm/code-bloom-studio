@@ -18,6 +18,12 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 
+// Narração TTS (opcional): gerada por `npm run video:narrate`. Quando o
+// manifesto existe, cada lição renderiza com áudio (cenas esticam pra fala).
+const narrationPath = join(root, "remotion", "narration-manifest.json");
+const narration: Record<string, { scenes: Record<string, { src: string; durationInFrames: number }> }> =
+  existsSync(narrationPath) ? JSON.parse(readFileSync(narrationPath, "utf8")) : {};
+
 const argv = process.argv.slice(2);
 const getArg = (name: string) => {
   const a = argv.find((x) => x.startsWith(`--${name}=`));
@@ -45,8 +51,10 @@ if (jobs.length === 0) {
   process.exit(0);
 }
 
-console.log(`Empacotando o projeto Remotion uma vez...`);
-const serveUrl = await bundle({ entryPoint: join(root, "remotion", "index.ts") });
+console.log(`Empacotando o projeto Remotion uma vez... (narração: ${Object.keys(narration).length} lições)`);
+const audioDir = join(root, "remotion-audio");
+mkdirSync(audioDir, { recursive: true });
+const serveUrl = await bundle({ entryPoint: join(root, "remotion", "index.ts"), publicDir: audioDir });
 
 console.log(`Renderizando ${jobs.length} vídeo(s)...`);
 let done = 0;
@@ -59,8 +67,9 @@ for (const e of jobs) {
     console.log(`  • [${done}/${jobs.length}] ${e.key} — já existe, pulando`);
     continue;
   }
-  const composition = await selectComposition({ serveUrl, id: "TheoryVideo", inputProps: e });
-  await renderMedia({ composition, serveUrl, codec: "h264", outputLocation: outFile, inputProps: e });
+  const inputProps = { ...e, narration: narration[e.key]?.scenes };
+  const composition = await selectComposition({ serveUrl, id: "TheoryVideo", inputProps });
+  await renderMedia({ composition, serveUrl, codec: "h264", outputLocation: outFile, inputProps });
   console.log(`  ✓ [${done}/${jobs.length}] ${e.key} → out/videos/${e.courseId}/${e.lessonId}.mp4`);
 }
 console.log("Concluído.");

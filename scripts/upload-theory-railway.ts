@@ -18,14 +18,18 @@ if (!existsSync(tokenFile)) {
 }
 const TOKEN = readFileSync(tokenFile, "utf8").trim();
 const src = join(root, "out", "videos");
+// --force: re-envia mesmo os que já existem no servidor (ex.: re-render com narração)
+const force = process.argv.includes("--force");
 
 let ok = 0, skip = 0, fail = 0;
 const courses = readdirSync(src).filter((d) => statSync(join(src, d)).isDirectory());
 for (const course of courses) {
   for (const file of readdirSync(join(src, course)).filter((f) => f.endsWith(".mp4"))) {
     const url = `${BASE}/${course}/${file}`;
-    const head = await fetch(url, { method: "HEAD" }).catch(() => null);
-    if (head?.ok) { skip++; continue; }
+    if (!force) {
+      const head = await fetch(url, { method: "HEAD" }).catch(() => null);
+      if (head?.ok) { skip++; continue; }
+    }
     const body = readFileSync(join(src, course, file));
     let res = await fetch(`${BASE}/upload/${course}/${file}`, {
       method: "PUT", headers: { Authorization: `Bearer ${TOKEN}` }, body,

@@ -54,11 +54,17 @@ Um Volume em `/data` guarda os MP4 (o upload de código do Railway limita
 > **pausado por inatividade** (projetos free pausam após ~1 semana sem
 > atividade) e derrubou os vídeos. O Railway não tem esse comportamento.
 
+Os vídeos são **narrados** (TTS neural pt-BR via Edge-TTS, voz
+`pt-BR-FranciscaNeural` — troque com `TTS_VOICE=<voz>`): um mp3 por cena em
+`remotion-audio/` (gitignored) + manifesto `remotion/narration-manifest.json`;
+cada cena estica para caber a fala.
+
 Para (re)enviar vídeos após um novo render:
 
-1. `npm run video:render` (MP4s em `out/videos/`).
-2. `npm run video:upload` — PUT autenticado com retomada (pula os que já
-   existem). O token está em `railway-videos/upload-token.local` (gitignored);
+1. `npm run video:narrate` (gera/atualiza a narração; retoma onde parou).
+2. `npm run video:render -- --force` (MP4s em `out/videos/`, com áudio).
+3. `npm run video:upload -- --force` — PUT autenticado (sem `--force`, pula os
+   que já existem). O token está em `railway-videos/upload-token.local` (gitignored);
    para rotacionar: gere outro, salve no arquivo e rode
    `railway variables --set "UPLOAD_TOKEN=..."` no serviço.
 3. Nada mais muda: `VITE_THEORY_VIDEO_BASE` já aponta pro Railway (Vercel +

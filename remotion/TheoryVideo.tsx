@@ -1,8 +1,10 @@
 import {
   AbsoluteFill,
+  Audio,
   Series,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -15,6 +17,9 @@ const display = loadDisplay("normal", { weights: ["500", "700"], subsets: ["lati
 const body = loadBody("normal", { weights: ["400", "500", "700"], subsets: ["latin"] }).fontFamily;
 const mono = loadMono("normal", { weights: ["400", "700"], subsets: ["latin"] }).fontFamily;
 
+export type NarrationClip = { src: string; durationInFrames: number };
+export type SceneKey = "intro" | "concept" | "analogy" | "code" | "points" | "outro";
+
 export type TheoryProps = {
   module: string;
   title: string;
@@ -24,6 +29,9 @@ export type TheoryProps = {
   codeOutput: string;
   points: string[];
   cta: string;
+  /** Narração TTS por cena (opcional). Quando presente, cada cena se estica
+   * para caber a fala e o clipe toca no início da cena. */
+  narration?: Partial<Record<SceneKey, NarrationClip>>;
 };
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
@@ -43,12 +51,19 @@ export function computeScenes(p: TheoryProps) {
   const codeLen = (p.code ?? "").length;
   const typing = clamp(Math.round(codeLen * 1.7), 36, 160);
 
-  const intro = 96;
-  const concept = readFrames(p.concept, 0.5, 120, 240);
-  const analogy = hasAnalogy ? readFrames(p.analogy, 0.5, 110, 210) : 0;
-  const code = hasCode ? 44 + typing + (hasOutput ? 76 : 28) : 0;
-  const points = hasPoints ? 54 + pointsList.length * 38 : 0;
-  const outro = 102;
+  // Com narração, a cena dura pelo menos a fala + um respiro no final.
+  const NARR_PAD = 20;
+  const narr = (scene: SceneKey, base: number) => {
+    const clip = p.narration?.[scene];
+    return clip ? Math.max(base, clip.durationInFrames + NARR_PAD) : base;
+  };
+
+  const intro = narr("intro", 96);
+  const concept = narr("concept", readFrames(p.concept, 0.5, 120, 240));
+  const analogy = hasAnalogy ? narr("analogy", readFrames(p.analogy, 0.5, 110, 210)) : 0;
+  const code = hasCode ? narr("code", 44 + typing + (hasOutput ? 76 : 28)) : 0;
+  const points = hasPoints ? narr("points", 54 + pointsList.length * 38) : 0;
+  const outro = narr("outro", 102);
 
   const total = intro + concept + analogy + code + points + outro;
   return { intro, concept, analogy, code, points, outro, total, hasAnalogy, hasOutput, hasPoints, hasCode, pointsList, typing };
@@ -311,35 +326,45 @@ const OutroScene: React.FC<{ cta: string }> = ({ cta }) => {
   );
 };
 
+const Narr: React.FC<{ clip?: NarrationClip }> = ({ clip }) =>
+  clip ? <Audio src={staticFile(clip.src)} /> : null;
+
 export const TheoryVideo: React.FC<TheoryProps> = (props) => {
   const { module, title, concept, analogy, code, codeOutput, cta } = props;
   const s = computeScenes(props);
+  const n = props.narration ?? {};
   return (
     <AbsoluteFill>
       <Backdrop />
       <Series>
         <Series.Sequence durationInFrames={s.intro}>
+          <Narr clip={n.intro} />
           <IntroScene module={module} title={title} />
         </Series.Sequence>
         <Series.Sequence durationInFrames={s.concept}>
+          <Narr clip={n.concept} />
           <TextScene tag="O que acontece" text={concept} />
         </Series.Sequence>
         {s.hasAnalogy && (
           <Series.Sequence durationInFrames={s.analogy}>
+            <Narr clip={n.analogy} />
             <AnalogyScene text={analogy} />
           </Series.Sequence>
         )}
         {s.hasCode && (
           <Series.Sequence durationInFrames={s.code}>
+            <Narr clip={n.code} />
             <CodeScene code={code} output={codeOutput} typingFrames={s.typing} hasOutput={s.hasOutput} />
           </Series.Sequence>
         )}
         {s.hasPoints && (
           <Series.Sequence durationInFrames={s.points}>
+            <Narr clip={n.points} />
             <PointsScene points={s.pointsList} />
           </Series.Sequence>
         )}
         <Series.Sequence durationInFrames={s.outro}>
+          <Narr clip={n.outro} />
           <OutroScene cta={cta} />
         </Series.Sequence>
       </Series>

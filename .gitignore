@@ -50,6 +50,9 @@ bun.lockb
 # manifesto gerado por `npm run video:extract` (regenerável; o índice usado
 # pelo app é src/data/theoryVideoIndex.ts, esse sim versionado)
 /remotion/theory-data.json
+# narração TTS (regenerável via `npm run video:narrate`)
+/remotion-audio/
+/remotion/narration-manifest.json
 
 # Railway (vídeos copiados para deploy; fonte é out/videos)
 /railway-videos/videos/
