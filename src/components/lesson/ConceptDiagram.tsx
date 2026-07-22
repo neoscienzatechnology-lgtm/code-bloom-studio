@@ -20,7 +20,7 @@ const SCENES: Record<DiagramFamily, (t: VisualTone) => ReactNode> = {
       <path d="M172 76 H216 M206 68 L218 76 L206 84" fill="none" stroke={t.text} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
       <rect x="232" y="52" width="120" height="66" rx="14" fill={t.panel} stroke={t.primary} strokeWidth="4" />
       <rect x="252" y="38" width="80" height="24" rx="12" fill={t.primary} />
-      <line x1="266" y1="50" x2="318" y2="50" stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
+      <line x1="266" y1="50" x2="318" y2="50" stroke="#10231A" strokeWidth="5" strokeLinecap="round" />
       <rect x="258" y="72" width="68" height="28" rx="14" fill={t.soft} stroke={t.accent} strokeWidth="3" />
       <line x1="274" y1="86" x2="310" y2="86" stroke={t.accent} strokeWidth="5" strokeLinecap="round" />
       <circle cx="396" cy="76" r="20" fill={t.soft} opacity="0.9" />
@@ -152,7 +152,7 @@ const SCENES: Record<DiagramFamily, (t: VisualTone) => ReactNode> = {
   // Terminal: o programa fala com você pela saída
   output: (t) => (
     <>
-      <rect x="150" y="32" width="220" height="90" rx="14" fill="#1e2032" />
+      <rect x="150" y="32" width="220" height="90" rx="14" fill={t.panel} stroke={t.secondary} strokeWidth="2.5" />
       <circle cx="170" cy="48" r="4" fill={ERROR_RED} />
       <circle cx="184" cy="48" r="4" fill="#f6c445" />
       <circle cx="198" cy="48" r="4" fill={CHECK_GREEN} />
@@ -205,7 +205,7 @@ const SCENES: Record<DiagramFamily, (t: VisualTone) => ReactNode> = {
     <>
       <rect x="150" y="34" width="190" height="88" rx="12" fill={t.panel} stroke={t.primary} strokeWidth="3.5" />
       <rect x="150" y="34" width="190" height="24" rx="10" fill={t.primary} />
-      <g stroke="#ffffff" strokeWidth="4" strokeLinecap="round">
+      <g stroke="#10231A" strokeWidth="4" strokeLinecap="round">
         <line x1="164" y1="46" x2="196" y2="46" />
         <line x1="216" y1="46" x2="248" y2="46" />
         <line x1="268" y1="46" x2="300" y2="46" />
@@ -229,14 +229,14 @@ const SCENES: Record<DiagramFamily, (t: VisualTone) => ReactNode> = {
   // Ramos que se encontram: trabalho em paralelo, integração no fim
   flow: (t) => (
     <>
-      <path d="M120 96 H400" fill="none" stroke={t.primary} strokeWidth="6" strokeLinecap="round" />
+      <path d="M120 96 H400" fill="none" stroke={t.secondary} strokeWidth="6" strokeLinecap="round" />
       <path d="M180 96 Q210 96 222 72 Q234 50 264 50 H312 Q342 50 354 72 Q366 96 392 96" fill="none" stroke={t.accent} strokeWidth="6" strokeLinecap="round" />
       <circle cx="150" cy="96" r="10" fill={t.panel} stroke={t.primary} strokeWidth="4" />
       <circle cx="264" cy="50" r="10" fill={t.panel} stroke={t.accent} strokeWidth="4" />
       <circle cx="312" cy="50" r="10" fill={t.panel} stroke={t.accent} strokeWidth="4" />
       <circle cx="260" cy="96" r="10" fill={t.panel} stroke={t.primary} strokeWidth="4" />
       <circle cx="400" cy="96" r="12" fill={t.primary} />
-      <path d="M395 96 L399 101 L406 91" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M395 96 L399 101 L406 91" fill="none" stroke="#10231A" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
     </>
   ),
 
@@ -269,7 +269,7 @@ const SCENES: Record<DiagramFamily, (t: VisualTone) => ReactNode> = {
         </g>
       ))}
       <rect x="238" y="102" width="44" height="18" rx="9" fill={t.accent} />
-      <line x1="252" y1="111" x2="268" y2="111" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" />
+      <line x1="252" y1="111" x2="268" y2="111" stroke="#10231A" strokeWidth="4" strokeLinecap="round" />
       <circle cx="354" cy="56" r="16" fill={t.soft} stroke={t.secondary} strokeWidth="3" />
       <path d="M348 56 L353 61 L361 50" fill="none" stroke={t.secondary} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="166" cy="92" r="14" fill={t.soft} />

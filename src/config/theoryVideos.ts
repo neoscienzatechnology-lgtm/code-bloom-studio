@@ -2,14 +2,14 @@
 //
 // DORMENTE por padrão: o card "Teoria em vídeo" só aparece quando
 // VITE_THEORY_VIDEO_BASE aponta para a URL pública onde os MP4 estão
-// hospedados (ex.: bucket público do Supabase Storage). Sem essa variável,
-// nenhum vídeo é carregado e a experiência atual (cards) fica intacta.
+// hospedados. HOJE: serviço próprio no Railway
+// (https://codetier-videos-production.up.railway.app), ver railway-videos/.
 //
-// Layout esperado dos arquivos no bucket: <base>/<courseId>/<lessonId>.mp4
+// Layout esperado dos arquivos: <base>/<courseId>/<lessonId>.mp4
 //
-// CSP: o vercel.json precisa de `media-src` com o host dos vídeos (hoje só
-// https://*.supabase.co). Se migrar de CDN (R2/Bunny), atualize o media-src lá,
-// senão o navegador bloqueia os vídeos (falha silenciosa = "em breve"). #checkup-12
+// CSP: o vercel.json precisa de `media-src` com o host dos vídeos (hoje o
+// domínio do Railway). Se migrar de host/CDN, atualize o media-src lá, senão
+// o navegador bloqueia os vídeos (falha silenciosa = "em breve"). #checkup-12
 import { THEORY_VIDEO_KEYS } from "@/data/theoryVideoIndex";
 
 const RAW = import.meta.env.VITE_THEORY_VIDEO_BASE?.trim();

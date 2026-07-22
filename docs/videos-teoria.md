@@ -57,14 +57,14 @@ Um Volume em `/data` guarda os MP4 (o upload de código do Railway limita
 Para (re)enviar vídeos após um novo render:
 
 1. `npm run video:render` (MP4s em `out/videos/`).
-2. Rode o pusher (PUT autenticado; o token está em
-   `railway-videos/upload-token.local`, gitignored — recrie/rotacione com
-   `railway variables --set "UPLOAD_TOKEN=..."` se preciso):
-   envia cada `out/videos/<c>/<l>.mp4` para
-   `PUT <base>/upload/<c>/<l>.mp4` com `Authorization: Bearer <token>`
-   (pula os que já existem — ver script usado no deploy inicial).
+2. `npm run video:upload` — PUT autenticado com retomada (pula os que já
+   existem). O token está em `railway-videos/upload-token.local` (gitignored);
+   para rotacionar: gere outro, salve no arquivo e rode
+   `railway variables --set "UPLOAD_TOKEN=..."` no serviço.
 3. Nada mais muda: `VITE_THEORY_VIDEO_BASE` já aponta pro Railway (Vercel +
    `.env`), e o CSP (`vercel.json`, `media-src`) já libera o domínio.
+   Obs.: o cache dos vídeos é de 1 dia (ETag revalida) — re-render com o mesmo
+   nome aparece para todos em até 24h.
    > ⚠️ Só ligue a env depois do upload **100%** concluído (`npm run video:upload`
    > sem falhas) — o índice é estático, então lições sem o MP4 no bucket mostram
    > "Vídeo em breve" até subir. (checkup #11)

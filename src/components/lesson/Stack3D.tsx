@@ -82,7 +82,7 @@ const Stack3D = ({ tone }: { tone: VisualTone }) => {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       // Dígito escuro com halo claro: legível tanto no bloco verde-escuro
-      // (primary) quanto no bloco do topo em verde-lima (accent).
+      // (deep) quanto no bloco do topo em verde-neon (accent).
       ctx.lineWidth = 12;
       ctx.strokeStyle = "rgba(255,255,255,0.92)";
       ctx.strokeText(String(n), 64, 70);
@@ -95,7 +95,7 @@ const Stack3D = ({ tone }: { tone: VisualTone }) => {
 
     const makeBlock = (label: number): Block => {
       const mat = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(tone.primary),
+        color: new THREE.Color(tone.deep),
         roughness: 0.5,
         metalness: 0.05,
         transparent: true,
@@ -120,7 +120,7 @@ const Stack3D = ({ tone }: { tone: VisualTone }) => {
       live.forEach((b, i) => {
         b.targetY = BOX_H / 2 + i * PITCH;
         const isTop = i === live.length - 1;
-        b.mat.color.set(new THREE.Color(isTop ? tone.accent : tone.primary));
+        b.mat.color.set(new THREE.Color(isTop ? tone.accent : tone.deep));
       });
     };
 

@@ -177,7 +177,7 @@ const SCENES: Partial<Record<IllustrationKind, ReactNode>> = {
       <path d="M226 36 H294 V64 Q294 92 260 100 Q226 92 226 64 Z" fill={PALETTE.yellow} stroke={PALETTE.yellowDark} strokeWidth="4" strokeLinejoin="round" />
       <path d="M226 44 H204 Q200 70 226 76 M294 44 H316 Q320 70 294 76" fill="none" stroke={PALETTE.yellowDark} strokeWidth="4" strokeLinecap="round" />
       <rect x="248" y="100" width="24" height="12" rx="3" fill={PALETTE.yellowDark} />
-      <rect x="236" y="112" width="48" height="10" rx="4" fill={PALETTE.ink} opacity="0.9" />
+      <rect x="236" y="112" width="48" height="10" rx="4" fill="#6B5316" />
       <path d="M260 52 L264 62 L275 62 L266 69 L269 80 L260 73 L251 80 L254 69 L245 62 L256 62 Z" fill="#ffffff" opacity="0.9" />
       <circle cx="180" cy="48" r="5" fill={PALETTE.neon} />
       <circle cx="344" cy="56" r="5" fill={PALETTE.red} />

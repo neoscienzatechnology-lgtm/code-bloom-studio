@@ -1,5 +1,6 @@
 /**
- * Converte os PNGs de fundo (public/) para WebP via Chromium headless.
+ * Converte os PNGs de fundo gerados por `npm run brand:art` (out/criativos/)
+ * para WebP em public/, via Chromium headless.
  *   npm run assets:webp
  */
 import { chromium } from "@playwright/test";
@@ -7,13 +8,15 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const pub = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const src = join(root, "out", "criativos");
+const pub = join(root, "public");
 const names = ["hero-codetier", "atmos-codetier"];
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
 for (const name of names) {
-  const png = readFileSync(join(pub, `${name}.png`));
+  const png = readFileSync(join(src, `${name}.png`));
   const webpDataUrl: string = await page.evaluate(async (dataUrl) => {
     const img = new Image();
     await new Promise((res, rej) => {
