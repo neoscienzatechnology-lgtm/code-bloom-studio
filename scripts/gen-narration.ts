@@ -71,6 +71,18 @@ process.exitCode = 1;
 const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
   Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`timeout ${ms}ms`)), ms))]);
 
+// O texto vai embutido em SSML sem escape pelo msedge-tts: `<h1>` cru (cursos
+// de HTML!) quebra o XML e o servidor fecha a stream sem `turn.end`. Além de
+// escapar, trocamos símbolos por fala natural ("<h1>" → "h1").
+function speakable(text: string): string {
+  return text
+    .replace(/<\/?([\w-]+)[^>]*>/g, " $1 ") // <h1> e </h1> → "h1"
+    .replace(/&/g, " e ")
+    .replace(/[<>]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function ttsToFile(text: string, dest: string): Promise<void> {
   const tmpDir = `${dest}.tmpdir`;
   rmSync(tmpDir, { recursive: true, force: true });
@@ -78,7 +90,7 @@ async function ttsToFile(text: string, dest: string): Promise<void> {
   const tts = new MsEdgeTTS();
   try {
     await withTimeout(tts.setMetadata(VOICE, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3), 15_000);
-    const { audioFilePath } = await withTimeout(tts.toFile(tmpDir, text), 45_000);
+    const { audioFilePath } = await withTimeout(tts.toFile(tmpDir, speakable(text)), 45_000);
     renameSync(audioFilePath, dest);
   } finally {
     try { tts.close(); } catch { /* socket já fechado */ }
