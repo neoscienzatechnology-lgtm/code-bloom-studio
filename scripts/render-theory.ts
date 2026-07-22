@@ -51,6 +51,9 @@ if (jobs.length === 0) {
   process.exit(0);
 }
 
+// Só o caminho completo reporta sucesso (ver nota em gen-narration.ts).
+process.exitCode = 1;
+
 console.log(`Empacotando o projeto Remotion uma vez... (narração: ${Object.keys(narration).length} lições)`);
 const audioDir = join(root, "remotion-audio");
 mkdirSync(audioDir, { recursive: true });
@@ -68,8 +71,19 @@ for (const e of jobs) {
     continue;
   }
   const inputProps = { ...e, narration: narration[e.key]?.scenes };
-  const composition = await selectComposition({ serveUrl, id: "TheoryVideo", inputProps });
-  await renderMedia({ composition, serveUrl, codec: "h264", outputLocation: outFile, inputProps });
+  // Watchdog: um render normal leva <2 min; se o Chrome headless emperrar,
+  // derruba o processo e o orquestrador relança (resume pula os prontos).
+  const watchdog = new Promise<never>((_, rej) =>
+    setTimeout(() => rej(new Error(`watchdog: render de ${e.key} passou de 6min`)), 6 * 60_000),
+  );
+  await Promise.race([
+    (async () => {
+      const composition = await selectComposition({ serveUrl, id: "TheoryVideo", inputProps });
+      await renderMedia({ composition, serveUrl, codec: "h264", outputLocation: outFile, inputProps });
+    })(),
+    watchdog,
+  ]);
   console.log(`  ✓ [${done}/${jobs.length}] ${e.key} → out/videos/${e.courseId}/${e.lessonId}.mp4`);
 }
 console.log("Concluído.");
+process.exitCode = 0;

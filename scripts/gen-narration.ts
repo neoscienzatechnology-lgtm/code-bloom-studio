@@ -63,6 +63,11 @@ function narrationTexts(e: Entry): Record<string, string> {
 process.on("uncaughtException", (e) => console.error("(ruído ws ignorado)", (e as Error)?.message));
 process.on("unhandledRejection", (e) => console.error("(rejeição solta ignorada)", (e as Error)?.message));
 
+// Se o event loop esvaziar no meio (promise que nunca resolve após um erro
+// engolido), o Node sairia com 0 "sem terminar" — este default garante que
+// só o caminho feliz completo reporte sucesso ao orquestrador.
+process.exitCode = 1;
+
 const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
   Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`timeout ${ms}ms`)), ms))]);
 
@@ -131,3 +136,4 @@ for (const e of jobs) {
 }
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 1), "utf8");
 console.log(`FIM: ${done} lições, ${clips} clipes gerados, voz=${VOICE}`);
+process.exitCode = 0;
