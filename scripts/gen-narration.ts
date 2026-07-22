@@ -57,23 +57,43 @@ function narrationTexts(e: Entry): Record<string, string> {
   return out;
 }
 
+// O ws interno do msedge-tts pode emitir erro FORA da promise (socket fechado
+// pelo servidor) e derrubar o processo — engolimos como ruído; a falha real
+// aparece como timeout/rejeição do clipe e cai no retry.
+process.on("uncaughtException", (e) => console.error("(ruído ws ignorado)", (e as Error)?.message));
+process.on("unhandledRejection", (e) => console.error("(rejeição solta ignorada)", (e as Error)?.message));
+
+const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
+  Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`timeout ${ms}ms`)), ms))]);
+
 async function ttsToFile(text: string, dest: string): Promise<void> {
   const tmpDir = `${dest}.tmpdir`;
   rmSync(tmpDir, { recursive: true, force: true });
   mkdirSync(tmpDir, { recursive: true });
   const tts = new MsEdgeTTS();
-  await tts.setMetadata(VOICE, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
-  const { audioFilePath } = await tts.toFile(tmpDir, text);
-  renameSync(audioFilePath, dest);
-  rmSync(tmpDir, { recursive: true, force: true });
-  tts.close();
+  try {
+    await withTimeout(tts.setMetadata(VOICE, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3), 15_000);
+    const { audioFilePath } = await withTimeout(tts.toFile(tmpDir, text), 45_000);
+    renameSync(audioFilePath, dest);
+  } finally {
+    try { tts.close(); } catch { /* socket já fechado */ }
+    rmSync(tmpDir, { recursive: true, force: true });
+  }
 }
 
-async function withRetry(fn: () => Promise<void>, tries = 3): Promise<void> {
+// Gera E valida (duração sã) dentro do mesmo retry — clipe ruim regenera.
+async function makeClip(text: string, dest: string, tries = 4): Promise<number> {
   for (let i = 1; ; i++) {
-    try { return await fn(); } catch (err) {
+    try {
+      await ttsToFile(text, dest);
+      const meta = await parseFile(dest);
+      const sec = meta.format.duration ?? 0;
+      if (sec <= 0.2) throw new Error(`áudio suspeito (${sec}s)`);
+      return sec;
+    } catch (err) {
+      rmSync(dest, { force: true });
       if (i >= tries) throw err;
-      await new Promise((r) => setTimeout(r, 1500 * i));
+      await new Promise((r) => setTimeout(r, 2500 * i));
     }
   }
 }
@@ -90,13 +110,16 @@ for (const e of jobs) {
   const scenes: Record<string, { src: string; durationInFrames: number }> = {};
   for (const [scene, text] of Object.entries(texts)) {
     const dest = join(dir, `${scene}.mp3`);
+    let sec: number;
     if (force || !existsSync(dest)) {
-      await withRetry(() => ttsToFile(text, dest));
+      sec = await makeClip(text, dest);
       clips++;
+      await new Promise((r) => setTimeout(r, 250)); // ritmo: evita rate-limit
+    } else {
+      const meta = await parseFile(dest).catch(() => null);
+      sec = meta?.format.duration ?? 0;
+      if (sec <= 0.2) { sec = await makeClip(text, dest); clips++; } // repara clipe corrompido
     }
-    const meta = await parseFile(dest);
-    const sec = meta.format.duration ?? 0;
-    if (sec <= 0.2) throw new Error(`áudio suspeito (${sec}s): ${e.key}/${scene}`);
     scenes[scene] = { src: `${e.key}/${scene}.mp3`, durationInFrames: Math.ceil(sec * FPS) };
   }
   manifest[e.key] = { voice: VOICE, scenes };
