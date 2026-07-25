@@ -1257,3 +1257,53 @@ describe("primeiras aulas de Fundamentos são autorais", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+// "Preveja a saída" é a prática mais fácil de errar escrevendo: basta a
+// resposta não bater com o que o código realmente imprime. Aqui a alternativa
+// correta é conferida EXECUTANDO o trecho. #revisao-lote8
+describe("práticas de prever-saída do Fundamentos", () => {
+  const executar = (code: string) => {
+    const logs: string[] = [];
+    const push = (...args: unknown[]) =>
+      logs.push(
+        args
+          .map((value) => {
+            if (typeof value === "string") return value;
+            if (typeof value === "undefined") return "undefined";
+            try {
+              const serialized = JSON.stringify(value);
+              return serialized === undefined ? String(value) : serialized;
+            } catch {
+              return String(value);
+            }
+          })
+          .join(" "),
+      );
+    // `mostrar` é o pseudocódigo das primeiras aulas — equivale a console.log
+    new Function("console", "mostrar", `"use strict";\n${code}`)(
+      { log: push, info: push, warn: push, error: push, debug: push },
+      push,
+    );
+    return logs.join("\n");
+  };
+  const normalize = (text: string) => text.replace(/\r\n/g, "\n").replace(/[ \t]+$/gm, "").trim();
+
+  it("a alternativa correta é a saída real do código", () => {
+    const offenders: string[] = [];
+    Object.entries(FOUNDATION_AUTHORED).forEach(([lessonId, extras]) => {
+      extras.practiceActivities.forEach((activity) => {
+        if (activity.type !== "predict-output" || !activity.code) return;
+        try {
+          const output = normalize(executar(activity.code));
+          const answer = normalize(String(activity.correctAnswer));
+          if (output !== answer) {
+            offenders.push(`${lessonId}: código imprime "${output}" mas a resposta é "${answer}"`);
+          }
+        } catch (error) {
+          offenders.push(`${lessonId}: código não executa (${(error as Error).message})`);
+        }
+      });
+    });
+    expect(offenders).toEqual([]);
+  });
+});
