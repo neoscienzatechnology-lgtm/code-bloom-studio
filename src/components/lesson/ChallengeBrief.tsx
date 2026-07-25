@@ -18,12 +18,21 @@ interface ChallengeBriefProps {
  * #revisao-3.1
  */
 const ChallengeBrief = ({ lesson, language, collapsible = false, className = "" }: ChallengeBriefProps) => {
-  const expectedLabel = language === "SQL" ? "Sua query deve conter: " : "Saída esperada: ";
+  // SQL agora roda de verdade e a saída esperada é o RESULTADO da consulta —
+  // por isso o rótulo deixou de ser "sua query deve conter". #revisao-lote4
+  const expectedLabel = language === "SQL" ? "Resultado esperado: " : "Saída esperada: ";
+  const multiline = lesson.expectedOutput.includes("\n");
 
   const target = (
     <div className="mt-3 rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
       <span className="font-bold text-muted-foreground">{expectedLabel}</span>
-      <code className="break-words font-mono text-primary">{lesson.expectedOutput}</code>
+      {multiline ? (
+        <pre className="mt-2 max-h-44 overflow-auto whitespace-pre font-mono text-xs text-primary">
+          {lesson.expectedOutput}
+        </pre>
+      ) : (
+        <code className="break-words font-mono text-primary">{lesson.expectedOutput}</code>
+      )}
     </div>
   );
 

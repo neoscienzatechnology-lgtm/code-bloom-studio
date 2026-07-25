@@ -18,6 +18,8 @@ import { moduleGroups } from "@/utils/entitlement";
 import { appCatalogSummary, courseCatalog, getCourseCatalogItem, landingTracks } from "@/data/courseCatalog";
 import { capstoneProjects } from "@/data/capstones";
 import { JS_RUNTIME_LESSONS } from "@/data/jsRuntimeLessons";
+import { SQL_SEED, SQL_VERIFICATION_QUERIES } from "@/data/sqlSandbox";
+import { formatSqlResult } from "@/utils/sqlOutput";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
@@ -1061,6 +1063,50 @@ describe("lições marcadas como JS executável", () => {
         }
       });
     });
+    expect(offenders).toEqual([]);
+  });
+});
+
+// SQL deixou de ser corrigido por trecho de texto: cada solução roda num
+// SQLite real contra o banco-escola e o gabarito é o RESULTADO. Este teste
+// refaz isso — se alguém mexer no seed ou numa query sem regravar os
+// gabaritos (`npm run sql:sync -- --write`), quebra aqui. #revisao-lote4
+describe("lições de SQL rodam num banco real", () => {
+  it("toda solução oficial produz exatamente o resultado esperado", async () => {
+    const initSqlJs = (await import("sql.js")).default;
+    const SQL = await initSqlJs({
+      locateFile: () => join(process.cwd(), "node_modules", "sql.js", "dist", "sql-wasm.wasm"),
+    });
+
+    const sqlCourse = courses.find((course) => course.language.trim().toLowerCase() === "sql");
+    expect(sqlCourse).toBeTruthy();
+
+    const offenders: string[] = [];
+    for (const lesson of sqlCourse!.lessons) {
+      const db = new SQL.Database();
+      try {
+        db.run(SQL_SEED);
+        const own = db.exec(lesson.solution);
+        const verify = SQL_VERIFICATION_QUERIES[lesson.id];
+        const results = verify ? db.exec(verify) : own;
+        const got = formatSqlResult(results.length ? results[results.length - 1] : null);
+        if (got !== lesson.expectedOutput) {
+          offenders.push(`${lesson.id}: ${JSON.stringify(got)} ≠ ${JSON.stringify(lesson.expectedOutput)}`);
+        }
+      } catch (error) {
+        offenders.push(`${lesson.id}: erro ${(error as Error).message}`);
+      } finally {
+        db.close();
+      }
+    }
+    expect(offenders).toEqual([]);
+  }, 30_000);
+
+  it("nenhuma lição de SQL ainda usa fragmento de query como gabarito", () => {
+    const sqlCourse = courses.find((course) => course.language.trim().toLowerCase() === "sql")!;
+    const offenders = sqlCourse.lessons
+      .filter((lesson) => /^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|WHERE|JOIN|GROUP|HAVING|LIMIT|AND|OR)\b/i.test(lesson.expectedOutput))
+      .map((lesson) => lesson.id);
     expect(offenders).toEqual([]);
   });
 });

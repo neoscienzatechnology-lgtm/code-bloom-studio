@@ -9,6 +9,9 @@ import { evaluateJsRun } from "@/utils/jsOutput";
 import { isPythonRuntimeSupported, runPython } from "@/lib/pythonRunner";
 import { runJs } from "@/lib/jsRunner";
 import { runsRealJs } from "@/data/jsRuntimeLessons";
+import { evaluateSqlRun } from "@/utils/sqlOutput";
+import { isSqlRuntimeSupported, runSql } from "@/lib/sqlRunner";
+import { SQL_ORDER_MATTERS, SQL_SEED, SQL_VERIFICATION_QUERIES, isSqlLesson } from "@/data/sqlSandbox";
 import { getLessonConcepts } from "@/utils/conceptMastery";
 import { recordReview } from "@/utils/spacedRepetition";
 import { track } from "@/lib/analytics";
@@ -147,6 +150,7 @@ export function useLessonRunner({
   // JS também roda de verdade (worker), nas lições verificadas em
   // `jsRuntimeLessons.ts`. As demais seguem no validador heurístico.
   const isRealJs = !isPython && runsRealJs(lesson.id);
+  const isSql = isSqlLesson(course.language);
 
   const handleRun = () => {
     if (running || runLockedRef.current) return;
@@ -185,6 +189,31 @@ export function useLessonRunner({
             runValidator();
           }
         });
+      return;
+    }
+
+    // SQL roda num SQLite de verdade (sql.js) contra o banco-escola: a
+    // correção compara o RESULTADO da consulta, não o texto dela.
+    if (isSql && isSqlRuntimeSupported()) {
+      patch({ output: "⏳ Abrindo o banco de dados e rodando sua consulta…", isCorrect: null, reflectiveQ: null });
+      runSql(SQL_SEED, code, SQL_VERIFICATION_QUERIES[lesson.id])
+        .then((res) => {
+          if (res.error === "runtime-unavailable") {
+            runValidator();
+            return;
+          }
+          const ev = evaluateSqlRun(res.result, res.error, lesson.expectedOutput, {
+            orderMatters: SQL_ORDER_MATTERS.has(lesson.id),
+          });
+          finishRun({
+            correct: ev.correct,
+            nextIsCorrect: ev.correct,
+            level: ev.correct ? "exact" : "wrong",
+            message: ev.message,
+            errorKind: ev.errorKind,
+          });
+        })
+        .catch(() => runValidator());
       return;
     }
 

@@ -167,8 +167,8 @@ describe("ChallengeBrief", () => {
     expect(screen.getByText(/Ver enunciado/)).toBeInTheDocument();
   });
 
-  it("relabela para SQL, onde a validação é por trecho da query", () => {
+  it("relabela para SQL, onde a correção compara o resultado da consulta", () => {
     render(<ChallengeBrief lesson={lesson} language="SQL" collapsible />);
-    expect(screen.getByText(/Sua query deve conter/)).toBeInTheDocument();
+    expect(screen.getByText(/Resultado esperado/)).toBeInTheDocument();
   });
 });
