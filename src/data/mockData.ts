@@ -659,7 +659,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "React Native **não renderiza HTML**: `div` e `p` não existem no celular e o app quebra. Use os componentes nativos `View` (container) e `Text` (texto) — texto solto fora de `Text` também é erro.",
     },
-    module: "React Native: primeiros componentes",
+    module: "React Native 1 - Primeira tela",
     level: "Intermediário",
     estimatedMinutes: 8,
     learningObjective: "Entender a diferença entre componentes web e componentes nativos no React Native.",
@@ -693,7 +693,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Estilos no React Native são **objetos JavaScript**, não CSS: as propriedades usam camelCase (`backgroundColor`, `fontSize`). O nome com hífen não é aplicado.",
     },
-    module: "React Native: primeiros componentes",
+    module: "React Native 1 - Primeira tela",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Aplicar estilos previsíveis em telas mobile usando StyleSheet.",
@@ -727,7 +727,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Mudar uma variável comum **não redesenha a tela**: o React nem fica sabendo. Só `setTotal` avisa o React de que o estado mudou e a interface precisa atualizar.",
     },
-    module: "React Native: interação",
+    module: "React Native 2 - Interação e estado",
     level: "Intermediário",
     estimatedMinutes: 10,
     learningObjective: "Conectar um botão a uma mudança de estado visível na tela.",
@@ -761,7 +761,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "`map` dentro de ScrollView **renderiza todos os itens de uma vez** — com 1.000 itens o app trava. `FlatList` renderiza só o que está visível e recicla o resto.",
     },
-    module: "React Native: dados na tela",
+    module: "React Native 2 - Interação e estado",
     level: "Intermediário",
     estimatedMinutes: 10,
     learningObjective: "Renderizar listas de forma adequada usando dados e índice mental de itens.",
@@ -795,7 +795,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Um booleano por tela permite estados impossíveis (duas telas \"visíveis\" ao mesmo tempo). Modelar **uma tela atual** com nomes claros é a base que bibliotecas como React Navigation organizam para você.",
     },
-    module: "React Native: fluxo de telas",
+    module: "React Native 3 - Navegação e formulários",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Entender navegação como mudança controlada entre telas do app.",
@@ -828,7 +828,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Sem `value` + `onChangeText`, o que o usuário digita **não entra no estado** — o app não consegue validar nem salvar. O par controlado mantém o estado como única fonte da verdade.",
     },
-    module: "React Native: formulários",
+    module: "React Native 3 - Navegação e formulários",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Capturar texto digitado com um campo controlado por estado.",
@@ -862,7 +862,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "`pular()` com parênteses **executa na hora** em que a tela renderiza, não no toque. Passe a **referência** (`pular`, sem parênteses) ou uma arrow `() => pular()`.",
     },
-    module: "React Native: áreas de toque",
+    module: "React Native 4 - Toque e mídia",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Criar áreas de toque com feedback visual usando Pressable.",
@@ -896,7 +896,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Imagem remota **sem width/height renderiza com tamanho zero** — o bug clássico do \"cadê minha imagem?\". O layout nativo não conhece o tamanho antes de baixar; declare as dimensões.",
     },
-    module: "React Native: mídia",
+    module: "React Native 4 - Toque e mídia",
     level: "Intermediário",
     estimatedMinutes: 8,
     learningObjective: "Exibir imagens remotas com source e dimensões explícitas.",
@@ -930,7 +930,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Antes de calcular, entenda **o que cada coluna significa**. Somar a coluna errada produz um número que parece certo — e está completamente errado.",
     },
-    module: "Dados e IA: fundamentos",
+    module: "Dados e IA 1 - Dados na prática",
     level: "Iniciante",
     estimatedMinutes: 8,
     learningObjective: "Ler uma tabela simples como conjunto de registros e colunas.",
@@ -964,7 +964,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Dados reais vêm com espaços e capitalização misturada. Comparar **sem limpar** gera falsos negativos silenciosos — normalize com `strip()` e `lower()` antes de comparar.",
     },
-    module: "Dados e IA: fundamentos",
+    module: "Dados e IA 1 - Dados na prática",
     level: "Iniciante",
     estimatedMinutes: 9,
     learningObjective: "Identificar dados inconsistentes que atrapalham análise e automação.",
@@ -998,7 +998,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Copiar os valores na mão quebra na primeira mudança da lista — e ninguém percebe. `sum()` e `len()` acompanham os dados reais, sempre.",
     },
-    module: "Dados e IA: análise simples",
+    module: "Dados e IA 1 - Dados na prática",
     level: "Iniciante",
     estimatedMinutes: 10,
     learningObjective: "Calcular métricas básicas para responder uma pergunta de negócio.",
@@ -1032,7 +1032,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Prompt vago devolve resposta vaga. Um prompt bom é uma **especificação**: diz o objetivo, o dado, o formato da resposta e o critério do que importa.",
     },
-    module: "Dados e IA: produtividade",
+    module: "Dados e IA 2 - Automação com IA",
     level: "Iniciante",
     estimatedMinutes: 9,
     learningObjective: "Escrever prompts com objetivo, contexto, formato e restrições.",
@@ -1066,7 +1066,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Relatório com números **digitados** fica errado na primeira atualização dos dados. Calcule a partir da fonte e injete com f-string — o relatório se mantém sozinho.",
     },
-    module: "Dados e IA: produtividade",
+    module: "Dados e IA 2 - Automação com IA",
     level: "Iniciante",
     estimatedMinutes: 10,
     learningObjective: "Planejar uma automação simples de relatório com entrada, cálculo e saída.",
@@ -1099,7 +1099,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Calcular sobre **todos** os dados quando a pergunta é sobre um recorte distorce a resposta. Filtre primeiro, calcule depois.",
     },
-    module: "Dados: preparação",
+    module: "Dados e IA 3 - Filtrar, agrupar e importar",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Filtrar registros com list comprehension antes de calcular métricas.",
@@ -1134,7 +1134,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Na primeira ocorrência da categoria, a chave **ainda não existe** e `contagem[c]` quebra com KeyError. `get(c, 0)` devolve zero quando a chave é nova.",
     },
-    module: "Dados: análise",
+    module: "Dados e IA 3 - Filtrar, agrupar e importar",
     level: "Intermediário",
     estimatedMinutes: 10,
     learningObjective: "Agrupar e contar ocorrências por categoria usando dicionário.",
@@ -1168,7 +1168,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Indexar a **string** pega um caractere, não um campo. `split(\",\")` corta a linha em campos — aí sim a posição 0 é o nome inteiro.",
     },
-    module: "Dados: importação",
+    module: "Dados e IA 3 - Filtrar, agrupar e importar",
     level: "Intermediário",
     estimatedMinutes: 9,
     learningObjective: "Transformar uma linha CSV em lista de campos com split.",
@@ -1203,7 +1203,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Estado espalhado em variáveis soltas dificulta salvar, reiniciar ou exibir o jogo. Um **objeto** agrupa tudo que descreve o momento atual em um lugar só.",
     },
-    module: "Game Dev: regras e estado",
+    module: "Jogos 1 - Regras e estado",
     level: "Iniciante",
     estimatedMinutes: 8,
     learningObjective: "Representar o estado básico de um jogo com variáveis simples.",
@@ -1237,7 +1237,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Regra é **condição + consequência**. Sem o `if`, a consequência acontece sempre — o jogador ganha ponto até errando, e o jogo perde o sentido.",
     },
-    module: "Game Dev: regras e estado",
+    module: "Jogos 1 - Regras e estado",
     level: "Iniciante",
     estimatedMinutes: 9,
     learningObjective: "Criar regras simples de pontuação usando condições.",
@@ -1271,7 +1271,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Copiar e colar a atualização não escala: 100 rodadas viram 100 linhas. O **loop** é o coração do jogo — repete a atualização com controle e um único lugar para mudar.",
     },
-    module: "Game Dev: ciclo do jogo",
+    module: "Jogos 2 - Ciclo do jogo",
     level: "Iniciante",
     estimatedMinutes: 10,
     learningObjective: "Entender o loop de atualização como repetição controlada do jogo.",
@@ -1305,7 +1305,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Chamar a função direto executa a ação **no carregamento**, sem o jogador. Evento conecta a ação ao comando: o jogo só reage quando o jogador age. Note: `pular` sem parênteses — você entrega a função, não o resultado dela.",
     },
-    module: "Game Dev: ciclo do jogo",
+    module: "Jogos 2 - Ciclo do jogo",
     level: "Iniciante",
     estimatedMinutes: 8,
     learningObjective: "Usar eventos para transformar ações do jogador em comportamento.",
@@ -1339,7 +1339,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Um `=` sozinho **atribui** o valor (e o if vira sempre verdadeiro). A comparação usa `>=` ou `===` — a condição de vitória precisa testar o estado, não alterá-lo.",
     },
-    module: "Game Dev: ciclo do jogo",
+    module: "Jogos 2 - Ciclo do jogo",
     level: "Iniciante",
     estimatedMinutes: 9,
     learningObjective: "Definir uma condição clara de vitória ou encerramento.",
@@ -1373,7 +1373,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "A **ordem** importa: verificando antes de descontar, a regra olha o estado antigo e o fim de jogo nunca dispara. Atualize o estado primeiro, verifique depois.",
     },
-    module: "Jogos: risco e derrota",
+    module: "Jogos 3 - Desafio e progressão",
     level: "Iniciante",
     estimatedMinutes: 8,
     learningObjective: "Implementar perda de vida e detecção de fim de jogo na ordem correta.",
@@ -1407,7 +1407,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Atribuir um número **fixo** trava a progressão: da fase 2 em diante a regra não muda mais nada. Incrementar a partir do estado atual funciona em qualquer fase.",
     },
-    module: "Jogos: progressão",
+    module: "Jogos 3 - Desafio e progressão",
     level: "Iniciante",
     estimatedMinutes: 8,
     learningObjective: "Subir de fase quando a pontuação atinge a meta.",
@@ -1442,7 +1442,7 @@ const supplementalLessonEnhancements: Record<string, LessonEnhancement> = {
       explanation:
         "Empatar com o recorde **não** é superá-lo: com `>=` o jogo anuncia recorde novo em todo empate. Regras de borda (maior vs maior-ou-igual) merecem um teste mental com o caso exato.",
     },
-    module: "Jogos: pontuação",
+    module: "Jogos 3 - Desafio e progressão",
     level: "Iniciante",
     estimatedMinutes: 8,
     learningObjective: "Comparar a pontuação da partida com o recorde e anunciar superação.",

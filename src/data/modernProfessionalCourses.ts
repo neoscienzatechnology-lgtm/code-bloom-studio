@@ -407,7 +407,7 @@ const reactLessons = [
   makeLesson({
     id: "3-7",
     title: "Renderização condicional",
-    module: "React 4 - Fluxo visual",
+    module: "React 4 - Fluxo visual e formulários",
     learningObjective: "Mostrar uma parte da interface apenas quando uma condição for verdadeira.",
     description: "Crie mensagens de carregando, erro ou sucesso.",
     explanation:
@@ -455,7 +455,7 @@ const reactLessons = [
   makeLesson({
     id: "3-8",
     title: "Listas e keys",
-    module: "React 4 - Fluxo visual",
+    module: "React 4 - Fluxo visual e formulários",
     learningObjective: "Renderizar uma lista usando map e uma key estável.",
     description: "Mostre vários itens sem copiar JSX manualmente.",
     explanation:
@@ -502,7 +502,7 @@ const reactLessons = [
   makeLesson({
     id: "3-9",
     title: "Formulários controlados",
-    module: "React 5 - Entrada do usuário",
+    module: "React 4 - Fluxo visual e formulários",
     learningObjective: "Controlar o valor de um input com estado.",
     description: "Capture texto digitado e valide antes de enviar.",
     explanation:
@@ -1360,7 +1360,7 @@ const gitLessons = [
   makeLesson({
     id: "7-4",
     title: "diff e log",
-    module: "Git 2 - Revisão",
+    module: "Git 1 - Histórico seguro",
     learningObjective: "Revisar mudanças antes e depois do commit.",
     description: "Compare alterações e leia o histórico.",
     explanation:

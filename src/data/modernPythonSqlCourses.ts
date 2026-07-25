@@ -359,7 +359,7 @@ const pythonLessons = [
   makeLesson({
     id: "1-6",
     title: "Condições com if, elif e else",
-    module: "Python 3 - Decisões",
+    module: "Python 3 - Decisões e repetições",
     learningObjective: "Criar caminhos diferentes usando uma condição booleana.",
     description: "Mostre mensagens diferentes conforme a idade informada.",
     explanation:
@@ -407,7 +407,7 @@ const pythonLessons = [
   makeLesson({
     id: "1-7",
     title: "Comparações e lógica",
-    module: "Python 3 - Decisões",
+    module: "Python 3 - Decisões e repetições",
     learningObjective: "Combinar comparações com and, or e not.",
     description: "Crie regras com mais de uma condição sem perder clareza.",
     explanation:
@@ -455,7 +455,7 @@ const pythonLessons = [
   makeLesson({
     id: "1-8",
     title: "Loops com for e range",
-    module: "Python 4 - Repetições",
+    module: "Python 3 - Decisões e repetições",
     learningObjective: "Repetir uma ação um número conhecido de vezes.",
     description: "Use for e range() para contar sem copiar linhas.",
     explanation:
@@ -2130,7 +2130,7 @@ const sqlLessons = [
   makeLesson({
     id: "6-5",
     title: "ORDER BY e LIMIT",
-    module: "SQL 2 - Resultado organizado",
+    module: "SQL 1 - Leitura de dados",
     learningObjective: "Ordenar resultados e limitar a quantidade de linhas retornadas.",
     description: "Mostre os registros mais recentes, maiores ou menores.",
     explanation:
@@ -2414,7 +2414,7 @@ const sqlLessons = [
   makeLesson({
     id: "6-11",
     title: "JOIN para juntar tabelas",
-    module: "SQL 5 - Relações",
+    module: "SQL 5 - Relações e relatórios",
     learningObjective: "Combinar dados relacionados de duas tabelas.",
     description: "Liste pedidos com o nome do cliente usando uma chave de relacionamento.",
     explanation:
@@ -2461,7 +2461,7 @@ const sqlLessons = [
   makeLesson({
     id: "6-12",
     title: "GROUP BY e COUNT",
-    module: "SQL 6 - Relatórios",
+    module: "SQL 5 - Relações e relatórios",
     learningObjective: "Agrupar linhas e contar registros por categoria.",
     description: "Monte uma consulta que responde quantos itens existem em cada grupo.",
     explanation:
@@ -2508,7 +2508,7 @@ const sqlLessons = [
   makeLesson({
     id: "6-13",
     title: "HAVING e filtros de grupo",
-    module: "SQL 6 - Relatórios",
+    module: "SQL 5 - Relações e relatórios",
     learningObjective: "Filtrar resultados agregados depois do GROUP BY.",
     description: "Mostre apenas grupos que passam por uma regra de contagem ou soma.",
     explanation:
@@ -2556,7 +2556,7 @@ const sqlLessons = [
   makeLesson({
     id: "6-14",
     title: "Projeto: relatório de biblioteca",
-    module: "SQL 6 - Relatórios",
+    module: "SQL 6 - Projeto",
     learningObjective: "Combinar SELECT, WHERE, ORDER BY e GROUP BY em consultas úteis.",
     description: "Crie consultas para responder perguntas reais sobre livros emprestados.",
     explanation:

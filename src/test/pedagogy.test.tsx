@@ -1307,3 +1307,21 @@ describe("práticas de prever-saída do Fundamentos", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+// Cada módulo vira uma seção do roteiro do curso. Módulos de UMA aula
+// fragmentam a trilha (o curso 11 chegou a ter 6 deles) — só os de "Projeto"
+// fazem sentido sozinhos, porque são o fechamento. #revisao-lote9
+describe("agrupamento de módulos", () => {
+  it("não tem módulo de conteúdo com uma aula só", () => {
+    const offenders: string[] = [];
+    courses.forEach((course) => {
+      moduleGroups(course.lessons).forEach((group) => {
+        const isProject = /projeto/i.test(group.title);
+        if (group.lessons.length === 1 && !isProject) {
+          offenders.push(`${course.id}: "${group.title}"`);
+        }
+      });
+    });
+    expect(offenders).toEqual([]);
+  });
+});

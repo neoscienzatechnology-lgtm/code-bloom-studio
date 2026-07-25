@@ -121,7 +121,7 @@ const lessons = [
   lesson({
     id: "8-1",
     title: "Complexidade sem susto",
-    module: "Algoritmos 1 - Como medir soluções",
+    module: "Algoritmos 1 - Medir e buscar",
     learningObjective: "Entender Big O como uma forma de comparar crescimento de trabalho.",
     description: "Compare O(1), O(n), O(log n) e O(n²) usando exemplos pequenos.",
     explanation:
@@ -168,7 +168,7 @@ const lessons = [
   lesson({
     id: "8-2",
     title: "Busca linear",
-    module: "Algoritmos 2 - Encontrar dados",
+    module: "Algoritmos 1 - Medir e buscar",
     learningObjective: "Percorrer uma lista até encontrar um alvo.",
     description: "Use busca linear para listas pequenas ou não ordenadas.",
     explanation:
@@ -215,7 +215,7 @@ const lessons = [
   lesson({
     id: "8-3",
     title: "Busca binária",
-    module: "Algoritmos 2 - Encontrar dados",
+    module: "Algoritmos 1 - Medir e buscar",
     learningObjective: "Dividir uma lista ordenada pela metade para encontrar um alvo.",
     description: "Entenda por que busca binária é O(log n).",
     explanation:
@@ -263,7 +263,7 @@ const lessons = [
   lesson({
     id: "8-4",
     title: "Ordenação por comparação",
-    module: "Algoritmos 3 - Organizar dados",
+    module: "Algoritmos 2 - Ordenar e organizar",
     learningObjective: "Entender a ideia por trás de algoritmos de ordenação.",
     description: "Compare Bubble Sort como didática e sort() como ferramenta prática.",
     explanation:
@@ -310,7 +310,7 @@ const lessons = [
   lesson({
     id: "8-5",
     title: "Pilha: último entra, primeiro sai",
-    module: "Algoritmos 4 - Estruturas",
+    module: "Algoritmos 2 - Ordenar e organizar",
     learningObjective: "Usar pilha para modelar desfazer, navegação e chamadas.",
     description: "Entenda LIFO usando append e pop.",
     explanation:
@@ -358,7 +358,7 @@ const lessons = [
   lesson({
     id: "8-6",
     title: "Fila: primeiro entra, primeiro sai",
-    module: "Algoritmos 4 - Estruturas",
+    module: "Algoritmos 2 - Ordenar e organizar",
     learningObjective: "Usar fila para processar itens por ordem de chegada.",
     description: "Entenda FIFO em tarefas, atendimento e BFS.",
     explanation:
@@ -405,7 +405,7 @@ const lessons = [
   lesson({
     id: "8-7",
     title: "Recursão e caso base",
-    module: "Algoritmos 5 - Estratégias",
+    module: "Algoritmos 3 - Estratégias e redes",
     learningObjective: "Identificar caso base e passo recursivo.",
     description: "Use recursão sem cair em repetição infinita.",
     explanation:
@@ -453,7 +453,7 @@ const lessons = [
   lesson({
     id: "8-8",
     title: "Grafos e conexões",
-    module: "Algoritmos 6 - Redes",
+    module: "Algoritmos 3 - Estratégias e redes",
     learningObjective: "Representar conexões usando lista de adjacência.",
     description: "Modele relações entre pontos antes de buscar caminhos.",
     explanation:
@@ -500,7 +500,7 @@ const lessons = [
   lesson({
     id: "8-9",
     title: "BFS: busca em largura",
-    module: "Algoritmos 6 - Redes",
+    module: "Algoritmos 3 - Estratégias e redes",
     learningObjective: "Percorrer um grafo por camadas usando fila.",
     description: "Use BFS para encontrar caminhos curtos em grafos sem peso.",
     explanation:
@@ -547,7 +547,7 @@ const lessons = [
   lesson({
     id: "8-10",
     title: "Projeto: escolha a estratégia",
-    module: "Algoritmos 7 - Projeto guiado",
+    module: "Algoritmos 4 - Projeto guiado",
     learningObjective: "Escolher uma estrutura e uma estratégia para um problema simples.",
     description: "Transforme um problema em entrada, estrutura, algoritmo e saída.",
     explanation:
