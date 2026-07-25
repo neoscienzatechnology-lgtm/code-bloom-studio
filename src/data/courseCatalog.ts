@@ -59,7 +59,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 13,
     kind: "Fundamento web",
     prerequisite: "Nenhum",
-    finalProject: "Página pessoal semântica",
+    finalProject: "Página de portfólio",
     lockedUntil: null,
   },
   {
@@ -107,7 +107,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 14,
     kind: "Banco de dados",
     prerequisite: "Lógica básica",
-    finalProject: "Relatório de biblioteca em SQL",
+    finalProject: "Relatório da loja em SQL",
     lockedUntil: null,
   },
   {
@@ -175,7 +175,7 @@ export const courseCatalog: CourseCatalogItem[] = [
 export const appCatalogSummary = {
   courseCount: courseCatalog.length,
   lessonCount: courseCatalog.reduce((total, course) => total + course.lessonCount, 0),
-  projectCount: 50,
+  projectCount: 38,
   practiceTypeCount: 5,
 };
 

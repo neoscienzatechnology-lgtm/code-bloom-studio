@@ -1110,3 +1110,73 @@ describe("lições de SQL rodam num banco real", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+// Os projetos passaram a usar os mesmos motores da aula (Python/SQL/JS). Se um
+// passo de projeto dessas linguagens não produzir exatamente o gabarito, o
+// aluno certo seria reprovado — então isso quebra aqui. #revisao-lote5
+describe("passos de projeto com runtime real", () => {
+  const runJsSandbox = (code: string) => {
+    const logs: string[] = [];
+    const push = (...args: unknown[]) =>
+      logs.push(
+        args
+          .map((value) => {
+            if (typeof value === "string") return value;
+            if (typeof value === "undefined") return "undefined";
+            try {
+              const serialized = JSON.stringify(value);
+              return serialized === undefined ? String(value) : serialized;
+            } catch {
+              return String(value);
+            }
+          })
+          .join(" "),
+      );
+    new Function("console", `"use strict";\n${code}`)({ log: push, info: push, warn: push, error: push, debug: push });
+    return logs.join("\n");
+  };
+  const normalize = (text: string) => text.replace(/\r\n/g, "\n").replace(/[ \t]+$/gm, "").trim();
+
+  it("JavaScript: toda solução produz o resultado esperado", () => {
+    const offenders: string[] = [];
+    projects
+      .filter((project) => project.language.trim().toLowerCase() === "javascript")
+      .forEach((project) => {
+        project.steps.forEach((step) => {
+          try {
+            const output = runJsSandbox(step.solution);
+            if (normalize(output) !== normalize(step.expectedOutput)) {
+              offenders.push(`${project.id}/${step.id}: "${normalize(output)}" ≠ "${normalize(step.expectedOutput)}"`);
+            }
+          } catch (error) {
+            offenders.push(`${project.id}/${step.id}: quebrou (${(error as Error).message})`);
+          }
+        });
+      });
+    expect(offenders).toEqual([]);
+  });
+
+  it("SQL: toda consulta oficial devolve o resultado esperado do banco-escola", async () => {
+    const initSqlJs = (await import("sql.js")).default;
+    const SQL = await initSqlJs({
+      locateFile: () => join(process.cwd(), "node_modules", "sql.js", "dist", "sql-wasm.wasm"),
+    });
+    const offenders: string[] = [];
+    for (const project of projects.filter((item) => item.language.trim().toLowerCase() === "sql")) {
+      for (const step of project.steps) {
+        const db = new SQL.Database();
+        try {
+          db.run(SQL_SEED);
+          const results = db.exec(step.solution);
+          const got = formatSqlResult(results.length ? results[results.length - 1] : null);
+          if (got !== step.expectedOutput) offenders.push(`${project.id}/${step.id}`);
+        } catch (error) {
+          offenders.push(`${project.id}/${step.id}: ${(error as Error).message}`);
+        } finally {
+          db.close();
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  }, 30_000);
+});

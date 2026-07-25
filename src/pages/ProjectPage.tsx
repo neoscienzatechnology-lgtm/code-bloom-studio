@@ -20,6 +20,13 @@ import CardIllustration from "@/components/lesson/CardIllustration";
 import { getProjectById } from "@/data/projects";
 import { getCourseById } from "@/data/mockData";
 import { validateCode } from "@/utils/codeValidator";
+import { evaluatePythonRun } from "@/utils/pythonOutput";
+import { isPythonRuntimeSupported, runPython } from "@/lib/pythonRunner";
+import { evaluateSqlRun } from "@/utils/sqlOutput";
+import { isSqlRuntimeSupported, runSql } from "@/lib/sqlRunner";
+import { SQL_SEED } from "@/data/sqlSandbox";
+import { evaluateJsRun } from "@/utils/jsOutput";
+import { runJs } from "@/lib/jsRunner";
 import { useProgress } from "@/hooks/useProgress";
 import { readJson, writeJson, removeKey, STORAGE_KEYS } from "@/lib/storage";
 import { track } from "@/lib/analytics";
@@ -96,31 +103,73 @@ const ProjectPage = () => {
   const projectXpKey = `project-${project.id}`;
   const alreadyClaimed = isCompleted(projectXpKey);
 
+  const celebrate = () =>
+    confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 }, colors: ["#0A7C78", "#7AD7A7"] });
+
+  const settle = (correct: boolean, message: string) => {
+    setOutput(message);
+    setStepStatus(correct ? "ok" : "err");
+    if (correct) celebrate();
+    setRunning(false);
+    runLockedRef.current = false;
+  };
+
+  // Heurística de texto: só para linguagens sem runtime (HTML, CSS, React…).
+  const runHeuristic = () => {
+    const result = validateCode(code, step!.expectedOutput, step!.solution, {
+      starterCode: step!.starterCode,
+    });
+    const correct = result.level === "exact" || result.level === "flexible";
+    settle(correct, correct ? `✅ ${step!.expectedOutput}` : result.message);
+  };
+
+  // O projeto agora usa os MESMOS motores da aula: Python no Pyodide, SQL no
+  // SQLite e JavaScript no worker. Antes tudo era comparado como texto, mesmo
+  // em Python. #revisao-lote5
   const handleRun = () => {
     if (!step || running || runLockedRef.current) return;
     runLockedRef.current = true;
     setRunning(true);
-    setTimeout(() => {
-      const result = validateCode(code, step.expectedOutput, step.solution, {
-        starterCode: step.starterCode,
-      });
-      const correct = result.level === "exact" || result.level === "flexible";
-      if (correct) {
-        setOutput(`✅ ${step.expectedOutput}`);
-        setStepStatus("ok");
-        confetti({
-          particleCount: 60,
-          spread: 60,
-          origin: { y: 0.7 },
-          colors: ["#0A7C78", "#7AD7A7"],
-        });
-      } else {
-        setOutput(result.message);
-        setStepStatus("err");
-      }
-      setRunning(false);
-      runLockedRef.current = false;
-    }, 500);
+
+    const language = project.language.trim().toLowerCase();
+
+    if (language === "python" && isPythonRuntimeSupported()) {
+      setOutput("⏳ Rodando seu código…");
+      runPython(code)
+        .then((res) => {
+          const evaluation = evaluatePythonRun(res.stdout, res.stderr, res.error, step.expectedOutput);
+          settle(evaluation.correct, evaluation.message);
+        })
+        .catch(() => runHeuristic());
+      return;
+    }
+
+    if (language === "sql" && isSqlRuntimeSupported()) {
+      setOutput("⏳ Consultando o banco…");
+      runSql(SQL_SEED, code)
+        .then((res) => {
+          if (res.error === "runtime-unavailable") {
+            runHeuristic();
+            return;
+          }
+          const evaluation = evaluateSqlRun(res.result, res.error, step.expectedOutput);
+          settle(evaluation.correct, evaluation.message);
+        })
+        .catch(() => runHeuristic());
+      return;
+    }
+
+    if (language === "javascript") {
+      runJs(code)
+        .then((res) => {
+          const evaluation = evaluateJsRun(res.output, res.error, step.expectedOutput);
+          settle(evaluation.correct, evaluation.message);
+        })
+        .catch(() => runHeuristic());
+      return;
+    }
+
+    setTimeout(runHeuristic, 500);
   };
 
   const handleAdvance = () => {

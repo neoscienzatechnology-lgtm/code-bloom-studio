@@ -342,4 +342,305 @@ const foundationSavings: Project = {
   ],
 };
 
-export const capstoneProjects: Project[] = [foundationSavings, pythonExpenseReport, jsShoppingCart];
+// Capstone de SQL: roda no SQLite de verdade (ver sqlSandbox.ts). Os
+// `expectedOutput` foram gerados executando as consultas contra o banco.
+const sqlStoreReport: Project = {
+  id: "proj-sql-store-report",
+  courseId: "6",
+  title: "Relatório da loja em SQL",
+  emoji: "🗄️",
+  language: "SQL",
+  goal: "Responder cinco perguntas reais de negócio consultando o banco da loja — da lista de estoque ao ranking de clientes.",
+  description:
+    "Projeto final do curso de SQL. Cada etapa é uma pergunta que um gerente faria, e sua consulta roda num SQLite de verdade: o que vale é o resultado que volta.",
+  xpReward: 130,
+  summary: [
+    "SELECT com WHERE para filtrar linhas",
+    "ORDER BY e LIMIT para rankings",
+    "GROUP BY com COUNT para contar por grupo",
+    "JOIN ligando duas tabelas pela chave",
+    "SUM por cliente: o relatório final",
+  ],
+  steps: [
+    {
+      id: "step-1",
+      title: "Etapa 1 — O que ainda temos em estoque",
+      description: "Liste `nome` e `estoque` dos produtos com estoque maior que zero.",
+      starterCode: "-- Produtos disponíveis para venda\n",
+      solution: "SELECT nome, estoque\nFROM produtos\nWHERE estoque > 0;",
+      expectedOutput: "nome | estoque\n--------------\nTeclado | 8\nMonitor | 3\nMousepad | 25\nCabo HDMI | 12",
+      hints: [
+        "Escolha as colunas logo depois do SELECT.",
+        "A tabela é produtos.",
+        "O filtro vai no WHERE: estoque > 0.",
+      ],
+      concepts: ["SELECT", "WHERE"],
+    },
+    {
+      id: "step-2",
+      title: "Etapa 2 — Os três mais caros",
+      description: "Mostre `nome` e `preco` dos três produtos mais caros, do maior para o menor.",
+      starterCode: "-- Ranking de preço\n",
+      solution: "SELECT nome, preco\nFROM produtos\nORDER BY preco DESC\nLIMIT 3;",
+      expectedOutput: "nome | preco\n------------\nMonitor | 700\nTeclado | 150\nMouse | 90",
+      hints: [
+        "ORDER BY define a ordem do resultado.",
+        "DESC ordena do maior para o menor.",
+        "LIMIT corta o resultado nas primeiras linhas.",
+      ],
+      concepts: ["ORDER BY", "LIMIT"],
+    },
+    {
+      id: "step-3",
+      title: "Etapa 3 — Quantos produtos por categoria",
+      description: "Conte quantos produtos existem em cada `categoria`.",
+      starterCode: "-- Contagem por categoria\n",
+      solution: "SELECT categoria, COUNT(*)\nFROM produtos\nGROUP BY categoria;",
+      expectedOutput: "categoria | COUNT(*)\n--------------------\ncabo | 1\nperiferico | 3\ntela | 1",
+      hints: [
+        "GROUP BY junta as linhas que têm o mesmo valor.",
+        "COUNT(*) conta as linhas de cada grupo.",
+        "A coluna do GROUP BY também aparece no SELECT.",
+      ],
+      concepts: ["GROUP BY", "COUNT"],
+    },
+    {
+      id: "step-4",
+      title: "Etapa 4 — Pedidos com o nome do cliente",
+      description:
+        "Junte `pedidos` e `clientes` pela chave `cliente_id` e mostre o id do pedido, o nome do cliente e o total.",
+      starterCode: "-- Pedidos com o nome de quem comprou\n",
+      solution:
+        "SELECT pedidos.id, clientes.nome, pedidos.total\nFROM pedidos\nJOIN clientes ON pedidos.cliente_id = clientes.id;",
+      expectedOutput: "id | nome | total\n-----------------\n10 | Ana Souza | 240\n11 | Bruno Lima | 90\n12 | Ana Souza | 700",
+      hints: [
+        "JOIN liga as duas tabelas.",
+        "A condição do ON é pedidos.cliente_id = clientes.id.",
+        "Use tabela.coluna quando o nome existir nas duas.",
+      ],
+      concepts: ["JOIN", "chave estrangeira"],
+    },
+    {
+      id: "step-5",
+      title: "Etapa 5 — Quanto cada cliente já gastou",
+      description:
+        "O relatório final: some o total dos pedidos por cliente e ordene do maior gasto para o menor, chamando a soma de `gasto`.",
+      starterCode: "-- Ranking de clientes por valor gasto\n",
+      solution:
+        "SELECT clientes.nome, SUM(pedidos.total) AS gasto\nFROM pedidos\nJOIN clientes ON pedidos.cliente_id = clientes.id\nGROUP BY clientes.nome\nORDER BY gasto DESC;",
+      expectedOutput: "nome | gasto\n------------\nAna Souza | 940\nBruno Lima | 90",
+      hints: [
+        "Comece do JOIN da etapa anterior.",
+        "SUM(pedidos.total) soma os valores de cada grupo.",
+        "AS dá um nome à coluna calculada, e dá para ordenar por ele.",
+      ],
+      concepts: ["JOIN", "GROUP BY", "SUM", "alias"],
+    },
+  ],
+};
+
+// HTML e CSS não têm saída de execução: o gabarito é um marcador que precisa
+// existir no código — mesma convenção das lições desses cursos.
+const htmlPortfolio: Project = {
+  id: "proj-html-portfolio",
+  courseId: "9",
+  title: "Página de portfólio",
+  emoji: "💼",
+  language: "HTML",
+  goal: "Escrever, do zero, a estrutura semântica de uma página de portfólio — cabeçalho, sobre, projetos e contato.",
+  description:
+    "Projeto final de HTML. Cada etapa acrescenta um bloco à MESMA página, na ordem em que um navegador (e um leitor de tela) lê o documento.",
+  xpReward: 110,
+  summary: [
+    "header com identificação e navegação",
+    "section e h2 organizando o conteúdo",
+    "listas para conjuntos de itens",
+    "formulário com label associado ao input",
+    "documento completo com lang e title",
+  ],
+  steps: [
+    {
+      id: "step-1",
+      title: "Etapa 1 — Cabeçalho da página",
+      description: "Crie um `<header>` com seu nome em `<h1>` e um `<nav>` com links para #sobre e #projetos.",
+      starterCode: "<!-- Cabeçalho do portfólio -->\n",
+      solution:
+        '<header>\n  <h1>Ana Souza</h1>\n  <nav>\n    <a href="#sobre">Sobre</a>\n    <a href="#projetos">Projetos</a>\n  </nav>\n</header>',
+      expectedOutput: "<header>",
+      hints: [
+        "O h1 é o título principal — só um por página.",
+        "Links de navegação ficam dentro de nav.",
+        'Um link interno aponta para o id: href="#sobre".',
+      ],
+      concepts: ["header", "h1", "nav", "âncora"],
+    },
+    {
+      id: "step-2",
+      title: "Etapa 2 — Seção sobre você",
+      description: 'Adicione uma `<section id="sobre">` com um `<h2>` e um parágrafo de apresentação.',
+      starterCode: "<header>\n  <h1>Ana Souza</h1>\n</header>\n<!-- Adicione a seção Sobre -->\n",
+      solution:
+        '<header>\n  <h1>Ana Souza</h1>\n</header>\n<section id="sobre">\n  <h2>Sobre mim</h2>\n  <p>Estudo programação e construo pequenos projetos para praticar.</p>\n</section>',
+      expectedOutput: '<section id="sobre">',
+      hints: [
+        "section agrupa um assunto da página.",
+        "O id é o que faz o link #sobre funcionar.",
+        "Depois do h1 vem h2 — a hierarquia não pula níveis.",
+      ],
+      concepts: ["section", "id", "hierarquia de títulos"],
+    },
+    {
+      id: "step-3",
+      title: "Etapa 3 — Lista de projetos",
+      description: 'Crie uma `<section id="projetos">` com um `<h2>` e uma lista `<ul>` de três projetos.',
+      starterCode: "<!-- Seção de projetos com uma lista -->\n",
+      solution:
+        '<section id="projetos">\n  <h2>Projetos</h2>\n  <ul>\n    <li>Calculadora em JavaScript</li>\n    <li>Relatório de gastos em Python</li>\n    <li>Página de portfólio em HTML</li>\n  </ul>\n</section>',
+      expectedOutput: "<ul>",
+      hints: [
+        "ul é uma lista sem ordem; cada item é um li.",
+        "Cada projeto vira um li.",
+        "A seção precisa do id para o link do menu funcionar.",
+      ],
+      concepts: ["ul", "li", "listas"],
+    },
+    {
+      id: "step-4",
+      title: "Etapa 4 — Formulário de contato",
+      description: "Adicione um `<form>` com um `<label>` ligado a um `<input>` de e-mail e um botão de enviar.",
+      starterCode: "<!-- Formulário de contato acessível -->\n",
+      solution:
+        '<form>\n  <label for="email">Seu e-mail</label>\n  <input id="email" type="email" name="email">\n  <button type="submit">Enviar</button>\n</form>',
+      expectedOutput: '<label for="email">',
+      hints: [
+        "O for do label precisa ser igual ao id do input.",
+        'type="email" ajuda o teclado do celular e a validação.',
+        "É esse par label/input que faz o leitor de tela anunciar o campo.",
+      ],
+      concepts: ["form", "label", "input", "acessibilidade"],
+    },
+    {
+      id: "step-5",
+      title: "Etapa 5 — A página completa",
+      description:
+        "Junte tudo num documento válido: doctype, html com lang, head com title e o body com header, seções, formulário e footer.",
+      starterCode: "<!-- Monte o documento completo -->\n",
+      solution:
+        '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <title>Portfólio de Ana Souza</title>\n</head>\n<body>\n  <header>\n    <h1>Ana Souza</h1>\n    <nav>\n      <a href="#sobre">Sobre</a>\n      <a href="#projetos">Projetos</a>\n    </nav>\n  </header>\n  <section id="sobre">\n    <h2>Sobre mim</h2>\n    <p>Estudo programação e construo pequenos projetos para praticar.</p>\n  </section>\n  <section id="projetos">\n    <h2>Projetos</h2>\n    <ul>\n      <li>Calculadora em JavaScript</li>\n      <li>Relatório de gastos em Python</li>\n      <li>Página de portfólio em HTML</li>\n    </ul>\n  </section>\n  <form>\n    <label for="email">Seu e-mail</label>\n    <input id="email" type="email" name="email">\n    <button type="submit">Enviar</button>\n  </form>\n  <footer>\n    <p>Feito por Ana Souza</p>\n  </footer>\n</body>\n</html>',
+      expectedOutput: "<!DOCTYPE html>",
+      hints: [
+        "O lang no html diz o idioma para leitores de tela e buscadores.",
+        "title é o que aparece na aba do navegador.",
+        "Reaproveite os blocos que você já escreveu, na ordem em que aparecem.",
+      ],
+      concepts: ["documento HTML", "head", "body", "footer"],
+    },
+  ],
+};
+
+const cssProfileCard: Project = {
+  id: "proj-css-profile-card",
+  courseId: "4",
+  title: "Cartão de perfil responsivo",
+  emoji: "🎨",
+  language: "CSS",
+  goal: "Estilizar um cartão de perfil do zero: cores, espaçamento, layout em flex, estado de hover e adaptação ao celular.",
+  description:
+    "Projeto final de CSS. Cada etapa acrescenta uma camada ao MESMO cartão, na ordem em que se estiliza de verdade: base, espaço, layout, interação e responsividade.",
+  xpReward: 110,
+  summary: [
+    "Seletor de classe e cores",
+    "Box model: padding, borda e raio",
+    "Flexbox alinhando avatar e texto",
+    "Hover como retorno visual",
+    "Media query adaptando ao celular",
+  ],
+  steps: [
+    {
+      id: "step-1",
+      title: "Etapa 1 — A base do cartão",
+      description: "Crie a classe `.cartao` com fundo branco, cor de texto escura e largura máxima de 360px.",
+      starterCode: "/* Estilo base do cartão */\n",
+      solution: ".cartao {\n  background: #ffffff;\n  color: #1b2a22;\n  max-width: 360px;\n}",
+      expectedOutput: ".cartao",
+      hints: [
+        "Um seletor de classe começa com ponto.",
+        "background define o fundo; color, o texto.",
+        "max-width impede o cartão de esticar demais.",
+      ],
+      concepts: ["seletor de classe", "cores", "max-width"],
+    },
+    {
+      id: "step-2",
+      title: "Etapa 2 — Respiro e borda",
+      description: "Dê `padding` de 20px, borda arredondada de 16px e uma borda fina cinza ao cartão.",
+      starterCode:
+        ".cartao {\n  background: #ffffff;\n  color: #1b2a22;\n  max-width: 360px;\n}\n/* Acrescente respiro e borda */\n",
+      solution:
+        ".cartao {\n  background: #ffffff;\n  color: #1b2a22;\n  max-width: 360px;\n  padding: 20px;\n  border: 1px solid #d9e2dc;\n  border-radius: 16px;\n}",
+      expectedOutput: "border-radius: 16px",
+      hints: [
+        "padding é o espaço DENTRO do elemento.",
+        "border pede espessura, estilo e cor.",
+        "border-radius arredonda os cantos.",
+      ],
+      concepts: ["box model", "padding", "border-radius"],
+    },
+    {
+      id: "step-3",
+      title: "Etapa 3 — Avatar e texto lado a lado",
+      description: "Use Flexbox em `.cartao` para alinhar avatar e texto na horizontal, com 16px entre eles.",
+      starterCode: ".cartao {\n  padding: 20px;\n  border-radius: 16px;\n}\n/* Alinhe o conteúdo com flex */\n",
+      solution:
+        ".cartao {\n  padding: 20px;\n  border-radius: 16px;\n  display: flex;\n  align-items: center;\n  gap: 16px;\n}",
+      expectedOutput: "display: flex",
+      hints: [
+        "display: flex coloca os filhos em linha.",
+        "align-items: center alinha pelo meio na vertical.",
+        "gap cria o espaço entre os itens sem margin.",
+      ],
+      concepts: ["flexbox", "align-items", "gap"],
+    },
+    {
+      id: "step-4",
+      title: "Etapa 4 — Retorno visual no hover",
+      description: "Faça o cartão ganhar sombra ao passar o mouse, com uma transição suave.",
+      starterCode: ".cartao {\n  padding: 20px;\n  border-radius: 16px;\n}\n/* Acrescente transição e hover */\n",
+      solution:
+        ".cartao {\n  padding: 20px;\n  border-radius: 16px;\n  transition: box-shadow 0.2s ease;\n}\n\n.cartao:hover {\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);\n}",
+      expectedOutput: ".cartao:hover",
+      hints: [
+        ":hover é o estado de quando o ponteiro está em cima.",
+        "A transição fica no elemento normal, não no :hover.",
+        "box-shadow recebe deslocamento, desfoque e cor.",
+      ],
+      concepts: ["hover", "transition", "box-shadow"],
+    },
+    {
+      id: "step-5",
+      title: "Etapa 5 — Adaptado ao celular",
+      description:
+        "Em telas de até 480px, empilhe o conteúdo do cartão (coluna) e centralize. Esse é o cartão final.",
+      starterCode:
+        ".cartao {\n  display: flex;\n  align-items: center;\n  gap: 16px;\n  padding: 20px;\n  border-radius: 16px;\n}\n/* Adapte para telas pequenas */\n",
+      solution:
+        ".cartao {\n  display: flex;\n  align-items: center;\n  gap: 16px;\n  padding: 20px;\n  border-radius: 16px;\n}\n\n@media (max-width: 480px) {\n  .cartao {\n    flex-direction: column;\n    text-align: center;\n  }\n}",
+      expectedOutput: "@media (max-width: 480px)",
+      hints: [
+        "A media query cria regras só para certas larguras.",
+        "flex-direction: column empilha os filhos.",
+        "As regras de dentro sobrescrevem as de fora naquela largura.",
+      ],
+      concepts: ["media query", "responsividade", "flex-direction"],
+    },
+  ],
+};
+
+export const capstoneProjects: Project[] = [
+  foundationSavings,
+  pythonExpenseReport,
+  jsShoppingCart,
+  sqlStoreReport,
+  htmlPortfolio,
+  cssProfileCard,
+];
