@@ -552,7 +552,7 @@ Em jogos simples, você pode simular rodadas com um loop comum. Em canvas, esse 
 O conceito central é repetir atualização com controle.`,
         starterCode: "// Simule 3 rodadas e mostre 'rodada'\n",
         solution: 'for (let rodada = 1; rodada <= 3; rodada++) {\n  console.log("rodada");\n}',
-        expectedOutput: "rodada",
+        expectedOutput: "rodada\nrodada\nrodada",
         hints: ["Use for.", "Comece em 1 e vá até 3.", "Mostre a palavra rodada."],
         xpReward: 20,
         quiz: [makeQuiz("O que o game loop faz?", ["Atualiza o jogo em ciclos", "Cria banco", "Remove HTML", "Publica branch"], 0, "O loop mantém o jogo respondendo e atualizando.")],

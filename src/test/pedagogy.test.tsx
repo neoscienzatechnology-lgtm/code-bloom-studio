@@ -17,6 +17,7 @@ import { courses, type Course, type Lesson } from "@/data/mockData";
 import { moduleGroups } from "@/utils/entitlement";
 import { appCatalogSummary, courseCatalog, getCourseCatalogItem, landingTracks } from "@/data/courseCatalog";
 import { capstoneProjects } from "@/data/capstones";
+import { JS_RUNTIME_LESSONS } from "@/data/jsRuntimeLessons";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
@@ -995,5 +996,71 @@ describe("capstones", () => {
       expect(getCourseCatalogItem(courseId)?.finalProject).toBe(title);
       expect(capstoneProjects.find((project) => project.courseId === courseId)?.title).toBe(title);
     });
+  });
+});
+
+// Marcar uma lição como "JS executável" é uma promessa: o worker vai rodar a
+// solução e comparar a saída EXATA. Este teste refaz essa verificação — se
+// alguém editar a solução ou a saída esperada e elas desalinharem, quebra
+// aqui em vez de reprovar o aluno que acertou. #revisao-lote3
+describe("lições marcadas como JS executável", () => {
+  const runJsSandbox = (code: string) => {
+    const logs: string[] = [];
+    const format = (args: unknown[]) =>
+      args
+        .map((value) => {
+          if (typeof value === "string") return value;
+          if (typeof value === "undefined") return "undefined";
+          if (typeof value === "function") return value.toString();
+          try {
+            const serialized = JSON.stringify(value);
+            return serialized === undefined ? String(value) : serialized;
+          } catch {
+            return String(value);
+          }
+        })
+        .join(" ");
+    const push = (...args: unknown[]) => logs.push(format(args));
+    const fn = new Function("console", `"use strict";\n${code}`);
+    fn({ log: push, info: push, warn: push, error: push, debug: push });
+    return logs.join("\n");
+  };
+  const normalize = (text: string) => text.replace(/\r\n/g, "\n").replace(/[ \t]+$/gm, "").trim();
+
+  it("rodam de verdade e a saída bate com a esperada", () => {
+    const offenders: string[] = [];
+    const seen = new Set<string>();
+
+    courses.forEach((course) => {
+      course.lessons.forEach((lesson) => {
+        if (!JS_RUNTIME_LESSONS.has(lesson.id)) return;
+        seen.add(lesson.id);
+        try {
+          const output = runJsSandbox(lesson.solution);
+          if (normalize(output) !== normalize(lesson.expectedOutput)) {
+            offenders.push(`${lesson.id}: saída "${normalize(output)}" ≠ esperada "${normalize(lesson.expectedOutput)}"`);
+          }
+        } catch (error) {
+          offenders.push(`${lesson.id}: quebrou (${(error as Error).message})`);
+        }
+      });
+    });
+
+    expect(offenders).toEqual([]);
+    // toda lição da lista precisa existir no catálogo
+    expect([...JS_RUNTIME_LESSONS].filter((id) => !seen.has(id))).toEqual([]);
+  });
+
+  it("não inclui lições que dependem de DOM, rede ou módulos", () => {
+    const forbidden = /\b(document|window|localStorage|fetch|require|import\s|useState|useEffect)\b/;
+    const offenders: string[] = [];
+    courses.forEach((course) => {
+      course.lessons.forEach((lesson) => {
+        if (JS_RUNTIME_LESSONS.has(lesson.id) && forbidden.test(lesson.solution)) {
+          offenders.push(lesson.id);
+        }
+      });
+    });
+    expect(offenders).toEqual([]);
   });
 });

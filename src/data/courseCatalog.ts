@@ -44,7 +44,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     language: "JavaScript",
     emoji: "⚡",
     level: "Iniciante",
-    lessonCount: 19,
+    lessonCount: 20,
     kind: "Linguagem da web",
     prerequisite: "Lógica básica",
     finalProject: "Carrinho de compras",
@@ -185,7 +185,7 @@ export const landingTracks = [
   { id: "10", emoji: "🧠", name: "Fundamentos da Programação", language: "Lógica", level: "Iniciante", lessons: 24 },
   { id: "9", emoji: "🏗️", name: "HTML Semântico", language: "HTML", level: "Iniciante", lessons: 13 },
   { id: "4", emoji: "🎨", name: "CSS", language: "CSS", level: "Iniciante", lessons: 15 },
-  { id: "2", emoji: "⚡", name: "JavaScript", language: "JavaScript", level: "Iniciante", lessons: 19 },
+  { id: "2", emoji: "⚡", name: "JavaScript", language: "JavaScript", level: "Iniciante", lessons: 20 },
   { id: "1", emoji: "🐍", name: "Python", language: "Python", level: "Iniciante", lessons: 35 },
 ];
 

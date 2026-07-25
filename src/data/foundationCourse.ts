@@ -1188,7 +1188,7 @@ Loops deixam a intenção clara: repetir uma ação enquanto uma regra for verda
 Identifique o que muda. Neste caso, a mensagem não muda; quem muda é o contador de repetições.`,
       starterCode: "// Mostre Praticar três vezes usando for\n",
       solution: 'for (let vez = 1; vez <= 3; vez++) {\n  console.log("Praticar");\n}',
-      expectedOutput: "Praticar",
+      expectedOutput: "Praticar\nPraticar\nPraticar",
       hints: [
         "Use um contador chamado vez.",
         "A condição pode ser vez <= 3.",
@@ -1379,7 +1379,7 @@ Reutilização evita duplicação, reduz erro e deixa o programa mais fácil de 
       starterCode: "// Crie somar(a, b). Mostre 2+3 e 10+5.\n",
       solution:
         "function somar(a, b) {\n  return a + b;\n}\n\nconsole.log(somar(2, 3));\nconsole.log(somar(10, 5));",
-      expectedOutput: "15",
+      expectedOutput: "5\n15",
       hints: [
         "A função deve receber a e b.",
         "Retorne a + b.",

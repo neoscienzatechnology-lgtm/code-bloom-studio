@@ -5,7 +5,10 @@ import { useLessonEditor } from "@/hooks/useLessonEditor";
 import { useAttemptTracker } from "@/hooks/useAttemptTracker";
 import { validateCode, type ErrorKind } from "@/utils/codeValidator";
 import { evaluatePythonRun } from "@/utils/pythonOutput";
+import { evaluateJsRun } from "@/utils/jsOutput";
 import { isPythonRuntimeSupported, runPython } from "@/lib/pythonRunner";
+import { runJs } from "@/lib/jsRunner";
+import { runsRealJs } from "@/data/jsRuntimeLessons";
 import { getLessonConcepts } from "@/utils/conceptMastery";
 import { recordReview } from "@/utils/spacedRepetition";
 import { track } from "@/lib/analytics";
@@ -141,6 +144,9 @@ export function useLessonRunner({
   };
 
   const isPython = course.language.trim().toLowerCase() === "python";
+  // JS também roda de verdade (worker), nas lições verificadas em
+  // `jsRuntimeLessons.ts`. As demais seguem no validador heurístico.
+  const isRealJs = !isPython && runsRealJs(lesson.id);
 
   const handleRun = () => {
     if (running || runLockedRef.current) return;
@@ -179,6 +185,37 @@ export function useLessonRunner({
             runValidator();
           }
         });
+      return;
+    }
+
+    // JavaScript roda no worker: erro real do motor e comparação de saída de
+    // verdade, em vez de semelhança de texto. Falhou o runtime → heurística.
+    if (isRealJs) {
+      runJs(code)
+        .then((res) => {
+          if (res.error && !res.output) {
+            // "Execução interrompida"/timeout do runner não é erro do aluno
+            if (/interrompida|Tempo esgotado/i.test(res.error)) {
+              finishRun({
+                correct: false,
+                nextIsCorrect: false,
+                level: "wrong",
+                message: res.error,
+                errorKind: "syntax",
+              });
+              return;
+            }
+          }
+          const ev = evaluateJsRun(res.output, res.error, lesson.expectedOutput);
+          finishRun({
+            correct: ev.correct,
+            nextIsCorrect: ev.correct,
+            level: ev.correct ? "exact" : "wrong",
+            message: ev.message,
+            errorKind: ev.errorKind,
+          });
+        })
+        .catch(() => runValidator());
       return;
     }
 
