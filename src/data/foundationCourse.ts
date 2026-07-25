@@ -1,4 +1,5 @@
 import type { Course, Lesson, PracticeActivity, QuizQuestion } from "./mockData";
+import { FOUNDATION_AUTHORED } from "./foundationAuthored";
 
 function quiz(
   question: string,
@@ -1720,11 +1721,17 @@ Depois desta base, HTML, CSS e JavaScript no navegador ficam muito mais fáceis 
   ],
 };
 
-foundationProgrammingCourse.lessons = foundationProgrammingCourse.lessons.map((currentLesson, index) => ({
-  ...currentLesson,
-  tryItPrompt: foundationTryItPrompt(currentLesson),
-  commonMistake: foundationCommonMistake(currentLesson),
-  reference: foundationReference(currentLesson),
-  concepts: conceptsForLesson(currentLesson),
-  practiceActivities: [buildPracticeActivity(currentLesson, index)],
-}));
+// O conteúdo AUTORAL (FOUNDATION_AUTHORED) sempre vence o gerado. Conforme
+// mais aulas forem escritas à mão, os geradores vão saindo de cena sozinhos.
+// #revisao-lote7
+foundationProgrammingCourse.lessons = foundationProgrammingCourse.lessons.map((currentLesson, index) => {
+  const authored = FOUNDATION_AUTHORED[currentLesson.id];
+  return {
+    ...currentLesson,
+    tryItPrompt: foundationTryItPrompt(currentLesson),
+    commonMistake: authored?.commonMistake ?? foundationCommonMistake(currentLesson),
+    reference: authored?.reference ?? foundationReference(currentLesson),
+    concepts: conceptsForLesson(currentLesson),
+    practiceActivities: authored?.practiceActivities ?? [buildPracticeActivity(currentLesson, index)],
+  };
+});

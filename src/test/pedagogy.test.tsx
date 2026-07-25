@@ -19,6 +19,7 @@ import { appCatalogSummary, courseCatalog, getCourseCatalogItem, landingTracks }
 import { capstoneProjects } from "@/data/capstones";
 import { JS_RUNTIME_LESSONS } from "@/data/jsRuntimeLessons";
 import { SQL_SEED, SQL_VERIFICATION_QUERIES } from "@/data/sqlSandbox";
+import { FOUNDATION_AUTHORED } from "@/data/foundationAuthored";
 import { formatSqlResult } from "@/utils/sqlOutput";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
@@ -1193,4 +1194,66 @@ describe("passos de projeto com runtime real", () => {
     }
     expect(offenders).toEqual([]);
   }, 30_000);
+});
+
+// As primeiras aulas de Fundamentos são a porta de entrada do iniciante e
+// deixaram de usar o texto genérico dos geradores. Este teste impede a
+// regressão silenciosa (alguém apagar o autoral e o gerador voltar a valer).
+// #revisao-lote7
+describe("primeiras aulas de Fundamentos são autorais", () => {
+  const DISTRATORES_GENERICOS = [
+    "Trocar a linguagem do curso",
+    "Apagar todas as variáveis",
+    "Ignorar a ordem das linhas",
+  ];
+  const REFERENCIA_GENERICA = [
+    "Entrada é a informação inicial que o programa recebe.",
+    "Processamento é a regra aplicada passo a passo.",
+  ];
+
+  const foundation = courses.find((course) => course.id === "10")!;
+  const primeiras = foundation.lessons.filter((lesson) => FOUNDATION_AUTHORED[lesson.id]);
+
+  it("cobre as seis primeiras aulas", () => {
+    expect(primeiras.length).toBeGreaterThanOrEqual(6);
+    expect(Object.keys(FOUNDATION_AUTHORED)).toEqual(
+      expect.arrayContaining(["10-1", "10-2", "10-3", "10-4", "10-5", "10-6"]),
+    );
+  });
+
+  it("não usa erro comum, referência nem distratores genéricos", () => {
+    const offenders: string[] = [];
+    primeiras.forEach((lesson) => {
+      REFERENCIA_GENERICA.forEach((generic) => {
+        if (lesson.reference?.includes(generic)) offenders.push(`${lesson.id}: referência genérica`);
+      });
+      lesson.practiceActivities?.forEach((activity) => {
+        (activity.options ?? []).forEach((option) => {
+          if (DISTRATORES_GENERICOS.includes(option)) offenders.push(`${lesson.id}: distrator genérico "${option}"`);
+        });
+      });
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("cada prática tem enunciado, resposta correta entre as opções e feedback", () => {
+    const offenders: string[] = [];
+    primeiras.forEach((lesson) => {
+      const activity = lesson.practiceActivities?.[0];
+      if (!activity) {
+        offenders.push(`${lesson.id}: sem prática`);
+        return;
+      }
+      if (!activity.prompt?.trim()) offenders.push(`${lesson.id}: sem enunciado`);
+      if (!activity.successFeedback?.trim() || !activity.errorFeedback?.trim()) {
+        offenders.push(`${lesson.id}: falta feedback`);
+      }
+      if (Array.isArray(activity.options) && typeof activity.correctAnswer === "string") {
+        if (!activity.options.includes(activity.correctAnswer)) {
+          offenders.push(`${lesson.id}: resposta correta fora das opções`);
+        }
+      }
+    });
+    expect(offenders).toEqual([]);
+  });
 });
