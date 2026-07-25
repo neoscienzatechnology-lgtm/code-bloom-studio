@@ -6,6 +6,8 @@
  * after each step instead of only at the end.
  */
 
+import { capstoneProjects } from "@/data/capstones";
+
 export interface ProjectStep {
   id: string;
   title: string;
@@ -431,17 +433,7 @@ function buildProjectSteps(language: string, theme: string): ProjectStep[] {
 }
 
 const projectBlueprints: ProjectBlueprint[] = [
-  { id: "proj-py-expense-cli", courseId: "1", title: "Controle de Gastos CLI", emoji: "💰", language: "Python", theme: "Controle de Gastos", goal: "Criar um programa de terminal para registrar gastos e mostrar um resumo simples.", description: "Pratique variáveis, funções e listas simulando um controle financeiro em etapas curtas.", summary: ["Variáveis", "Funções", "Listas", "Resumo no terminal"] },
-  { id: "proj-py-habit-tracker", courseId: "1", title: "Rastreador de Hábitos", emoji: "✅", language: "Python", theme: "Rastreador de Hábitos", goal: "Montar uma base para acompanhar hábitos diários e contar tarefas concluídas.", description: "Use estruturas simples para representar hábitos, contar itens e exibir progresso.", summary: ["Listas", "Contagem", "Funções", "Saída formatada"] },
-  { id: "proj-py-quiz-maker", courseId: "1", title: "Gerador de Quiz", emoji: "🧠", language: "Python", theme: "Gerador de Quiz", goal: "Criar a base de um quiz de perguntas e respostas no terminal.", description: "Modele perguntas, conte etapas e organize a lógica inicial de um jogo de quiz.", summary: ["Strings", "Listas", "Funções", "Validação"] },
-  { id: "proj-py-file-inventory", courseId: "1", title: "Inventário Simples", emoji: "📦", language: "Python", theme: "Inventário Simples", goal: "Organizar produtos e preparar um resumo de estoque.", description: "Construa pequenas partes de um inventário usando listas e funções.", summary: ["Coleções", "Funções", "Relatórios", "Terminal"] },
-  { id: "proj-py-password-checker", courseId: "1", title: "Validador de Senhas", emoji: "🔐", language: "Python", theme: "Validador de Senhas", goal: "Criar uma lógica inicial para avaliar força de senha.", description: "Pratique funções e regras simples para transformar requisitos em código.", summary: ["Funções", "Condições", "Strings", "Regras"] },
 
-  { id: "proj-js-todo-core", courseId: "2", title: "To-do no Console", emoji: "📝", language: "JavaScript", theme: "To-do no Console", goal: "Criar a lógica base de uma lista de tarefas.", description: "Pratique constantes, objetos e arrays com um app de tarefas em mini etapas.", summary: ["const", "Objetos", "Arrays", "Template literals"] },
-  { id: "proj-js-cart-total", courseId: "2", title: "Carrinho de Compras", emoji: "🛒", language: "JavaScript", theme: "Carrinho de Compras", goal: "Calcular itens e preparar o total de um carrinho simples.", description: "Junte objetos, arrays e contagem para simular um fluxo de compra.", summary: ["Objetos", "Arrays", "Operadores", "Saída"] },
-  { id: "proj-js-scoreboard", courseId: "2", title: "Placar de Jogo", emoji: "🎮", language: "JavaScript", theme: "Placar de Jogo", goal: "Criar uma lógica de placar para jogos e quizzes.", description: "Modele dados de pontuação e exiba status do jogador.", summary: ["Variáveis", "Objetos", "Arrays", "Estado"] },
-  { id: "proj-js-weather-card", courseId: "2", title: "Card de Clima", emoji: "🌤️", language: "JavaScript", theme: "Card de Clima", goal: "Preparar dados para um cartão de previsão do tempo.", description: "Organize valores de clima e gere uma saída pronta para interface.", summary: ["Objetos", "Strings", "Arrays", "Formatação"] },
-  { id: "proj-js-form-validator", courseId: "2", title: "Validador de Formulário", emoji: "📋", language: "JavaScript", theme: "Validador de Formulário", goal: "Criar regras iniciais para validar campos de formulário.", description: "Transforme requisitos de formulário em objetos e mensagens de estado.", summary: ["Objetos", "Condições", "Validação", "Mensagens"] },
 
   { id: "proj-react-profile-card", courseId: "3", title: "Card de Perfil", emoji: "👤", language: "React", theme: "Card de Perfil", goal: "Criar um componente reutilizável para mostrar informações de usuário.", description: "Pratique JSX, props e estado com um cartão de perfil.", summary: ["Componentes", "JSX", "Props", "Estado"] },
   { id: "proj-react-course-card", courseId: "3", title: "Card de Curso", emoji: "🎓", language: "React", theme: "Card de Curso", goal: "Montar um componente visual para cursos com título e ação.", description: "Crie uma peça de interface parecida com os cartões do app.", summary: ["Componentes", "Props", "Eventos", "UI"] },
@@ -479,9 +471,6 @@ const projectBlueprints: ProjectBlueprint[] = [
   { id: "proj-logic-path-finder", courseId: "8", title: "Planejador de Caminho", emoji: "🗺️", language: "Lógica", theme: "Planejador de Caminho", goal: "Modelar a lógica inicial de um caminho entre pontos.", description: "Pratique representação de dados e resolução em etapas.", summary: ["Modelagem", "Funções", "Algoritmo", "Complexidade"] },
   { id: "proj-logic-cache", courseId: "8", title: "Cache Mental", emoji: "🧩", language: "Lógica", theme: "Cache Mental", goal: "Entender quando guardar resultados evita retrabalho.", description: "Modele entrada e análise de custo para uma ideia de cache.", summary: ["Entrada", "Memoização", "Funções", "Big O"] },
 
-  { id: "proj-logic-beginner-flow", courseId: "10", title: "Mapa de Solução", emoji: "🧠", language: "Lógica básica", theme: "Mapa de Solução", goal: "Transformar um problema em entrada, passos e saída.", description: "Pratique raciocínio antes de escrever código complexo.", summary: ["Problema", "Entrada", "Passos", "Saída"] },
-  { id: "proj-logic-decision-rules", courseId: "10", title: "Regras de Decisão", emoji: "🚦", language: "Lógica básica", theme: "Regras de Decisão", goal: "Descrever decisões simples usando se/senão.", description: "Modele regras de negócio de forma clara e testável.", summary: ["Condição", "Regra", "Saída", "Teste"] },
-  { id: "proj-logic-study-plan", courseId: "10", title: "Plano de Estudos", emoji: "🗓️", language: "Lógica básica", theme: "Plano de Estudos", goal: "Organizar passos de estudo em uma sequência verificável.", description: "Aplique decomposição em um problema cotidiano.", summary: ["Sequência", "Lista", "Decomposição", "Revisão"] },
 
   { id: "proj-mobile-task-list", courseId: "11", title: "Lista de Tarefas Mobile", emoji: "📱", language: "React Native", theme: "Lista de Tarefas Mobile", goal: "Criar a base de uma tela mobile com lista e ação.", description: "Use View, Text, StyleSheet e onPress em uma experiência mobile simples.", summary: ["View", "Text", "StyleSheet", "onPress"] },
   { id: "proj-mobile-habit-card", courseId: "11", title: "Card de Hábito Mobile", emoji: "✅", language: "React Native", theme: "Card de Hábito Mobile", goal: "Montar um card mobile para acompanhar hábitos.", description: "Pratique estrutura visual e interação de toque.", summary: ["Componentes", "Estilo", "Estado", "Mobile"] },
@@ -694,6 +683,7 @@ export const projects: Project[] = [
       },
     ],
   },
+  ...capstoneProjects,
   ...generatedProjects,
 ];
 

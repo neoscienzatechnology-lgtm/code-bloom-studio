@@ -23,7 +23,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 24,
     kind: "Base de programação",
     prerequisite: "Nenhum",
-    finalProject: "Calculadora simples guiada",
+    finalProject: "Cofrinho de metas",
     lockedUntil: null,
   },
   {
@@ -35,8 +35,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 35,
     kind: "Linguagem de programação",
     prerequisite: "Nenhum",
-    // TODO lote 2: apontar para o capstone real de projects.ts
-    finalProject: "Calculadora simples",
+    finalProject: "Relatório de gastos do mês",
     lockedUntil: null,
   },
   {
@@ -48,7 +47,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 19,
     kind: "Linguagem da web",
     prerequisite: "Lógica básica",
-    finalProject: "Contador interativo",
+    finalProject: "Carrinho de compras",
     lockedUntil: null,
   },
   {
@@ -176,7 +175,7 @@ export const courseCatalog: CourseCatalogItem[] = [
 export const appCatalogSummary = {
   courseCount: courseCatalog.length,
   lessonCount: courseCatalog.reduce((total, course) => total + course.lessonCount, 0),
-  projectCount: 60,
+  projectCount: 50,
   practiceTypeCount: 5,
 };
 

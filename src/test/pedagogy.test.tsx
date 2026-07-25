@@ -15,7 +15,8 @@ import { buildStudyStats } from "@/utils/studyStats";
 import { ACTIVITY_COURSE_IDS, awardProgressOnce, normalizeProgress, resolveProgressCourseId } from "@/hooks/useProgress";
 import { courses, type Course, type Lesson } from "@/data/mockData";
 import { moduleGroups } from "@/utils/entitlement";
-import { appCatalogSummary, courseCatalog, landingTracks } from "@/data/courseCatalog";
+import { appCatalogSummary, courseCatalog, getCourseCatalogItem, landingTracks } from "@/data/courseCatalog";
+import { capstoneProjects } from "@/data/capstones";
 import { learningPaths } from "@/data/learningPaths";
 import { projects } from "@/data/projects";
 import { buildReferenceIndex, filterReferenceEntries, getReferenceLanguages } from "@/utils/referenceIndex";
@@ -937,5 +938,62 @@ describe("XP calibration by difficulty", () => {
   it("scales Avançado by 1.5x", () => {
     expect(calibrateXp(10, "Avançado")).toBe(15);
     expect(calibrateXp(15, "Avançado")).toBe(23);
+  });
+});
+
+// Os antigos "projetos" eram um template: 57 dos 60 compartilhavam as MESMAS
+// três etapas por linguagem (a etapa 3 de todo projeto Python era
+// `tarefas = ["planejar","construir","testar"]`). Capstone é o contrário
+// disso: etapas encadeadas que constroem um artefato. #revisao-lote2
+describe("capstones", () => {
+  it("têm etapas encadeadas suficientes e saída própria", () => {
+    const offenders: string[] = [];
+    capstoneProjects.forEach((project) => {
+      if (project.steps.length < 4) offenders.push(`${project.id}: só ${project.steps.length} etapas`);
+      project.steps.forEach((step) => {
+        if (!step.expectedOutput.trim()) offenders.push(`${project.id}/${step.id}: sem saída esperada`);
+        if (step.solution.trim() === step.starterCode.trim())
+          offenders.push(`${project.id}/${step.id}: solução igual ao starter`);
+        if (step.hints.length < 2) offenders.push(`${project.id}/${step.id}: menos de 2 dicas`);
+      });
+      // a última etapa junta o que veio antes: é a maior do projeto
+      const last = project.steps[project.steps.length - 1];
+      const first = project.steps[0];
+      if (last.solution.length <= first.solution.length)
+        offenders.push(`${project.id}: a etapa final não constrói sobre as anteriores`);
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("não repetem o código genérico dos templates antigos", () => {
+    const offenders: string[] = [];
+    const capstoneIds = new Set(capstoneProjects.map((project) => project.id));
+    const otherSolutions = new Set(
+      projects.filter((project) => !capstoneIds.has(project.id)).flatMap((project) => project.steps.map((s) => s.solution.trim())),
+    );
+
+    capstoneProjects.forEach((project) => {
+      project.steps.forEach((step) => {
+        if (/planejar.*construir.*testar/.test(step.solution)) {
+          offenders.push(`${project.id}/${step.id}: voltou o passo genérico`);
+        }
+        if (otherSolutions.has(step.solution.trim())) {
+          offenders.push(`${project.id}/${step.id}: solução idêntica à de outro projeto`);
+        }
+      });
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("é o capstone que o catálogo anuncia como projeto final", () => {
+    const pairs: Array<[string, string]> = [
+      ["10", "Cofrinho de metas"],
+      ["1", "Relatório de gastos do mês"],
+      ["2", "Carrinho de compras"],
+    ];
+    pairs.forEach(([courseId, title]) => {
+      expect(getCourseCatalogItem(courseId)?.finalProject).toBe(title);
+      expect(capstoneProjects.find((project) => project.courseId === courseId)?.title).toBe(title);
+    });
   });
 });
