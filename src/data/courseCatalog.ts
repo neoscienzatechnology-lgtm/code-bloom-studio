@@ -83,7 +83,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 11,
     kind: "Framework front-end",
     prerequisite: "JavaScript básico",
-    finalProject: "Painel de tarefas (guiado)",
+    finalProject: "Painel de tarefas em React",
     lockedUntil: "JavaScript",
   },
   {
@@ -95,7 +95,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 12,
     kind: "Backend JavaScript",
     prerequisite: "JavaScript básico",
-    finalProject: "Rotas de uma API de tarefas",
+    finalProject: "API de tarefas (lógica completa)",
     lockedUntil: "JavaScript",
   },
   {
@@ -119,7 +119,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 11,
     kind: "Ferramenta profissional",
     prerequisite: "Nenhum",
-    finalProject: "Fluxo de feature no Git",
+    finalProject: "Fluxo de uma feature no Git",
     lockedUntil: null,
   },
   {
@@ -131,7 +131,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 10,
     kind: "Algoritmos avançados",
     prerequisite: "Lógica + uma linguagem",
-    finalProject: "Escolha da estrutura de dados",
+    finalProject: "Busca e ordenação num catálogo",
     lockedUntil: "Lógica",
   },
   {
@@ -143,7 +143,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 8,
     kind: "Framework mobile",
     prerequisite: "React básico",
-    finalProject: "Tela com lista e imagens",
+    finalProject: "Tela de tarefas no celular",
     lockedUntil: "React",
   },
   {
@@ -155,7 +155,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 8,
     kind: "Dados e automação",
     prerequisite: "Python básico",
-    finalProject: "Leitura de CSV linha a linha",
+    finalProject: "Resumo de vendas do CSV",
     lockedUntil: "Python",
   },
   {
@@ -167,7 +167,7 @@ export const courseCatalog: CourseCatalogItem[] = [
     lessonCount: 8,
     kind: "Jogos e interação",
     prerequisite: "Lógica + JavaScript",
-    finalProject: "Placar e recorde do jogo",
+    finalProject: "Placar com vidas e recorde",
     lockedUntil: "JavaScript",
   },
 ];
@@ -175,7 +175,7 @@ export const courseCatalog: CourseCatalogItem[] = [
 export const appCatalogSummary = {
   courseCount: courseCatalog.length,
   lessonCount: courseCatalog.reduce((total, course) => total + course.lessonCount, 0),
-  projectCount: 38,
+  projectCount: 16,
   practiceTypeCount: 5,
 };
 

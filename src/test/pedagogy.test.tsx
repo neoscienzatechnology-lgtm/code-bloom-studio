@@ -988,16 +988,30 @@ describe("capstones", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("é o capstone que o catálogo anuncia como projeto final", () => {
-    const pairs: Array<[string, string]> = [
-      ["10", "Cofrinho de metas"],
-      ["1", "Relatório de gastos do mês"],
-      ["2", "Carrinho de compras"],
-    ];
-    pairs.forEach(([courseId, title]) => {
-      expect(getCourseCatalogItem(courseId)?.finalProject).toBe(title);
-      expect(capstoneProjects.find((project) => project.courseId === courseId)?.title).toBe(title);
+  it("todo curso tem um capstone e o catálogo anuncia exatamente ele", () => {
+    const offenders: string[] = [];
+    courses.forEach((course) => {
+      const capstone = capstoneProjects.find((project) => project.courseId === course.id);
+      if (!capstone) {
+        offenders.push(`${course.id} (${course.title}): sem capstone`);
+        return;
+      }
+      const announced = getCourseCatalogItem(course.id)?.finalProject;
+      if (announced !== capstone.title) {
+        offenders.push(`${course.id}: catálogo diz "${announced}" mas o capstone é "${capstone.title}"`);
+      }
     });
+    expect(offenders).toEqual([]);
+  });
+
+  it("não sobrou nenhum projeto gerado por template", () => {
+    // `buildProjectSteps` gerava as mesmas 3 etapas por linguagem para
+    // qualquer tema; todo projeto agora é autoral. #revisao-lote6
+    const genericSolutions = projects.filter((project) =>
+      project.steps.some((step) => /planejar.*construir.*testar|tarefas = \["planejar"/.test(step.solution)),
+    );
+    expect(genericSolutions.map((project) => project.id)).toEqual([]);
+    expect(projects.every((project) => project.steps.length >= 3)).toBe(true);
   });
 });
 
