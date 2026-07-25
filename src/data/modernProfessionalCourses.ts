@@ -1743,7 +1743,7 @@ export const modernProfessionalCourses: Course[] = [
     title: "React para Interfaces",
     language: "React",
     emoji: "RC",
-    level: "Iniciante",
+    level: "Intermediário",
     duration: "4h",
     students: 1934,
     progress: 0,

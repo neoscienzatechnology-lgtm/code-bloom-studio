@@ -173,6 +173,40 @@ describe("pedagogy blueprint", () => {
     expect(appCatalogSummary.projectCount).toBe(projects.length);
   });
 
+  // O catálogo leve alimenta a vitrine (/cursos e landing) e não pode prometer
+  // um curso diferente do que existe: já anunciou "Python Essencial 18h
+  // Intermediário" para um curso "Python do Zero" iniciante. #revisao-1.4
+  it("não deixa o catálogo anunciar título/nível/nº de aulas diferentes do curso real", () => {
+    const offenders: string[] = [];
+    courseCatalog.forEach((item) => {
+      const real = courses.find((course) => course.id === item.id);
+      if (!real) {
+        offenders.push(`${item.id}: sem curso correspondente`);
+        return;
+      }
+      if (item.title !== real.title) offenders.push(`${item.id} título: "${item.title}" vs "${real.title}"`);
+      if (item.level !== real.level) offenders.push(`${item.id} nível: ${item.level} vs ${real.level}`);
+      if (item.lessonCount !== real.lessons.length)
+        offenders.push(`${item.id} aulas: ${item.lessonCount} vs ${real.lessons.length}`);
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("mantém nível e nº de aulas do landingTracks iguais ao curso real", () => {
+    const offenders: string[] = [];
+    landingTracks.forEach((track) => {
+      const real = courses.find((course) => course.id === track.id);
+      if (!real) {
+        offenders.push(`${track.id}: sem curso correspondente`);
+        return;
+      }
+      if (track.level !== real.level) offenders.push(`${track.id} nível: ${track.level} vs ${real.level}`);
+      if (track.lessons !== real.lessons.length)
+        offenders.push(`${track.id} aulas: ${track.lessons} vs ${real.lessons.length}`);
+    });
+    expect(offenders).toEqual([]);
+  });
+
   it("mantém a contagem de lições do landingTracks alinhada com o courseCatalog", () => {
     const offenders: string[] = [];
     landingTracks.forEach((track) => {

@@ -16,7 +16,7 @@ const statIcons = [Gamepad2, BookOpenCheck, Code2, Trophy] as const;
 const stats = [
   { label: "Cursos", value: appCatalogSummary.courseCount, suffix: "", icon: statIcons[0] },
   { label: "Lições", value: appCatalogSummary.lessonCount, suffix: "", icon: statIcons[1] },
-  { label: "Projetos", value: appCatalogSummary.projectCount, suffix: "", icon: statIcons[2] },
+  { label: "Projetos guiados", value: appCatalogSummary.projectCount, suffix: "", icon: statIcons[2] },
   { label: "Tipos de prática", value: appCatalogSummary.practiceTypeCount, suffix: "", icon: statIcons[3] },
 ];
 
@@ -152,14 +152,16 @@ const LandingPage = () => {
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-muted-foreground">
               Lições curtas, exercícios práticos e feedback instantâneo. Você escreve código real desde a primeira aula.
             </p>
-            <div className="mb-8 flex flex-wrap gap-3">
+            <div className="mb-4 flex flex-wrap gap-3">
+              {/* Experimentar vem ANTES de cadastrar: a pessoa faz uma aula
+                  inteira e só então cria conta. #revisao-2.2 */}
               <Button
                 asChild
                 size="lg"
                 className="rounded-full bg-primary px-8 text-base font-extrabold text-white shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors"
               >
-                <Link to="/onboarding">
-                  Começar grátis <ArrowRight size={18} className="ml-1" />
+                <Link to="/experimentar">
+                  Experimentar uma aula grátis <ArrowRight size={18} className="ml-1" />
                 </Link>
               </Button>
               <Button
@@ -171,6 +173,9 @@ const LandingPage = () => {
                 <Link to="/cursos">Ver cursos</Link>
               </Button>
             </div>
+            <p className="mb-8 text-sm font-bold text-muted-foreground">
+              Sem cadastro para começar · Sem cartão · Funciona offline
+            </p>
             <div className="mb-8 max-w-md">
               <CoachGuide
                 state="idle"
@@ -295,15 +300,15 @@ const LandingPage = () => {
             Pronto para começar?
           </h2>
           <p className="mb-8 text-base text-white/75">
-            Comece pela trilha Fundamentos da Programação e avance no seu ritmo.
+            Faça a primeira aula agora, sem cadastro. Se gostar, crie a conta e seu progresso vai junto.
           </p>
           <Button
             asChild
             size="lg"
             className="rounded-full bg-white px-10 text-base font-extrabold text-primary hover:bg-white/90 transition-colors shadow-sm"
           >
-            <Link to="/onboarding">
-              Começar Agora <ArrowRight size={18} className="ml-1" />
+            <Link to="/experimentar">
+              Fazer a primeira aula <ArrowRight size={18} className="ml-1" />
             </Link>
           </Button>
         </motion.div>

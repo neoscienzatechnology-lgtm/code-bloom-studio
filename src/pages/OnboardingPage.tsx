@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import BrandLogo from "@/components/BrandLogo";
 import { ArrowRight, CheckCircle2, Clock, GraduationCap, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,9 +54,26 @@ const OnboardingPage = () => {
     navigate(`/cursos/${targetCourse.id}`);
   };
 
+  // Saída sempre disponível: sem isto, o "voltar" do navegador caía em
+  // /cadastro, que redireciona de volta para cá — um laço sem saída.
+  // #revisao-2.5
+  const skip = () => {
+    setProfile({ experience: "new", goal: "frontend", dailyGoal: 10, createdAt: new Date().toISOString() });
+    navigate("/dashboard");
+  };
+
   return (
     <main className="min-h-screen bg-background px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-6xl">
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <Link to="/dashboard" className="flex items-center" aria-label="CodeTier — ir para o início">
+            <BrandLogo className="h-10 max-w-[170px]" />
+          </Link>
+          <Button variant="ghost" onClick={skip} className="rounded-full text-sm font-bold text-muted-foreground">
+            Pular por agora
+          </Button>
+        </div>
+
         <div className="mb-8 max-w-3xl">
           <p className="mimo-section-title mb-1">Comece pelo objetivo</p>
           <h1 className="text-3xl font-black text-foreground sm:text-4xl">

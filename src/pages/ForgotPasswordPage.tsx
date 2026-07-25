@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Mail } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import LiveBackdrop from "@/components/LiveBackdrop";
+import { reportAuthError } from "@/utils/authErrors";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ const ForgotPasswordPage = () => {
     });
     setSubmitting(false);
     if (error) {
-      toast.error("Erro: " + error.message);
+      toast.error(reportAuthError(error, "forgot-password"));
     } else {
       setSent(true);
     }

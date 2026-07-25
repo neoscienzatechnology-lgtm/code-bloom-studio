@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Clock, Database, Mail, ShieldAlert, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Copy, Database, Mail, ShieldAlert, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   SUPPORT_EMAIL,
@@ -23,7 +24,7 @@ const requestSteps = [
     title: "1. Envie a solicitação",
     description: hasSupportEmail
       ? `Use o botão abaixo ou escreva para ${SUPPORT_EMAIL} usando o e-mail da sua conta.`
-      : "Defina o e-mail oficial de suporte antes de publicar o app na Play Store.",
+      : "Copie a mensagem pronta abaixo e envie pelo canal de contato indicado na página do app na loja.",
   },
   {
     icon: CheckCircle2,
@@ -68,15 +69,15 @@ const AccountDeletionPage = () => {
         </header>
 
         {!hasSupportEmail && (
-          <section className="mb-8 rounded-2xl border border-quest-yellow/30 bg-quest-yellow/10 p-5">
+          <section className="mb-8 rounded-2xl border border-primary/25 bg-primary/5 p-5">
             <div className="flex gap-3">
-              <ShieldAlert className="mt-0.5 shrink-0 text-quest-yellow" size={22} aria-hidden="true" />
+              <ShieldAlert className="mt-0.5 shrink-0 text-primary" size={22} aria-hidden="true" />
               <div>
-                <h2 className="mb-2 text-lg font-black text-foreground">Canal oficial pendente</h2>
+                <h2 className="mb-2 text-lg font-black text-foreground">Seu pedido será atendido</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  O fluxo visual já está criado, mas a publicação na Play Store ainda precisa de um
-                  e-mail ou formulário oficial. Configure `VITE_SUPPORT_EMAIL` no ambiente de build
-                  para ativar o botão de solicitação por e-mail.
+                  Copie a mensagem pronta no fim desta página e envie pelo canal de contato do
+                  CodeTier informado na página do app na loja. Responderemos usando o e-mail da sua
+                  conta para confirmar a exclusão.
                 </p>
               </div>
             </div>
@@ -131,11 +132,25 @@ const AccountDeletionPage = () => {
           ) : (
             <div className="rounded-2xl border border-border bg-background p-4">
               <p className="mb-3 text-sm font-bold text-foreground">
-                Modelo de mensagem para conectar ao suporte oficial:
+                Mensagem pronta — copie e envie pelo canal de contato do CodeTier:
               </p>
               <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-xl bg-muted p-4 text-xs leading-relaxed text-muted-foreground">
                 {accountDeletionBody}
               </pre>
+              <Button
+                type="button"
+                className="mt-4 rounded-full font-black"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(accountDeletionBody);
+                    toast.success("Mensagem copiada. Agora é só enviar ao suporte.");
+                  } catch {
+                    toast.error("Não foi possível copiar. Selecione o texto acima e copie manualmente.");
+                  }
+                }}
+              >
+                <Copy size={18} className="mr-2" aria-hidden="true" /> Copiar mensagem
+              </Button>
             </div>
           )}
         </section>

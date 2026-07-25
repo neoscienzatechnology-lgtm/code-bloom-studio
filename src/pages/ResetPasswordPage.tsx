@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import LiveBackdrop from "@/components/LiveBackdrop";
+import { reportAuthError } from "@/utils/authErrors";
 
 const ResetPasswordPage = () => {
   const [password, setPassword] = useState("");
@@ -40,7 +41,7 @@ const ResetPasswordPage = () => {
     const { error } = await supabase.auth.updateUser({ password });
     setSubmitting(false);
     if (error) {
-      toast.error("Erro: " + error.message);
+      toast.error(reportAuthError(error, "reset-password"));
     } else {
       setDone(true);
       setTimeout(() => navigate("/login"), 3000);

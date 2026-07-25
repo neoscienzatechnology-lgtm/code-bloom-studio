@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import BrandLogo from "@/components/BrandLogo";
 import LiveBackdrop from "@/components/LiveBackdrop";
 import { getAuthRedirect } from "@/utils/authRedirect";
+import { reportAuthError } from "@/utils/authErrors";
 
 const LoginPage = () => {
   const { user, signIn, signInWithGoogle, loading } = useAuth();
@@ -33,7 +34,7 @@ const LoginPage = () => {
     const { error } = await signIn(email, password);
     setSubmitting(false);
     if (error) {
-      toast.error("Erro ao entrar: " + error.message);
+      toast.error(reportAuthError(error, "login"));
     }
   };
 
@@ -43,7 +44,7 @@ const LoginPage = () => {
     setGoogleSubmitting(false);
 
     if (error) {
-      toast.error("Erro ao entrar com Google: " + error.message);
+      toast.error(reportAuthError(error, "login-google"));
     }
   };
 

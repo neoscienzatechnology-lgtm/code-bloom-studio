@@ -19,8 +19,8 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 const Index = lazy(() => import("./pages/Index.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const CoursesPage = lazy(() => import("./pages/CoursesPage.tsx"));
-const RoadmapPage = lazy(() => import("./pages/RoadmapPage.tsx"));
 const CourseDetailPage = lazy(() => import("./pages/CourseDetailPage.tsx"));
+const TryLessonPage = lazy(() => import("./pages/TryLessonPage.tsx"));
 const EditorPage = lazy(() => import("./pages/EditorPage.tsx"));
 const CheckpointPage = lazy(() => import("./pages/CheckpointPage.tsx"));
 const ProjectPage = lazy(() => import("./pages/ProjectPage.tsx"));
@@ -132,8 +132,11 @@ const App = () => {
               <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/onboarding" element={<ProtectedPage><OnboardingPage /></ProtectedPage>} />
-              <Route path="/cursos" element={<ProtectedPageWithNav><CoursesPage /></ProtectedPageWithNav>} />
-              <Route path="/trilha" element={<ProtectedPageWithNav><RoadmapPage /></ProtectedPageWithNav>} />
+              {/* Vitrine pública: dá para ver a grade e experimentar uma aula
+                  inteira antes de criar conta. O editor das demais aulas
+                  continua protegido. #revisao-2.1 / #revisao-2.2 */}
+              <Route path="/cursos" element={<PageWithNav><CoursesPage /></PageWithNav>} />
+              <Route path="/experimentar" element={<PageWithNav><TryLessonPage /></PageWithNav>} />
               <Route path="/revisao" element={<ProtectedPageWithNav><DailyReviewPage /></ProtectedPageWithNav>} />
               <Route path="/pontos-fracos" element={<ProtectedPageWithNav><WeakConceptsPage /></ProtectedPageWithNav>} />
               <Route path="/referencia" element={<ProtectedPageWithNav><ReferencePage /></ProtectedPageWithNav>} />
@@ -143,7 +146,7 @@ const App = () => {
               <Route path="/privacidade" element={<PageWithNav><PrivacyPolicyPage /></PageWithNav>} />
               <Route path="/termos" element={<PageWithNav><TermsPage /></PageWithNav>} />
               <Route path="/excluir-conta" element={<PageWithNav><AccountDeletionPage /></PageWithNav>} />
-              <Route path="/cursos/:courseId" element={<ProtectedPageWithNav><CourseDetailPage /></ProtectedPageWithNav>} />
+              <Route path="/cursos/:courseId" element={<PageWithNav><CourseDetailPage /></PageWithNav>} />
               <Route path="/editor/:courseId/:lessonId" element={<ProtectedPageWithNav><EditorPage /></ProtectedPageWithNav>} />
               <Route path="/checkpoint/:courseId/:lessonId" element={<ProtectedPageWithNav><CheckpointPage /></ProtectedPageWithNav>} />
               <Route path="/projetos" element={<ProtectedPageWithNav><ProjectsPage /></ProtectedPageWithNav>} />

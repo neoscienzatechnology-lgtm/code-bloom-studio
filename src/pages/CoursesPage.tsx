@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, BookOpen, CheckCircle2, Clock, Code2, Compass, Lock, Route, Sparkles } from "lucide-react";
 import { courses } from "@/data/mockData";
 import { getCourseMeta, learningPaths, type LearningPath } from "@/data/learningPaths";
+import { formatCourseDuration } from "@/utils/courseDuration";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
@@ -250,7 +251,7 @@ const CoursesPage = () => {
                                 <BookOpen size={13} /> Pré-requisito: {meta.prerequisite}
                               </div>
                               <div className="flex items-center gap-2">
-                                <Clock size={13} /> Duração: {course.duration}
+                                <Clock size={13} /> Duração: {formatCourseDuration(course)}
                               </div>
                             </div>
                             <div className="mt-4 rounded-lg bg-secondary/70 p-3 text-xs">

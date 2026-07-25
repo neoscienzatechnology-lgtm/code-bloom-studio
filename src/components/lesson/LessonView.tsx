@@ -15,6 +15,7 @@ import { recordLessonCompletedAndMaybeShowAd } from "@/lib/ads";
 import { track } from "@/lib/analytics";
 import { scheduleStreakReminder } from "@/lib/notifications";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
+import { isPythonRuntimeSupported, runPython } from "@/lib/pythonRunner";
 import { buildLessonCards } from "@/utils/lessonCards";
 import { calibrateXp } from "@/utils/xp";
 import type { Course, Lesson } from "@/data/mockData";
@@ -26,6 +27,11 @@ interface LessonViewProps {
   /** Route of the "next" CTA: next lesson, next checkpoint, or back to the course. */
   nextHref: string;
   hasNextLesson: boolean;
+  /** Sobrescreve o rótulo do botão de avançar. */
+  nextLabel?: string;
+  /** Aula de demonstração (visitante sem conta): sem anúncio e sem pedir
+   * permissão de notificação para quem ainda não se cadastrou. #revisao-2.2 */
+  trial?: boolean;
 }
 
 /**
@@ -35,7 +41,15 @@ interface LessonViewProps {
  * 2. "code" — the real-editor challenge, the lesson's climax.
  * All state here is lesson-scoped: render with key={lesson.id}.
  */
-const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: LessonViewProps) => {
+const LessonView = ({
+  course,
+  lesson,
+  lessonIndex,
+  nextHref,
+  hasNextLesson,
+  nextLabel,
+  trial = false,
+}: LessonViewProps) => {
   const navigate = useNavigate();
   const { completeLesson, saveCode, isCompleted, getSavedCode, studyStats, synced } = useProgress();
   const { user } = useAuth();
@@ -56,6 +70,17 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
     track("lesson_started", { lessonId: lesson.id, courseId: course.id, alreadyCompleted });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson.id]);
+
+  // Pré-aquece o Python enquanto o aluno lê os cartões: os ~10 MB do Pyodide
+  // baixam durante a teoria, então o primeiro "Executar" não espera 45s.
+  // #revisao-3.2
+  useEffect(() => {
+    if (course.language.trim().toLowerCase() !== "python") return;
+    if (!isPythonRuntimeSupported()) return;
+    void runPython("pass").catch(() => {
+      /* o erro real aparece no primeiro run de verdade */
+    });
+  }, [course.language]);
 
   const [code, setCode] = useState(() => getSavedCode(lesson.id) ?? lesson.starterCode ?? "");
   const initialCodeRef = useRef(code);
@@ -120,7 +145,9 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
     : "idle";
 
   const handleNext = () => {
-    if (lessonReadyToAdvance) {
+    if (trial) {
+      track("trial_to_signup", { lessonId: lesson.id, completed: lessonReadyToAdvance });
+    } else if (lessonReadyToAdvance) {
       // Intersticial com limite de frequência + lembrete de sequência
       // (ambos apenas no app Android; no-op na web). Pro não vê anúncios.
       if (!isPro) void recordLessonCompletedAndMaybeShowAd();
@@ -211,6 +238,7 @@ const LessonView = ({ course, lesson, lessonIndex, nextHref, hasNextLesson }: Le
               alreadyCompleted={alreadyCompleted}
               lessonReadyToAdvance={lessonReadyToAdvance}
               hasNextLesson={hasNextLesson}
+              nextLabel={nextLabel}
               revealedHintCount={hintIndex + 1}
               onRun={runner.handleRun}
               onReset={runner.handleReset}

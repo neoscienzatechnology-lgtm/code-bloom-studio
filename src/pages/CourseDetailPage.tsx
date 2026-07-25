@@ -7,6 +7,7 @@ import { Award, BookOpen, Clock, Code2, GraduationCap, Play, Trophy } from "luci
 import { getAugmentedCourseById } from "@/data/checkpoints";
 import { getProjectsByCourse } from "@/data/projects";
 import { getCourseMeta } from "@/data/learningPaths";
+import { formatCourseDuration } from "@/utils/courseDuration";
 import { useProgress } from "@/hooks/useProgress";
 import CoachGuide, { type CoachState } from "@/components/CoachGuide";
 import CourseRoutePath from "@/components/CourseRoutePath";
@@ -89,7 +90,7 @@ const CourseDetailPage = () => {
                   <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
                     <Clock size={13} /> Duração
                   </div>
-                  <div className="text-sm font-black">{course.duration}</div>
+                  <div className="text-sm font-black">{formatCourseDuration(course)}</div>
                 </div>
                 <div className="rounded-xl bg-secondary/60 p-3">
                   <div className="mb-1 flex items-center gap-1 text-[11px] font-bold text-muted-foreground">

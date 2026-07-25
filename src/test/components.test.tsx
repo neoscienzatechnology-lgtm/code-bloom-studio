@@ -9,6 +9,7 @@ vi.mock("@/contexts/AuthContext", () => ({
 import { useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useLessonEditor } from "@/hooks/useLessonEditor";
+import ChallengeBrief from "@/components/lesson/ChallengeBrief";
 
 const mockUseAuth = vi.mocked(useAuth);
 
@@ -138,5 +139,36 @@ describe("useLessonEditor reducer", () => {
     act(() => result.current.advanceHint(2));
     act(() => result.current.advanceHint(2));
     expect(result.current.state.hintIndex).toBe(2);
+  });
+});
+
+// O enunciado e a saída esperada precisam existir TAMBÉM no celular: antes o
+// painel do desafio era `hidden lg:block` e quem digitava no celular não via o
+// alvo do exercício. #revisao-3.1
+describe("ChallengeBrief", () => {
+  const lesson = {
+    id: "10-1",
+    title: "O que é programação?",
+    description: "Mostre a mensagem de boas-vindas na tela.",
+    expectedOutput: "Ola, mundo",
+  } as unknown as Parameters<typeof ChallengeBrief>[0]["lesson"];
+
+  it("mostra enunciado e saída esperada no modo desktop", () => {
+    render(<ChallengeBrief lesson={lesson} />);
+    expect(screen.getByText(/Mostre a mensagem de boas-vindas/)).toBeInTheDocument();
+    expect(screen.getByText(/Saída esperada/)).toBeInTheDocument();
+    expect(screen.getByText("Ola, mundo")).toBeInTheDocument();
+  });
+
+  it("mantém a saída esperada visível mesmo com o enunciado recolhido (celular)", () => {
+    render(<ChallengeBrief lesson={lesson} collapsible />);
+    expect(screen.getByText(/Saída esperada/)).toBeInTheDocument();
+    expect(screen.getByText("Ola, mundo")).toBeInTheDocument();
+    expect(screen.getByText(/Ver enunciado/)).toBeInTheDocument();
+  });
+
+  it("relabela para SQL, onde a validação é por trecho da query", () => {
+    render(<ChallengeBrief lesson={lesson} language="SQL" collapsible />);
+    expect(screen.getByText(/Sua query deve conter/)).toBeInTheDocument();
   });
 });

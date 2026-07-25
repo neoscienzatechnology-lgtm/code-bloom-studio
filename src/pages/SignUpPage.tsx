@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Mail, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { readJson, STORAGE_KEYS } from "@/lib/storage";
 import { toast } from "sonner";
 import BrandLogo from "@/components/BrandLogo";
 import LiveBackdrop from "@/components/LiveBackdrop";
 import { getAuthRedirect } from "@/utils/authRedirect";
+import { reportAuthError } from "@/utils/authErrors";
 
 const SignUpPage = () => {
   const { user, signUp, signInWithGoogle, loading } = useAuth();
@@ -18,6 +22,30 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [resendIn, setResendIn] = useState(0);
+  // Quem fez a aula de demonstração já tem progresso local — dizer isso aqui
+  // é o melhor argumento para completar o cadastro. #revisao-2.2
+  const trialProgress = useMemo(
+    () => readJson<{ completedLessons?: string[] }>(STORAGE_KEYS.progress, {})?.completedLessons?.length ?? 0,
+    [],
+  );
+
+  useEffect(() => {
+    if (resendIn <= 0) return;
+    const timer = setTimeout(() => setResendIn((seconds) => seconds - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendIn]);
+
+  const resend = async () => {
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    if (error) {
+      toast.error(reportAuthError(error, "signup-resend"));
+      return;
+    }
+    setResendIn(60);
+    toast.success("Enviamos o link de novo. Confira a caixa de entrada e o spam.");
+  };
 
   if (loading)
     return (
@@ -34,9 +62,10 @@ const SignUpPage = () => {
     const { error } = await signUp(email, password, name);
     setSubmitting(false);
     if (error) {
-      toast.error("Erro ao cadastrar: " + error.message);
+      toast.error(reportAuthError(error, "signup"));
     } else {
-      toast.success("Conta criada! Verifique seu email para confirmar.");
+      setSent(true);
+      setResendIn(60);
     }
   };
 
@@ -46,7 +75,7 @@ const SignUpPage = () => {
     setGoogleSubmitting(false);
 
     if (error) {
-      toast.error("Erro ao entrar com Google: " + error.message);
+      toast.error(reportAuthError(error, "signup-google"));
     }
   };
 
@@ -64,9 +93,49 @@ const SignUpPage = () => {
             <span className="text-2xl">🚀</span>
             <BrandLogo className="h-14 max-w-[220px]" />
           </Link>
-          <h1 className="text-2xl font-black">Criar conta grátis</h1>
-          <p className="text-sm text-muted-foreground mt-1">Comece sua aventura no mundo da programação!</p>
+          <h1 className="text-2xl font-black">{sent ? "Confirme seu e-mail" : "Criar conta grátis"}</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {sent ? "Falta um passo para salvar seu progresso." : "Comece sua aventura no mundo da programação!"}
+          </p>
         </div>
+
+        {sent ? (
+          <div className="space-y-4 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
+              <Mail className="h-8 w-8 text-primary" aria-hidden="true" />
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Enviamos um link de confirmação para{" "}
+              <strong className="text-foreground">{email}</strong>. Abra a mensagem para ativar sua conta —
+              confira também o spam.
+            </p>
+            <Button
+              variant="outline"
+              className="w-full rounded-full font-bold"
+              disabled={resendIn > 0}
+              onClick={resend}
+            >
+              {resendIn > 0 ? `Reenviar em ${resendIn}s` : "Reenviar e-mail"}
+            </Button>
+            <button
+              type="button"
+              onClick={() => setSent(false)}
+              className="text-xs font-bold text-muted-foreground underline-offset-4 hover:underline"
+            >
+              Usar outro e-mail
+            </button>
+          </div>
+        ) : (
+        <>
+        {trialProgress > 0 && (
+          <div className="mb-5 flex items-start gap-2.5 rounded-2xl border border-primary/25 bg-primary/5 px-4 py-3 text-left">
+            <PartyPopper size={18} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              <strong className="text-foreground">Sua aula já está salva neste aparelho.</strong> Crie a conta
+              para guardar o progresso e continuar de onde parou em qualquer celular.
+            </p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -140,6 +209,8 @@ const SignUpPage = () => {
             Entrar
           </Link>
         </p>
+        </>
+        )}
       </motion.div>
     </div>
   );

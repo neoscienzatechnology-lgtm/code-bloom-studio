@@ -60,6 +60,9 @@ const DashboardPage = () => {
       !lessonId.endsWith("-quiz") && toLocalDateKey(new Date(completedAt)) === todayKey,
   ).length;
   const goalLessons = Math.max(1, Math.round((profile?.dailyGoal ?? 10) / 6));
+  // Aulas concluídas de verdade (ignora as chaves "-quiz"), usado para revelar
+  // os painéis aos poucos. #revisao-4.3
+  const lessonsDone = completedLessons.filter((id) => !id.endsWith("-quiz")).length;
 
   return (
     <div className="relative min-h-screen px-4 py-10 sm:px-6">
@@ -148,12 +151,43 @@ const DashboardPage = () => {
           </div>
         </motion.section>
 
+        {/* Primeira sessão: em vez de sete blocos zerados, um guia curto. Os
+            painéis de análise aparecem conforme existe o que analisar.
+            #revisao-4.3 */}
+        {lessonsDone === 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 rounded-2xl border border-border bg-card p-6"
+          >
+            <h2 className="mb-3 text-xl font-black text-foreground">Como funciona o CodeTier</h2>
+            <ol className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+              <li>
+                <strong className="text-foreground">1.</strong> Cada aula começa com cartões curtos de teoria,
+                exemplo e um quiz rápido.
+              </li>
+              <li>
+                <strong className="text-foreground">2.</strong> Depois você escreve código de verdade no editor
+                e recebe correção na hora.
+              </li>
+              <li>
+                <strong className="text-foreground">3.</strong> Concluiu? Ganha XP, mantém a ofensiva e o app
+                passa a sugerir revisões do que você errou.
+              </li>
+            </ol>
+            <Button asChild className="mt-5 rounded-full font-black">
+              <Link to={`/editor/${continueCourse.id}/${currentLesson.id}`}>Fazer a primeira aula</Link>
+            </Button>
+          </motion.section>
+        )}
+
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
-            <AdaptiveReview topErrors={topErrors} />
+            {lessonsDone >= 5 && topErrors.length > 0 && <AdaptiveReview topErrors={topErrors} />}
 
-            <ConceptMasteryPanel concepts={conceptMastery} syncLabel={syncLabel} />
+            {lessonsDone >= 3 && <ConceptMasteryPanel concepts={conceptMastery} syncLabel={syncLabel} />}
 
+            {inProgressCourses.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <h2 className="mb-4 text-xl font-black">Cursos em andamento</h2>
               {inProgressCourses.length > 0 ? (
@@ -189,8 +223,10 @@ const DashboardPage = () => {
                 </p>
               )}
             </motion.div>
+            )}
           </div>
 
+          {lessonsDone >= 1 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
             <h2 className="mb-4 flex items-center gap-2 text-xl font-black">
               <Flame className="text-quest-orange" size={20} /> Ritmo de estudo
@@ -250,6 +286,7 @@ const DashboardPage = () => {
               </div>
             </div>
           </motion.div>
+          )}
         </div>
       </div>
     </div>

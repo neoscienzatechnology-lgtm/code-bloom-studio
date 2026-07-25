@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Brain, Flame, FolderKanban, Home, LogIn, LogOut, Menu, Moon, Sun, Target, User, X, Zap } from "lucide-react";
+import { Brain, Flame, FolderKanban, Home, LogOut, Menu, Moon, Sun, Target, User, X, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,37 +9,97 @@ import { useEntitlement } from "@/contexts/EntitlementContext";
 import { MONETIZATION } from "@/config/monetization";
 import BrandLogo from "@/components/BrandLogo";
 
-const navLinks = [
-  { to: "/dashboard", label: "Início", icon: Home },
-  { to: "/cursos", label: "Trilhas", icon: Target },
-  { to: "/pontos-fracos", label: "Praticar", icon: Brain },
-  { to: "/projetos", label: "Projetos", icon: FolderKanban },
-  { to: "/perfil", label: "Perfil", icon: User },
-];
-
-const desktopLinks = [
-  { to: "/dashboard", label: "Início" },
-  { to: "/cursos", label: "Trilhas" },
-  { to: "/pontos-fracos", label: "Praticar" },
-  { to: "/playground", label: "Playground" },
-  { to: "/referencia", label: "Referência" },
-  { to: "/projetos", label: "Projetos" },
-  { to: "/perfil", label: "Perfil" },
-];
-
-const Navbar = () => {
-  const location = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, signOut } = useAuth();
-  const { totalXp, studyStats } = useProgress();
-  const { isPro } = useEntitlement();
-  const links =
-    MONETIZATION.enabled && !isPro ? [...desktopLinks, { to: "/pro", label: "Seja Pro" }] : desktopLinks;
+const useThemeToggle = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme === "dark";
-  const toggleTheme = () => setTheme(isDark ? "light" : "dark");
+  return { isDark, toggleTheme: () => setTheme(isDark ? "light" : "dark") };
+};
+
+const ThemeToggle = ({ className = "" }: { className?: string }) => {
+  const { isDark, toggleTheme } = useThemeToggle();
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
+      className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground ${className}`}
+    >
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
+  );
+};
+
+/**
+ * Barra do visitante: só marca e convite. Antes a landing mostrava o menu
+ * completo do app e chips de XP/ofensiva zerados para quem nem tinha conta —
+ * e cada clique redirecionava para o cadastro sem explicação. #revisao-2.3
+ */
+const PublicNavbar = () => (
+  <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+    <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <Link to="/" className="flex items-center" aria-label="CodeTier — início">
+        <BrandLogo className="h-12 max-w-[190px]" />
+      </Link>
+
+      <div className="flex items-center gap-2">
+        <Link
+          to="/cursos"
+          className="hidden rounded-lg px-4 py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:block"
+        >
+          Cursos
+        </Link>
+        <ThemeToggle />
+        <Link
+          to="/login"
+          className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-bold text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Entrar
+        </Link>
+        <Link
+          to="/cadastro"
+          className="inline-flex min-h-11 items-center rounded-full bg-primary px-4 text-sm font-black text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Criar conta grátis
+        </Link>
+      </div>
+    </div>
+  </nav>
+);
+
+const AppNavbar = () => {
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { signOut } = useAuth();
+  const { totalXp, studyStats, completedLessons } = useProgress();
+  const { isPro } = useEntitlement();
+  const { isDark, toggleTheme } = useThemeToggle();
+
+  // "Praticar" levava sempre a /pontos-fracos, uma tela de remediação que fica
+  // vazia para quem ainda não concluiu nenhuma aula. #revisao-4.1
+  const practiceTo = completedLessons.length === 0 ? "/cursos" : "/revisao";
+
+  const navLinks = [
+    { to: "/dashboard", label: "Início", icon: Home },
+    { to: "/cursos", label: "Trilhas", icon: Target },
+    { to: practiceTo, label: "Praticar", icon: Brain },
+    { to: "/projetos", label: "Projetos", icon: FolderKanban },
+    { to: "/perfil", label: "Perfil", icon: User },
+  ];
+
+  const desktopLinks = [
+    { to: "/dashboard", label: "Início" },
+    { to: "/cursos", label: "Trilhas" },
+    { to: practiceTo, label: "Praticar" },
+    { to: "/playground", label: "Playground" },
+    { to: "/referencia", label: "Referência" },
+    { to: "/projetos", label: "Projetos" },
+    { to: "/perfil", label: "Perfil" },
+  ];
+
+  const links =
+    MONETIZATION.enabled && !isPro ? [...desktopLinks, { to: "/pro", label: "Seja Pro" }] : desktopLinks;
+
   const immersiveRoutes = ["/editor", "/checkpoint", "/projeto"];
   const showMobileBottomNav =
     location.pathname !== "/" && !immersiveRoutes.some((route) => location.pathname.startsWith(route));
@@ -91,30 +151,14 @@ const Navbar = () => {
               <Zap size={15} className="text-primary" />
               <span>{totalXp.toLocaleString()} XP</span>
             </div>
+            <ThemeToggle />
             <button
-              onClick={toggleTheme}
-              aria-label={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
-              className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              onClick={signOut}
+              className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              title="Sair"
             >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              <LogOut size={18} />
             </button>
-            {user ? (
-              <>
-                <button
-                  onClick={signOut}
-                  className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  title="Sair"
-                >
-                  <LogOut size={18} />
-                </button>
-              </>
-            ) : (
-              <Link to="/login">
-                <button className="flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90">
-                  <LogIn size={16} /> Entrar
-                </button>
-              </Link>
-            )}
           </div>
 
           <button
@@ -156,22 +200,12 @@ const Navbar = () => {
                   {isDark ? <Sun size={18} /> : <Moon size={18} />}
                   {isDark ? "Tema claro" : "Tema escuro"}
                 </button>
-                {user ? (
-                  <button
-                    onClick={signOut}
-                    className="mt-2 rounded-lg bg-secondary px-4 py-3 text-left text-sm font-bold text-muted-foreground"
-                  >
-                    Sair
-                  </button>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground"
-                  >
-                    <LogIn size={16} /> Entrar
-                  </Link>
-                )}
+                <button
+                  onClick={signOut}
+                  className="mt-2 rounded-lg bg-secondary px-4 py-3 text-left text-sm font-bold text-muted-foreground"
+                >
+                  Sair
+                </button>
               </div>
             </motion.div>
           )}
@@ -179,28 +213,35 @@ const Navbar = () => {
       </nav>
 
       {showMobileBottomNav && (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden">
-        <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={`${link.to}-${link.label}`}
-                to={link.to}
-                className={`flex min-h-[48px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-black ${
-                  isActive(link.to, link.label) ? "bg-primary/15 text-primary" : "text-muted-foreground"
-                }`}
-              >
-                <Icon size={20} />
-                {link.label}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden">
+          <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={`${link.to}-${link.label}`}
+                  to={link.to}
+                  className={`flex min-h-[48px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-black ${
+                    isActive(link.to, link.label) ? "bg-primary/15 text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <Icon size={20} />
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
       )}
     </>
   );
+};
+
+const Navbar = () => {
+  const { user } = useAuth();
+  // Visitante e aluno veem barras diferentes; assim o público não carrega
+  // progresso (nem lê localStorage) na landing.
+  return user ? <AppNavbar /> : <PublicNavbar />;
 };
 
 export default Navbar;

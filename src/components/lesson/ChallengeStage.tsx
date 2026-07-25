@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Target } from "lucide-react";
+import ChallengeBrief from "@/components/lesson/ChallengeBrief";
 import LessonGuide from "@/components/LessonGuide";
 import PaceCoach from "@/components/PaceCoach";
 import type { CoachState } from "@/components/CoachGuide";
@@ -52,17 +52,8 @@ const ChallengeStage = ({
   onDismissPace,
 }: ChallengeStageProps) => (
   <>
-    {/* Task card */}
-    <div className="ct-surface mb-4 rounded-2xl p-5">
-      <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-black text-primary">
-        <Target size={13} /> Desafio
-      </div>
-      <p className="leading-relaxed text-foreground whitespace-pre-line">{lesson.description}</p>
-      <div className="mt-3 rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm">
-        <span className="font-bold text-muted-foreground">{language === "SQL" ? "Sua query deve conter: " : "Saída esperada: "}</span>
-        <code className="font-mono text-primary">{lesson.expectedOutput}</code>
-      </div>
-    </div>
+    {/* Task card (mesmo componente usado no topo do editor no celular) */}
+    <ChallengeBrief lesson={lesson} language={language} className="mb-4" />
 
     <LessonGuide
       title={lesson.title}

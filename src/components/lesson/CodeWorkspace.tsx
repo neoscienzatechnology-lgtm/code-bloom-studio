@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, ChevronRight, Lightbulb, Play, RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/CodeEditor";
+import ChallengeBrief from "@/components/lesson/ChallengeBrief";
 import LessonGuide from "@/components/LessonGuide";
 import CoachGuide, { type CoachState } from "@/components/CoachGuide";
 import { SelfExplain } from "@/components/Metacognition";
@@ -21,6 +22,8 @@ interface CodeWorkspaceProps {
   alreadyCompleted: boolean;
   lessonReadyToAdvance: boolean;
   hasNextLesson: boolean;
+  /** Sobrescreve o rótulo do botão de avançar (ex.: aula de demonstração). */
+  nextLabel?: string;
   revealedHintCount: number;
   onRun: () => void;
   onReset: () => void;
@@ -43,6 +46,7 @@ const CodeWorkspace = ({
   alreadyCompleted,
   lessonReadyToAdvance,
   hasNextLesson,
+  nextLabel,
   revealedHintCount,
   onRun,
   onReset,
@@ -55,6 +59,14 @@ const CodeWorkspace = ({
 
   return (
     <div className="flex min-h-0 flex-col">
+      {/* No celular o enunciado e a saída esperada ficam acima do editor —
+          antes só existiam no painel do desktop. #revisao-3.1 */}
+      <ChallengeBrief
+        lesson={lesson}
+        language={course.language}
+        collapsible
+        className="m-4 mb-0 lg:hidden"
+      />
       <LessonGuide
         title={lesson.title}
         state={mascotState}
@@ -196,7 +208,7 @@ const CodeWorkspace = ({
               onClick={onBackToChallenge}
               className="gap-1.5 rounded-full text-xs text-muted-foreground lg:hidden"
             >
-              <ArrowLeft size={14} /> Ver desafio
+              <ArrowLeft size={14} /> Rever a aula
             </Button>
           </div>
           <Button
@@ -209,7 +221,7 @@ const CodeWorkspace = ({
                 : "text-muted-foreground opacity-60"
             }`}
           >
-            {hasNextLesson ? "Próxima lição" : "Voltar ao curso"}{" "}
+            {nextLabel ?? (hasNextLesson ? "Próxima lição" : "Voltar ao curso")}{" "}
             <ChevronRight size={16} />
           </Button>
         </div>
