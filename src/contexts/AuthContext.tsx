@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { clearOAuthRedirect, storeOAuthRedirect } from "@/utils/oauthRedirect";
-import { identifyUser, resetAnalyticsUser } from "@/lib/analytics";
+import { identifyUser, resetAnalyticsUser, trackOnce } from "@/lib/analytics";
 import { resetLocalProgress } from "@/hooks/useProgress";
 
 interface AuthContextType {
@@ -17,6 +17,24 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Confirmar o e-mail é o degrau invisível do funil: o cadastro é enviado aqui
+// e a conta só nasce quando o link é aberto — possivelmente noutro aparelho,
+// horas depois. Sem este evento não dá para saber se a perda está no formulário
+// ou na caixa de entrada. Só o id da conta sai daqui (nunca o e-mail).
+function trackAccountActivation(user: User): void {
+  const confirmedAt = user.email_confirmed_at ?? user.confirmed_at;
+  if (!confirmedAt) return;
+  const createdAt = Date.parse(user.created_at ?? "");
+  const minutesToConfirm = Number.isNaN(createdAt)
+    ? null
+    : Math.max(0, Math.round((Date.parse(confirmedAt) - createdAt) / 60000));
+
+  trackOnce(`email_confirmed:${user.id}`, "email_confirmed", {
+    provider: user.app_metadata?.provider ?? "email",
+    minutesToConfirm,
+  });
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -28,14 +46,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       setLoading(false);
       // Telemetria: identifica só pelo id da conta (sem e-mail/nome)
-      if (session?.user) identifyUser(session.user.id);
-      else resetAnalyticsUser();
+      if (session?.user) {
+        identifyUser(session.user.id);
+        trackAccountActivation(session.user);
+      } else {
+        resetAnalyticsUser();
+      }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      if (session?.user) trackAccountActivation(session.user);
     });
 
     return () => subscription.unsubscribe();

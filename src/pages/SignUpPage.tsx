@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, PartyPopper } from "lucide-react";
@@ -12,6 +12,8 @@ import BrandLogo from "@/components/BrandLogo";
 import LiveBackdrop from "@/components/LiveBackdrop";
 import { getAuthRedirect } from "@/utils/authRedirect";
 import { reportAuthError } from "@/utils/authErrors";
+import { authErrorReason } from "@/utils/authErrors";
+import { track } from "@/lib/analytics";
 
 const SignUpPage = () => {
   const { user, signUp, signInWithGoogle, loading } = useAuth();
@@ -37,12 +39,23 @@ const SignUpPage = () => {
     return () => clearTimeout(timer);
   }, [resendIn]);
 
+  // Topo do funil: quantos chegam de fato ao formulário (não conta quem já
+  // está logado e cai aqui) — e quantos vêm da aula grátis.
+  const startTracked = useRef(false);
+  useEffect(() => {
+    if (loading || user || startTracked.current) return;
+    startTracked.current = true;
+    track("signup_started", { redirectTo, trialProgress });
+  }, [loading, user, redirectTo, trialProgress]);
+
   const resend = async () => {
     const { error } = await supabase.auth.resend({ type: "signup", email });
     if (error) {
+      track("signup_error", { method: "email", step: "resend", reason: authErrorReason(error) });
       toast.error(reportAuthError(error, "signup-resend"));
       return;
     }
+    track("signup_resent", {});
     setResendIn(60);
     toast.success("Enviamos o link de novo. Confira a caixa de entrada e o spam.");
   };
@@ -59,11 +72,16 @@ const SignUpPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    track("signup_submitted", { method: "email", trialProgress });
     const { error } = await signUp(email, password, name);
     setSubmitting(false);
     if (error) {
+      track("signup_error", { method: "email", reason: authErrorReason(error) });
       toast.error(reportAuthError(error, "signup"));
     } else {
+      // Ainda NÃO é conta ativa: falta abrir o link. O par com `email_confirmed`
+      // é o que mostra quanta gente se perde na caixa de entrada.
+      track("signup_email_sent", { method: "email" });
       setSent(true);
       setResendIn(60);
     }
@@ -71,10 +89,12 @@ const SignUpPage = () => {
 
   const handleGoogleSignIn = async () => {
     setGoogleSubmitting(true);
+    track("signup_submitted", { method: "google", trialProgress });
     const { error } = await signInWithGoogle(redirectTo);
     setGoogleSubmitting(false);
 
     if (error) {
+      track("signup_error", { method: "google", reason: authErrorReason(error) });
       toast.error(reportAuthError(error, "signup-google"));
     }
   };

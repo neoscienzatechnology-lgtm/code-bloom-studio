@@ -27,6 +27,110 @@ interface ProgressRow {
   code: string;
   completed: boolean;
   xp_earned: number;
+  /** Só é enviado quando a coluna existe no banco (ver `completedAtSupported`). */
+  completed_at?: string;
+}
+
+interface ProgressCloudRow {
+  lesson_id: string;
+  course_id: string;
+  code: string | null;
+  completed: boolean | null;
+  xp_earned: number | null;
+  updated_at: string;
+  completed_at?: string | null;
+}
+
+// A data de conclusão vinha de `updated_at`, que muda a cada autosave: reabrir
+// uma aula antiga e digitar contava como "estudou hoje" — inflando a OFENSIVA
+// e a contagem diária do freemium. Agora usamos `completed_at`, que só é
+// gravado ao concluir. A coluna vem da migration 20260622120000; enquanto ela
+// não for aplicada, detectamos a ausência uma vez e seguimos com o
+// comportamento antigo, sem quebrar nada. #checkup-14
+const PROGRESS_COLUMNS = "lesson_id, course_id, code, completed, xp_earned, updated_at";
+let completedAtSupported: boolean | null = null;
+
+/** Coluna inexistente (migration não aplicada) — 42703 no PostgREST. */
+function isMissingColumnError(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false;
+  return error.code === "42703" || /column .*completed_at.* does not exist/i.test(error.message ?? "");
+}
+
+async function fetchProgressRows(userId: string): Promise<ProgressCloudRow[]> {
+  if (completedAtSupported !== false) {
+    const attempt = await supabase
+      .from("user_progress")
+      .select(`${PROGRESS_COLUMNS}, completed_at`)
+      .eq("user_id", userId);
+    if (!attempt.error) {
+      completedAtSupported = true;
+      return (attempt.data ?? []) as unknown as ProgressCloudRow[];
+    }
+    // Só desiste da coluna quando ela realmente não existe; queda de rede
+    // continua sendo erro (e o TanStack Query tenta de novo).
+    if (!isMissingColumnError(attempt.error)) throw attempt.error;
+    completedAtSupported = false;
+  }
+
+  const { data, error } = await supabase.from("user_progress").select(PROGRESS_COLUMNS).eq("user_id", userId);
+  if (error) throw error;
+  return (data ?? []) as unknown as ProgressCloudRow[];
+}
+
+/**
+ * Dia (chave local) em que a aula foi concluída, segundo a nuvem. `updated_at`
+ * é só o plano B de quem concluiu antes da coluna existir.
+ */
+export function completionDateFromRow(
+  row: { completed_at?: string | null; updated_at?: string | null },
+  fallback: Date = new Date(),
+): string {
+  const stamp = row.completed_at ?? row.updated_at;
+  if (!stamp) return toLocalDateKey(fallback);
+  const parsed = new Date(stamp);
+  return Number.isNaN(parsed.getTime()) ? toLocalDateKey(fallback) : toLocalDateKey(parsed);
+}
+
+/** Converte a chave local (AAAA-MM-DD) em timestamp; meio-dia evita virar o dia por fuso. */
+function stampFromDateKey(dateKey: string | undefined, now: Date): string {
+  if (!dateKey) return now.toISOString();
+  const parsed = new Date(`${dateKey}T12:00:00`);
+  return Number.isNaN(parsed.getTime()) ? now.toISOString() : parsed.toISOString();
+}
+
+export interface ProgressRowInput {
+  userId: string;
+  lessonId: string;
+  courseId: string;
+  code: string;
+  completed: boolean;
+  xp: number;
+  /** Dia real da conclusão (do snapshot local), NÃO o relógio de agora. */
+  completedAtKey?: string;
+}
+
+/**
+ * Monta a linha do upsert. Com `supportsCompletedAt` falso o campo simplesmente
+ * não vai no payload — o PostgREST então nem toca na coluna, e o app funciona
+ * igual antes e depois da migration.
+ */
+export function buildProgressRow(
+  input: ProgressRowInput,
+  supportsCompletedAt: boolean,
+  now: Date = new Date(),
+): ProgressRow {
+  const row: ProgressRow = {
+    user_id: input.userId,
+    lesson_id: input.lessonId,
+    course_id: input.courseId,
+    code: input.code,
+    completed: input.completed,
+    xp_earned: input.xp,
+  };
+  if (supportsCompletedAt && input.completed) {
+    row.completed_at = stampFromDateKey(input.completedAtKey, now);
+  }
+  return row;
 }
 
 const STORAGE_KEY = STORAGE_KEYS.progress;
@@ -227,14 +331,7 @@ export function useProgress() {
   const progressQuery = useQuery({
     queryKey: ["user-progress", user?.id],
     enabled: !!user,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_progress")
-        .select("lesson_id, course_id, code, completed, xp_earned, updated_at")
-        .eq("user_id", user!.id);
-      if (error) throw error;
-      return data ?? [];
-    },
+    queryFn: () => fetchProgressRows(user!.id),
   });
 
   // Cloud progress write — always a batch upsert (callers wrap a single row
@@ -271,10 +368,7 @@ export function useProgress() {
       cloudCourseIds[d.lesson_id] = d.course_id;
       if (d.code) cloudCode[d.lesson_id] = d.code;
       if (d.completed) {
-        // TODO #checkup-14: após aplicar a migration 20260622120000_progress_completed_at,
-        // selecionar/gravar `completed_at` e usar `d.completed_at ?? d.updated_at` aqui —
-        // updated_at muda a cada saveCode e infla a contagem diária do freemium.
-        const completedAt = d.updated_at ? toLocalDateKey(new Date(d.updated_at)) : toLocalDateKey(new Date());
+        const completedAt = completionDateFromRow(d);
         const earned = d.xp_earned || 0;
         cloudCompletedAt[d.lesson_id] = completedAt;
         cloudXpEarned[d.lesson_id] = earned;
@@ -304,14 +398,21 @@ export function useProgress() {
     });
     replaceProgressSnapshot(merged);
 
-    const localCompletions: ProgressRow[] = local.completedLessons.map((lessonId) => ({
-      user_id: user.id,
-      lesson_id: lessonId,
-      course_id: cloudCourseIds[lessonId] ?? resolveProgressCourseId(lessonId),
-      code: mergedCode[lessonId] ?? "",
-      completed: true,
-      xp_earned: mergedXpEarned[lessonId] ?? 0,
-    }));
+    const localCompletions: ProgressRow[] = local.completedLessons.map((lessonId) =>
+      buildProgressRow(
+        {
+          userId: user.id,
+          lessonId,
+          courseId: cloudCourseIds[lessonId] ?? resolveProgressCourseId(lessonId),
+          code: mergedCode[lessonId] ?? "",
+          completed: true,
+          xp: mergedXpEarned[lessonId] ?? 0,
+          // preserva a data REAL da conclusão local ao subir para a nuvem
+          completedAtKey: mergedCompletedAt[lessonId],
+        },
+        completedAtSupported === true,
+      ),
+    );
 
     if (localCompletions.length > 0) {
       upsertProgressMutate(localCompletions);
@@ -324,14 +425,20 @@ export function useProgress() {
     (lessonId: string, courseId: string, code: string, completed: boolean, xp: number) => {
       if (!user) return;
       upsertProgressMutate([
-        {
-          user_id: user.id,
-          lesson_id: lessonId,
-          course_id: courseId,
-          code,
-          completed,
-          xp_earned: xp,
-        },
+        buildProgressRow(
+          {
+            userId: user.id,
+            lessonId,
+            courseId,
+            code,
+            completed,
+            xp,
+            // A data vem do snapshot (quando a aula foi REALMENTE concluída), não
+            // do relógio: salvar código numa aula antiga não pode carimbá-la hoje. #checkup-14
+            completedAtKey: getProgressSnapshot().lessonCompletedAt[lessonId],
+          },
+          completedAtSupported === true,
+        ),
       ]);
     },
     [user, upsertProgressMutate]

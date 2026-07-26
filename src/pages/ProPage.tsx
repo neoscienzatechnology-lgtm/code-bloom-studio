@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import { ArrowLeft, Check, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEntitlement } from "@/contexts/EntitlementContext";
 import { MONETIZATION } from "@/config/monetization";
+import { track } from "@/lib/analytics";
 
 const ProPage = () => {
   const navigate = useNavigate();
@@ -13,13 +14,25 @@ const ProPage = () => {
   const [message, setMessage] = useState<string | null>(null);
   const reason = params.get("reason");
 
+  // Quem chega aqui viu a oferta. `reason` diz o que trouxe (limite diário,
+  // módulo trancado ou curiosidade) — sem isso, /pro é só um pageview mudo.
+  useEffect(() => {
+    if (isPro) return;
+    track("paywall_shown", { reason: reason ?? "direct", native: Capacitor.isNativePlatform() });
+  }, [isPro, reason]);
+
   const handleSubscribe = async () => {
     setMessage(null);
+    track("pro_purchase_started", { reason: reason ?? "direct", native: Capacitor.isNativePlatform() });
     const result = await buyPro();
     if (result.ok) {
+      track("pro_purchase_completed", { reason: reason ?? "direct" });
       setMessage("Assinatura ativada. Bem-vindo ao Pro! 🎉");
       return;
     }
+    // Hoje isto é sempre "indisponível" (a compra está dormente atrás do flag);
+    // o evento existe para o dia em que a loja estiver ligada.
+    track("pro_purchase_failed", { reason: result.reason ?? "unavailable" });
     setMessage(
       Capacitor.isNativePlatform()
         ? "As assinaturas serão ativadas em breve aqui no app."
@@ -30,6 +43,7 @@ const ProPage = () => {
   const handleRestore = async () => {
     setMessage(null);
     const ok = await restore();
+    track("pro_restore", { ok });
     setMessage(ok ? "Compra restaurada com sucesso. 🎉" : "Nenhuma assinatura encontrada para restaurar.");
   };
 

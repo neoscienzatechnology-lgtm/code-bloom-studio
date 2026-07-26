@@ -7,6 +7,8 @@
 // explícitos (telas e marcos de aprendizado) e exceções. Identificamos o
 // usuário apenas pelo id da conta (sem e-mail/nome).
 
+import { readJson, writeJson, STORAGE_KEYS } from "@/lib/storage";
+
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY?.trim();
 const POSTHOG_HOST = import.meta.env.VITE_POSTHOG_HOST?.trim() || "https://us.i.posthog.com";
 
@@ -14,6 +16,30 @@ type PostHogClient = typeof import("posthog-js").default;
 
 let client: PostHogClient | null = null;
 let initStarted = false;
+
+// O SDK entra por import() dinâmico: entre o primeiro render e o `client`
+// pronto passam alguns milissegundos — justo onde caem os eventos de entrada
+// (`$pageview`, `signup_started`). Sem fila, o começo do funil sumia.
+type QueuedEvent = { event: string; properties?: Record<string, unknown> };
+const queue: QueuedEvent[] = [];
+const QUEUE_LIMIT = 50;
+let pendingUserId: string | null = null;
+
+function flushQueue(): void {
+  if (!client) return;
+  const buffered = queue.splice(0, queue.length);
+  if (pendingUserId) {
+    identifyUser(pendingUserId);
+    pendingUserId = null;
+  }
+  buffered.forEach(({ event, properties }) => {
+    try {
+      client?.capture(event, properties);
+    } catch {
+      /* ignore */
+    }
+  });
+}
 
 export function isAnalyticsEnabled(): boolean {
   return Boolean(POSTHOG_KEY);
@@ -32,6 +58,7 @@ export async function initAnalytics(): Promise<void> {
       persistence: "localStorage",
     });
     client = posthog;
+    flushQueue();
 
     window.addEventListener("error", (event) => {
       captureError(event.error ?? event.message);
@@ -45,11 +72,29 @@ export async function initAnalytics(): Promise<void> {
 }
 
 export function track(event: string, properties?: Record<string, unknown>): void {
+  if (!POSTHOG_KEY) return; // telemetria desligada: nem enfileira
+  if (!client) {
+    if (queue.length < QUEUE_LIMIT) queue.push({ event, properties });
+    return;
+  }
   try {
-    client?.capture(event, properties);
+    client.capture(event, properties);
   } catch {
     /* ignore */
   }
+}
+
+/**
+ * Marco que só pode ser contado uma vez (ex.: confirmação de e-mail, que
+ * acontece uma vez por conta mas dispara em todo login seguinte). O marcador
+ * fica no aparelho; com telemetria desligada nada é gravado nem marcado.
+ */
+export function trackOnce(marker: string, event: string, properties?: Record<string, unknown>): void {
+  if (!POSTHOG_KEY) return;
+  const seen = readJson<Record<string, true>>(STORAGE_KEYS.analyticsMilestones, {});
+  if (seen[marker]) return;
+  writeJson(STORAGE_KEYS.analyticsMilestones, { ...seen, [marker]: true });
+  track(event, properties);
 }
 
 export function trackPageview(path: string): void {
@@ -57,14 +102,20 @@ export function trackPageview(path: string): void {
 }
 
 export function identifyUser(userId: string): void {
+  if (!POSTHOG_KEY) return;
+  if (!client) {
+    pendingUserId = userId;
+    return;
+  }
   try {
-    client?.identify(userId);
+    client.identify(userId);
   } catch {
     /* ignore */
   }
 }
 
 export function resetAnalyticsUser(): void {
+  pendingUserId = null;
   try {
     client?.reset();
   } catch {

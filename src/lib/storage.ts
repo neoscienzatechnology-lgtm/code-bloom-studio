@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
   entitlement: "code-bloom-studio-entitlement",
   reminder: "code-bloom-studio-reminder",
   freeze: "code-bloom-studio-freeze",
+  analyticsMilestones: "code-bloom-studio-analytics-milestones",
   oauthRedirect: "capycode:oauth-redirect",
   projectPrefix: "code-bloom-studio-project-",
   confidencePrefix: "capy-confidence-",

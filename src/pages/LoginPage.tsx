@@ -8,7 +8,8 @@ import { toast } from "sonner";
 import BrandLogo from "@/components/BrandLogo";
 import LiveBackdrop from "@/components/LiveBackdrop";
 import { getAuthRedirect } from "@/utils/authRedirect";
-import { reportAuthError } from "@/utils/authErrors";
+import { authErrorReason, reportAuthError } from "@/utils/authErrors";
+import { track } from "@/lib/analytics";
 
 const LoginPage = () => {
   const { user, signIn, signInWithGoogle, loading } = useAuth();
@@ -31,19 +32,25 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    track("login_submitted", { method: "email" });
     const { error } = await signIn(email, password);
     setSubmitting(false);
     if (error) {
+      // `email_not_confirmed` aqui é o sintoma clássico de quem se cadastrou e
+      // nunca abriu o link — vale acompanhar junto com `signup_email_sent`.
+      track("login_error", { method: "email", reason: authErrorReason(error) });
       toast.error(reportAuthError(error, "login"));
     }
   };
 
   const handleGoogleSignIn = async () => {
     setGoogleSubmitting(true);
+    track("login_submitted", { method: "google" });
     const { error } = await signInWithGoogle(redirectTo);
     setGoogleSubmitting(false);
 
     if (error) {
+      track("login_error", { method: "google", reason: authErrorReason(error) });
       toast.error(reportAuthError(error, "login-google"));
     }
   };

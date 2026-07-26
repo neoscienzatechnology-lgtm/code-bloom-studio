@@ -18,8 +18,12 @@ export type Database = {
         Row: {
           avatar_emoji: string | null
           created_at: string
+          daily_goal: number | null
           display_name: string | null
           id: string
+          learning_experience: string | null
+          learning_goal: string | null
+          learning_profile_at: string | null
           level: number | null
           updated_at: string
           user_id: string
@@ -28,8 +32,12 @@ export type Database = {
         Insert: {
           avatar_emoji?: string | null
           created_at?: string
+          daily_goal?: number | null
           display_name?: string | null
           id?: string
+          learning_experience?: string | null
+          learning_goal?: string | null
+          learning_profile_at?: string | null
           level?: number | null
           updated_at?: string
           user_id: string
@@ -38,8 +46,12 @@ export type Database = {
         Update: {
           avatar_emoji?: string | null
           created_at?: string
+          daily_goal?: number | null
           display_name?: string | null
           id?: string
+          learning_experience?: string | null
+          learning_goal?: string | null
+          learning_profile_at?: string | null
           level?: number | null
           updated_at?: string
           user_id?: string
@@ -108,6 +120,7 @@ export type Database = {
         Row: {
           code: string | null
           completed: boolean | null
+          completed_at: string | null
           course_id: string
           created_at: string
           id: string
@@ -119,6 +132,7 @@ export type Database = {
         Insert: {
           code?: string | null
           completed?: boolean | null
+          completed_at?: string | null
           course_id: string
           created_at?: string
           id?: string
@@ -130,6 +144,7 @@ export type Database = {
         Update: {
           code?: string | null
           completed?: boolean | null
+          completed_at?: string | null
           course_id?: string
           created_at?: string
           id?: string

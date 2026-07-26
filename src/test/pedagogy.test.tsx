@@ -12,7 +12,14 @@ import { buildConceptMasteryPlan, getWeakConceptIds } from "@/utils/conceptMaste
 import { buildConceptTrainingSession } from "@/utils/weakConceptTraining";
 import { buildAchievements } from "@/utils/achievements";
 import { buildStudyStats } from "@/utils/studyStats";
-import { ACTIVITY_COURSE_IDS, awardProgressOnce, normalizeProgress, resolveProgressCourseId } from "@/hooks/useProgress";
+import {
+  ACTIVITY_COURSE_IDS,
+  awardProgressOnce,
+  buildProgressRow,
+  completionDateFromRow,
+  normalizeProgress,
+  resolveProgressCourseId,
+} from "@/hooks/useProgress";
 import { courses, type Course, type Lesson } from "@/data/mockData";
 import { moduleGroups } from "@/utils/entitlement";
 import { appCatalogSummary, courseCatalog, getCourseCatalogItem, landingTracks } from "@/data/courseCatalog";
@@ -153,6 +160,39 @@ describe("study stats and achievements", () => {
     expect(second.awarded).toBe(false);
     expect(second.progress.completedLessons).toEqual(["10-1"]);
     expect(second.progress.totalXp).toBe(15);
+  });
+
+  // A ofensiva e o limite diário do freemium liam a data de conclusão de
+  // `updated_at`, que muda a cada autosave: reabrir uma aula antiga e digitar
+  // marcava "estudou hoje". #checkup-14
+  it("não conta como atividade de hoje quando o aluno só edita uma aula antiga", () => {
+    const ontem = "2026-05-16";
+    const agora = new Date("2026-05-17T09:00:00");
+
+    // Vindo da nuvem: concluída ontem, mas salva (autosave) hoje.
+    expect(
+      completionDateFromRow({ completed_at: `${ontem}T20:00:00.000Z`, updated_at: agora.toISOString() }, agora),
+    ).toBe(ontem);
+
+    // Subindo para a nuvem: o carimbo é o dia real da conclusão, não o relógio.
+    const row = buildProgressRow(
+      { userId: "u1", lessonId: "10-1", courseId: "10", code: "print(1)", completed: true, xp: 15, completedAtKey: ontem },
+      true,
+      agora,
+    );
+    expect(row.completed_at?.startsWith(ontem)).toBe(true);
+  });
+
+  it("mantém o app funcionando antes da migration de completed_at", () => {
+    const agora = new Date("2026-05-17T09:00:00");
+
+    // Sem a coluna, o plano B continua sendo updated_at…
+    expect(completionDateFromRow({ updated_at: "2026-05-15T10:00:00.000Z" }, agora)).toBe("2026-05-15");
+    // …e o campo não vai no payload, para o PostgREST não tocar na coluna.
+    const base = { userId: "u1", lessonId: "10-1", courseId: "10", code: "", completed: true, xp: 15 };
+    expect("completed_at" in buildProgressRow(base, false, agora)).toBe(false);
+    // Aula não concluída nunca carrega data.
+    expect("completed_at" in buildProgressRow({ ...base, completed: false }, true, agora)).toBe(false);
   });
 
   it("normalizes duplicated completed lessons without multiplying XP", () => {

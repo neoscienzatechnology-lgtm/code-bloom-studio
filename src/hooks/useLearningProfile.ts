@@ -56,12 +56,7 @@ async function fetchCloudProfile(userId: string): Promise<LearningProfile | null
       .maybeSingle();
     if (error || !data) return null;
 
-    const row = data as unknown as {
-      learning_goal: string | null;
-      learning_experience: string | null;
-      daily_goal: number | null;
-      learning_profile_at: string | null;
-    };
+    const row = data;
     if (!row.learning_goal || !row.learning_experience) return null;
 
     return {
@@ -77,8 +72,8 @@ async function fetchCloudProfile(userId: string): Promise<LearningProfile | null
 
 async function pushCloudProfile(userId: string, profile: LearningProfile): Promise<void> {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from("profiles") as any)
+    await supabase
+      .from("profiles")
       .update({
         learning_goal: profile.goal,
         learning_experience: profile.experience,

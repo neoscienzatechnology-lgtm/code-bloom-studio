@@ -95,6 +95,27 @@ describe("analytics no-op safety", () => {
     expect(() => analytics.captureError(new Error("boom"))).not.toThrow();
     await expect(analytics.initAnalytics()).resolves.toBeUndefined();
   });
+
+  // Sem chave, `trackOnce` não pode nem gastar o marcador: se gastasse, o dia
+  // em que a telemetria for ligada o marco já estaria "usado" e nunca chegaria.
+  it("does not burn the one-shot marker while telemetry is off", async () => {
+    const analytics = await import("@/lib/analytics");
+    const { readJson, STORAGE_KEYS } = await import("@/lib/storage");
+    analytics.trackOnce("email_confirmed:u1", "email_confirmed", { provider: "email" });
+    expect(readJson(STORAGE_KEYS.analyticsMilestones, null)).toBeNull();
+  });
+});
+
+describe("motivo de erro de autenticação (telemetria)", () => {
+  it("resume o erro num rótulo estável, sem texto cru", async () => {
+    const { authErrorReason } = await import("@/utils/authErrors");
+    expect(authErrorReason(new Error("User already registered"))).toBe("email_taken");
+    expect(authErrorReason(new Error("Email not confirmed"))).toBe("email_not_confirmed");
+    expect(authErrorReason(new Error("Invalid login credentials"))).toBe("invalid_credentials");
+    expect(authErrorReason(new Error("Email rate limit exceeded"))).toBe("rate_limited");
+    // Erro novo/desconhecido não pode vazar o texto original para fora.
+    expect(authErrorReason(new Error("Some brand new GoTrue failure with user@example.com"))).toBe("unknown");
+  });
 });
 
 describe("concept diagram mapping", () => {

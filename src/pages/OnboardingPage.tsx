@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BrandLogo from "@/components/BrandLogo";
 import { ArrowRight, CheckCircle2, Clock, GraduationCap, Target } from "lucide-react";
@@ -10,9 +10,10 @@ import {
   useLearningProfile,
 } from "@/hooks/useLearningProfile";
 import { learningPaths } from "@/data/learningPaths";
-import { courses } from "@/data/mockData";
+import { courseCatalog } from "@/data/courseCatalog";
 import { selectPathStartCourse } from "@/utils/learningPathProgress";
 import CoachGuide from "@/components/CoachGuide";
+import { track } from "@/lib/analytics";
 
 const experienceOptions: Array<{ value: ExperienceLevel; title: string; description: string }> = [
   { value: "new", title: "Nunca programei", description: "Começar devagar, com linguagem simples e muitos exemplos." },
@@ -39,9 +40,15 @@ const OnboardingPage = () => {
     [goal]
   );
 
+  useEffect(() => {
+    track("onboarding_started", {});
+  }, []);
+
   const finish = () => {
+    // O catálogo leve basta para escolher o curso inicial (só id/progresso),
+    // e assim a tela seguinte ao cadastro não baixa os 13 cursos. #peso-5
     const targetCourse = selectPathStartCourse(
-      courses.map((course) => ({ ...course, realProgress: 0 })),
+      courseCatalog.map((course) => ({ id: course.id, realProgress: 0 })),
       selectedPath,
       null,
     );
@@ -51,6 +58,7 @@ const OnboardingPage = () => {
       dailyGoal,
       createdAt: new Date().toISOString(),
     });
+    track("onboarding_completed", { goal, experience, dailyGoal, courseId: targetCourse.id });
     navigate(`/cursos/${targetCourse.id}`);
   };
 
@@ -59,6 +67,7 @@ const OnboardingPage = () => {
   // #revisao-2.5
   const skip = () => {
     setProfile({ experience: "new", goal: "frontend", dailyGoal: 10, createdAt: new Date().toISOString() });
+    track("onboarding_skipped", { goal, experience, dailyGoal });
     navigate("/dashboard");
   };
 
@@ -99,7 +108,10 @@ const OnboardingPage = () => {
             {learningPaths.map((path) => (
               <button
                 key={path.id}
-                onClick={() => setGoal(path.id)}
+                onClick={() => {
+                  setGoal(path.id);
+                  track("onboarding_step", { step: "goal", value: path.id });
+                }}
                 className={`rounded-2xl border p-5 text-left transition-all ${
                   goal === path.id
                     ? "border-primary bg-primary/10 ring-1 ring-primary/20"
@@ -129,7 +141,10 @@ const OnboardingPage = () => {
                 {experienceOptions.map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => setExperience(option.value)}
+                    onClick={() => {
+                      setExperience(option.value);
+                      track("onboarding_step", { step: "experience", value: option.value });
+                    }}
                     className={`rounded-xl border p-4 text-left transition-all ${
                       experience === option.value
                         ? "border-quest-blue bg-quest-blue/10 ring-1 ring-quest-blue/20"
@@ -154,7 +169,10 @@ const OnboardingPage = () => {
                 {dailyOptions.map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => setDailyGoal(option.value)}
+                    onClick={() => {
+                      setDailyGoal(option.value);
+                      track("onboarding_step", { step: "dailyGoal", value: option.value });
+                    }}
                     className={`rounded-full border px-5 py-2 text-sm font-black transition-all ${
                       dailyGoal === option.value
                         ? "border-accent bg-accent text-accent-foreground"
