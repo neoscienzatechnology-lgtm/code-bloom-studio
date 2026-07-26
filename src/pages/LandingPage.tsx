@@ -8,6 +8,7 @@ import BrandLogo from "@/components/BrandLogo";
 import { appCatalogSummary, landingTracks } from "@/data/courseCatalog";
 import CourseCoverArt from "@/components/CourseCoverArt";
 import { isWebglAvailable, prefersReducedMotion } from "@/utils/webgl";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 const HeroCanvasLazy = lazy(() => import("@/components/HeroCanvas"));
 
@@ -126,6 +127,14 @@ function canAfford3d(): boolean {
 
 const LandingPage = () => {
   const [enable3d, setEnable3d] = useState(false);
+
+  // As outras rotas públicas reescrevem título/descrição; sem isto, voltar
+  // para a home mantinha o título da página anterior. #seo
+  useDocumentMeta({
+    title: "CodeTier — Aprenda programação com trilhas guiadas",
+    description: `App de ensino de programação em português: ${appCatalogSummary.courseCount} trilhas, ${appCatalogSummary.lessonCount} aulas curtas e ${appCatalogSummary.projectCount} projetos, com código rodando no navegador.`,
+    canonicalPath: "/",
+  });
 
   useEffect(() => {
     if (!canAfford3d()) return;

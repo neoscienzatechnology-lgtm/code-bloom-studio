@@ -5,7 +5,15 @@ import { useAugmentedCourse } from "@/hooks/useAugmentedCourse";
 import { useProgress } from "@/hooks/useProgress";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { isCourseComplete, courseCompletionDate, formatCertificateDate } from "@/utils/certificate";
+import CertificateArt from "@/components/CertificateArt";
+import {
+  certificatePath,
+  courseCompletionDate,
+  formatCertificateDate,
+  isCourseComplete,
+  toCertificateDateKey,
+} from "@/utils/certificate";
+import { track } from "@/lib/analytics";
 
 const CertificatePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -31,7 +39,10 @@ const CertificatePage = () => {
   }
 
   const name = (user?.user_metadata?.display_name as string | undefined)?.trim() || "Estudante CodeTier";
-  const dateText = formatCertificateDate(courseCompletionDate(lessonIds, lessonCompletedAt) ?? new Date());
+  const completedOn = courseCompletionDate(lessonIds, lessonCompletedAt) ?? new Date();
+  const dateText = formatCertificateDate(completedOn);
+  // Link que outra pessoa consegue abrir (esta rota exige login). #revisao-lote10
+  const publicUrl = `${window.location.origin}${certificatePath(course.id, name, toCertificateDateKey(completedOn))}`;
 
   const downloadPng = async () => {
     const svg = svgRef.current;
@@ -73,19 +84,20 @@ const CertificatePage = () => {
   };
 
   const share = async () => {
-    const url = window.location.href;
     const text = `Concluí a trilha ${course.title} no CodeTier! 🎓`;
     const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
     if (typeof nav.share === "function") {
       try {
-        await nav.share({ title: "Certificado CodeTier", text, url });
+        await nav.share({ title: "Certificado CodeTier", text, url: publicUrl });
+        track("certificate_shared", { courseId: course.id, via: "share" });
         return;
       } catch {
         /* usuário cancelou — cai no copiar */
       }
     }
     try {
-      await navigator.clipboard.writeText(`${text} ${url}`);
+      await navigator.clipboard.writeText(`${text} ${publicUrl}`);
+      track("certificate_shared", { courseId: course.id, via: "clipboard" });
       setShareMsg("Link copiado!");
       setTimeout(() => setShareMsg(null), 2000);
     } catch {
@@ -102,33 +114,14 @@ const CertificatePage = () => {
         </Link>
 
         <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
-          <svg ref={svgRef} viewBox="0 0 1200 850" className="h-auto w-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={`Certificado de conclusão da trilha ${course.title} para ${name}`}>
-            <rect width="1200" height="850" fill="#FBFBFB" />
-            <rect x="28" y="28" width="1144" height="794" rx="18" fill="none" stroke="#242424" strokeWidth="3" />
-            <rect x="28" y="28" width="1144" height="10" rx="5" fill="#44D62C" />
-
-            <g transform="translate(600,150)">
-              <path d="M-26 -28 C-46 -10 -46 10 -26 28" fill="none" stroke="#242424" strokeWidth="9" strokeLinecap="round" />
-              <path d="M-18 -28 C2 -10 2 10 -18 28" fill="none" stroke="#44D62C" strokeWidth="9" strokeLinecap="round" />
-              <text x="34" y="13" fontFamily="'Space Grotesk',sans-serif" fontSize="40" fontWeight="700" letterSpacing="-2" fill="#242424">CodeTier</text>
-            </g>
-
-            <text x="600" y="270" textAnchor="middle" fontFamily="'Space Grotesk',sans-serif" fontSize="22" fontWeight="600" letterSpacing="6" fill="#1F8A3A">CERTIFICADO DE CONCLUSÃO</text>
-
-            <text x="600" y="345" textAnchor="middle" fontFamily="system-ui,sans-serif" fontSize="22" fill="#5B6571">Este certificado é concedido a</text>
-            <text x="600" y="430" textAnchor="middle" fontFamily="'Space Grotesk',sans-serif" fontSize="66" fontWeight="700" letterSpacing="-1" fill="#242424">{name}</text>
-            <rect x="380" y="455" width="440" height="3" rx="1.5" fill="#E2E4E2" />
-
-            <text x="600" y="525" textAnchor="middle" fontFamily="system-ui,sans-serif" fontSize="22" fill="#5B6571">por concluir a trilha</text>
-            <text x="600" y="585" textAnchor="middle" fontFamily="'Space Grotesk',sans-serif" fontSize="40" fontWeight="700" fill="#1F8A3A">{course.title}</text>
-
-            <g transform="translate(600,680)">
-              <circle cx="0" cy="0" r="46" fill="#44D62C" />
-              <path d="M-20 0 L-7 14 L22 -16" fill="none" stroke="#0A2A06" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
-            </g>
-
-            <text x="600" y="775" textAnchor="middle" fontFamily="system-ui,sans-serif" fontSize="20" fill="#5B6571">Concluído em {dateText} · {course.lessons.length} lições · {course.language}</text>
-          </svg>
+          <CertificateArt
+            ref={svgRef}
+            name={name}
+            courseTitle={course.title}
+            lessonCount={course.lessons.length}
+            language={course.language}
+            dateText={dateText}
+          />
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -140,6 +133,10 @@ const CertificatePage = () => {
           </Button>
           {shareMsg && <span className="text-sm font-bold text-primary">{shareMsg}</span>}
         </div>
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          O link compartilhado abre uma página pública com seu nome, a trilha e a data — sem login e sem
+          nenhum dado da sua conta.
+        </p>
       </div>
     </div>
   );

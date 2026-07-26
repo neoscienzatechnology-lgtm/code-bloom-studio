@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -12,11 +13,46 @@ import { useProgress } from "@/hooks/useProgress";
 import CoachGuide, { type CoachState } from "@/components/CoachGuide";
 import CourseRoutePath from "@/components/CourseRoutePath";
 import CourseCoverArt from "@/components/CourseCoverArt";
+import { getCourseCatalogItem } from "@/data/courseCatalog";
+import { SITE_URL, useDocumentMeta, useJsonLd } from "@/hooks/useDocumentMeta";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const { data: course, loading } = useAugmentedCourse(courseId);
   const { isCompleted } = useProgress();
+
+  // Título/descrição vêm do catálogo leve, que já está carregado: assim a aba
+  // e o buscador têm o nome do curso mesmo antes do conteúdo chegar. #seo
+  const catalogItem = getCourseCatalogItem(courseId ?? "");
+  useDocumentMeta({
+    title: catalogItem
+      ? `${catalogItem.title} — curso de ${catalogItem.language} | CodeTier`
+      : "Curso — CodeTier",
+    description: catalogItem
+      ? `Trilha ${catalogItem.title}: ${catalogItem.lessonCount} aulas de ${catalogItem.language} com código rodando no navegador. Nível ${catalogItem.level.toLowerCase()}, projeto final "${catalogItem.finalProject}".`
+      : undefined,
+    canonicalPath: catalogItem ? `/cursos/${catalogItem.id}` : undefined,
+  });
+  useJsonLd(
+    useMemo(
+      () =>
+        catalogItem
+          ? {
+              "@context": "https://schema.org",
+              "@type": "Course",
+              name: catalogItem.title,
+              description: `Curso de ${catalogItem.language} com ${catalogItem.lessonCount} aulas práticas e projeto final.`,
+              url: `${SITE_URL}/cursos/${catalogItem.id}`,
+              inLanguage: "pt-BR",
+              educationalLevel: catalogItem.level,
+              teaches: catalogItem.language,
+              isAccessibleForFree: true,
+              provider: { "@type": "Organization", name: "CodeTier", url: SITE_URL },
+            }
+          : null,
+      [catalogItem],
+    ),
+  );
 
   // O conteúdo do curso chega sob demanda (#peso-5): esqueleto enquanto isso.
   if (loading) {

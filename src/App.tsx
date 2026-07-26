@@ -37,6 +37,7 @@ const WeakConceptsPage = lazy(() => import("./pages/WeakConceptsPage.tsx"));
 const ReferencePage = lazy(() => import("./pages/ReferencePage.tsx"));
 const PlaygroundPage = lazy(() => import("./pages/PlaygroundPage.tsx"));
 const CertificatePage = lazy(() => import("./pages/CertificatePage.tsx"));
+const PublicCertificatePage = lazy(() => import("./pages/PublicCertificatePage.tsx"));
 const ProPage = lazy(() => import("./pages/ProPage.tsx"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
@@ -142,6 +143,9 @@ const App = () => {
               <Route path="/referencia" element={<ProtectedPageWithNav><ReferencePage /></ProtectedPageWithNav>} />
               <Route path="/playground" element={<ProtectedPageWithNav><PlaygroundPage /></ProtectedPageWithNav>} />
               <Route path="/certificado/:courseId" element={<ProtectedPageWithNav><CertificatePage /></ProtectedPageWithNav>} />
+              {/* Certificado compartilhado: público de propósito — é o link que
+                  o aluno manda para os amigos. #revisao-lote10 */}
+              <Route path="/c/:courseId/:slug" element={<PageWithNav><PublicCertificatePage /></PageWithNav>} />
               <Route path="/pro" element={<ProtectedPageWithNav><ProPage /></ProtectedPageWithNav>} />
               <Route path="/privacidade" element={<PageWithNav><PrivacyPolicyPage /></PageWithNav>} />
               <Route path="/termos" element={<PageWithNav><TermsPage /></PageWithNav>} />

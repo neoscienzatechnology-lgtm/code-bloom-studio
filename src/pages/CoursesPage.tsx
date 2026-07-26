@@ -16,6 +16,7 @@ import CoachGuide from "@/components/CoachGuide";
 import CourseCoverArt from "@/components/CourseCoverArt";
 import { useLearningProfile } from "@/hooks/useLearningProfile";
 import { calculatePathProgress, selectPathStartCourse } from "@/utils/learningPathProgress";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 const tabs = ["Trilhas", "Explorar"] as const;
 const pathCoverCourseIds: Record<string, string> = {
@@ -49,6 +50,12 @@ const isCourseUnlocked = (courseId: string, completedCourseIds: string[]) => {
 const CoursesPage = () => {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Trilhas");
   const navigate = useNavigate();
+  useDocumentMeta({
+    title: "Cursos de programação em português — CodeTier",
+    description:
+      "Trilhas guiadas de Lógica, Python, JavaScript, HTML, CSS, React, SQL e mais — aulas curtas com código rodando no navegador e projeto final em cada curso.",
+    canonicalPath: "/cursos",
+  });
   const { getCourseProgress } = useProgress();
   const { profile, setProfile } = useLearningProfile();
 

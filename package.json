@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "tsx scripts/gen-sitemap.ts",
     "build": "vite build",
+    "sitemap": "tsx scripts/gen-sitemap.ts",
     "build:dev": "vite build --mode development",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",

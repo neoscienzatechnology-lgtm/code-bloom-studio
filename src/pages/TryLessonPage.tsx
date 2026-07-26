@@ -4,6 +4,7 @@ import { loadLesson } from "@/data/courseLoader";
 import type { Course, Lesson } from "@/data/mockData";
 import LessonView from "@/components/lesson/LessonView";
 import { track } from "@/lib/analytics";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 // Aula aberta de demonstração: o visitante faz uma lição INTEIRA antes de
 // criar conta. O progresso fica no localStorage e sobe para a conta no
@@ -22,6 +23,13 @@ const TryLessonPage = () => {
   const [data, setData] = useState<{ course: Course; lesson: Lesson; lessonIndex: number } | null | undefined>(
     undefined,
   );
+
+  useDocumentMeta({
+    title: "Aula grátis de programação (sem cadastro) — CodeTier",
+    description:
+      "Faça uma aula inteira de lógica de programação agora, direto no navegador e sem criar conta. Escreva código, execute e veja o resultado.",
+    canonicalPath: "/experimentar",
+  });
 
   useEffect(() => {
     track("trial_started", TRIAL);

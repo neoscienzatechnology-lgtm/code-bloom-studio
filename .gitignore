@@ -57,3 +57,9 @@ bun.lockb
 # Railway (vídeos copiados para deploy; fonte é out/videos)
 /railway-videos/videos/
 /railway-videos/node_modules/
+
+# Ferramentas locais e material de outro projeto que vive nesta pasta:
+# nada disso pertence ao CodeTier e não pode entrar num `git add -A`.
+/.playwright-mcp/
+/supabase/.temp/
+/diagnostico-*

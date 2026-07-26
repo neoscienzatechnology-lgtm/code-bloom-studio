@@ -7,7 +7,13 @@ import { classifyTheoryLine, splitInlineTokens } from "@/utils/theoryMarkup";
 import { tokenizeCodeLine, buildAssembleData, TOKEN_SEP } from "@/utils/assembleBlocks";
 import { evaluatePythonRun } from "@/utils/pythonOutput";
 import { resolveStreakFreezes } from "@/utils/streakFreeze";
-import { isCourseComplete, courseCompletionDate } from "@/utils/certificate";
+import {
+  certificateNameFromSlug,
+  certificatePath,
+  courseCompletionDate,
+  isCourseComplete,
+  toCertificateDateKey,
+} from "@/utils/certificate";
 import { toLocalDateKey } from "@/utils/studyStats";
 import { courses } from "@/data/mockData";
 import { useLessonRunner } from "@/hooks/useLessonRunner";
@@ -414,6 +420,31 @@ describe("course certificate", () => {
     const at = { a: "2026-06-01T10:00:00Z", b: "2026-06-10T10:00:00Z" };
     expect(courseCompletionDate(["a", "b"], at)?.getTime()).toBe(new Date("2026-06-10T10:00:00Z").getTime());
     expect(courseCompletionDate(["x"], at)).toBeNull();
+  });
+
+  // O botão "Compartilhar" mandava a rota protegida: quem recebia caía no
+  // login. O link agora é público e se descreve pela própria URL. #revisao-lote10
+  it("shares a public URL that survives a round trip", () => {
+    const path = certificatePath("10", "Maria Clara Souza", "2026-06-10");
+    expect(path).toBe("/c/10/Maria-Clara-Souza?d=2026-06-10");
+    expect(certificateNameFromSlug("Maria-Clara-Souza")).toBe("Maria Clara Souza");
+
+    // Acento sobrevive à ida e volta pela URL.
+    const joao = certificatePath("1", "João Álvaro", "2026-06-10");
+    const [, , , slug] = joao.split("?")[0].split("/");
+    expect(certificateNameFromSlug(decodeURIComponent(slug))).toBe("João Álvaro");
+
+    // Nome com barra/interrogação não pode inventar rota nem query.
+    const hostil = certificatePath("1", "a/b?c#d", null);
+    expect(hostil).toBe("/c/1/a-b-c-d");
+    // Data ausente ou inválida simplesmente não vai no link.
+    expect(certificatePath("1", "Ana", "ontem")).toBe("/c/1/Ana");
+    // Sem nome, o certificado ainda abre.
+    expect(certificateNameFromSlug(undefined)).toBe("Estudante CodeTier");
+  });
+
+  it("turns a date into the local key used by the share link", () => {
+    expect(toCertificateDateKey(new Date(2026, 5, 9, 23, 30))).toBe("2026-06-09");
   });
 });
 
