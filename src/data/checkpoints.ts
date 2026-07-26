@@ -1,4 +1,4 @@
-import { courses, type Course, type Lesson, type PracticeActivity, type QuizQuestion } from "./mockData";
+import type { Course, Lesson, PracticeActivity, QuizQuestion } from "./mockData";
 
 /**
  * Spaced-repetition checkpoints.
@@ -276,22 +276,20 @@ export function augmentCourse(course: Course): AugmentedCourse {
   return result;
 }
 
-export function getAugmentedCourseById(courseId: string): AugmentedCourse | undefined {
-  const course = courses.find((c) => c.id === courseId);
+// Estas versões carregam o curso SOB DEMANDA (um arquivo de conteúdo por vez).
+// Antes elas liam a lista completa `courses`, o que arrastava os 13 cursos para
+// qualquer tela — inclusive a página pública do curso. #peso-5
+export async function loadAugmentedCourse(courseId: string): Promise<AugmentedCourse | undefined> {
+  const { loadCourse } = await import("./courseLoader");
+  const course = await loadCourse(courseId);
   return course ? augmentCourse(course) : undefined;
 }
 
-export function getAugmentedCourses(): AugmentedCourse[] {
-  return courses.map(augmentCourse);
-}
-
-export function getAugmentedLessonById(
+export async function loadAugmentedLesson(
   courseId: string,
   lessonId: string
-):
-  | { course: AugmentedCourse; lesson: AugmentedLesson; lessonIndex: number }
-  | undefined {
-  const course = getAugmentedCourseById(courseId);
+): Promise<{ course: AugmentedCourse; lesson: AugmentedLesson; lessonIndex: number } | undefined> {
+  const course = await loadAugmentedCourse(courseId);
   if (!course) return undefined;
   const lessonIndex = course.lessons.findIndex((l) => l.id === lessonId);
   if (lessonIndex === -1) return undefined;

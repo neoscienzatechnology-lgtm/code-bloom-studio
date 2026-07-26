@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { ArrowLeft, Download, Share2 } from "lucide-react";
-import { getAugmentedCourseById } from "@/data/checkpoints";
+import { useAugmentedCourse } from "@/hooks/useAugmentedCourse";
 import { useProgress } from "@/hooks/useProgress";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -9,12 +9,20 @@ import { isCourseComplete, courseCompletionDate, formatCertificateDate } from "@
 
 const CertificatePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const course = getAugmentedCourseById(courseId || "");
+  const { data: course, loading } = useAugmentedCourse(courseId);
   const { completedLessons, lessonCompletedAt } = useProgress();
   const { user } = useAuth();
   const svgRef = useRef<SVGSVGElement>(null);
   const [shareMsg, setShareMsg] = useState<string | null>(null);
 
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center" role="status" aria-busy="true">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <span className="sr-only">Carregando o certificado…</span>
+      </div>
+    );
+  }
   if (!course) return <Navigate to="/cursos" replace />;
 
   const lessonIds = course.lessons.map((lesson) => lesson.id);

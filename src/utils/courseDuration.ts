@@ -28,5 +28,10 @@ export function formatMinutes(minutes: number): string {
 
 /** Ex.: "35 aulas · ~3h30" — o número de aulas é o que o aluno realmente recebe. */
 export function formatCourseDuration(course: Course | CountableCourse): string {
-  return `${realLessons(course).length} aulas · ~${formatMinutes(courseMinutes(course))}`;
+  return formatCourseSummary(realLessons(course).length, courseMinutes(course));
+}
+
+/** Mesma frase, a partir de números já calculados (índice leve de cursos). */
+export function formatCourseSummary(lessonCount: number, minutes: number): string {
+  return `${lessonCount} aulas · ~${formatMinutes(minutes)}`;
 }

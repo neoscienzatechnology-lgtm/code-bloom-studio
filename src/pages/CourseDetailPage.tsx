@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Award, BookOpen, Clock, Code2, GraduationCap, Play, Trophy } from "lucide-react";
-import { getAugmentedCourseById } from "@/data/checkpoints";
+import { useAugmentedCourse } from "@/hooks/useAugmentedCourse";
 import { getProjectsByCourse } from "@/data/projects";
 import { getCourseMeta } from "@/data/learningPaths";
 import { formatCourseDuration } from "@/utils/courseDuration";
@@ -15,9 +15,27 @@ import CourseCoverArt from "@/components/CourseCoverArt";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const course = getAugmentedCourseById(courseId || "");
+  const { data: course, loading } = useAugmentedCourse(courseId);
   const { isCompleted } = useProgress();
 
+  // O conteúdo do curso chega sob demanda (#peso-5): esqueleto enquanto isso.
+  if (loading) {
+    return (
+      <div className="min-h-screen px-4 py-10 sm:px-6" role="status" aria-busy="true">
+        <div className="mx-auto max-w-5xl animate-pulse">
+          <div className="mb-4 h-40 w-full rounded-2xl bg-muted" />
+          <div className="mb-3 h-8 w-64 max-w-full rounded-lg bg-muted" />
+          <div className="mb-8 h-4 w-80 max-w-full rounded bg-muted/70" />
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="h-16 w-full rounded-xl bg-muted/60" />
+            ))}
+          </div>
+          <span className="sr-only">Carregando o curso…</span>
+        </div>
+      </div>
+    );
+  }
   if (!course) return <Navigate to="/cursos" replace />;
 
   const completedLessons = course.lessons.filter((lesson) => isCompleted(lesson.id)).length;

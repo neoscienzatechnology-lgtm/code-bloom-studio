@@ -160,7 +160,9 @@ export function getPathById(id: string | null | undefined): LearningPath {
   return learningPaths.find((path) => path.id === id) ?? learningPaths[0];
 }
 
-export function getCourseMeta(course: Course) {
+// Aceita o curso inteiro ou só os campos que a função usa — assim a vitrine
+// pública passa o catálogo leve sem arrastar o conteúdo dos cursos. #peso-1
+export function getCourseMeta(course: Pick<Course, "id" | "language" | "title">) {
   const catalogItem = getCourseCatalogItem(course.id);
   if (catalogItem) {
     return {

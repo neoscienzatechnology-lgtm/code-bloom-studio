@@ -6,6 +6,24 @@
     <meta name="theme-color" content="#fbfbfb" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0A0E0C" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Fontes sem bloquear a renderização: o texto aparece na fonte de
+         sistema e troca quando a web font chega (display=swap). #peso-3 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500;600&display=swap"
+      />
+    </noscript>
+
     <title>CodeTier — Aprenda programação com trilhas guiadas</title>
     <meta name="description" content="CodeTier é um app de ensino de programação com trilhas guiadas, aulas curtas, projetos e prática de código.">
     <meta name="author" content="CodeTier" />

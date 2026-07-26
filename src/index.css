@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
+/* As fontes NÃO são importadas aqui: `@import` no topo do CSS bloqueia a
+ * renderização e só começa a baixar depois que o CSS chega. O carregamento
+ * assíncrono vive no <head> do index.html. #peso-3 */
 
 @tailwind base;
 @tailwind components;

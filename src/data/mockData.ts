@@ -80,23 +80,6 @@ export interface Course {
   description: string;
 }
 
-export interface Badge {
-  id: string;
-  name: string;
-  emoji: string;
-  description: string;
-  unlocked: boolean;
-  rarity: "Comum" | "Raro" | "Épico" | "Lendário";
-}
-
-export interface LeaderboardEntry {
-  rank: number;
-  name: string;
-  avatar: string;
-  xp: number;
-  level: number;
-}
-
 type LessonDraft = Omit<Lesson, "quiz"> & { quiz?: QuizQuestion[] };
 
 function createLesson(draft: LessonDraft): Lesson {
@@ -1501,38 +1484,6 @@ export const courses: Course[] = [
   enrichCourse(createDataAiCourse(), supplementalLessonEnhancements),
   enrichCourse(createGameDevCourse(), supplementalLessonEnhancements),
 ];
-export const badges: Badge[] = [
-  { id: "1", name: "Primeira Linha", emoji: "✍️", description: "Escreva sua primeira linha de código", unlocked: true, rarity: "Comum" },
-  { id: "2", name: "Bug Hunter", emoji: "🐛", description: "Corrija 10 bugs em exercícios", unlocked: true, rarity: "Raro" },
-  { id: "3", name: "Streak Master", emoji: "🔥", description: "Mantenha um streak de 7 dias", unlocked: true, rarity: "Raro" },
-  { id: "4", name: "Pythonista", emoji: "🐍", description: "Complete o curso de Python", unlocked: false, rarity: "Épico" },
-  { id: "5", name: "Full Stack", emoji: "🏗️", description: "Complete front-end e back-end", unlocked: false, rarity: "Lendário" },
-  { id: "6", name: "Speed Coder", emoji: "⚡", description: "Complete 5 exercícios em menos de 10min", unlocked: true, rarity: "Épico" },
-  { id: "7", name: "Maratonista", emoji: "🏃", description: "Estude por 4 horas seguidas", unlocked: false, rarity: "Raro" },
-  { id: "8", name: "Mentor", emoji: "🌟", description: "Ajude 5 alunos no fórum", unlocked: false, rarity: "Lendário" },
-];
-
-export const leaderboard: LeaderboardEntry[] = [
-  { rank: 1, name: "Ana Silva", avatar: "👩‍💻", xp: 12450, level: 28 },
-  { rank: 2, name: "Carlos Dev", avatar: "👨‍💻", xp: 11200, level: 25 },
-  { rank: 3, name: "Maria Code", avatar: "👩‍🎓", xp: 10800, level: 24 },
-  { rank: 4, name: "Pedro H.", avatar: "🧑‍💻", xp: 9500, level: 22 },
-  { rank: 5, name: "Julia Santos", avatar: "👩‍🔬", xp: 8900, level: 20 },
-];
-
-export const userProfile = {
-  name: "Lucas Mendes",
-  avatar: "🧑‍💻",
-  level: 15,
-  xp: 7850,
-  xpToNext: 10000,
-  streak: 12,
-  coursesCompleted: 3,
-  exercisesDone: 156,
-  rank: 8,
-  joinedDate: "Mar 2024",
-};
-
 export function getCourseById(id: string): Course | undefined {
   return courses.find(c => c.id === id);
 }

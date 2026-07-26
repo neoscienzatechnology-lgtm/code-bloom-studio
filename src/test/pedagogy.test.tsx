@@ -18,6 +18,7 @@ import { moduleGroups } from "@/utils/entitlement";
 import { appCatalogSummary, courseCatalog, getCourseCatalogItem, landingTracks } from "@/data/courseCatalog";
 import { capstoneProjects } from "@/data/capstones";
 import { JS_RUNTIME_LESSONS } from "@/data/jsRuntimeLessons";
+import { COURSE_INDEX } from "@/data/lessonIndex";
 import { SQL_SEED, SQL_VERIFICATION_QUERIES } from "@/data/sqlSandbox";
 import { FOUNDATION_AUTHORED } from "@/data/foundationAuthored";
 import { formatSqlResult } from "@/utils/sqlOutput";
@@ -1323,5 +1324,35 @@ describe("agrupamento de módulos", () => {
       });
     });
     expect(offenders).toEqual([]);
+  });
+});
+
+// O índice leve (COURSE_INDEX) existe para telas públicas calcularem progresso
+// e duração sem baixar o conteúdo dos 13 cursos. Se ele sair de sincronia com
+// o catálogo real, a vitrine mostra número errado — então isso quebra aqui.
+// Regenerar com `npm run lesson:index`. #peso-1
+describe("índice de aulas", () => {
+  it("bate com o conteúdo real de cada curso", () => {
+    const offenders: string[] = [];
+    courses.forEach((course) => {
+      const entry = COURSE_INDEX[course.id];
+      if (!entry) {
+        offenders.push(`${course.id}: ausente no índice`);
+        return;
+      }
+      const realIds = course.lessons.map((lesson) => lesson.id);
+      if (entry.lessonIds.join(",") !== realIds.join(",")) {
+        offenders.push(`${course.id}: ids divergentes (${entry.lessonIds.length} vs ${realIds.length})`);
+      }
+      const realMinutes = course.lessons.reduce((total, lesson) => total + (lesson.estimatedMinutes ?? 6), 0);
+      if (entry.minutes !== realMinutes) {
+        offenders.push(`${course.id}: minutos ${entry.minutes} vs ${realMinutes}`);
+      }
+    });
+    expect(offenders).toEqual([]);
+  });
+
+  it("cobre exatamente os cursos do catálogo", () => {
+    expect(Object.keys(COURSE_INDEX).sort()).toEqual(courseCatalog.map((item) => item.id).sort());
   });
 });

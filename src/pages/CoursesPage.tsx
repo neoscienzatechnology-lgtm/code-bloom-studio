@@ -2,9 +2,13 @@ import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, BookOpen, CheckCircle2, Clock, Code2, Compass, Lock, Route, Sparkles } from "lucide-react";
-import { courses } from "@/data/mockData";
+// A vitrine mostra título, nível, duração e progresso — nada disso precisa do
+// conteúdo das aulas. Usar o catálogo leve + o índice de aulas tira ~520 KB
+// desta rota, que é pública e costuma ser a segunda visitada. #peso-1
+import { courseCatalog } from "@/data/courseCatalog";
+import { COURSE_INDEX } from "@/data/lessonIndex";
 import { getCourseMeta, learningPaths, type LearningPath } from "@/data/learningPaths";
-import { formatCourseDuration } from "@/utils/courseDuration";
+import { formatCourseSummary } from "@/utils/courseDuration";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/useProgress";
@@ -50,9 +54,9 @@ const CoursesPage = () => {
 
   const courseProgress = useMemo(
     () =>
-      courses.map((course) => ({
+      courseCatalog.map((course) => ({
         course,
-        progress: getCourseProgress(course.lessons.map((lesson) => lesson.id)),
+        progress: getCourseProgress([...(COURSE_INDEX[course.id]?.lessonIds ?? [])]),
       })),
     [getCourseProgress]
   );
@@ -117,11 +121,11 @@ const CoursesPage = () => {
           <div className="grid gap-5 lg:grid-cols-2">
             {learningPaths.map((path, index) => {
               const pathCourses = path.steps
-                .map((step) => courses.find((course) => course.id === step.courseId))
+                .map((step) => courseCatalog.find((course) => course.id === step.courseId))
                 .filter(Boolean);
               const pathProgress = calculatePathProgress(coursesWithProgress, path, learningPaths, profile?.goal);
               const coverCourseId = pathCoverCourseIds[path.id] ?? path.startCourseId;
-              const startCourse = courses.find((course) => course.id === coverCourseId) ?? pathCourses[0];
+              const startCourse = courseCatalog.find((course) => course.id === coverCourseId) ?? pathCourses[0];
 
               return (
                 <motion.div
@@ -251,7 +255,8 @@ const CoursesPage = () => {
                                 <BookOpen size={13} /> Pré-requisito: {meta.prerequisite}
                               </div>
                               <div className="flex items-center gap-2">
-                                <Clock size={13} /> Duração: {formatCourseDuration(course)}
+                                <Clock size={13} /> Duração:{" "}
+                                {formatCourseSummary(course.lessonCount, COURSE_INDEX[course.id]?.minutes ?? 0)}
                               </div>
                             </div>
                             <div className="mt-4 rounded-lg bg-secondary/70 p-3 text-xs">

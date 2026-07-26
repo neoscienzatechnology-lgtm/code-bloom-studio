@@ -3,17 +3,22 @@ import type { Course, Lesson } from "@/data/mockData";
 
 export type CourseWithProgress = Course & { realProgress: number };
 
-export function getPathCourses(
-  coursesWithProgress: CourseWithProgress[],
+/** O mínimo que as funções de trilha realmente usam. Assim a vitrine pública
+ * pode passar o catálogo leve (sem arrastar o conteúdo dos 13 cursos) e as
+ * telas logadas continuam passando o curso inteiro. #peso-1 */
+export type CourseProgressLike = { id: string; realProgress: number };
+
+export function getPathCourses<T extends CourseProgressLike>(
+  coursesWithProgress: T[],
   path: LearningPath,
-): CourseWithProgress[] {
+): T[] {
   const pathCourseIds = path.steps
     .map((step) => step.courseId)
     .filter((courseId): courseId is string => Boolean(courseId));
 
   return pathCourseIds
     .map((courseId) => coursesWithProgress.find((course) => course.id === courseId))
-    .filter((course): course is CourseWithProgress => Boolean(course));
+    .filter((course): course is T => Boolean(course));
 }
 
 function getPathCourseIds(path: LearningPath): string[] {
@@ -33,8 +38,8 @@ export function getSharedPathCourseIds(paths: LearningPath[]): Set<string> {
   return new Set(Object.entries(occurrences).filter(([, count]) => count > 1).map(([courseId]) => courseId));
 }
 
-export function calculatePathProgress(
-  coursesWithProgress: CourseWithProgress[],
+export function calculatePathProgress<T extends CourseProgressLike>(
+  coursesWithProgress: T[],
   path: LearningPath,
   allPaths: LearningPath[],
   activePathId?: string | null,
@@ -52,21 +57,21 @@ export function calculatePathProgress(
   return Math.round(progressValues.reduce((sum, value) => sum + value, 0) / pathCourses.length);
 }
 
-export function selectNextPathCourse(
-  coursesWithProgress: CourseWithProgress[],
+export function selectNextPathCourse<T extends CourseProgressLike>(
+  coursesWithProgress: T[],
   path: LearningPath,
-): CourseWithProgress {
+): T {
   const pathCourses = getPathCourses(coursesWithProgress, path);
   const nextNotCompletedPathCourse = pathCourses.find((course) => course.realProgress < 100);
 
   return nextNotCompletedPathCourse ?? pathCourses[pathCourses.length - 1] ?? coursesWithProgress[0];
 }
 
-export function selectPathStartCourse(
-  coursesWithProgress: CourseWithProgress[],
+export function selectPathStartCourse<T extends CourseProgressLike>(
+  coursesWithProgress: T[],
   path: LearningPath,
   currentPathId?: string | null,
-): CourseWithProgress {
+): T {
   const pathCourses = getPathCourses(coursesWithProgress, path);
   const firstIncomplete = pathCourses.find((course) => course.realProgress < 100);
 

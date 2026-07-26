@@ -1,6 +1,5 @@
 import { useParams, Navigate } from "react-router-dom";
-import { getLessonById } from "@/data/mockData";
-import { getAugmentedLessonById } from "@/data/checkpoints";
+import { useAugmentedLesson } from "@/hooks/useAugmentedCourse";
 import LessonView from "@/components/lesson/LessonView";
 import { useEntitlement } from "@/contexts/EntitlementContext";
 import { useProgress } from "@/hooks/useProgress";
@@ -12,17 +11,26 @@ const EditorPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const { isPro, ready } = useEntitlement();
   const { lessonCompletedAt } = useProgress();
-  const augmented = getAugmentedLessonById(courseId || "", lessonId || "");
-  const data = getLessonById(courseId || "", lessonId || "");
+  const { data: augmented, loading } = useAugmentedLesson(courseId, lessonId);
+
+  // O conteúdo do curso chega sob demanda (#peso-5).
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center" role="status" aria-busy="true">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <span className="sr-only">Carregando a aula…</span>
+      </div>
+    );
+  }
 
   // Checkpoint lessons live on a dedicated route
   if (augmented?.lesson.kind === "checkpoint") {
     return <Navigate to={`/checkpoint/${courseId}/${lessonId}`} replace />;
   }
-  if (!data?.lesson || !data?.course) return <Navigate to="/cursos" replace />;
+  if (!augmented?.lesson || !augmented?.course) return <Navigate to="/cursos" replace />;
 
-  const { lesson, course } = data;
-  const lessonIndex = data.lessonIndex ?? 0;
+  const { lesson, course } = augmented;
+  const lessonIndex = augmented.lessonIndex ?? 0;
 
   // Paywall (freemium "Equilibrado") — só atua com o flag ligado e usuário grátis.
   if (

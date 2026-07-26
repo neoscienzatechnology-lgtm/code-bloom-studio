@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, Navigate, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, ChevronRight, Lightbulb, ShieldCheck, Target, Trophy } from "lucide-react";
-import { getAugmentedLessonById } from "@/data/checkpoints";
+import { useAugmentedLesson } from "@/hooks/useAugmentedCourse";
 import QuizSection from "@/components/QuizSection";
 import GuidedPractice from "@/components/GuidedPractice";
 import CoachGuide from "@/components/CoachGuide";
@@ -21,7 +21,7 @@ type CheckpointStep = "intro" | "practice" | "quiz";
 const CheckpointPage = () => {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
   const navigate = useNavigate();
-  const data = getAugmentedLessonById(courseId || "", lessonId || "");
+  const { data, loading: loadingLesson } = useAugmentedLesson(courseId, lessonId);
   const { completeLesson, isCompleted } = useProgress();
   const [result, setResult] = useState<{ correct: number; total: number } | null>(null);
   const [step, setStep] = useState<CheckpointStep>("intro");
@@ -33,6 +33,14 @@ const CheckpointPage = () => {
     () => (hasPractice ? ["intro", "practice", "quiz"] : ["intro", "quiz"]),
     [hasPractice],
   );
+  if (loadingLesson) {
+    return (
+      <div className="flex min-h-screen items-center justify-center" role="status" aria-busy="true">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <span className="sr-only">Carregando o checkpoint…</span>
+      </div>
+    );
+  }
 
   if (!data || !data.lesson || data.lesson.kind !== "checkpoint") {
     return <Navigate to="/cursos" replace />;

@@ -112,8 +112,29 @@ const CodePreview = () => {
   );
 };
 
+// O hero 3D custa ~464 KB (three.js). Ele NÃO entra no primeiro render: o
+// poster estático aparece na hora e o canvas só é montado depois que a página
+// fica ociosa, em tela grande e sem economia de dados. No celular brasileiro
+// — o público principal — o 3D simplesmente não carrega. #peso-2
+function canAfford3d(): boolean {
+  if (!isWebglAvailable() || prefersReducedMotion()) return false;
+  if (typeof window === "undefined") return false;
+  if (!window.matchMedia("(min-width: 768px)").matches) return false;
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  return !connection?.saveData;
+}
+
 const LandingPage = () => {
-  const [enable3d] = useState(() => isWebglAvailable() && !prefersReducedMotion());
+  const [enable3d, setEnable3d] = useState(false);
+
+  useEffect(() => {
+    if (!canAfford3d()) return;
+    const idle = window.requestIdleCallback?.bind(window) ?? ((cb: () => void) => window.setTimeout(cb, 1200));
+    const handle = idle(() => setEnable3d(true));
+    return () => {
+      window.cancelIdleCallback?.(handle as number);
+    };
+  }, []);
   return (
     <div className="min-h-screen bg-background">
 
