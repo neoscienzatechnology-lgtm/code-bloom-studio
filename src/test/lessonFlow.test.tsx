@@ -102,6 +102,15 @@ describe("analytics no-op safety", () => {
     await expect(analytics.initAnalytics()).resolves.toBeUndefined();
   });
 
+  // O caminho do certificado público carrega o nome de uma pessoa; a
+  // telemetria precisa do formato da rota, não do nome. #aquisicao-shorts
+  it("keeps a person's name out of the pageview URL", async () => {
+    const { anonymizePath } = await import("@/lib/analytics");
+    expect(anonymizePath("/c/10/Maria-Clara-Souza")).toBe("/c/10/:nome");
+    expect(anonymizePath("/cursos/1")).toBe("/cursos/1");
+    expect(anonymizePath("/")).toBe("/");
+  });
+
   // Sem chave, `trackOnce` não pode nem gastar o marcador: se gastasse, o dia
   // em que a telemetria for ligada o marco já estaria "usado" e nunca chegaria.
   it("does not burn the one-shot marker while telemetry is off", async () => {

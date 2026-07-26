@@ -105,6 +105,17 @@ completed) e descobrir **em qual cartão os alunos abandonam**.
   (falta um caminho melhor para "entrar"), e `rate_limited` indica limite do
   Supabase estourando.
 
+### Origem da visita (campanhas)
+
+O `$pageview` leva junto `utm_source`, `utm_medium`, `utm_campaign`,
+`utm_content`, `utm_term` e `ref` quando existem na URL. É assim que se separa
+quem chegou por um Short de quem chegou por busca — os links prontos com
+marcação ficam em [`shorts-copy.md`](./shorts-copy.md).
+
+O caminho do certificado público (`/c/:courseId/:nome`) carrega o nome de uma
+pessoa, então ele é **anonimizado antes de sair do aparelho**: a telemetria
+recebe `/c/10/:nome`.
+
 ## Notas de implementação
 
 - **Fila de eventos**: o SDK entra por `import()` dinâmico, então os primeiros

@@ -266,7 +266,9 @@ const CodeScene: React.FC<{ code: string; output: string; typingFrames: number; 
             <span style={{ width: 13, height: 13, borderRadius: "50%", background: C.neon }} />
             <span style={{ marginLeft: 14, fontFamily: mono, fontSize: 22, color: C.dim }}>main</span>
           </div>
-          <div style={{ padding: "34px 40px", fontFamily: mono, fontSize, lineHeight: 1.5 }}>
+          {/* Sem ligaturas: "<=" viraria "≤" e o aluno precisa ver o que digitar.
+              Os 188 vídeos já renderizados só mudam se forem refeitos. */}
+          <div style={{ padding: "34px 40px", fontFamily: mono, fontSize, lineHeight: 1.5, fontVariantLigatures: "none" }}>
             {renderedLines.map((ln, i) => (
               <div key={i} style={{ whiteSpace: "pre", display: "flex" }}>
                 <span style={{ color: C.dim, width: 44, flexShrink: 0 }}>{i + 1}</span>

@@ -1,0 +1,4312 @@
+{
+ "exemplo-print-none": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/exemplo-print-none/hook.mp3",
+    "durationInFrames": 96,
+    "words": [
+     {
+      "text": "Esse",
+      "from": 3,
+      "to": 10
+     },
+     {
+      "text": "código",
+      "from": 11,
+      "to": 24
+     },
+     {
+      "text": "imprime",
+      "from": 25,
+      "to": 36
+     },
+     {
+      "text": "None.",
+      "from": 36,
+      "to": 55
+     },
+     {
+      "text": "E",
+      "from": 56,
+      "to": 58
+     },
+     {
+      "text": "não,",
+      "from": 59,
+      "to": 66
+     },
+     {
+      "text": "não",
+      "from": 67,
+      "to": 73
+     },
+     {
+      "text": "é bug.",
+      "from": 74,
+      "to": 95
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/exemplo-print-none/concept.mp3",
+    "durationInFrames": 203,
+    "words": [
+     {
+      "text": "A",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "função",
+      "from": 7,
+      "to": 18
+     },
+     {
+      "text": "mostra",
+      "from": 19,
+      "to": 30
+     },
+     {
+      "text": "o",
+      "from": 30,
+      "to": 32
+     },
+     {
+      "text": "texto",
+      "from": 32,
+      "to": 42
+     },
+     {
+      "text": "com",
+      "from": 42,
+      "to": 47
+     },
+     {
+      "text": "print,",
+      "from": 48,
+      "to": 61
+     },
+     {
+      "text": "mas",
+      "from": 62,
+      "to": 67
+     },
+     {
+      "text": "não",
+      "from": 68,
+      "to": 72
+     },
+     {
+      "text": "devolve",
+      "from": 73,
+      "to": 85
+     },
+     {
+      "text": "nada.",
+      "from": 86,
+      "to": 105
+     },
+     {
+      "text": "Sem",
+      "from": 106,
+      "to": 116
+     },
+     {
+      "text": "return,",
+      "from": 116,
+      "to": 135
+     },
+     {
+      "text": "o",
+      "from": 136,
+      "to": 138
+     },
+     {
+      "text": "Python",
+      "from": 139,
+      "to": 150
+     },
+     {
+      "text": "devolve",
+      "from": 150,
+      "to": 164
+     },
+     {
+      "text": "None.",
+      "from": 165,
+      "to": 202
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/exemplo-print-none/code.mp3",
+    "durationInFrames": 155,
+    "words": [
+     {
+      "text": "Olha",
+      "from": 3,
+      "to": 10
+     },
+     {
+      "text": "na",
+      "from": 11,
+      "to": 14
+     },
+     {
+      "text": "prática:",
+      "from": 15,
+      "to": 36
+     },
+     {
+      "text": "saudar",
+      "from": 37,
+      "to": 48
+     },
+     {
+      "text": "imprime",
+      "from": 48,
+      "to": 61
+     },
+     {
+      "text": "Oi,",
+      "from": 62,
+      "to": 71
+     },
+     {
+      "text": "e",
+      "from": 72,
+      "to": 75
+     },
+     {
+      "text": "o",
+      "from": 75,
+      "to": 76
+     },
+     {
+      "text": "valor",
+      "from": 77,
+      "to": 86
+     },
+     {
+      "text": "guardado",
+      "from": 87,
+      "to": 103
+     },
+     {
+      "text": "em",
+      "from": 104,
+      "to": 106
+     },
+     {
+      "text": "x",
+      "from": 106,
+      "to": 112
+     },
+     {
+      "text": "é",
+      "from": 112,
+      "to": 116
+     },
+     {
+      "text": "None.",
+      "from": 117,
+      "to": 154
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/exemplo-print-none/points.mp3",
+    "durationInFrames": 170,
+    "words": [
+     {
+      "text": "Guarde",
+      "from": 3,
+      "to": 15
+     },
+     {
+      "text": "isto:",
+      "from": 15,
+      "to": 29
+     },
+     {
+      "text": "print",
+      "from": 30,
+      "to": 40
+     },
+     {
+      "text": "mostra,",
+      "from": 40,
+      "to": 55
+     },
+     {
+      "text": "return",
+      "from": 56,
+      "to": 71
+     },
+     {
+      "text": "devolve.",
+      "from": 71,
+      "to": 95
+     },
+     {
+      "text": "Sem",
+      "from": 96,
+      "to": 105
+     },
+     {
+      "text": "return,",
+      "from": 105,
+      "to": 122
+     },
+     {
+      "text": "sai",
+      "from": 123,
+      "to": 131
+     },
+     {
+      "text": "None.",
+      "from": 131,
+      "to": 169
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/exemplo-print-none/outro.mp3",
+    "durationInFrames": 150,
+    "words": [
+     {
+      "text": "Tem",
+      "from": 3,
+      "to": 8
+     },
+     {
+      "text": "uma",
+      "from": 8,
+      "to": 13
+     },
+     {
+      "text": "trilha",
+      "from": 14,
+      "to": 23
+     },
+     {
+      "text": "inteira",
+      "from": 24,
+      "to": 36
+     },
+     {
+      "text": "de",
+      "from": 36,
+      "to": 39
+     },
+     {
+      "text": "Python",
+      "from": 40,
+      "to": 53
+     },
+     {
+      "text": "no",
+      "from": 53,
+      "to": 57
+     },
+     {
+      "text": "code",
+      "from": 57,
+      "to": 67
+     },
+     {
+      "text": "tier",
+      "from": 68,
+      "to": 77
+     },
+     {
+      "text": "ponto",
+      "from": 78,
+      "to": 87
+     },
+     {
+      "text": "vercel",
+      "from": 88,
+      "to": 102
+     },
+     {
+      "text": "ponto",
+      "from": 102,
+      "to": 112
+     },
+     {
+      "text": "app.",
+      "from": 113,
+      "to": 149
+     }
+    ]
+   }
+  }
+ },
+ "js-25-mais-1-vira-251": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/js-25-mais-1-vira-251/hook.mp3",
+    "durationInFrames": 124,
+    "words": [
+     {
+      "text": "Vinte",
+      "from": 3,
+      "to": 12
+     },
+     {
+      "text": "e",
+      "from": 13,
+      "to": 14
+     },
+     {
+      "text": "cinco",
+      "from": 14,
+      "to": 26
+     },
+     {
+      "text": "mais",
+      "from": 27,
+      "to": 33
+     },
+     {
+      "text": "um",
+      "from": 33,
+      "to": 39
+     },
+     {
+      "text": "deu",
+      "from": 40,
+      "to": 46
+     },
+     {
+      "text": "duzentos",
+      "from": 47,
+      "to": 60
+     },
+     {
+      "text": "e",
+      "from": 60,
+      "to": 64
+     },
+     {
+      "text": "cinquenta",
+      "from": 64,
+      "to": 77
+     },
+     {
+      "text": "e",
+      "from": 78,
+      "to": 80
+     },
+     {
+      "text": "um.",
+      "from": 80,
+      "to": 93
+     },
+     {
+      "text": "Não",
+      "from": 94,
+      "to": 101
+     },
+     {
+      "text": "é bug.",
+      "from": 102,
+      "to": 123
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/js-25-mais-1-vira-251/concept.mp3",
+    "durationInFrames": 224,
+    "words": [
+     {
+      "text": "Os",
+      "from": 3,
+      "to": 7
+     },
+     {
+      "text": "culpados",
+      "from": 8,
+      "to": 24
+     },
+     {
+      "text": "são",
+      "from": 24,
+      "to": 30
+     },
+     {
+      "text": "as",
+      "from": 30,
+      "to": 32
+     },
+     {
+      "text": "aspas.",
+      "from": 32,
+      "to": 58
+     },
+     {
+      "text": "Com",
+      "from": 59,
+      "to": 65
+     },
+     {
+      "text": "aspas,",
+      "from": 65,
+      "to": 80
+     },
+     {
+      "text": "o",
+      "from": 81,
+      "to": 83
+     },
+     {
+      "text": "vinte",
+      "from": 84,
+      "to": 92
+     },
+     {
+      "text": "e",
+      "from": 92,
+      "to": 93
+     },
+     {
+      "text": "cinco",
+      "from": 93,
+      "to": 102
+     },
+     {
+      "text": "é",
+      "from": 102,
+      "to": 104
+     },
+     {
+      "text": "texto,",
+      "from": 105,
+      "to": 125
+     },
+     {
+      "text": "e",
+      "from": 126,
+      "to": 128
+     },
+     {
+      "text": "o",
+      "from": 128,
+      "to": 129
+     },
+     {
+      "text": "sinal",
+      "from": 130,
+      "to": 141
+     },
+     {
+      "text": "de",
+      "from": 141,
+      "to": 144
+     },
+     {
+      "text": "mais",
+      "from": 145,
+      "to": 152
+     },
+     {
+      "text": "não",
+      "from": 153,
+      "to": 158
+     },
+     {
+      "text": "soma:",
+      "from": 158,
+      "to": 176
+     },
+     {
+      "text": "ele",
+      "from": 177,
+      "to": 182
+     },
+     {
+      "text": "junta.",
+      "from": 183,
+      "to": 223
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/js-25-mais-1-vira-251/code.mp3",
+    "durationInFrames": 264,
+    "words": [
+     {
+      "text": "Na",
+      "from": 3,
+      "to": 8
+     },
+     {
+      "text": "primeira",
+      "from": 8,
+      "to": 20
+     },
+     {
+      "text": "linha",
+      "from": 20,
+      "to": 31
+     },
+     {
+      "text": "o",
+      "from": 31,
+      "to": 33
+     },
+     {
+      "text": "vinte",
+      "from": 33,
+      "to": 41
+     },
+     {
+      "text": "e",
+      "from": 42,
+      "to": 42
+     },
+     {
+      "text": "cinco",
+      "from": 43,
+      "to": 54
+     },
+     {
+      "text": "está",
+      "from": 55,
+      "to": 61
+     },
+     {
+      "text": "entre",
+      "from": 62,
+      "to": 69
+     },
+     {
+      "text": "aspas,",
+      "from": 69,
+      "to": 90
+     },
+     {
+      "text": "então",
+      "from": 91,
+      "to": 101
+     },
+     {
+      "text": "sai",
+      "from": 101,
+      "to": 108
+     },
+     {
+      "text": "duzentos",
+      "from": 109,
+      "to": 122
+     },
+     {
+      "text": "e",
+      "from": 122,
+      "to": 125
+     },
+     {
+      "text": "cinquenta",
+      "from": 126,
+      "to": 138
+     },
+     {
+      "text": "e",
+      "from": 139,
+      "to": 141
+     },
+     {
+      "text": "um.",
+      "from": 141,
+      "to": 154
+     },
+     {
+      "text": "Na",
+      "from": 155,
+      "to": 159
+     },
+     {
+      "text": "segunda,",
+      "from": 159,
+      "to": 175
+     },
+     {
+      "text": "sem",
+      "from": 176,
+      "to": 184
+     },
+     {
+      "text": "aspas,",
+      "from": 185,
+      "to": 205
+     },
+     {
+      "text": "sai",
+      "from": 206,
+      "to": 213
+     },
+     {
+      "text": "vinte",
+      "from": 213,
+      "to": 221
+     },
+     {
+      "text": "e",
+      "from": 222,
+      "to": 222
+     },
+     {
+      "text": "seis.",
+      "from": 223,
+      "to": 263
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/js-25-mais-1-vira-251/points.mp3",
+    "durationInFrames": 271,
+    "words": [
+     {
+      "text": "Todo",
+      "from": 3,
+      "to": 11
+     },
+     {
+      "text": "campo",
+      "from": 11,
+      "to": 21
+     },
+     {
+      "text": "de",
+      "from": 21,
+      "to": 24
+     },
+     {
+      "text": "formulário",
+      "from": 24,
+      "to": 43
+     },
+     {
+      "text": "devolve",
+      "from": 44,
+      "to": 57
+     },
+     {
+      "text": "o",
+      "from": 57,
+      "to": 58
+     },
+     {
+      "text": "valor",
+      "from": 58,
+      "to": 69
+     },
+     {
+      "text": "como",
+      "from": 69,
+      "to": 77
+     },
+     {
+      "text": "texto.",
+      "from": 77,
+      "to": 98
+     },
+     {
+      "text": "Converta",
+      "from": 99,
+      "to": 115
+     },
+     {
+      "text": "com",
+      "from": 116,
+      "to": 121
+     },
+     {
+      "text": "Number",
+      "from": 121,
+      "to": 134
+     },
+     {
+      "text": "antes",
+      "from": 135,
+      "to": 145
+     },
+     {
+      "text": "de",
+      "from": 145,
+      "to": 148
+     },
+     {
+      "text": "somar.",
+      "from": 148,
+      "to": 168
+     },
+     {
+      "text": "E",
+      "from": 169,
+      "to": 171
+     },
+     {
+      "text": "cuidado:",
+      "from": 172,
+      "to": 191
+     },
+     {
+      "text": "com",
+      "from": 192,
+      "to": 198
+     },
+     {
+      "text": "vírgula,",
+      "from": 198,
+      "to": 211
+     },
+     {
+      "text": "Number",
+      "from": 212,
+      "to": 223
+     },
+     {
+      "text": "devolve",
+      "from": 223,
+      "to": 237
+     },
+     {
+      "text": "NaN.",
+      "from": 237,
+      "to": 270
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/js-25-mais-1-vira-251/outro.mp3",
+    "durationInFrames": 157,
+    "words": [
+     {
+      "text": "Tem",
+      "from": 3,
+      "to": 8
+     },
+     {
+      "text": "curso",
+      "from": 8,
+      "to": 19
+     },
+     {
+      "text": "de",
+      "from": 20,
+      "to": 22
+     },
+     {
+      "text": "JavaScript",
+      "from": 23,
+      "to": 48
+     },
+     {
+      "text": "inteiro",
+      "from": 48,
+      "to": 61
+     },
+     {
+      "text": "em",
+      "from": 61,
+      "to": 64
+     },
+     {
+      "text": "code",
+      "from": 65,
+      "to": 75
+     },
+     {
+      "text": "tier",
+      "from": 75,
+      "to": 85
+     },
+     {
+      "text": "ponto",
+      "from": 86,
+      "to": 96
+     },
+     {
+      "text": "vercel",
+      "from": 96,
+      "to": 110
+     },
+     {
+      "text": "ponto",
+      "from": 111,
+      "to": 120
+     },
+     {
+      "text": "app.",
+      "from": 121,
+      "to": 156
+     }
+    ]
+   }
+  }
+ },
+ "python-sort-devolve-none": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/python-sort-devolve-none/hook.mp3",
+    "durationInFrames": 124,
+    "words": [
+     {
+      "text": "Essa",
+      "from": 3,
+      "to": 11
+     },
+     {
+      "text": "linha",
+      "from": 11,
+      "to": 20
+     },
+     {
+      "text": "parece",
+      "from": 20,
+      "to": 32
+     },
+     {
+      "text": "certinha",
+      "from": 32,
+      "to": 51
+     },
+     {
+      "text": "e",
+      "from": 51,
+      "to": 53
+     },
+     {
+      "text": "apaga",
+      "from": 54,
+      "to": 66
+     },
+     {
+      "text": "a",
+      "from": 66,
+      "to": 67
+     },
+     {
+      "text": "sua",
+      "from": 67,
+      "to": 73
+     },
+     {
+      "text": "lista",
+      "from": 74,
+      "to": 83
+     },
+     {
+      "text": "inteira.",
+      "from": 84,
+      "to": 123
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/python-sort-devolve-none/concept.mp3",
+    "durationInFrames": 288,
+    "words": [
+     {
+      "text": "O",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "sorted",
+      "from": 6,
+      "to": 24
+     },
+     {
+      "text": "devolve",
+      "from": 24,
+      "to": 36
+     },
+     {
+      "text": "uma",
+      "from": 36,
+      "to": 42
+     },
+     {
+      "text": "cópia",
+      "from": 42,
+      "to": 52
+     },
+     {
+      "text": "ordenada,",
+      "from": 53,
+      "to": 79
+     },
+     {
+      "text": "mas",
+      "from": 80,
+      "to": 83
+     },
+     {
+      "text": "o",
+      "from": 83,
+      "to": 87
+     },
+     {
+      "text": "sort",
+      "from": 87,
+      "to": 98
+     },
+     {
+      "text": "ordena",
+      "from": 98,
+      "to": 110
+     },
+     {
+      "text": "a",
+      "from": 110,
+      "to": 112
+     },
+     {
+      "text": "própria",
+      "from": 112,
+      "to": 124
+     },
+     {
+      "text": "lista",
+      "from": 125,
+      "to": 138
+     },
+     {
+      "text": "e",
+      "from": 139,
+      "to": 141
+     },
+     {
+      "text": "devolve",
+      "from": 141,
+      "to": 155
+     },
+     {
+      "text": "None,",
+      "from": 155,
+      "to": 171
+     },
+     {
+      "text": "por",
+      "from": 172,
+      "to": 176
+     },
+     {
+      "text": "isso",
+      "from": 177,
+      "to": 184
+     },
+     {
+      "text": "guardar",
+      "from": 185,
+      "to": 197
+     },
+     {
+      "text": "o",
+      "from": 198,
+      "to": 199
+     },
+     {
+      "text": "resultado",
+      "from": 199,
+      "to": 218
+     },
+     {
+      "text": "faz",
+      "from": 219,
+      "to": 225
+     },
+     {
+      "text": "você",
+      "from": 225,
+      "to": 233
+     },
+     {
+      "text": "perder",
+      "from": 234,
+      "to": 245
+     },
+     {
+      "text": "a",
+      "from": 245,
+      "to": 246
+     },
+     {
+      "text": "lista.",
+      "from": 247,
+      "to": 287
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/python-sort-devolve-none/code.mp3",
+    "durationInFrames": 232,
+    "words": [
+     {
+      "text": "A",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "primeira",
+      "from": 6,
+      "to": 18
+     },
+     {
+      "text": "linha",
+      "from": 18,
+      "to": 26
+     },
+     {
+      "text": "imprime",
+      "from": 26,
+      "to": 37
+     },
+     {
+      "text": "a",
+      "from": 38,
+      "to": 40
+     },
+     {
+      "text": "cópia",
+      "from": 41,
+      "to": 51
+     },
+     {
+      "text": "ordenada,",
+      "from": 51,
+      "to": 76
+     },
+     {
+      "text": "e",
+      "from": 77,
+      "to": 80
+     },
+     {
+      "text": "a",
+      "from": 80,
+      "to": 82
+     },
+     {
+      "text": "seguinte",
+      "from": 82,
+      "to": 96
+     },
+     {
+      "text": "imprime",
+      "from": 96,
+      "to": 107
+     },
+     {
+      "text": "None",
+      "from": 107,
+      "to": 118
+     },
+     {
+      "text": "porque",
+      "from": 119,
+      "to": 126
+     },
+     {
+      "text": "a",
+      "from": 127,
+      "to": 129
+     },
+     {
+      "text": "variável",
+      "from": 129,
+      "to": 145
+     },
+     {
+      "text": "notas",
+      "from": 145,
+      "to": 157
+     },
+     {
+      "text": "deixou",
+      "from": 157,
+      "to": 169
+     },
+     {
+      "text": "de",
+      "from": 169,
+      "to": 171
+     },
+     {
+      "text": "apontar",
+      "from": 172,
+      "to": 185
+     },
+     {
+      "text": "para",
+      "from": 185,
+      "to": 190
+     },
+     {
+      "text": "a",
+      "from": 191,
+      "to": 191
+     },
+     {
+      "text": "lista.",
+      "from": 192,
+      "to": 231
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/python-sort-devolve-none/points.mp3",
+    "durationInFrames": 319,
+    "words": [
+     {
+      "text": "Chame",
+      "from": 3,
+      "to": 13
+     },
+     {
+      "text": "notas",
+      "from": 14,
+      "to": 26
+     },
+     {
+      "text": "ponto",
+      "from": 26,
+      "to": 35
+     },
+     {
+      "text": "sort",
+      "from": 35,
+      "to": 44
+     },
+     {
+      "text": "sozinho,",
+      "from": 44,
+      "to": 64
+     },
+     {
+      "text": "sem",
+      "from": 65,
+      "to": 72
+     },
+     {
+      "text": "o",
+      "from": 72,
+      "to": 73
+     },
+     {
+      "text": "sinal",
+      "from": 74,
+      "to": 84
+     },
+     {
+      "text": "de",
+      "from": 84,
+      "to": 87
+     },
+     {
+      "text": "igual.",
+      "from": 87,
+      "to": 106
+     },
+     {
+      "text": "Use",
+      "from": 107,
+      "to": 114
+     },
+     {
+      "text": "sorted",
+      "from": 114,
+      "to": 134
+     },
+     {
+      "text": "quando",
+      "from": 135,
+      "to": 143
+     },
+     {
+      "text": "quiser",
+      "from": 144,
+      "to": 154
+     },
+     {
+      "text": "uma",
+      "from": 155,
+      "to": 159
+     },
+     {
+      "text": "lista",
+      "from": 159,
+      "to": 170
+     },
+     {
+      "text": "nova.",
+      "from": 170,
+      "to": 190
+     },
+     {
+      "text": "E",
+      "from": 191,
+      "to": 194
+     },
+     {
+      "text": "lembre",
+      "from": 194,
+      "to": 204
+     },
+     {
+      "text": "da",
+      "from": 204,
+      "to": 208
+     },
+     {
+      "text": "regra:",
+      "from": 209,
+      "to": 226
+     },
+     {
+      "text": "método",
+      "from": 227,
+      "to": 241
+     },
+     {
+      "text": "que",
+      "from": 241,
+      "to": 244
+     },
+     {
+      "text": "muda",
+      "from": 245,
+      "to": 253
+     },
+     {
+      "text": "a",
+      "from": 253,
+      "to": 254
+     },
+     {
+      "text": "lista",
+      "from": 254,
+      "to": 267
+     },
+     {
+      "text": "devolve",
+      "from": 267,
+      "to": 281
+     },
+     {
+      "text": "None.",
+      "from": 281,
+      "to": 318
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/python-sort-devolve-none/outro.mp3",
+    "durationInFrames": 130,
+    "words": [
+     {
+      "text": "Tem",
+      "from": 3,
+      "to": 7
+     },
+     {
+      "text": "mais",
+      "from": 7,
+      "to": 14
+     },
+     {
+      "text": "Python",
+      "from": 14,
+      "to": 24
+     },
+     {
+      "text": "assim",
+      "from": 25,
+      "to": 34
+     },
+     {
+      "text": "no",
+      "from": 35,
+      "to": 38
+     },
+     {
+      "text": "code",
+      "from": 38,
+      "to": 48
+     },
+     {
+      "text": "tier",
+      "from": 48,
+      "to": 58
+     },
+     {
+      "text": "ponto",
+      "from": 59,
+      "to": 68
+     },
+     {
+      "text": "vercel",
+      "from": 68,
+      "to": 82
+     },
+     {
+      "text": "ponto",
+      "from": 83,
+      "to": 92
+     },
+     {
+      "text": "app.",
+      "from": 93,
+      "to": 129
+     }
+    ]
+   }
+  }
+ },
+ "css-caixa-200-virou-244": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/css-caixa-200-virou-244/hook.mp3",
+    "durationInFrames": 152,
+    "words": [
+     {
+      "text": "Sua",
+      "from": 3,
+      "to": 12
+     },
+     {
+      "text": "caixa",
+      "from": 13,
+      "to": 24
+     },
+     {
+      "text": "de",
+      "from": 25,
+      "to": 28
+     },
+     {
+      "text": "duzentos",
+      "from": 28,
+      "to": 44
+     },
+     {
+      "text": "pixels",
+      "from": 45,
+      "to": 57
+     },
+     {
+      "text": "está",
+      "from": 57,
+      "to": 66
+     },
+     {
+      "text": "medindo",
+      "from": 66,
+      "to": 80
+     },
+     {
+      "text": "duzentos",
+      "from": 81,
+      "to": 94
+     },
+     {
+      "text": "e",
+      "from": 95,
+      "to": 98
+     },
+     {
+      "text": "quarenta",
+      "from": 98,
+      "to": 110
+     },
+     {
+      "text": "e",
+      "from": 110,
+      "to": 111
+     },
+     {
+      "text": "quatro.",
+      "from": 112,
+      "to": 151
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/css-caixa-200-virou-244/concept.mp3",
+    "durationInFrames": 168,
+    "words": [
+     {
+      "text": "É",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "que",
+      "from": 7,
+      "to": 12
+     },
+     {
+      "text": "width",
+      "from": 12,
+      "to": 19
+     },
+     {
+      "text": "mede",
+      "from": 20,
+      "to": 30
+     },
+     {
+      "text": "só",
+      "from": 30,
+      "to": 38
+     },
+     {
+      "text": "o",
+      "from": 38,
+      "to": 39
+     },
+     {
+      "text": "conteúdo.",
+      "from": 40,
+      "to": 67
+     },
+     {
+      "text": "O",
+      "from": 68,
+      "to": 71
+     },
+     {
+      "text": "padding",
+      "from": 71,
+      "to": 85
+     },
+     {
+      "text": "e",
+      "from": 86,
+      "to": 87
+     },
+     {
+      "text": "a",
+      "from": 88,
+      "to": 90
+     },
+     {
+      "text": "borda",
+      "from": 90,
+      "to": 102
+     },
+     {
+      "text": "são",
+      "from": 102,
+      "to": 108
+     },
+     {
+      "text": "somados",
+      "from": 108,
+      "to": 123
+     },
+     {
+      "text": "por",
+      "from": 123,
+      "to": 128
+     },
+     {
+      "text": "fora.",
+      "from": 129,
+      "to": 167
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/css-caixa-200-virou-244/code.mp3",
+    "durationInFrames": 249,
+    "words": [
+     {
+      "text": "Vinte",
+      "from": 3,
+      "to": 13
+     },
+     {
+      "text": "de",
+      "from": 14,
+      "to": 17
+     },
+     {
+      "text": "padding",
+      "from": 17,
+      "to": 31
+     },
+     {
+      "text": "e",
+      "from": 31,
+      "to": 33
+     },
+     {
+      "text": "dois",
+      "from": 33,
+      "to": 40
+     },
+     {
+      "text": "de",
+      "from": 40,
+      "to": 43
+     },
+     {
+      "text": "borda,",
+      "from": 43,
+      "to": 56
+     },
+     {
+      "text": "de",
+      "from": 57,
+      "to": 61
+     },
+     {
+      "text": "cada",
+      "from": 61,
+      "to": 69
+     },
+     {
+      "text": "lado,",
+      "from": 70,
+      "to": 82
+     },
+     {
+      "text": "dão",
+      "from": 83,
+      "to": 89
+     },
+     {
+      "text": "quarenta",
+      "from": 89,
+      "to": 101
+     },
+     {
+      "text": "e",
+      "from": 101,
+      "to": 102
+     },
+     {
+      "text": "quatro",
+      "from": 102,
+      "to": 113
+     },
+     {
+      "text": "a",
+      "from": 114,
+      "to": 115
+     },
+     {
+      "text": "mais.",
+      "from": 116,
+      "to": 137
+     },
+     {
+      "text": "Uma",
+      "from": 138,
+      "to": 143
+     },
+     {
+      "text": "linha",
+      "from": 144,
+      "to": 151
+     },
+     {
+      "text": "resolve:",
+      "from": 151,
+      "to": 171
+     },
+     {
+      "text": "box-sizing",
+      "from": 172,
+      "to": 194
+     },
+     {
+      "text": "border-box.",
+      "from": 195,
+      "to": 248
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/css-caixa-200-virou-244/points.mp3",
+    "durationInFrames": 298,
+    "words": [
+     {
+      "text": "Coloca",
+      "from": 3,
+      "to": 16
+     },
+     {
+      "text": "border-box",
+      "from": 17,
+      "to": 41
+     },
+     {
+      "text": "no",
+      "from": 42,
+      "to": 44
+     },
+     {
+      "text": "asterisco",
+      "from": 45,
+      "to": 65
+     },
+     {
+      "text": "e",
+      "from": 65,
+      "to": 68
+     },
+     {
+      "text": "também",
+      "from": 68,
+      "to": 79
+     },
+     {
+      "text": "nos",
+      "from": 79,
+      "to": 84
+     },
+     {
+      "text": "pseudoelementos,",
+      "from": 84,
+      "to": 115
+     },
+     {
+      "text": "porque",
+      "from": 116,
+      "to": 124
+     },
+     {
+      "text": "o",
+      "from": 125,
+      "to": 126
+     },
+     {
+      "text": "asterisco",
+      "from": 127,
+      "to": 143
+     },
+     {
+      "text": "sozinho",
+      "from": 144,
+      "to": 159
+     },
+     {
+      "text": "não",
+      "from": 159,
+      "to": 165
+     },
+     {
+      "text": "pega",
+      "from": 165,
+      "to": 174
+     },
+     {
+      "text": "before",
+      "from": 174,
+      "to": 186
+     },
+     {
+      "text": "e",
+      "from": 187,
+      "to": 189
+     },
+     {
+      "text": "after.",
+      "from": 190,
+      "to": 210
+     },
+     {
+      "text": "Margin",
+      "from": 211,
+      "to": 225
+     },
+     {
+      "text": "continua",
+      "from": 225,
+      "to": 240
+     },
+     {
+      "text": "de",
+      "from": 241,
+      "to": 244
+     },
+     {
+      "text": "fora",
+      "from": 244,
+      "to": 253
+     },
+     {
+      "text": "da",
+      "from": 253,
+      "to": 258
+     },
+     {
+      "text": "conta.",
+      "from": 258,
+      "to": 297
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/css-caixa-200-virou-244/outro.mp3",
+    "durationInFrames": 170,
+    "words": [
+     {
+      "text": "Mais",
+      "from": 3,
+      "to": 12
+     },
+     {
+      "text": "CSS",
+      "from": 12,
+      "to": 35
+     },
+     {
+      "text": "que",
+      "from": 35,
+      "to": 38
+     },
+     {
+      "text": "funciona",
+      "from": 38,
+      "to": 55
+     },
+     {
+      "text": "de",
+      "from": 55,
+      "to": 58
+     },
+     {
+      "text": "verdade",
+      "from": 58,
+      "to": 74
+     },
+     {
+      "text": "em",
+      "from": 75,
+      "to": 77
+     },
+     {
+      "text": "code",
+      "from": 77,
+      "to": 87
+     },
+     {
+      "text": "tier",
+      "from": 88,
+      "to": 98
+     },
+     {
+      "text": "ponto",
+      "from": 99,
+      "to": 108
+     },
+     {
+      "text": "vercel",
+      "from": 109,
+      "to": 123
+     },
+     {
+      "text": "ponto",
+      "from": 123,
+      "to": 133
+     },
+     {
+      "text": "app.",
+      "from": 133,
+      "to": 169
+     }
+    ]
+   }
+  }
+ },
+ "html-label-for-foca-input": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/html-label-for-foca-input/hook.mp3",
+    "durationInFrames": 156,
+    "words": [
+     {
+      "text": "Repara:",
+      "from": 3,
+      "to": 22
+     },
+     {
+      "text": "eu",
+      "from": 23,
+      "to": 26
+     },
+     {
+      "text": "clico",
+      "from": 26,
+      "to": 36
+     },
+     {
+      "text": "na",
+      "from": 36,
+      "to": 40
+     },
+     {
+      "text": "palavra",
+      "from": 40,
+      "to": 54
+     },
+     {
+      "text": "E-mail",
+      "from": 54,
+      "to": 68
+     },
+     {
+      "text": "e",
+      "from": 68,
+      "to": 71
+     },
+     {
+      "text": "o",
+      "from": 71,
+      "to": 73
+     },
+     {
+      "text": "cursor",
+      "from": 73,
+      "to": 87
+     },
+     {
+      "text": "pula",
+      "from": 88,
+      "to": 96
+     },
+     {
+      "text": "pro",
+      "from": 97,
+      "to": 102
+     },
+     {
+      "text": "campo",
+      "from": 102,
+      "to": 111
+     },
+     {
+      "text": "sozinho.",
+      "from": 111,
+      "to": 155
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/html-label-for-foca-input/concept.mp3",
+    "durationInFrames": 223,
+    "words": [
+     {
+      "text": "O",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "label",
+      "from": 6,
+      "to": 17
+     },
+     {
+      "text": "tem",
+      "from": 18,
+      "to": 22
+     },
+     {
+      "text": "o",
+      "from": 22,
+      "to": 24
+     },
+     {
+      "text": "atributo",
+      "from": 24,
+      "to": 41
+     },
+     {
+      "text": "for",
+      "from": 41,
+      "to": 47
+     },
+     {
+      "text": "apontando",
+      "from": 47,
+      "to": 64
+     },
+     {
+      "text": "pro",
+      "from": 65,
+      "to": 71
+     },
+     {
+      "text": "id",
+      "from": 71,
+      "to": 78
+     },
+     {
+      "text": "do",
+      "from": 78,
+      "to": 82
+     },
+     {
+      "text": "input.",
+      "from": 83,
+      "to": 105
+     },
+     {
+      "text": "Isso",
+      "from": 106,
+      "to": 114
+     },
+     {
+      "text": "liga",
+      "from": 114,
+      "to": 122
+     },
+     {
+      "text": "os",
+      "from": 123,
+      "to": 126
+     },
+     {
+      "text": "dois:",
+      "from": 126,
+      "to": 142
+     },
+     {
+      "text": "clicar",
+      "from": 143,
+      "to": 154
+     },
+     {
+      "text": "no",
+      "from": 154,
+      "to": 159
+     },
+     {
+      "text": "texto",
+      "from": 159,
+      "to": 170
+     },
+     {
+      "text": "foca",
+      "from": 170,
+      "to": 180
+     },
+     {
+      "text": "o",
+      "from": 181,
+      "to": 182
+     },
+     {
+      "text": "campo.",
+      "from": 183,
+      "to": 222
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/html-label-for-foca-input/code.mp3",
+    "durationInFrames": 186,
+    "words": [
+     {
+      "text": "Quatro",
+      "from": 3,
+      "to": 12
+     },
+     {
+      "text": "linhas:",
+      "from": 13,
+      "to": 32
+     },
+     {
+      "text": "label",
+      "from": 33,
+      "to": 45
+     },
+     {
+      "text": "com",
+      "from": 45,
+      "to": 50
+     },
+     {
+      "text": "for",
+      "from": 50,
+      "to": 56
+     },
+     {
+      "text": "igual",
+      "from": 57,
+      "to": 67
+     },
+     {
+      "text": "a",
+      "from": 67,
+      "to": 70
+     },
+     {
+      "text": "email,",
+      "from": 70,
+      "to": 85
+     },
+     {
+      "text": "e",
+      "from": 86,
+      "to": 89
+     },
+     {
+      "text": "o",
+      "from": 89,
+      "to": 93
+     },
+     {
+      "text": "input",
+      "from": 93,
+      "to": 104
+     },
+     {
+      "text": "com",
+      "from": 105,
+      "to": 110
+     },
+     {
+      "text": "id",
+      "from": 110,
+      "to": 116
+     },
+     {
+      "text": "email.",
+      "from": 116,
+      "to": 137
+     },
+     {
+      "text": "Só",
+      "from": 138,
+      "to": 146
+     },
+     {
+      "text": "isso.",
+      "from": 147,
+      "to": 185
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/html-label-for-foca-input/points.mp3",
+    "durationInFrames": 272,
+    "words": [
+     {
+      "text": "Sem",
+      "from": 3,
+      "to": 13
+     },
+     {
+      "text": "o",
+      "from": 14,
+      "to": 15
+     },
+     {
+      "text": "for,",
+      "from": 15,
+      "to": 26
+     },
+     {
+      "text": "dá",
+      "from": 27,
+      "to": 32
+     },
+     {
+      "text": "para",
+      "from": 32,
+      "to": 38
+     },
+     {
+      "text": "envolver",
+      "from": 38,
+      "to": 51
+     },
+     {
+      "text": "o",
+      "from": 52,
+      "to": 55
+     },
+     {
+      "text": "input",
+      "from": 55,
+      "to": 67
+     },
+     {
+      "text": "com",
+      "from": 68,
+      "to": 72
+     },
+     {
+      "text": "o",
+      "from": 72,
+      "to": 74
+     },
+     {
+      "text": "próprio",
+      "from": 74,
+      "to": 84
+     },
+     {
+      "text": "label.",
+      "from": 85,
+      "to": 105
+     },
+     {
+      "text": "No",
+      "from": 106,
+      "to": 110
+     },
+     {
+      "text": "celular",
+      "from": 110,
+      "to": 124
+     },
+     {
+      "text": "a",
+      "from": 125,
+      "to": 126
+     },
+     {
+      "text": "área",
+      "from": 126,
+      "to": 136
+     },
+     {
+      "text": "de",
+      "from": 136,
+      "to": 141
+     },
+     {
+      "text": "toque",
+      "from": 141,
+      "to": 150
+     },
+     {
+      "text": "aumenta.",
+      "from": 150,
+      "to": 173
+     },
+     {
+      "text": "E",
+      "from": 174,
+      "to": 176
+     },
+     {
+      "text": "o",
+      "from": 177,
+      "to": 178
+     },
+     {
+      "text": "leitor",
+      "from": 178,
+      "to": 191
+     },
+     {
+      "text": "de",
+      "from": 191,
+      "to": 195
+     },
+     {
+      "text": "tela",
+      "from": 195,
+      "to": 204
+     },
+     {
+      "text": "anuncia",
+      "from": 205,
+      "to": 219
+     },
+     {
+      "text": "o",
+      "from": 219,
+      "to": 221
+     },
+     {
+      "text": "campo",
+      "from": 222,
+      "to": 230
+     },
+     {
+      "text": "certo.",
+      "from": 231,
+      "to": 271
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/html-label-for-foca-input/outro.mp3",
+    "durationInFrames": 202,
+    "words": [
+     {
+      "text": "Formulário",
+      "from": 3,
+      "to": 23
+     },
+     {
+      "text": "completo,",
+      "from": 23,
+      "to": 41
+     },
+     {
+      "text": "do",
+      "from": 42,
+      "to": 46
+     },
+     {
+      "text": "zero,",
+      "from": 46,
+      "to": 61
+     },
+     {
+      "text": "no",
+      "from": 62,
+      "to": 66
+     },
+     {
+      "text": "curso",
+      "from": 66,
+      "to": 77
+     },
+     {
+      "text": "de",
+      "from": 77,
+      "to": 80
+     },
+     {
+      "text": "HTML",
+      "from": 80,
+      "to": 105
+     },
+     {
+      "text": "em",
+      "from": 106,
+      "to": 108
+     },
+     {
+      "text": "code",
+      "from": 109,
+      "to": 119
+     },
+     {
+      "text": "tier",
+      "from": 119,
+      "to": 129
+     },
+     {
+      "text": "ponto",
+      "from": 130,
+      "to": 140
+     },
+     {
+      "text": "vercel",
+      "from": 140,
+      "to": 154
+     },
+     {
+      "text": "ponto",
+      "from": 155,
+      "to": 165
+     },
+     {
+      "text": "app.",
+      "from": 165,
+      "to": 201
+     }
+    ]
+   }
+  }
+ },
+ "if-igual-simples-libera-menor": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/if-igual-simples-libera-menor/hook.mp3",
+    "durationInFrames": 144,
+    "words": [
+     {
+      "text": "Esse",
+      "from": 3,
+      "to": 11
+     },
+     {
+      "text": "if",
+      "from": 11,
+      "to": 21
+     },
+     {
+      "text": "libera",
+      "from": 21,
+      "to": 34
+     },
+     {
+      "text": "um",
+      "from": 34,
+      "to": 36
+     },
+     {
+      "text": "menor",
+      "from": 36,
+      "to": 48
+     },
+     {
+      "text": "de",
+      "from": 48,
+      "to": 51
+     },
+     {
+      "text": "dezoito",
+      "from": 52,
+      "to": 67
+     },
+     {
+      "text": "anos.",
+      "from": 68,
+      "to": 87
+     },
+     {
+      "text": "Onde",
+      "from": 88,
+      "to": 96
+     },
+     {
+      "text": "está",
+      "from": 96,
+      "to": 102
+     },
+     {
+      "text": "o",
+      "from": 103,
+      "to": 107
+     },
+     {
+      "text": "erro?",
+      "from": 107,
+      "to": 143
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/if-igual-simples-libera-menor/concept.mp3",
+    "durationInFrames": 304,
+    "words": [
+     {
+      "text": "Um",
+      "from": 3,
+      "to": 7
+     },
+     {
+      "text": "sinal",
+      "from": 7,
+      "to": 17
+     },
+     {
+      "text": "de",
+      "from": 18,
+      "to": 20
+     },
+     {
+      "text": "igual",
+      "from": 20,
+      "to": 29
+     },
+     {
+      "text": "sozinho",
+      "from": 29,
+      "to": 44
+     },
+     {
+      "text": "atribui,",
+      "from": 44,
+      "to": 63
+     },
+     {
+      "text": "não",
+      "from": 64,
+      "to": 69
+     },
+     {
+      "text": "compara.",
+      "from": 69,
+      "to": 92
+     },
+     {
+      "text": "Dentro",
+      "from": 93,
+      "to": 105
+     },
+     {
+      "text": "do",
+      "from": 105,
+      "to": 109
+     },
+     {
+      "text": "if",
+      "from": 110,
+      "to": 121
+     },
+     {
+      "text": "ele",
+      "from": 122,
+      "to": 126
+     },
+     {
+      "text": "guarda",
+      "from": 126,
+      "to": 138
+     },
+     {
+      "text": "dezoito",
+      "from": 138,
+      "to": 154
+     },
+     {
+      "text": "na",
+      "from": 155,
+      "to": 159
+     },
+     {
+      "text": "variável,",
+      "from": 159,
+      "to": 183
+     },
+     {
+      "text": "e",
+      "from": 184,
+      "to": 187
+     },
+     {
+      "text": "o",
+      "from": 187,
+      "to": 191
+     },
+     {
+      "text": "if",
+      "from": 191,
+      "to": 201
+     },
+     {
+      "text": "acaba",
+      "from": 201,
+      "to": 212
+     },
+     {
+      "text": "testando",
+      "from": 212,
+      "to": 225
+     },
+     {
+      "text": "esse",
+      "from": 225,
+      "to": 230
+     },
+     {
+      "text": "dezoito,",
+      "from": 231,
+      "to": 250
+     },
+     {
+      "text": "que",
+      "from": 251,
+      "to": 254
+     },
+     {
+      "text": "é",
+      "from": 254,
+      "to": 257
+     },
+     {
+      "text": "verdadeiro.",
+      "from": 257,
+      "to": 303
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/if-igual-simples-libera-menor/code.mp3",
+    "durationInFrames": 186,
+    "words": [
+     {
+      "text": "A",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "idade",
+      "from": 6,
+      "to": 18
+     },
+     {
+      "text": "é",
+      "from": 18,
+      "to": 20
+     },
+     {
+      "text": "quinze,",
+      "from": 20,
+      "to": 37
+     },
+     {
+      "text": "mas",
+      "from": 38,
+      "to": 42
+     },
+     {
+      "text": "o",
+      "from": 42,
+      "to": 46
+     },
+     {
+      "text": "if",
+      "from": 47,
+      "to": 58
+     },
+     {
+      "text": "usa",
+      "from": 58,
+      "to": 66
+     },
+     {
+      "text": "um",
+      "from": 66,
+      "to": 69
+     },
+     {
+      "text": "igual",
+      "from": 69,
+      "to": 79
+     },
+     {
+      "text": "só.",
+      "from": 80,
+      "to": 96
+     },
+     {
+      "text": "Rode",
+      "from": 97,
+      "to": 110
+     },
+     {
+      "text": "e",
+      "from": 111,
+      "to": 112
+     },
+     {
+      "text": "veja",
+      "from": 113,
+      "to": 122
+     },
+     {
+      "text": "quem",
+      "from": 123,
+      "to": 128
+     },
+     {
+      "text": "acabou",
+      "from": 128,
+      "to": 139
+     },
+     {
+      "text": "liberado.",
+      "from": 140,
+      "to": 185
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/if-igual-simples-libera-menor/points.mp3",
+    "durationInFrames": 216,
+    "words": [
+     {
+      "text": "Um",
+      "from": 3,
+      "to": 8
+     },
+     {
+      "text": "igual",
+      "from": 8,
+      "to": 17
+     },
+     {
+      "text": "guarda",
+      "from": 17,
+      "to": 28
+     },
+     {
+      "text": "valor.",
+      "from": 29,
+      "to": 48
+     },
+     {
+      "text": "Maior",
+      "from": 49,
+      "to": 63
+     },
+     {
+      "text": "ou",
+      "from": 63,
+      "to": 68
+     },
+     {
+      "text": "igual",
+      "from": 68,
+      "to": 78
+     },
+     {
+      "text": "compara",
+      "from": 78,
+      "to": 90
+     },
+     {
+      "text": "de",
+      "from": 91,
+      "to": 93
+     },
+     {
+      "text": "verdade.",
+      "from": 94,
+      "to": 120
+     },
+     {
+      "text": "E",
+      "from": 121,
+      "to": 124
+     },
+     {
+      "text": "sempre",
+      "from": 124,
+      "to": 137
+     },
+     {
+      "text": "teste",
+      "from": 137,
+      "to": 147
+     },
+     {
+      "text": "um",
+      "from": 147,
+      "to": 150
+     },
+     {
+      "text": "caso",
+      "from": 150,
+      "to": 161
+     },
+     {
+      "text": "que",
+      "from": 161,
+      "to": 164
+     },
+     {
+      "text": "deveria",
+      "from": 164,
+      "to": 177
+     },
+     {
+      "text": "falhar.",
+      "from": 177,
+      "to": 215
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/if-igual-simples-libera-menor/outro.mp3",
+    "durationInFrames": 196,
+    "words": [
+     {
+      "text": "A",
+      "from": 3,
+      "to": 5
+     },
+     {
+      "text": "lição",
+      "from": 6,
+      "to": 17
+     },
+     {
+      "text": "completa",
+      "from": 17,
+      "to": 34
+     },
+     {
+      "text": "está",
+      "from": 34,
+      "to": 40
+     },
+     {
+      "text": "em",
+      "from": 41,
+      "to": 44
+     },
+     {
+      "text": "code",
+      "from": 44,
+      "to": 54
+     },
+     {
+      "text": "tier",
+      "from": 54,
+      "to": 64
+     },
+     {
+      "text": "ponto",
+      "from": 65,
+      "to": 74
+     },
+     {
+      "text": "vercel",
+      "from": 74,
+      "to": 88
+     },
+     {
+      "text": "ponto",
+      "from": 88,
+      "to": 98
+     },
+     {
+      "text": "app,",
+      "from": 98,
+      "to": 113
+     },
+     {
+      "text": "curso",
+      "from": 114,
+      "to": 123
+     },
+     {
+      "text": "Fundamentos",
+      "from": 123,
+      "to": 143
+     },
+     {
+      "text": "da",
+      "from": 143,
+      "to": 146
+     },
+     {
+      "text": "Programação.",
+      "from": 147,
+      "to": 195
+     }
+    ]
+   }
+  }
+ },
+ "busca-binaria-20-passos": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/busca-binaria-20-passos/hook.mp3",
+    "durationInFrames": 150,
+    "words": [
+     {
+      "text": "Achar",
+      "from": 3,
+      "to": 15
+     },
+     {
+      "text": "um",
+      "from": 15,
+      "to": 18
+     },
+     {
+      "text": "item",
+      "from": 19,
+      "to": 29
+     },
+     {
+      "text": "entre",
+      "from": 29,
+      "to": 38
+     },
+     {
+      "text": "um",
+      "from": 38,
+      "to": 41
+     },
+     {
+      "text": "milhão",
+      "from": 42,
+      "to": 53
+     },
+     {
+      "text": "de",
+      "from": 53,
+      "to": 57
+     },
+     {
+      "text": "itens",
+      "from": 57,
+      "to": 67
+     },
+     {
+      "text": "em",
+      "from": 67,
+      "to": 73
+     },
+     {
+      "text": "vinte",
+      "from": 74,
+      "to": 82
+     },
+     {
+      "text": "passos",
+      "from": 83,
+      "to": 96
+     },
+     {
+      "text": "parece",
+      "from": 96,
+      "to": 108
+     },
+     {
+      "text": "mentira.",
+      "from": 108,
+      "to": 149
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/busca-binaria-20-passos/concept.mp3",
+    "durationInFrames": 265,
+    "words": [
+     {
+      "text": "A",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "busca",
+      "from": 6,
+      "to": 17
+     },
+     {
+      "text": "binária",
+      "from": 17,
+      "to": 31
+     },
+     {
+      "text": "olha",
+      "from": 31,
+      "to": 39
+     },
+     {
+      "text": "o",
+      "from": 40,
+      "to": 41
+     },
+     {
+      "text": "meio",
+      "from": 41,
+      "to": 49
+     },
+     {
+      "text": "da",
+      "from": 50,
+      "to": 53
+     },
+     {
+      "text": "lista",
+      "from": 53,
+      "to": 63
+     },
+     {
+      "text": "ordenada",
+      "from": 63,
+      "to": 84
+     },
+     {
+      "text": "e",
+      "from": 84,
+      "to": 86
+     },
+     {
+      "text": "joga",
+      "from": 86,
+      "to": 96
+     },
+     {
+      "text": "a",
+      "from": 96,
+      "to": 97
+     },
+     {
+      "text": "metade",
+      "from": 98,
+      "to": 111
+     },
+     {
+      "text": "errada",
+      "from": 111,
+      "to": 122
+     },
+     {
+      "text": "fora,",
+      "from": 122,
+      "to": 137
+     },
+     {
+      "text": "toda",
+      "from": 138,
+      "to": 147
+     },
+     {
+      "text": "vez.",
+      "from": 147,
+      "to": 166
+     },
+     {
+      "text": "No",
+      "from": 167,
+      "to": 171
+     },
+     {
+      "text": "pior",
+      "from": 171,
+      "to": 182
+     },
+     {
+      "text": "caso,",
+      "from": 183,
+      "to": 196
+     },
+     {
+      "text": "vinte",
+      "from": 197,
+      "to": 205
+     },
+     {
+      "text": "rodadas",
+      "from": 206,
+      "to": 221
+     },
+     {
+      "text": "bastam.",
+      "from": 222,
+      "to": 264
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/busca-binaria-20-passos/code.mp3",
+    "durationInFrames": 195,
+    "words": [
+     {
+      "text": "Início,",
+      "from": 3,
+      "to": 19
+     },
+     {
+      "text": "fim",
+      "from": 20,
+      "to": 28
+     },
+     {
+      "text": "e",
+      "from": 28,
+      "to": 30
+     },
+     {
+      "text": "meio.",
+      "from": 30,
+      "to": 50
+     },
+     {
+      "text": "Se",
+      "from": 51,
+      "to": 57
+     },
+     {
+      "text": "o",
+      "from": 58,
+      "to": 61
+     },
+     {
+      "text": "alvo",
+      "from": 61,
+      "to": 68
+     },
+     {
+      "text": "é",
+      "from": 69,
+      "to": 70
+     },
+     {
+      "text": "maior",
+      "from": 70,
+      "to": 82
+     },
+     {
+      "text": "que",
+      "from": 83,
+      "to": 86
+     },
+     {
+      "text": "o",
+      "from": 87,
+      "to": 89
+     },
+     {
+      "text": "meio,",
+      "from": 89,
+      "to": 100
+     },
+     {
+      "text": "sobe",
+      "from": 101,
+      "to": 111
+     },
+     {
+      "text": "o",
+      "from": 111,
+      "to": 113
+     },
+     {
+      "text": "início;",
+      "from": 113,
+      "to": 127
+     },
+     {
+      "text": "se",
+      "from": 128,
+      "to": 131
+     },
+     {
+      "text": "é",
+      "from": 132,
+      "to": 133
+     },
+     {
+      "text": "menor,",
+      "from": 134,
+      "to": 148
+     },
+     {
+      "text": "desce",
+      "from": 149,
+      "to": 157
+     },
+     {
+      "text": "o",
+      "from": 157,
+      "to": 158
+     },
+     {
+      "text": "fim.",
+      "from": 159,
+      "to": 194
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/busca-binaria-20-passos/points.mp3",
+    "durationInFrames": 286,
+    "words": [
+     {
+      "text": "Só",
+      "from": 3,
+      "to": 11
+     },
+     {
+      "text": "funciona",
+      "from": 11,
+      "to": 27
+     },
+     {
+      "text": "se",
+      "from": 28,
+      "to": 32
+     },
+     {
+      "text": "a",
+      "from": 32,
+      "to": 33
+     },
+     {
+      "text": "lista",
+      "from": 33,
+      "to": 44
+     },
+     {
+      "text": "estiver",
+      "from": 44,
+      "to": 56
+     },
+     {
+      "text": "ordenada.",
+      "from": 57,
+      "to": 84
+     },
+     {
+      "text": "Se",
+      "from": 85,
+      "to": 91
+     },
+     {
+      "text": "os",
+      "from": 92,
+      "to": 95
+     },
+     {
+      "text": "dados",
+      "from": 95,
+      "to": 106
+     },
+     {
+      "text": "cabem",
+      "from": 107,
+      "to": 117
+     },
+     {
+      "text": "num",
+      "from": 117,
+      "to": 121
+     },
+     {
+      "text": "dicionário,",
+      "from": 121,
+      "to": 145
+     },
+     {
+      "text": "use",
+      "from": 146,
+      "to": 153
+     },
+     {
+      "text": "dicionário.",
+      "from": 153,
+      "to": 180
+     },
+     {
+      "text": "E",
+      "from": 181,
+      "to": 184
+     },
+     {
+      "text": "dobrar",
+      "from": 184,
+      "to": 197
+     },
+     {
+      "text": "o",
+      "from": 197,
+      "to": 198
+     },
+     {
+      "text": "tamanho",
+      "from": 199,
+      "to": 213
+     },
+     {
+      "text": "custa",
+      "from": 213,
+      "to": 225
+     },
+     {
+      "text": "só",
+      "from": 225,
+      "to": 230
+     },
+     {
+      "text": "um",
+      "from": 231,
+      "to": 234
+     },
+     {
+      "text": "passo",
+      "from": 235,
+      "to": 244
+     },
+     {
+      "text": "a",
+      "from": 244,
+      "to": 245
+     },
+     {
+      "text": "mais.",
+      "from": 246,
+      "to": 285
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/busca-binaria-20-passos/outro.mp3",
+    "durationInFrames": 171,
+    "words": [
+     {
+      "text": "Quer",
+      "from": 3,
+      "to": 9
+     },
+     {
+      "text": "testar",
+      "from": 9,
+      "to": 21
+     },
+     {
+      "text": "com",
+      "from": 22,
+      "to": 28
+     },
+     {
+      "text": "outros",
+      "from": 29,
+      "to": 39
+     },
+     {
+      "text": "números?",
+      "from": 39,
+      "to": 64
+     },
+     {
+      "text": "Roda",
+      "from": 65,
+      "to": 74
+     },
+     {
+      "text": "no",
+      "from": 75,
+      "to": 78
+     },
+     {
+      "text": "code",
+      "from": 78,
+      "to": 88
+     },
+     {
+      "text": "tier",
+      "from": 89,
+      "to": 99
+     },
+     {
+      "text": "ponto",
+      "from": 100,
+      "to": 109
+     },
+     {
+      "text": "vercel",
+      "from": 110,
+      "to": 124
+     },
+     {
+      "text": "ponto",
+      "from": 124,
+      "to": 134
+     },
+     {
+      "text": "app.",
+      "from": 134,
+      "to": 170
+     }
+    ]
+   }
+  }
+ },
+ "react-zero-fantasma": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/react-zero-fantasma/hook.mp3",
+    "durationInFrames": 144,
+    "words": [
+     {
+      "text": "Você",
+      "from": 3,
+      "to": 11
+     },
+     {
+      "text": "nunca",
+      "from": 12,
+      "to": 20
+     },
+     {
+      "text": "escreveu",
+      "from": 21,
+      "to": 36
+     },
+     {
+      "text": "esse",
+      "from": 36,
+      "to": 42
+     },
+     {
+      "text": "zero,",
+      "from": 42,
+      "to": 61
+     },
+     {
+      "text": "mas",
+      "from": 62,
+      "to": 65
+     },
+     {
+      "text": "ele",
+      "from": 66,
+      "to": 72
+     },
+     {
+      "text": "apareceu",
+      "from": 72,
+      "to": 87
+     },
+     {
+      "text": "sozinho",
+      "from": 87,
+      "to": 101
+     },
+     {
+      "text": "na",
+      "from": 102,
+      "to": 106
+     },
+     {
+      "text": "tela.",
+      "from": 106,
+      "to": 143
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/react-zero-fantasma/concept.mp3",
+    "durationInFrames": 280,
+    "words": [
+     {
+      "text": "Zero",
+      "from": 3,
+      "to": 13
+     },
+     {
+      "text": "conta",
+      "from": 14,
+      "to": 23
+     },
+     {
+      "text": "como",
+      "from": 23,
+      "to": 30
+     },
+     {
+      "text": "falso,",
+      "from": 30,
+      "to": 49
+     },
+     {
+      "text": "mas",
+      "from": 50,
+      "to": 53
+     },
+     {
+      "text": "a",
+      "from": 53,
+      "to": 57
+     },
+     {
+      "text": "expressão",
+      "from": 57,
+      "to": 73
+     },
+     {
+      "text": "devolve",
+      "from": 74,
+      "to": 87
+     },
+     {
+      "text": "o",
+      "from": 87,
+      "to": 88
+     },
+     {
+      "text": "próprio",
+      "from": 89,
+      "to": 99
+     },
+     {
+      "text": "zero.",
+      "from": 100,
+      "to": 118
+     },
+     {
+      "text": "O",
+      "from": 119,
+      "to": 122
+     },
+     {
+      "text": "React",
+      "from": 123,
+      "to": 134
+     },
+     {
+      "text": "ignora",
+      "from": 134,
+      "to": 147
+     },
+     {
+      "text": "falso,",
+      "from": 147,
+      "to": 162
+     },
+     {
+      "text": "nulo",
+      "from": 163,
+      "to": 173
+     },
+     {
+      "text": "e",
+      "from": 173,
+      "to": 174
+     },
+     {
+      "text": "indefinido,",
+      "from": 174,
+      "to": 198
+     },
+     {
+      "text": "só",
+      "from": 199,
+      "to": 206
+     },
+     {
+      "text": "que",
+      "from": 206,
+      "to": 209
+     },
+     {
+      "text": "o",
+      "from": 209,
+      "to": 210
+     },
+     {
+      "text": "número",
+      "from": 211,
+      "to": 221
+     },
+     {
+      "text": "zero",
+      "from": 221,
+      "to": 231
+     },
+     {
+      "text": "ele",
+      "from": 231,
+      "to": 235
+     },
+     {
+      "text": "desenha.",
+      "from": 236,
+      "to": 279
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/react-zero-fantasma/code.mp3",
+    "durationInFrames": 182,
+    "words": [
+     {
+      "text": "Pontos",
+      "from": 3,
+      "to": 14
+     },
+     {
+      "text": "vale",
+      "from": 15,
+      "to": 22
+     },
+     {
+      "text": "zero,",
+      "from": 22,
+      "to": 38
+     },
+     {
+      "text": "e",
+      "from": 39,
+      "to": 42
+     },
+     {
+      "text": "a",
+      "from": 42,
+      "to": 44
+     },
+     {
+      "text": "linha",
+      "from": 44,
+      "to": 52
+     },
+     {
+      "text": "pede",
+      "from": 53,
+      "to": 63
+     },
+     {
+      "text": "pra",
+      "from": 63,
+      "to": 68
+     },
+     {
+      "text": "mostrar",
+      "from": 68,
+      "to": 81
+     },
+     {
+      "text": "o",
+      "from": 81,
+      "to": 82
+     },
+     {
+      "text": "XP",
+      "from": 83,
+      "to": 100
+     },
+     {
+      "text": "só",
+      "from": 100,
+      "to": 107
+     },
+     {
+      "text": "quando",
+      "from": 108,
+      "to": 116
+     },
+     {
+      "text": "pontos",
+      "from": 117,
+      "to": 128
+     },
+     {
+      "text": "for",
+      "from": 128,
+      "to": 135
+     },
+     {
+      "text": "verdadeiro.",
+      "from": 135,
+      "to": 181
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/react-zero-fantasma/points.mp3",
+    "durationInFrames": 302,
+    "words": [
+     {
+      "text": "Compare",
+      "from": 3,
+      "to": 17
+     },
+     {
+      "text": "de",
+      "from": 17,
+      "to": 20
+     },
+     {
+      "text": "verdade:",
+      "from": 21,
+      "to": 45
+     },
+     {
+      "text": "pontos",
+      "from": 46,
+      "to": 57
+     },
+     {
+      "text": "maior",
+      "from": 57,
+      "to": 70
+     },
+     {
+      "text": "que",
+      "from": 71,
+      "to": 75
+     },
+     {
+      "text": "zero.",
+      "from": 75,
+      "to": 94
+     },
+     {
+      "text": "Aí",
+      "from": 95,
+      "to": 103
+     },
+     {
+      "text": "a",
+      "from": 103,
+      "to": 105
+     },
+     {
+      "text": "condição",
+      "from": 105,
+      "to": 122
+     },
+     {
+      "text": "vira",
+      "from": 122,
+      "to": 129
+     },
+     {
+      "text": "falso",
+      "from": 129,
+      "to": 145
+     },
+     {
+      "text": "e",
+      "from": 145,
+      "to": 147
+     },
+     {
+      "text": "a",
+      "from": 147,
+      "to": 150
+     },
+     {
+      "text": "div",
+      "from": 150,
+      "to": 157
+     },
+     {
+      "text": "sai",
+      "from": 157,
+      "to": 163
+     },
+     {
+      "text": "vazia.",
+      "from": 164,
+      "to": 186
+     },
+     {
+      "text": "O",
+      "from": 187,
+      "to": 189
+     },
+     {
+      "text": "mesmo",
+      "from": 189,
+      "to": 201
+     },
+     {
+      "text": "vale",
+      "from": 202,
+      "to": 212
+     },
+     {
+      "text": "quando",
+      "from": 213,
+      "to": 220
+     },
+     {
+      "text": "você",
+      "from": 221,
+      "to": 230
+     },
+     {
+      "text": "usa",
+      "from": 230,
+      "to": 239
+     },
+     {
+      "text": "o",
+      "from": 240,
+      "to": 241
+     },
+     {
+      "text": "tamanho",
+      "from": 242,
+      "to": 254
+     },
+     {
+      "text": "de",
+      "from": 254,
+      "to": 257
+     },
+     {
+      "text": "uma",
+      "from": 257,
+      "to": 261
+     },
+     {
+      "text": "lista.",
+      "from": 261,
+      "to": 301
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/react-zero-fantasma/outro.mp3",
+    "durationInFrames": 149,
+    "words": [
+     {
+      "text": "Tem",
+      "from": 3,
+      "to": 8
+     },
+     {
+      "text": "um",
+      "from": 8,
+      "to": 11
+     },
+     {
+      "text": "curso",
+      "from": 11,
+      "to": 22
+     },
+     {
+      "text": "de",
+      "from": 23,
+      "to": 26
+     },
+     {
+      "text": "React",
+      "from": 26,
+      "to": 38
+     },
+     {
+      "text": "inteiro",
+      "from": 39,
+      "to": 52
+     },
+     {
+      "text": "em",
+      "from": 52,
+      "to": 55
+     },
+     {
+      "text": "code",
+      "from": 55,
+      "to": 66
+     },
+     {
+      "text": "tier",
+      "from": 66,
+      "to": 76
+     },
+     {
+      "text": "ponto",
+      "from": 77,
+      "to": 87
+     },
+     {
+      "text": "vercel",
+      "from": 87,
+      "to": 102
+     },
+     {
+      "text": "ponto",
+      "from": 102,
+      "to": 112
+     },
+     {
+      "text": "app.",
+      "from": 112,
+      "to": 148
+     }
+    ]
+   }
+  }
+ },
+ "node-sql-injection-or-1-1": {
+  "voice": "pt-BR-FranciscaNeural",
+  "scenes": {
+   "hook": {
+    "src": "shorts/node-sql-injection-or-1-1/hook.mp3",
+    "durationInFrames": 134,
+    "words": [
+     {
+      "text": "Esse",
+      "from": 3,
+      "to": 11
+     },
+     {
+      "text": "texto",
+      "from": 11,
+      "to": 22
+     },
+     {
+      "text": "no",
+      "from": 23,
+      "to": 26
+     },
+     {
+      "text": "campo",
+      "from": 26,
+      "to": 36
+     },
+     {
+      "text": "de",
+      "from": 36,
+      "to": 39
+     },
+     {
+      "text": "e-mail",
+      "from": 39,
+      "to": 49
+     },
+     {
+      "text": "faz",
+      "from": 50,
+      "to": 54
+     },
+     {
+      "text": "a",
+      "from": 54,
+      "to": 59
+     },
+     {
+      "text": "busca",
+      "from": 59,
+      "to": 71
+     },
+     {
+      "text": "devolver",
+      "from": 71,
+      "to": 87
+     },
+     {
+      "text": "todo",
+      "from": 88,
+      "to": 96
+     },
+     {
+      "text": "mundo.",
+      "from": 96,
+      "to": 133
+     }
+    ]
+   },
+   "concept": {
+    "src": "shorts/node-sql-injection-or-1-1/concept.mp3",
+    "durationInFrames": 175,
+    "words": [
+     {
+      "text": "Se",
+      "from": 3,
+      "to": 9
+     },
+     {
+      "text": "você",
+      "from": 9,
+      "to": 17
+     },
+     {
+      "text": "monta",
+      "from": 18,
+      "to": 26
+     },
+     {
+      "text": "a",
+      "from": 27,
+      "to": 28
+     },
+     {
+      "text": "query",
+      "from": 29,
+      "to": 39
+     },
+     {
+      "text": "com",
+      "from": 39,
+      "to": 44
+     },
+     {
+      "text": "template",
+      "from": 44,
+      "to": 59
+     },
+     {
+      "text": "string,",
+      "from": 59,
+      "to": 76
+     },
+     {
+      "text": "o",
+      "from": 77,
+      "to": 79
+     },
+     {
+      "text": "que",
+      "from": 79,
+      "to": 82
+     },
+     {
+      "text": "a",
+      "from": 82,
+      "to": 84
+     },
+     {
+      "text": "pessoa",
+      "from": 84,
+      "to": 95
+     },
+     {
+      "text": "digita",
+      "from": 96,
+      "to": 110
+     },
+     {
+      "text": "vira",
+      "from": 111,
+      "to": 119
+     },
+     {
+      "text": "parte",
+      "from": 119,
+      "to": 129
+     },
+     {
+      "text": "do",
+      "from": 130,
+      "to": 132
+     },
+     {
+      "text": "comando.",
+      "from": 133,
+      "to": 174
+     }
+    ]
+   },
+   "code": {
+    "src": "shorts/node-sql-injection-or-1-1/code.mp3",
+    "durationInFrames": 229,
+    "words": [
+     {
+      "text": "A",
+      "from": 3,
+      "to": 5
+     },
+     {
+      "text": "aspa",
+      "from": 6,
+      "to": 16
+     },
+     {
+      "text": "fecha",
+      "from": 17,
+      "to": 29
+     },
+     {
+      "text": "o",
+      "from": 29,
+      "to": 30
+     },
+     {
+      "text": "valor",
+      "from": 30,
+      "to": 43
+     },
+     {
+      "text": "e",
+      "from": 44,
+      "to": 47
+     },
+     {
+      "text": "o",
+      "from": 47,
+      "to": 50
+     },
+     {
+      "text": "or",
+      "from": 51,
+      "to": 57
+     },
+     {
+      "text": "um",
+      "from": 57,
+      "to": 60
+     },
+     {
+      "text": "igual",
+      "from": 60,
+      "to": 73
+     },
+     {
+      "text": "um",
+      "from": 74,
+      "to": 77
+     },
+     {
+      "text": "deixa",
+      "from": 77,
+      "to": 88
+     },
+     {
+      "text": "o",
+      "from": 89,
+      "to": 90
+     },
+     {
+      "text": "where",
+      "from": 90,
+      "to": 96
+     },
+     {
+      "text": "sempre",
+      "from": 97,
+      "to": 109
+     },
+     {
+      "text": "verdadeiro.",
+      "from": 109,
+      "to": 137
+     },
+     {
+      "text": "O",
+      "from": 138,
+      "to": 141
+     },
+     {
+      "text": "banco",
+      "from": 141,
+      "to": 151
+     },
+     {
+      "text": "devolve",
+      "from": 152,
+      "to": 166
+     },
+     {
+      "text": "todos",
+      "from": 167,
+      "to": 176
+     },
+     {
+      "text": "os",
+      "from": 177,
+      "to": 180
+     },
+     {
+      "text": "usuários.",
+      "from": 180,
+      "to": 228
+     }
+    ]
+   },
+   "points": {
+    "src": "shorts/node-sql-injection-or-1-1/points.mp3",
+    "durationInFrames": 277,
+    "words": [
+     {
+      "text": "O",
+      "from": 3,
+      "to": 5
+     },
+     {
+      "text": "conserto",
+      "from": 6,
+      "to": 22
+     },
+     {
+      "text": "é",
+      "from": 23,
+      "to": 24
+     },
+     {
+      "text": "uma",
+      "from": 24,
+      "to": 29
+     },
+     {
+      "text": "interrogação:",
+      "from": 29,
+      "to": 60
+     },
+     {
+      "text": "o",
+      "from": 61,
+      "to": 63
+     },
+     {
+      "text": "banco",
+      "from": 64,
+      "to": 74
+     },
+     {
+      "text": "monta",
+      "from": 74,
+      "to": 82
+     },
+     {
+      "text": "a",
+      "from": 83,
+      "to": 84
+     },
+     {
+      "text": "query",
+      "from": 84,
+      "to": 92
+     },
+     {
+      "text": "primeiro",
+      "from": 93,
+      "to": 108
+     },
+     {
+      "text": "e",
+      "from": 108,
+      "to": 110
+     },
+     {
+      "text": "só",
+      "from": 110,
+      "to": 116
+     },
+     {
+      "text": "depois",
+      "from": 116,
+      "to": 129
+     },
+     {
+      "text": "recebe",
+      "from": 129,
+      "to": 142
+     },
+     {
+      "text": "o",
+      "from": 142,
+      "to": 143
+     },
+     {
+      "text": "valor,",
+      "from": 143,
+      "to": 160
+     },
+     {
+      "text": "então",
+      "from": 161,
+      "to": 172
+     },
+     {
+      "text": "o",
+      "from": 173,
+      "to": 174
+     },
+     {
+      "text": "que",
+      "from": 174,
+      "to": 177
+     },
+     {
+      "text": "a",
+      "from": 177,
+      "to": 179
+     },
+     {
+      "text": "pessoa",
+      "from": 179,
+      "to": 191
+     },
+     {
+      "text": "digitou",
+      "from": 192,
+      "to": 206
+     },
+     {
+      "text": "não",
+      "from": 206,
+      "to": 212
+     },
+     {
+      "text": "tem",
+      "from": 213,
+      "to": 218
+     },
+     {
+      "text": "como",
+      "from": 218,
+      "to": 225
+     },
+     {
+      "text": "virar",
+      "from": 226,
+      "to": 235
+     },
+     {
+      "text": "comando.",
+      "from": 235,
+      "to": 276
+     }
+    ]
+   },
+   "outro": {
+    "src": "shorts/node-sql-injection-or-1-1/outro.mp3",
+    "durationInFrames": 145,
+    "words": [
+     {
+      "text": "O",
+      "from": 3,
+      "to": 6
+     },
+     {
+      "text": "curso",
+      "from": 7,
+      "to": 17
+     },
+     {
+      "text": "de",
+      "from": 18,
+      "to": 21
+     },
+     {
+      "text": "Node",
+      "from": 21,
+      "to": 30
+     },
+     {
+      "text": "inteiro",
+      "from": 30,
+      "to": 44
+     },
+     {
+      "text": "está",
+      "from": 45,
+      "to": 51
+     },
+     {
+      "text": "em",
+      "from": 51,
+      "to": 54
+     },
+     {
+      "text": "code",
+      "from": 54,
+      "to": 64
+     },
+     {
+      "text": "tier",
+      "from": 65,
+      "to": 74
+     },
+     {
+      "text": "ponto",
+      "from": 75,
+      "to": 84
+     },
+     {
+      "text": "vercel",
+      "from": 85,
+      "to": 99
+     },
+     {
+      "text": "ponto",
+      "from": 99,
+      "to": 108
+     },
+     {
+      "text": "app.",
+      "from": 109,
+      "to": 144
+     }
+    ]
+   }
+  }
+ }
+}

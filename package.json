@@ -24,6 +24,11 @@
     "video:narrate": "tsx scripts/gen-narration.ts",
     "video:upload": "tsx scripts/upload-theory-railway.ts",
     "video:studio": "remotion studio remotion/index.ts",
+    "shorts:check": "tsx scripts/check-shorts.ts",
+    "shorts:narrate": "tsx scripts/gen-shorts-narration.ts",
+    "shorts:render": "tsx scripts/render-shorts.ts",
+    "shorts:still": "tsx scripts/still-short.ts",
+    "shorts:copy": "tsx scripts/gen-shorts-copy.ts",
     "store:art": "tsx scripts/gen-store-art.ts",
     "icon:android": "tsx scripts/gen-app-icon.ts",
     "assets:webp": "tsx scripts/png-to-webp.ts",
@@ -32,7 +37,8 @@
     "infographics": "tsx scripts/gen-infographics.ts",
     "sql:sync": "tsx scripts/sync-sql-expectations.ts",
     "lesson:index": "tsx scripts/gen-lesson-index.ts",
-    "typecheck": "tsc -p tsconfig.app.json --noEmit"
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
+    "typecheck:tools": "tsc -p tsconfig.tools.json --noEmit"
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.0.0",

@@ -1,0 +1,298 @@
+[
+ {
+  "id": "js-25-mais-1-vira-251",
+  "courseId": "2",
+  "lessonId": "2-3",
+  "language": "JavaScript",
+  "hook": "Por que 25 + 1 virou 251?",
+  "hookType": "resultado-inesperado",
+  "concept": "As aspas fazem o 25 virar texto, e com texto o + não soma: ele gruda os valores, dando 251.",
+  "code": "const idade = \"25\";\nconsole.log(idade + 1);\n\nconst real = 25;\nconsole.log(real + 1);",
+  "codeOutput": "251\n26",
+  "points": [
+   "input.value sempre chega como texto.",
+   "Use Number(valor) antes de somar.",
+   "Number('12,5') com vírgula vira NaN"
+  ],
+  "cta": "Curso de JavaScript completo no codetier.vercel.app",
+  "narration": {
+   "hook": "Vinte e cinco mais um deu duzentos e cinquenta e um. Não é bug.",
+   "concept": "Os culpados são as aspas. Com aspas, o vinte e cinco é texto, e o sinal de mais não soma: ele junta.",
+   "code": "Na primeira linha o vinte e cinco está entre aspas, então sai duzentos e cinquenta e um. Na segunda, sem aspas, sai vinte e seis.",
+   "points": "Todo campo de formulário devolve o valor como texto. Converta com Number antes de somar. E cuidado: com vírgula, Number devolve NaN.",
+   "outro": "Tem curso de JavaScript inteiro em code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "Por que 25 + 1 vira 251 em JavaScript",
+   "description": "Um par de aspas transforma número em texto e o operador + deixa de somar para concatenar. Veja as duas versões lado a lado no console e entenda por que a conta de um formulário sai errada. Detalhe: só o + faz isso; com - o texto vira número. https://codetier.vercel.app/cursos/2",
+   "hashtags": [
+    "javascript",
+    "programacao",
+    "dicasdeprogramacao",
+    "codetier",
+    "webdev"
+   ],
+   "shortCaption": "25 + 1 = 251? As aspas fazem o número virar texto e o + só gruda. Converta com Number antes de somar 🤯"
+  },
+  "spokenWords": 93
+ },
+ {
+  "id": "python-sort-devolve-none",
+  "courseId": "1",
+  "lessonId": "1-34",
+  "language": "Python",
+  "hook": "Um ordena, o outro apaga sua lista",
+  "hookType": "comparacao",
+  "concept": "sorted() devolve uma cópia ordenada; sort() ordena no lugar e devolve None, então notas = notas.sort() faz notas virar None e você perde a lista.",
+  "code": "notas = [7.5, 5.0, 9.2]\ncopia = sorted(notas)\nprint(copia)\nnotas = notas.sort()\nprint(notas)",
+  "codeOutput": "[5.0, 7.5, 9.2]\nNone",
+  "points": [
+   "Chame notas.sort() sem o sinal de igual",
+   "Use sorted() para ter uma lista nova",
+   "Método que muda a lista devolve None"
+  ],
+  "cta": "Treine isso agora no codetier.vercel.app",
+  "narration": {
+   "hook": "Essa linha parece certinha e apaga a sua lista inteira.",
+   "concept": "O sorted devolve uma cópia ordenada, mas o sort ordena a própria lista e devolve None, por isso guardar o resultado faz você perder a lista.",
+   "code": "A primeira linha imprime a cópia ordenada, e a seguinte imprime None porque a variável notas deixou de apontar para a lista.",
+   "points": "Chame notas ponto sort sozinho, sem o sinal de igual. Use sorted quando quiser uma lista nova. E lembre da regra: método que muda a lista devolve None.",
+   "outro": "Tem mais Python assim no code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "Python: por que notas = notas.sort() faz você perder a lista",
+   "description": "sorted() devolve uma cópia ordenada, enquanto .sort() ordena a própria lista e devolve None. Por isso notas = notas.sort() faz a variável notas virar None e você perde a lista em vez de ordená-la. https://codetier.vercel.app/cursos/1",
+   "hashtags": [
+    "python",
+    "programacao",
+    "aprenderaprogramar",
+    "dicasdeprogramacao",
+    "codetier"
+   ],
+   "shortCaption": "sorted() devolve cópia. .sort() devolve None e você perde a lista se usar o igual. Chame notas.sort() sozinho 🐍"
+  },
+  "spokenWords": 94
+ },
+ {
+  "id": "css-caixa-200-virou-244",
+  "courseId": "4",
+  "lessonId": "4-5",
+  "language": "CSS",
+  "hook": "width: 200px. A caixa mede 244.",
+  "hookType": "resultado-inesperado",
+  "concept": "width mede só o conteúdo: padding e border entram por fora; box-sizing: border-box puxa os dois para dentro dos 200px.",
+  "code": ".card {\n  width: 200px;\n  padding: 20px;\n  border: 2px solid;\n}\n.fix {\n  box-sizing: border-box;\n}",
+  "codeOutput": ".card      -> 244px\n.card.fix  -> 200px",
+  "points": [
+   "Use border-box em *, ::before e ::after",
+   "Margin fica de fora da conta",
+   "Meça com getBoundingClientRect()"
+  ],
+  "cta": "Treine box model no codetier.vercel.app",
+  "narration": {
+   "hook": "Sua caixa de duzentos pixels está medindo duzentos e quarenta e quatro.",
+   "concept": "É que width mede só o conteúdo. O padding e a borda são somados por fora.",
+   "code": "Vinte de padding e dois de borda, de cada lado, dão quarenta e quatro a mais. Uma linha resolve: box-sizing border-box.",
+   "points": "Coloca border-box no asterisco e também nos pseudoelementos, porque o asterisco sozinho não pega before e after. Margin continua de fora da conta.",
+   "outro": "Mais CSS que funciona de verdade em code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "CSS: por que sua caixa de 200px vira 244px (box model)",
+   "description": "No box model padrão, width mede só o conteúdo — padding e border são somados por fora e a caixa de 200px sai com 244px. Uma linha com box-sizing: border-box devolve exatamente o tamanho que você pediu. https://codetier.vercel.app/cursos/4",
+   "hashtags": [
+    "css",
+    "boxmodel",
+    "frontend",
+    "programacao",
+    "devbr"
+   ],
+   "shortCaption": "Você escreve width: 200px e o navegador desenha 244px. O box model explica, e box-sizing: border-box resolve em uma linha só 📐"
+  },
+  "spokenWords": 85
+ },
+ {
+  "id": "html-label-for-foca-input",
+  "courseId": "9",
+  "lessonId": "9-8",
+  "language": "HTML",
+  "hook": "Cliquei no texto. O campo focou sozinho.",
+  "hookType": "atalho",
+  "concept": "O atributo for do label aponta pro id do input. Com isso, o clique no texto é repassado ao campo e o rótulo entra na área clicável.",
+  "code": "<label for=\"email\">\n  E-mail\n</label>\n<input id=\"email\" type=\"email\">",
+  "codeOutput": "antes do clique  -> body\nclique em E-mail -> input#email",
+  "points": [
+   "Sem for, envolver o input também vale",
+   "No celular a área de toque aumenta",
+   "Leitor de tela anuncia o campo certo"
+  ],
+  "cta": "Monte o formulário inteiro em codetier.vercel.app",
+  "narration": {
+   "hook": "Repara: eu clico na palavra E-mail e o cursor pula pro campo sozinho.",
+   "concept": "O label tem o atributo for apontando pro id do input. Isso liga os dois: clicar no texto foca o campo.",
+   "code": "Quatro linhas: label com for igual a email, e o input com id email. Só isso.",
+   "points": "Sem o for, dá para envolver o input com o próprio label. No celular a área de toque aumenta. E o leitor de tela anuncia o campo certo.",
+   "outro": "Formulário completo, do zero, no curso de HTML em code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "Clicar no texto foca o campo: o truque do label no HTML",
+   "description": "O atributo for no label aponta pro id do input, e o clique no texto é repassado ao campo. Placeholder some quando você digita; o label fica, aumenta a área de toque no celular e é anunciado por leitores de tela. https://codetier.vercel.app/cursos/9",
+   "hashtags": [
+    "html",
+    "acessibilidade",
+    "programacao",
+    "frontend",
+    "devbr"
+   ],
+   "shortCaption": "Clica no texto E-mail e o campo foca sozinho. É o for do label apontando pro id do input 👆 curso de HTML em codetier.vercel.app"
+  },
+  "spokenWords": 88
+ },
+ {
+  "id": "if-igual-simples-libera-menor",
+  "courseId": "10",
+  "lessonId": "10-10",
+  "language": "JavaScript",
+  "hook": "Esse if libera um menor de 18. Onde está o erro?",
+  "hookType": "erro-comum",
+  "concept": "Dentro do if, um = só atribui: idade vira 18 e o if testa esse 18, que é verdadeiro. Para comparar, use >=.",
+  "code": "let idade = 15;\nif (idade = 18) {\n  console.log(\"Liberado\");\n}\nconsole.log(\"idade:\", idade);",
+  "codeOutput": "Liberado\nidade: 18",
+  "points": [
+   "Um = guarda valor, não compara",
+   "Use >= para comparar, nunca =",
+   "Teste um caso que deveria falhar"
+  ],
+  "cta": "Treine if e else no curso 10 em codetier.vercel.app",
+  "narration": {
+   "hook": "Esse if libera um menor de dezoito anos. Onde está o erro?",
+   "concept": "Um sinal de igual sozinho atribui, não compara. Dentro do if ele guarda dezoito na variável, e o if acaba testando esse dezoito, que é verdadeiro.",
+   "code": "A idade é quinze, mas o if usa um igual só. Rode e veja quem acabou liberado.",
+   "points": "Um igual guarda valor. Maior ou igual compara de verdade. E sempre teste um caso que deveria falhar.",
+   "outro": "A lição completa está em code tier ponto vercel ponto app, curso Fundamentos da Programação."
+  },
+  "platform": {
+   "title": "O if que libera um menor de 18 anos (erro clássico de JavaScript)",
+   "description": "Um if com um só sinal de igual não compara nada: ele atribui 18 à variável e o bloco roda mesmo com idade 15. Neste Short em JavaScript você vê o código rodando, a saída real e a correção com >=. Baseado na lição 'if e else na prática' do curso Fundamentos da Programação. Curso completo: https://codetier.vercel.app/cursos/10",
+   "hashtags": [
+    "javascript",
+    "programacao",
+    "logicadeprogramacao",
+    "codetier",
+    "devbr"
+   ],
+   "shortCaption": "15 anos e o if liberou 🤨 Um = no lugar de >= muda tudo. Aula completa no CodeTier."
+  },
+  "spokenWords": 88
+ },
+ {
+  "id": "busca-binaria-20-passos",
+  "courseId": "8",
+  "lessonId": "8-3",
+  "language": "Algoritmos",
+  "hook": "1 milhão de itens, 20 passos. Como?",
+  "hookType": "comparacao",
+  "concept": "Busca binária corta a lista ordenada no meio e joga metade fora a cada passo: 1 milhão de itens vira 20 comparações no pior caso.",
+  "code": "ini, fim, passos = 0, 999_999, 0\nwhile ini <= fim:\n    passos += 1\n    m = (ini + fim) // 2\n    if m == 777_777: break\n    if m < 777_777: ini = m+1\n    else: fim = m-1\nprint(passos)",
+  "codeOutput": "20",
+  "points": [
+   "Só funciona em lista ordenada",
+   "Se cabe num dict, use dict",
+   "Dobrar a lista custa 1 passo a mais"
+  ],
+  "cta": "Roda esse código em codetier.vercel.app",
+  "narration": {
+   "hook": "Achar um item entre um milhão de itens em vinte passos parece mentira.",
+   "concept": "A busca binária olha o meio da lista ordenada e joga a metade errada fora, toda vez. No pior caso, vinte rodadas bastam.",
+   "code": "Início, fim e meio. Se o alvo é maior que o meio, sobe o início; se é menor, desce o fim.",
+   "points": "Só funciona se a lista estiver ordenada. Se os dados cabem num dicionário, use dicionário. E dobrar o tamanho custa só um passo a mais.",
+   "outro": "Quer testar com outros números? Roda no code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "Busca binária: 1 milhão de itens em 20 passos",
+   "description": "A busca linear no pior caso percorre 1.000.000 de itens; a busca binária resolve o mesmo alvo em no máximo 20 passos porque descarta metade da lista a cada rodada. O detalhe que quase todo mundo esquece: só funciona se a lista estiver ordenada. https://codetier.vercel.app/cursos/8",
+   "hashtags": [
+    "algoritmos",
+    "buscabinaria",
+    "python",
+    "programacao",
+    "logica"
+   ],
+   "shortCaption": "1 milhão de itens, 20 passos. O truque da busca binária cabe em 8 linhas, mas só funciona com a lista ordenada 🧩"
+  },
+  "spokenWords": 89
+ },
+ {
+  "id": "react-zero-fantasma",
+  "courseId": "3",
+  "lessonId": "3-7",
+  "language": "React",
+  "hook": "Quem colocou esse 0 na sua tela?",
+  "hookType": "resultado-inesperado",
+  "concept": "Zero conta como falso, mas 0 && algo devolve o próprio 0. O React ignora false, null e undefined — só que 0 ele desenha.",
+  "code": "const pontos = 0;\nconst XP = <p>{pontos} XP</p>;\n\n<div>{pontos && XP}</div>\n<div>{pontos > 0 && XP}</div>",
+  "codeOutput": "<div>0</div>\n<div></div>",
+  "points": [
+   "Compare sempre: pontos > 0 && ...",
+   "lista.length && ... tem o mesmo bug",
+   "Ternário com null também resolve"
+  ],
+  "cta": "Curso de React completo em codetier.vercel.app",
+  "narration": {
+   "hook": "Você nunca escreveu esse zero, mas ele apareceu sozinho na tela.",
+   "concept": "Zero conta como falso, mas a expressão devolve o próprio zero. O React ignora falso, nulo e indefinido, só que o número zero ele desenha.",
+   "code": "Pontos vale zero, e a linha pede pra mostrar o XP só quando pontos for verdadeiro.",
+   "points": "Compare de verdade: pontos maior que zero. Aí a condição vira falso e a div sai vazia. O mesmo vale quando você usa o tamanho de uma lista.",
+   "outro": "Tem um curso de React inteiro em code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "O 0 fantasma do React: por que && imprime zero na tela",
+   "description": "Com pontos igual a 0, o operador && devolve 0 e o React imprime esse zero solto na interface. Trocar por pontos > 0 devolve false, e o React ignora false, null e undefined — a tela fica limpa. https://codetier.vercel.app/cursos/3",
+   "hashtags": [
+    "react",
+    "javascript",
+    "programacao",
+    "frontend",
+    "devbr"
+   ],
+   "shortCaption": "Aquele 0 solto no meio da tela React não veio do nada: && devolve 0, não false. Conserte com pontos > 0 👻"
+  },
+  "spokenWords": 93
+ },
+ {
+  "id": "node-sql-injection-or-1-1",
+  "courseId": "5",
+  "lessonId": "5-11",
+  "language": "Node.js",
+  "hook": "Esse texto devolve todos os usuários",
+  "hookType": "resultado-inesperado",
+  "concept": "Monte a query com template string e o que o usuário digita deixa de ser dado: vira comando dentro do SQL.",
+  "code": "const e = \"' OR '1'='1\";\nconst ruim =\n `WHERE email='${e}'`;\nconst bom = 'WHERE email=?';\nconsole.log(ruim);\nconsole.log(bom, [e]);",
+  "codeOutput": "WHERE email='' OR '1'='1'\nWHERE email=? [ \"' OR '1'='1\" ]",
+  "points": [
+   "Aspas e OR '1'='1' zeram o filtro",
+   "Troque interpolação por placeholder",
+   "Com placeholder, o dado nunca vira SQL"
+  ],
+  "cta": "Curso de Node completo em codetier.vercel.app",
+  "narration": {
+   "hook": "Esse texto no campo de e-mail faz a busca devolver todo mundo.",
+   "concept": "Se você monta a query com template string, o que a pessoa digita vira parte do comando.",
+   "code": "A aspa fecha o valor e o or um igual um deixa o where sempre verdadeiro. O banco devolve todos os usuários.",
+   "points": "O conserto é uma interrogação: o banco monta a query primeiro e só depois recebe o valor, então o que a pessoa digitou não tem como virar comando.",
+   "outro": "O curso de Node inteiro está em code tier ponto vercel ponto app."
+  },
+  "platform": {
+   "title": "SQL injection: por que nunca montar query com template string",
+   "description": "Um texto de 11 caracteres no campo de e-mail transforma a query em um filtro que sempre passa. Veja o estrago e o conserto de uma linha, usando placeholder no lugar de template string. O placeholder é ? no mysql2 e no SQLite, e $1 no Postgres. https://codetier.vercel.app/cursos/5",
+   "hashtags": [
+    "nodejs",
+    "sqlinjection",
+    "backend",
+    "programacao",
+    "segurancadigital"
+   ],
+   "shortCaption": "Digitei ' OR '1'='1 no campo de e-mail e o WHERE parou de filtrar. O conserto tem uma linha: placeholder em vez de template string 🔓"
+  },
+  "spokenWords": 81
+ }
+]

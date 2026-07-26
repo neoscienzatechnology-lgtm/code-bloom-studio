@@ -97,8 +97,31 @@ export function trackOnce(marker: string, event: string, properties?: Record<str
   track(event, properties);
 }
 
+// Origem da visita. Sem isto não dá para saber qual Short (ou qual busca)
+// trouxe a pessoa: o `$pageview` ia só com o caminho, e a query — onde mora a
+// marcação de campanha — ficava para trás. #aquisicao-shorts
+const CAMPAIGN_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "ref"] as const;
+
+/**
+ * O caminho do certificado carrega o NOME de uma pessoa
+ * (/c/:courseId/:nome) — a telemetria recebe o formato da rota, não o nome.
+ */
+export function anonymizePath(path: string): string {
+  return path.replace(/^\/c\/([^/]+)\/.+$/, "/c/$1/:nome");
+}
+
 export function trackPageview(path: string): void {
-  track("$pageview", { $current_url: path });
+  const properties: Record<string, unknown> = { $current_url: anonymizePath(path) };
+  try {
+    const params = new URLSearchParams(window.location.search);
+    CAMPAIGN_KEYS.forEach((key) => {
+      const value = params.get(key);
+      if (value) properties[key] = value.slice(0, 64);
+    });
+  } catch {
+    /* sem window.location utilizável: o pageview vai sem campanha */
+  }
+  track("$pageview", properties);
 }
 
 export function identifyUser(userId: string): void {
