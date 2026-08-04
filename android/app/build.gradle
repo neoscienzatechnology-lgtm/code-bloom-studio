@@ -1,16 +1,26 @@
 apply plugin: 'com.android.application'
 
-// Release signing secrets live outside the repo tree (~/.codetier) so they
-// can never be committed or zipped along with the project by accident.
-// Fallback to android/key.properties keeps other machines/CI working.
-def keystorePropertiesFile = new File(System.getProperty('user.home'), '.codetier/key.properties')
-if (!keystorePropertiesFile.exists()) {
-    keystorePropertiesFile = rootProject.file("key.properties")
-}
+// Release signing secrets live outside the repo tree so they can never be
+// committed or zipped along with the project by accident.
+//
+// A chave de upload foi criada ANTES do rebrand e mora em ~/.capycode. Ela NÃO
+// pode ser trocada depois que o app for publicado: o Google identifica o app
+// pela assinatura, e uma chave nova = "outro app". Por isso a busca inclui o
+// caminho antigo — sem ele o Gradle não achava nada, caía no bloco vazio de
+// signingConfigs e gerava um AAB SEM ASSINATURA, que a Play recusa.
+def keystoreCandidates = [
+    new File(System.getProperty('user.home'), '.codetier/key.properties'),
+    new File(System.getProperty('user.home'), '.capycode/key.properties'),
+    rootProject.file("key.properties"),
+]
+def keystorePropertiesFile = keystoreCandidates.find { it.exists() } ?: keystoreCandidates.first()
 def keystoreProperties = new Properties()
 
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    println "signing: usando ${keystorePropertiesFile}"
+} else {
+    println "signing: NENHUM key.properties encontrado — o release sairia sem assinatura"
 }
 
 android {
