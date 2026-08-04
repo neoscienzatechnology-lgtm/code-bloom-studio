@@ -67,3 +67,6 @@ bun.lockb
 # Shorts verticais: MP4/PNG de QA e áudio TTS são regeneráveis (npm run shorts:*)
 /out/shorts/
 /out/shorts-qa/
+
+# Arte de canal (regenerável com npm run channel:art)
+/out/canal/

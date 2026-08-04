@@ -80,6 +80,50 @@ descrição leva para `codetier.vercel.app/cursos/<courseId>`.
 render custam minutos e um gancho de 60 caracteres só apareceria cortado no
 vídeo pronto.
 
+## Abrir o canal (uma vez só)
+
+`npm run channel:art` gera em `out/canal/`:
+
+- `avatar-codetier-800.png` — 800×800, serve nas três plataformas (é cortado em
+  círculo, por isso só o emblema: nome escrito viraria borrão a 40px);
+- `banner-youtube-2048x1152.png` — o YouTube usa a mesma imagem em TV, desktop e
+  celular, recortando de fora para dentro. Só a faixa central de 1235×338
+  aparece em todos, e é onde vivem logo, frase e endereço. Os arquivos
+  `banner-preview-*.png` mostram cada recorte antes de subir.
+
+Textos para colar:
+
+**Nome**: `CodeTier` · **@**: `@codetier` (se estiver livre)
+
+**Descrição do canal (YouTube)**
+
+```
+Programação explicada em vídeos de 30 segundos: um erro que todo mundo comete, o código rodando de verdade e o conserto.
+
+Trilhas completas de lógica, Python, JavaScript, HTML, CSS, React, SQL e mais em https://codetier.vercel.app — a primeira aula é aberta, sem cadastro.
+```
+
+**Bio (TikTok, até ~80 caracteres)**
+
+```
+Programação em 30s: o erro, o código rodando e o conserto. Aula grátis 👇
+```
+
+**Bio (Instagram)**
+
+```
+Programação explicada em 30 segundos 🟢
+Erro comum → código rodando → conserto
+Aula grátis, sem cadastro 👇
+```
+
+**Link da bio** (TikTok e Instagram só permitem um; no YouTube o link vai na
+descrição de cada vídeo, clicável):
+
+```
+https://codetier.vercel.app/experimentar?utm_source=bio
+```
+
 ## Publicação
 
 O que copiar e colar está em [`shorts-copy.md`](./shorts-copy.md), gerado por
