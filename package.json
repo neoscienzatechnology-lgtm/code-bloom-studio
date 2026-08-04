@@ -34,7 +34,7 @@
     "assets:webp": "tsx scripts/png-to-webp.ts",
     "brand:art": "tsx scripts/gen-brand-creatives.ts",
     "channel:art": "tsx scripts/gen-channel-art.ts",
-    "store:screens": "tsx scripts/cap-landing.ts && tsx scripts/gen-store-screenshots.ts",
+    "store:screens": "tsx scripts/cap-store-shots.ts && tsx scripts/gen-store-screenshots.ts",
     "infographics": "tsx scripts/gen-infographics.ts",
     "sql:sync": "tsx scripts/sync-sql-expectations.ts",
     "lesson:index": "tsx scripts/gen-lesson-index.ts",

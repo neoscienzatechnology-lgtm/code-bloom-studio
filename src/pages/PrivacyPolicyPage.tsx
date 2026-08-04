@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Database, Lock, ShieldCheck, UserCheck } from "lucide-react";
+import { ArrowLeft, Code2, Database, Lock, ShieldCheck, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SUPPORT_EMAIL, hasSupportEmail } from "@/config/support";
 
-const updatedAt = "15 de maio de 2026";
+const updatedAt = "4 de agosto de 2026";
 
 const dataCategories = [
   {
@@ -22,6 +23,12 @@ const dataCategories = [
     title: "Dados locais do app",
     description:
       "Parte do progresso pode ficar salva no próprio dispositivo para manter a experiência funcionando mesmo antes do login.",
+  },
+  {
+    icon: Code2,
+    title: "Código dos exercícios",
+    description:
+      "O que você escreve no editor é salvo junto com o progresso, para você retomar a lição de outro aparelho. Não escreva senhas nem dados pessoais ali.",
   },
 ];
 
@@ -101,6 +108,12 @@ const PrivacyPolicyPage = () => {
               progresso pode ser sincronizada com os serviços de infraestrutura usados pelo CodeTier,
               como autenticação, banco de dados e hospedagem.
             </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <strong className="text-foreground">Isso inclui o código que você escreve nos exercícios.</strong>{" "}
+              Para você retomar uma lição de outro aparelho, o conteúdo do editor é salvo na sua conta
+              junto com o progresso. Por isso, não escreva senhas nem dados pessoais dentro dos
+              exercícios.
+            </p>
           </section>
 
           <section>
@@ -117,8 +130,10 @@ const PrivacyPolicyPage = () => {
               código que você escreve. Não usamos gravação de sessão.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              No aplicativo Android, podemos exibir anúncios fornecidos pelo Google AdMob. Nesse caso,
-              o Google pode coletar o identificador de publicidade do dispositivo para veicular e medir
+              <strong className="text-foreground">Esta versão do CodeTier não exibe anúncios</strong> e
+              não coleta identificador de publicidade — nem na web, nem no app Android. Se um dia
+              passarmos a exibir anúncios pelo Google AdMob, atualizaremos esta política antes, e o
+              Google poderá coletar o identificador de publicidade do dispositivo para veicular e medir
               anúncios, conforme a{" "}
               <a
                 href="https://policies.google.com/privacy"
@@ -135,7 +150,19 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="mb-2 text-xl font-black text-foreground">6. Dados de menores de idade</h2>
+            <h2 className="mb-2 text-xl font-black text-foreground">6. Certificado público</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Ao concluir uma trilha, você pode compartilhar um certificado. O link gerado abre uma
+              página <strong className="text-foreground">pública</strong> — sem login — que mostra o
+              nome exibido na sua conta, o curso e a data de conclusão.{" "}
+              <strong className="text-foreground">Seu nome aparece dentro do próprio endereço</strong>,
+              então quem receber o link vê essa informação. Nada mais da sua conta vai nessa página, e
+              o compartilhamento só acontece se você tocar em compartilhar.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 text-xl font-black text-foreground">7. Dados de menores de idade</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               O CodeTier é voltado ao aprendizado de iniciantes. Estudantes menores de idade devem usar
               o app com orientação de responsáveis. Não solicitamos dados sensíveis nos exercícios e
@@ -144,20 +171,30 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="mb-2 text-xl font-black text-foreground">7. Seus direitos e exclusão de dados</h2>
+            <h2 className="mb-2 text-xl font-black text-foreground">8. Seus direitos e exclusão de dados</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Você pode solicitar acesso, correção ou exclusão dos dados vinculados à sua conta pela
               página pública de{" "}
               <Link to="/excluir-conta" className="font-black text-primary hover:underline">
                 exclusão de conta
               </Link>
-              . O canal de suporte precisa estar configurado no ambiente de produção antes da publicação
-              do app na loja.
+              , dentro ou fora do app. A exclusão apaga a conta e os dados de aprendizagem ligados a
+              ela — progresso, XP, sequência, respostas, código salvo nos exercícios e conquistas.
+              Respondemos em até 30 dias.
             </p>
+            {hasSupportEmail && (
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Dúvidas sobre privacidade e pedidos de dados:{" "}
+                <a href={`mailto:${SUPPORT_EMAIL}`} className="font-black text-primary hover:underline">
+                  {SUPPORT_EMAIL}
+                </a>
+                .
+              </p>
+            )}
           </section>
 
           <section>
-            <h2 className="mb-2 text-xl font-black text-foreground">8. Segurança</h2>
+            <h2 className="mb-2 text-xl font-black text-foreground">9. Segurança</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Aplicamos medidas razoáveis para proteger as informações usadas pelo app. Nenhum sistema é
               totalmente imune a falhas, por isso mantemos a coleta limitada ao que é necessário para a
@@ -166,7 +203,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="mb-2 text-xl font-black text-foreground">9. Mudanças nesta política</h2>
+            <h2 className="mb-2 text-xl font-black text-foreground">10. Mudanças nesta política</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Esta política pode ser atualizada conforme o CodeTier evoluir. Quando houver mudanças
               relevantes, a data de atualização será alterada nesta página.

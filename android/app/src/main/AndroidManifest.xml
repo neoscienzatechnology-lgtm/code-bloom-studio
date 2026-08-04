@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- AdMob/Play Services usa o Advertising ID no Android 13+; declarar no Data Safety. -->
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <!-- O AAR do play-services-ads (dependência do plugin AdMob) injeta o
+         AD_ID no manifesto final por conta própria. Enquanto os anúncios estão
+         DESLIGADOS (VITE_ADS_ENABLED vazio: o SDK nem inicializa), o app não lê
+         identificador de publicidade nenhum — e a ficha da Play declara "sem
+         anúncios". Permissão declarada e não usada obriga a declarar coleta que
+         não acontece, então ela sai do manifesto até os anúncios existirem.
+         AO LIGAR ANÚNCIOS: apague o tools:node="remove" desta linha, senão o
+         AdMob fica limitado a anúncios não personalizados. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
 
     <application
         android:allowBackup="false"

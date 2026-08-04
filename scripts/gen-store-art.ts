@@ -5,9 +5,10 @@
  *   npm run store:art
  */
 import { chromium } from "@playwright/test";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { encodeRgbaPng, readPngHeader } from "./lib/png";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = join(here, "..", "out", "store");
@@ -126,7 +127,16 @@ const featureSvg = `
   <rect width="1024" height="500" filter="url(#grain)" opacity="0.04" style="mix-blend-mode:overlay"/>
 </svg>`;
 
-async function shoot(svg: string, w: number, h: number, file: string) {
+/**
+ * A Play trata os dois assets de forma diferente: o ÍCONE precisa ser PNG de
+ * **32 bits (com canal alfa)** e a FEATURE GRAPHIC, 24 bits (sem alfa).
+ *
+ * `alpha: true` não é só uma flag de captura: o encoder do Chromium DESCARTA o
+ * canal alfa quando a imagem é toda opaca, mesmo com `omitBackground`. Por isso
+ * lemos os pixels crus do canvas e gravamos o arquivo com nosso encoder, que
+ * força o color type 6.
+ */
+async function shoot(svg: string, w: number, h: number, file: string, alpha = false) {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
   await page.setContent(
@@ -135,11 +145,39 @@ async function shoot(svg: string, w: number, h: number, file: string) {
   );
   await page.evaluate(() => (document as Document).fonts.ready);
   await page.waitForTimeout(250);
-  await page.screenshot({ path: join(outDir, file), type: "png", clip: { x: 0, y: 0, width: w, height: h } });
+
+  const shot = await page.screenshot({ type: "png", clip: { x: 0, y: 0, width: w, height: h } });
+  const destino = join(outDir, file);
+
+  if (!alpha) {
+    writeFileSync(destino, shot);
+    console.log(`✓ out/store/${file} (24-bit, sem alfa)`);
+  } else {
+    // A captura já está rasterizada (as fontes entraram certas); aqui só
+    // convertemos para RGBA cru — desenhar o SVG direto no canvas não serviria,
+    // porque SVG carregado como imagem não baixa as web fonts.
+    const rgbaB64 = await page.evaluate(async (b64: string) => {
+      const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
+      const canvas = document.createElement("canvas");
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(bitmap, 0, 0);
+      const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let binary = "";
+      for (let i = 0; i < data.length; i++) binary += String.fromCharCode(data[i]);
+      return btoa(binary);
+    }, shot.toString("base64"));
+
+    const png = encodeRgbaPng(w, h, new Uint8Array(Buffer.from(rgbaB64, "base64")));
+    writeFileSync(destino, png);
+    const header = readPngHeader(png);
+    console.log(`✓ out/store/${file} (color type ${header.colorType} = ${header.colorType === 6 ? "RGBA 32-bit" : "INESPERADO"})`);
+  }
+
   await browser.close();
-  console.log(`✓ out/store/${file}`);
 }
 
-await shoot(iconSvg, 512, 512, "icon-512.png");
+await shoot(iconSvg, 512, 512, "icon-512.png", true);
 await shoot(featureSvg, 1024, 500, "feature-1024x500.png");
 console.log("Concluído.");

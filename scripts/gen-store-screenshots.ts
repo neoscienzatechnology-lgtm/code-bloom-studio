@@ -18,15 +18,15 @@ mkdirSync(rawDir, { recursive: true });
 
 // Manifesto: raw → final + legenda (use *palavra* para o destaque neon).
 // Ao receber prints do celular (telas logadas), salve-os em raw/ e adicione aqui.
+// Os crus vêm de `npx tsx scripts/cap-store-shots.ts`, que só visita rotas
+// PÚBLICAS — nenhum print mostra usuário de teste.
 const SHOTS: { raw: string; file: string; caption: string }[] = [
-  { raw: "landing-hero.png", file: "shot-01-comece.png", caption: "Aprenda a *programar* do zero" },
-  { raw: "landing-01-o-que-voc-quer-aprender.png", file: "shot-02-trilhas.png", caption: "Trilhas do zero ao *projeto*" },
-  { raw: "landing-03-aprenda-fazendo.png", file: "shot-03-fazendo.png", caption: "Você aprende *fazendo*" },
-  // Telas logadas (prints do celular do usuário) — descomente ao recebê-los:
-  // { raw: "phone-dashboard.png", file: "shot-04-dashboard.png", caption: "Seu progresso, *todo dia*" },
-  // { raw: "phone-aula.png", file: "shot-05-aula.png", caption: "Aulas curtas, *uma ideia* por vez" },
-  // { raw: "phone-video.png", file: "shot-06-video.png", caption: "Teoria em *vídeo* antes da prática" },
-  // { raw: "phone-editor.png", file: "shot-07-editor.png", caption: "Código *de verdade*, no celular" },
+  { raw: "01-landing.png", file: "shot-01-comece.png", caption: "Aprenda a *programar* do zero" },
+  { raw: "02-cursos.png", file: "shot-02-trilhas.png", caption: "13 trilhas, do zero ao *projeto*" },
+  { raw: "03-trilha.png", file: "shot-03-trilha.png", caption: "Uma trilha *guiada*, aula por aula" },
+  { raw: "04-aula.png", file: "shot-04-aula.png", caption: "Aulas curtas, *uma ideia* por vez" },
+  { raw: "05-editor.png", file: "shot-05-editor.png", caption: "Código *de verdade*, no celular" },
+  { raw: "06-saida.png", file: "shot-06-saida.png", caption: "Rode e veja o *resultado* na hora" },
 ];
 
 const rand = (i: number) => {
