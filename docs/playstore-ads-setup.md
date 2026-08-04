@@ -22,7 +22,8 @@
 ## Checklist antes de publicar com anúncios reais
 
 1. **Criar a conta/app no AdMob** (https://admob.google.com):
-   - Registrar o app `com.capycode.app`.
+   - Registrar o app `com.codetier.app` (é o `applicationId`; `com.capycode.app`
+     é só o namespace interno do pacote Java, não o id da loja).
    - Criar 1 bloco intersticial (e 1 banner, se for usar).
 2. **Substituir os IDs**:
    - App ID real em `android/app/src/main/res/values/strings.xml`

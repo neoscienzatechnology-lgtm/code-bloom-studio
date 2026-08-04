@@ -38,15 +38,34 @@ você (envolvem pagamento, identidade e segredos).
 3. Pegue a **Public SDK Key (Android)** — começa com `goog_...`. **Não é segredo**
    (pode ir em env público / Vercel).
 
-## Passo 3 — Keystore de assinatura (você cria; senha é sua)
+## Passo 3 — Keystore de assinatura: **ela já existe, NÃO gere outra**
+
+A chave de upload foi criada antes do rebrand e está em
+`~/.capycode/capycode-upload-key.jks` (alias `capycode-upload`, RSA 4096, válida
+até 2053 — a Play exige validade até pelo menos 2033). O `key.properties` está
+na mesma pasta e o `build.gradle` já procura lá.
+
+⚠️ **Gerar uma chave nova quebra tudo.** O Google identifica o app pela
+assinatura: chave diferente depois do primeiro envio = AAB recusado, e depois de
+publicado = "outro app", sem instalações nem avaliações.
+
+- 🔒 **Faça backup offline** da `.jks` e das senhas, em dois lugares. Hoje ela
+  existe num único disco e não pode ir para o git.
+- Ative **Play App Signing** no primeiro upload (a Play guarda a chave de
+  distribuição; você só administra a de upload). É o único caminho que permite
+  recuperar a conta se a `.jks` se perder.
+
+<details>
+<summary>Só se a chave for perdida e o app ainda não tiver sido publicado</summary>
+
 ```bash
 keytool -genkey -v -keystore codetier-upload.jks -alias upload \
         -keyalg RSA -keysize 2048 -validity 10000
 ```
-- Mova a `.jks` pra `C:/Users/<voce>/.codetier/` e crie ali um `key.properties`
-  (modelo em `android/key.properties.example`).
-- 🔒 Guarde a `.jks` + senhas com segurança. Ative **Play App Signing** (a Play
-  guarda a chave de app; você só gerencia a "upload key").
+Mova a `.jks` para `~/.codetier/` e crie ali um `key.properties`
+(modelo em `android/key.properties.example`). Se o app **já** tiver sido
+publicado, não faça isso: peça reset da upload key ao suporte da Play.
+</details>
 
 ## Passo 4 — Criar o app + produtos na Play Console
 1. **Criar app**: nome "CodeTier", idioma pt-BR, tipo App, grátis (com compras).
